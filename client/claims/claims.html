@@ -1,0 +1,21 @@
+<head>
+    <script src="../../../lib/require.js"></script>
+    <script src="../../../lib/requireConfig.js"></script>
+
+</head>
+
+<body>
+<h1>Claims</h1>
+</body>
+
+<script type="application/javascript">
+    require(['jquery', 'knockout', 'claims/ClaimsVM'],
+            function ($, ko, ClaimsVM) {
+                console.log('Init KnockOut');
+                ko.applyBindings(new ClaimsVM());
+            });
+
+</script>
+
+
+
