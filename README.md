@@ -28,6 +28,11 @@
 
 3 **Shared** Common code between client/server, example models
 
+**Running tests**
+Mocha is being used as the testing lib. Assertions are from Node standard pkgs.
+The easy way to run tests is by using WebStorm. Create a Mocha test runner for the 'tests' dir.
+
+
 #Devtools
 
 **MongoDB** <br/>
@@ -40,3 +45,4 @@ NO additional 'schema'setup is required
 **Webstorm is pretty good**
 You can setup a run config to launch using the Supevisor <br/>
 See: http://stackoverflow.com/questions/12170755/webstorm-using-node-supervisor-so-do-not-have-to-restart-after-each-code-chang
+
