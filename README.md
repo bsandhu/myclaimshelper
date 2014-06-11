@@ -32,8 +32,11 @@
 Mocha is being used as the testing lib. Assertions are from Node standard pkgs.
 The easy way to run tests is by using WebStorm. Create a Mocha test runner for the 'tests' dir.
 Use the following options for the test runner:
+
 1 *MochaPackage* 007/node_modules/mocha
+
 2 *User Interface* BDD
+
 3 *Test dir* 007/tests
 
 #Devtools
