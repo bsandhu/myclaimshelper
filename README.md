@@ -30,5 +30,13 @@
 
 #Devtools
 
-Webstorm is pretty good. You can setup a run config to launch using the Supevisor <br/>
+**MongoDB** <br/>
+You will need a local (dev machine) install of Mongo DB. 
+Command line for starting MongoDB <br/>
+`mongod --port 9090 --dbpath <local dir for storing data>`
+
+NO additional 'schema'setup is required
+
+**Webstorm is pretty good**
+You can setup a run config to launch using the Supevisor <br/>
 See: http://stackoverflow.com/questions/12170755/webstorm-using-node-supervisor-so-do-not-have-to-restart-after-each-code-chang
