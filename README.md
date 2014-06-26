@@ -6,10 +6,10 @@
 
 #Starting
 1 Clone the git repo<br/>
-`~> git clone https://github.com/bsandhu/Agent.git`
+`~> git clone https://github.com/vadan/007.git`
 
 2 Start the Node server<br/>
-`~/Agent> node server/start.js`
+`~/007> node server/start.js`
 
 3 You should see a msg like this<br/>
 `restify listening at http://0.0.0.0:8080`
