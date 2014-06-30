@@ -15,7 +15,7 @@ require.config({
             deps: ['jquery']
         },
         'knockout-jqueryui': {
-            deps: ['knockout']
+            deps: ['knockout', 'jquery']
         },
         'KOMap': {
             deps: ['knockout'],

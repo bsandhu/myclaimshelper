@@ -1,21 +1,33 @@
 <head>
     <script src="../../../lib/require.js"></script>
     <script src="../../../lib/requireConfig.js"></script>
-
+    <link rel="stylesheet" type="text/css" href="../css/app.css">
 </head>
 
-<body>
 <h1>Claims</h1>
-</body>
+<br/>
+
+<div>
+    <div class="inline wide">Summary</div>
+    <div class="inline wide">Entry date</div>
+</div>
+<hr/>
+<div class="inline" data-bind="foreach: claims">
+    <a data-bind="attr: {href: 'ClaimDetails.html?_id=' + $data._id()}">
+        <div class="inline wide" data-bind="text: $data.description"></div>
+    </a>
+
+    <div class="inline wide" data-bind="text: $data.entryDate"></div>
+
+    <div data-bind="text: hasOwnProperty('dueDate') ? dueDate : ''"></div>
+    <div data-bind="text: hasOwnProperty('summary') ? summary : ''"></div>
+</div>
 
 <script type="application/javascript">
-    require(['jquery', 'knockout', 'claims/ClaimsVM'],
+    require(['jquery', 'knockout', 'claims/ClaimsVM', 'jquery-ui', 'knockout-jqueryui'],
             function ($, ko, ClaimsVM) {
                 console.log('Init KnockOut');
                 ko.applyBindings(new ClaimsVM());
             });
 
 </script>
-
-
-

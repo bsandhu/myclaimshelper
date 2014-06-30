@@ -1,0 +1,13 @@
+.inline {
+    display: inline-block;
+}
+
+.narrow {
+    width: 100px;
+}
+.normal {
+    width: 150px;
+}
+.wide {
+    width: 200px;
+}

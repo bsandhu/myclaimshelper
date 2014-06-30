@@ -4,7 +4,8 @@
     "private": true,
     "dependencies": {
         "mongodb": "*",
-        "restify": "*"
+        "restify": "*",
+        "underscore" : "*"
     },
     "devDependencies": {
         "mocha": "*"

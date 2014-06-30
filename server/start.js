@@ -1,13 +1,19 @@
 var restify = require('restify');
 var claimsService = require('./claims/claimsService.js');
+var mongoUtils = require('./MongoUtils.js');
 
 var server;
 
 function init() {
     server = restify.createServer();
+    server.use(restify.bodyParser());
 }
 
 function setupClaimsServiceRoutes() {
+    server.get('/claim/getAll', claimsService.getAllClaims);
+    server.post('/claim/save', claimsService.saveClaim);
+    server.post('/claimEntry/save', claimsService.saveClaimEntry);
+    server.get('/claim/getEntries/:id', claimsService.getEntries);
     server.get('/claim/:id', claimsService.getClaim);
 };
 
@@ -39,4 +45,6 @@ function startServer() {
 init();
 setupClaimsServiceRoutes();
 setupStaticRoutes();
+mongoUtils.initCollections();
 startServer();
+
