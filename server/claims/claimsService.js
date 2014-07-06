@@ -1,6 +1,5 @@
 var claim = require('./../model/claim.js');
 var mongoUtils = require('./../mongoUtils.js');
-var ObjectId = require('mongodb').ObjectID;
 var _ = require('underscore');
 
 function saveClaim(req, res) {
@@ -9,12 +8,13 @@ function saveClaim(req, res) {
 
         var entityCol = db.collection('Claims');
         if (!claim._id) {
+            claim._id = String(new Date().getTime());
             entityCol.insert(claim, {w: 1}, function (err, result) {
                 console.log('Saving Claim');
                 sendResponse(res, err, result);
             });
         } else {
-            entityCol.update({_id: claim._id}, claim, {w: 1}, function (err, result) {
+            entityCol.update({'_id': claim._id}, claim, {w: 1}, function (err, result) {
                 console.log('Updating Claim');
                 sendResponse(res, err, result);
             });
@@ -28,7 +28,7 @@ function getClaim(req, res) {
 
     mongoUtils.run(function (db) {
         var claims = db.collection('Claims');
-        claims.find({'_id': {'$eq': ObjectId(claimId)}}).toArray(function (err, items) {
+        claims.find({'_id': {'$eq': claimId}}).toArray(function (err, items) {
             var resData = (items.length == 0)
                 ? 'No claim found with id ' + claimId
                 : _.extend(new claim.Claim(), items[0]);
