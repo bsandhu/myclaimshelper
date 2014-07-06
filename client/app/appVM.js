@@ -9,7 +9,7 @@ define(['jquery', 'knockout', 'KOMap', 'app/model/claim'],
 
         AppVM.prototype.onAddNewClaim = function () {
             console.log('Adding new claim');
-            window.location.href = 'claim.html';
+            window.location.href = '/app/claims/claim.html?_id=new';
         }
 
         AppVM.prototype.load = function () {

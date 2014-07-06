@@ -39,10 +39,11 @@ define(['jquery', 'knockout', 'KOMap', 'app/AjaxUtils',
 
             AjaxUtils.post(
                 '/claim',
-                JSON.stringify(ko.toJS(this.claim)),
-                function () {
-                    console.log('Saved claim');
+                koMap.toJSON(this.claim),
+                function (response) {
+                    console.log('Saved claim: ' + JSON.stringify(response));
                     _this.showNewTaskForm(false);
+                    _this.claimId = response.data[0]._id;
                     _this.loadClaim();
                 });
         };

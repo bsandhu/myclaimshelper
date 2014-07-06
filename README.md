@@ -14,10 +14,9 @@
 3 You should see a msg like this<br/>
 `restify listening at http://0.0.0.0:8080`
 
-4 Try hitting these URLs
+4 App shoudl be deployed at this URL:
 
-  * [This is intended to be the Claims service REST API](http://localhost:8080/claim/100) 
-  * [Main view. There should be no errors in the devtools console] (http://localhost:8080/claims/claims.html)
+  [Main view. There should be no errors in the devtools console] (http://localhost:8080/app/app.html)
 
 
 #Code structure

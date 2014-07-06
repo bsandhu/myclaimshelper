@@ -35,6 +35,8 @@ describe('Claims Service', function () {
 
         testClaim.description = 'Test claim update';
         testClaim.tasks.push(newTask);
+        // Mimic the input from the browser
+        testClaim._id = testClaim._id.toString();
 
         var req = {body: testClaim};
         var res = {};
@@ -56,8 +58,8 @@ describe('Claims Service', function () {
             assert(data);
             assert.equal(data.status, 'Success');
             var savedClaim = data.data;
-            assert(savedClaim.description, 'Test claim');
-            assert(savedClaim.tasks.length, 2);
+            assert.equal(savedClaim.description, 'Test claim update');
+            assert.equal(savedClaim.tasks.length, 2);
             done();
         };
         claimsService.getClaim(req, res);
