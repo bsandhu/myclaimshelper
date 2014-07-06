@@ -2,10 +2,12 @@
     <script src="../../../lib/require.js"></script>
     <script src="../../../lib/requireConfig.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/app.css">
+    <link rel="stylesheet" type="text/css" href="../css/jquery-ui.css">
 </head>
 
 <h1>Claims</h1>
-<br/>
+<input type="button" data-bind="button: {label: 'Add New Claim'}, click: onAddNewClaim"/>
+<div style="height: 10px"></div>
 
 <div>
     <div class="inline wide">Summary</div>
@@ -13,7 +15,10 @@
 </div>
 <hr/>
 <div class="inline" data-bind="foreach: claims">
-    <a data-bind="attr: {href: 'ClaimDetails.html?_id=' + $data._id()}">
+
+    <div class="inline wide" data-bind="attr: {title: $data._id}, text: $index() + 1"></div>
+
+    <a data-bind="attr: {href: '/app/claims/claim.html?_id=' + $data._id()}">
         <div class="inline wide" data-bind="text: $data.description"></div>
     </a>
 
@@ -24,10 +29,10 @@
 </div>
 
 <script type="application/javascript">
-    require(['jquery', 'knockout', 'claims/ClaimsVM', 'jquery-ui', 'knockout-jqueryui'],
-            function ($, ko, ClaimsVM) {
+    require(['jquery', 'knockout', 'app/appVM', 'jquery-ui', 'knockout-jqueryui'],
+            function ($, ko, AppVM) {
                 console.log('Init KnockOut');
-                ko.applyBindings(new ClaimsVM());
+                ko.applyBindings(new AppVM());
             });
 
 </script>

@@ -1,43 +1,53 @@
 var assert = require("assert");
 var claimsService = require("./../server/claims/claimsService.js");
-var models = require("./../server/models/models.js");
+var claim = require("./../server/model/claim.js");
 
-describe('Mongo Conn', function () {
+describe('Claims Service', function () {
 
-    var testClaim = new models.Claim();
+    var testClaim = new claim.Claim();
     testClaim.description = 'Test claim';
-    testClaim._id = String(new Date().getTime());
 
-    it('Should be able to save claim', function (done) {
+    var task = new claim.Task();
+    task.entryDate = new Date(2014, 1, 1);
+    task.dueDate = new Date(2014, 1, 10);
+    task.summary = "I am test Task";
+
+    testClaim.tasks = [task];
+
+    it('Save claim', function (done) {
         var req = {};
         req.body = testClaim;
         var res = {};
         res.json = function (data) {
             assert(data);
             assert.equal(data.status, 'Success');
+            assert.ok(testClaim._id);
             done();
         };
         claimsService.saveClaim(req, res, 'Claims');
     });
 
-    it('Should be able to save claim entry', function (done) {
-        var claimEntry = new models.ClaimEntry();
-        claimEntry.claimId = testClaim._id;
-        claimEntry.description = 'Test claim';
-        claimEntry.entryDate = new Date();
+    it('Update claim', function (done) {
+        var newTask = new claim.Task();
+        newTask.entryDate = new Date(2014, 2, 1);
+        newTask.dueDate = new Date(2014, 2, 10);
+        newTask.summary = "I am test Task too";
 
-        var req = {};
-        req.body = claimEntry;
+        testClaim.description = 'Test claim update';
+        testClaim.tasks.push(newTask);
+
+        var req = {body: testClaim};
         var res = {};
         res.json = function (data) {
             assert(data);
             assert.equal(data.status, 'Success');
+            assert.ok(testClaim._id);
             done();
         };
-        claimsService.saveClaimEntry(req, res, 'ClaimEntries');
-    })
+        claimsService.saveClaim(req, res, 'Claims');
+    });
 
-    it('Should be able query claim entries', function (done) {
+    it('Get a Claim', function (done) {
         var req = {params: {}};
         req.params.id = testClaim._id;
 
@@ -45,10 +55,25 @@ describe('Mongo Conn', function () {
         res.json = function (data) {
             assert(data);
             assert.equal(data.status, 'Success');
-            assert.equal(data.data[0].claimId, testClaim._id);
+            var savedClaim = data.data;
+            assert(savedClaim.description, 'Test claim');
+            assert(savedClaim.tasks.length, 2);
+            done();
+        };
+        claimsService.getClaim(req, res);
+    })
+
+    it('Get All', function (done) {
+        var req = {};
+        var res = {};
+
+        res.json = function (data) {
+            assert(data);
+            assert.equal(data.status, 'Success');
+            assert(data.data.length >= 1);
             done();
         };
 
-        claimsService.getEntries(req, res);
+        claimsService.getAllClaims(req, res);
     });
 });

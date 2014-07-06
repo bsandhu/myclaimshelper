@@ -11,3 +11,16 @@
 .wide {
     width: 200px;
 }
+.clear {
+
+}
+
+.label {
+    color: #0b97c4;
+    margin-right: 2px;
+    text-align: right;
+}
+body {
+    background-image: url("/images/subtle_dots.png");
+    background-repeat: repeat;
+}

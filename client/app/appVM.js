@@ -1,18 +1,23 @@
-define(['jquery', 'knockout', 'KOMap', 'claims/Claim'],
+define(['jquery', 'knockout', 'KOMap', 'app/model/claim'],
     function ($, ko, koMap, Claim) {
 
-        function ClaimsVM() {
-            console.log('Init ClaimsVM');
+        function AppVM() {
+            console.log('Init AppVM');
             this.claims = ko.observableArray();
             this.load();
         }
 
-        ClaimsVM.prototype.load = function () {
+        AppVM.prototype.onAddNewClaim = function () {
+            console.log('Adding new claim');
+            window.location.href = 'claim.html';
+        }
+
+        AppVM.prototype.load = function () {
             var _this = this;
-            $.get('/claim/getAll')
+            $.get('/claim')
                 .done(function (resp) {
                     var data = resp.data;
-                    console.log('Loaded claims ' + JSON.stringify(data));
+                    console.log('Loaded Claim ' + JSON.stringify(data));
                     $.each(data, function (index, claim) {
                         _this.claims.push(koMap.fromJS(claim, new Claim()));
                     });
@@ -22,5 +27,5 @@ define(['jquery', 'knockout', 'KOMap', 'claims/Claim'],
                 })
         };
 
-        return ClaimsVM;
+        return AppVM;
     });

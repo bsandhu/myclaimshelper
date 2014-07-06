@@ -1,10 +1,7 @@
 define(['knockout'],
     function (ko) {
 
-        function ClaimDetailEntry() {
-            this._id  = ko.observable();
-            this.claimId  = ko.observable();
-
+        function Task() {
             this.entryDate = ko.observable();
             this.dueDate = ko.observable();
             this.updateDate = ko.observable();
@@ -16,5 +13,14 @@ define(['knockout'],
             // TODO TimeSheet realated info
         };
 
-        return ClaimDetailEntry;
+        Task.prototype.clear = function(){
+            for(attr in this) {
+                if (ko.isObservable(this[attr])){
+                    this[attr](null);
+                    console.debug('Clearing attr: ' + attr);
+                }
+            }
+        };
+
+        return Task;
     });

@@ -13,18 +13,17 @@ function run(fn) {
 
 function initCollection(collectionName) {
     run(function (db) {
-        db.createCollection('Claims', function (err, claims) {
+        db.createCollection(collectionName, function (err, claims) {
             if (err) {
                 throw 'Failed to create collection . ' + err;
             }
-            console.log('Created collection Claims');
+            console.log('Created collection: ' + collectionName);
         });
     });
 }
 
 function initCollections() {
     initCollection('Claims');
-    initCollection('ClaimEntries');
 }
 
 exports.run = run;

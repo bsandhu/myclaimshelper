@@ -15,6 +15,8 @@ define(['knockout'],
             this.location = ko.observable();
             this.insuranceCompany = ko.observable();
             this.insranceCoFileNum = ko.observable();
+
+            this.tasks = ko.observableArray([]);
         };
 
         return Claim;

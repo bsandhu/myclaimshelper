@@ -9,12 +9,13 @@ function Claim() {
     this.claimant;
     this.location;
     this.insuranceCompany;
-    this.insranceCoFileNum;
+    this.insuranceCompanyFileNum;
+
+    // Array of 'Task' objects
+    this.tasks = [];
 }
 
-function ClaimEntry() {
-    this.claimId;
-
+function Task() {
     this.entryDate;
     this.dueDate;
     this.updateDate;
@@ -24,4 +25,4 @@ function ClaimEntry() {
 }
 
 exports.Claim = Claim;
-exports.ClaimEntry = ClaimEntry;
+exports.Task = Task;

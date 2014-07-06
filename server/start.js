@@ -1,6 +1,6 @@
 var restify = require('restify');
 var claimsService = require('./claims/claimsService.js');
-var mongoUtils = require('./MongoUtils.js');
+var mongoUtils = require('./mongoUtils.js');
 
 var server;
 
@@ -10,11 +10,9 @@ function init() {
 }
 
 function setupClaimsServiceRoutes() {
-    server.get('/claim/getAll', claimsService.getAllClaims);
-    server.post('/claim/save', claimsService.saveClaim);
-    server.post('/claimEntry/save', claimsService.saveClaimEntry);
-    server.get('/claim/getEntries/:id', claimsService.getEntries);
+    server.get('/claim', claimsService.getAllClaims);
     server.get('/claim/:id', claimsService.getClaim);
+    server.post('/claim', claimsService.saveClaim);
 };
 
 function setupStaticRoutes() {
@@ -22,7 +20,7 @@ function setupStaticRoutes() {
     server.get(/\/models\/.*/, restify.serveStatic({
         directory: 'shared'
     }));
-    server.get(/\/claims\/.*/, restify.serveStatic({
+    server.get(/\/app\/.*/, restify.serveStatic({
         directory: 'client'
     }));
     server.get(/\/lib\/.*/, restify.serveStatic({
