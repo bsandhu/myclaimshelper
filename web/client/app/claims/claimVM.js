@@ -1,6 +1,6 @@
-define(['jquery', 'knockout', 'KOMap', 'app/AjaxUtils',
+define(['jquery', 'knockout', 'KOMap', 'app/ajaxUtils',
         'app/model/claim', 'app/model/Task' ],
-    function ($, ko, koMap, AjaxUtils, Claim, Task) {
+    function ($, ko, koMap, ajaxUtils, Claim, Task) {
 
         function ClaimVM(claimId) {
             if (!claimId) {
@@ -37,7 +37,7 @@ define(['jquery', 'knockout', 'KOMap', 'app/AjaxUtils',
             console.log('Saving Claim');
             this.claim.tasks.push(this.newTask);
 
-            AjaxUtils.post(
+            ajaxUtils.post(
                 '/claim',
                 koMap.toJSON(this.claim),
                 function (response) {

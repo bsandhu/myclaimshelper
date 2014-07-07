@@ -1,0 +1,15 @@
+{
+    "name": "007-mailman",
+    "version": "0.0.0",
+    "private": true,
+    "dependencies": {
+        "simplesmtp": ">= 0.3.32",
+        "mailparser": ">=0.4.4"
+    },
+    "devDependencies": {
+        "mocha": "*"
+    },
+    "engine": {
+        "node": ">=0.10"
+    }
+}
