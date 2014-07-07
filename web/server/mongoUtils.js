@@ -1,6 +1,6 @@
 var MongoClient = require('mongodb').MongoClient;
 
-var connUrl = 'mongodb://localhost:9090/AgentDb';
+var connUrl = process.env.DB || 'mongodb://localhost:9090/AgentDb';
 
 function run(fn) {
     MongoClient.connect(connUrl, function (err, db) {
