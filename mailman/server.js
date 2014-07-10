@@ -1,7 +1,7 @@
 var fs = require('fs');
+var mailHandler = require('./handlers/mailHandler.js');
 var simplesmtp = require('simplesmtp');
 var MailParser = require('mailparser').MailParser;
-
 
 var PORT = 25; //465
 var smtp = simplesmtp.createServer();
@@ -13,6 +13,7 @@ mailparser.on('end', function(mail_object){
     console.log('Subject:', mail_object.subject);
     console.log('Text:', mail_object.text);
     console.log('Attachments:', mail_object.attachments);
+    mailHandler.handleMail(mail_object);
 });
 
 mailparser.on('headers', function(headers){

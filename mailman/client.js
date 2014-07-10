@@ -2,7 +2,7 @@ var simplesmtp = require('simplesmtp');
 
 var message = 'from: vadan@abc.ee\r\n' +
                 'to: vadan@node.ee\r\n' +
-                'subject: the subject\r\n' +
+                'subject: claimid:123 the subject\r\n' +
                 '\r\n' +
                 'Hello world!\r\n' +
                 '' ;
@@ -13,7 +13,8 @@ mail('sender@gmail.com', 'abc@gmail.com', message);
  * Send a raw email
  *
  * @param {String} from E-mail address of the sender
- * @param {String|Array} to E-mail address or a list of addresses of the receiver
+ * @param {String|Array} to E-mail address or a list of addresses of the 
+ * receiver
  * @param {[type]} message Mime message
  */
 
