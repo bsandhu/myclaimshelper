@@ -1,12 +1,9 @@
 {
-    "name": "007-mailman",
+    "name": "007-claimman",
     "version": "0.0.0",
     "private": true,
     "dependencies": {
-        "007-claimman": "*",
-        "mongodb": "*",
-        "simplesmtp": ">= 0.3.32",
-        "mailparser": ">=0.4.4"
+        "mongodb": "*"
     },
     "devDependencies": {
         "mocha": "*"
