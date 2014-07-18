@@ -1,5 +1,4 @@
 var config = {};
 
-config.db = 'mongodb://localhost:9090/007db';
-
+config.db = process.env.DB || 'mongodb://localhost:9090/007db';
 module.exports = config;
