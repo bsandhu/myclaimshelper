@@ -2,25 +2,32 @@ var models = require('007-claimman/models/models.js');
 var dbtools = require('007-claimman/tools/dbtools.js');
 var config = require('../config.js');
 
-/* Topmost function to handle mail */
+/*
+ * Define an action pipeline that is easily editable
+ */
+
+/* 
+ * Topmost function to handle mail 
+ *
+ * @param {object} pre-parsed structured mail object.
+ * @returns status object?
+ */
 function handleMail(mail){
     var data = parseMail(mail);
-    // create event/entry
-    var entry = new models.ClaimEntry();
-    entry.claimId = data.claimId;
-    entry.mail = data.mail;
-    console.log(entry);
-    // write to db
-    writeEntry(entry);
+    // write email to db
+    writeEntry(data, 'ClaimEntries');
+    // write attachments
+    // writeEntry(data, 'Artifacts');
     // respond with email?
 }
 
-function writeEntry(entry){
+function writeEntry(entry, collectionName){
     var connUrl = config.db;
     dbtools.run(connUrl, function(db){
-        var entityCol = db.collection('ClaimEntries');
+        var entityCol = db.collection(collectionName);
         entityCol.insert(entry, {w: 1}, function (err, result) {
-            console.log('Saving entry ' + entry);
+            if (err) throw err;
+            console.log('Saved entry ' + entry);
         });
     });
 }
@@ -34,7 +41,11 @@ function parseMail(mail){
     return result
 }
 
-// Should this return null or throw when no id is found?
+/*
+ * @param {object} pre-parsed structured mail object.
+ *
+ * NOTE: Should this return null or throw when no id is found?
+*/
 function _getClaimId(mail){
     var regex = RegExp('claim *id:[ \t]*([A-Za-z0-9_]+)', 'i');
     var claimid = mail.subject.match(regex);
