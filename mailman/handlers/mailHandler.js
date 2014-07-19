@@ -53,6 +53,17 @@ function _getClaimId(mail){
         return claimid[1]
 }
 
+/*
+ * Emails can be tagged arbitrarily. Tags start wtih # and can be found in the
+ * body of the text.
+*/
+function _getTags(mail){
+    var regex = RegExp('#[A-Za-z0-9_]+', 'g');
+    var tags = mail.text.match(regex);
+    return tags
+}
+
 exports._getClaimId = _getClaimId;
+exports._getTags = _getTags;
 exports.parseMail = parseMail;
 exports.handleMail = handleMail;
