@@ -2,7 +2,7 @@ var assert = require('assert');
 var mh = require('../handlers/mailHandler.js');
 
 
-describe('mailHandler.parseMail', function() {
+describe('parseMail', function() {
     it('gets claim id with pattern \w+claim id: {id}', function(done){
         var r = mh._getClaimId({'subject':'FW: abc |claim id: 123'});
         assert.strictEqual(r, '123', 'claim id found in subject');

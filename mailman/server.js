@@ -7,6 +7,7 @@ var PORT = 25; //465
 var smtp = simplesmtp.createServer();
 var mailparser = new MailParser({debug:true});
 
+// mailparser
 mailparser.on('end', function(mail_object){
     console.log('From:', mail_object.from);
     console.log('To:', mail_object.to);
@@ -20,17 +21,17 @@ mailparser.on('headers', function(headers){
     console.log('Headers:' + headers);
 });
 
+// smtp
 smtp.on('startData', function(connection){
     console.log('Message from:', connection.from);
     console.log('Message to:', connection.to);
-    connection.saveStream = fs.createWriteStream('/tmp/message.txt');
+    connection.saveStream = fs.createWriteStream('/tmp/message-' + Date.now() + '.txt');
 });
 
 smtp.on('data', function(connection, chunk){
     connection.saveStream.write(chunk);
     mailparser.write(chunk);
 });
-
 
 smtp.on('dataReady', function(connection, callback){
     connection.saveStream.end();
