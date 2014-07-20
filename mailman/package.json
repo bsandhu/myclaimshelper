@@ -5,6 +5,7 @@
     "dependencies": {
         "007-claimman": "*",
         "mongodb": "*",
+        "restify": "*",
         "simplesmtp": ">= 0.3.32",
         "mailparser": ">=0.4.4"
     },

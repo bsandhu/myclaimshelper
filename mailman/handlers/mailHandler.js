@@ -6,6 +6,23 @@ var config = require('../config.js');
  * Define an action pipeline that is easily editable
  */
 
+function processMail(req, res, next){
+    var attachments = _getAttachments(req);
+    console.log(attachments);
+    //writeEntry({'attachments': attachments}, 'ClaimEntries');
+    res.send(200, 'Request Processed.');
+    next();
+}
+
+function _getAttachments(req){
+    var attachments = [];
+    for (var i=1; i <= req.params['attachment-count']; i++){
+        attachments.push(req.params['attachment-' + i]);
+    }
+    return attachments
+}
+
+
 /* 
  * Topmost function to handle mail 
  *
@@ -67,3 +84,4 @@ exports._getClaimId = _getClaimId;
 exports._getTags = _getTags;
 exports.parseMail = parseMail;
 exports.handleMail = handleMail;
+exports.processMail = processMail;
