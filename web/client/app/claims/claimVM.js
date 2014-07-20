@@ -22,10 +22,6 @@ define(['jquery', 'knockout', 'KOMap', 'app/ajaxUtils',
             }
         };
 
-        ClaimVM.prototype.configureDropzone = function () {
-            thumbnailWidth
-        };
-
         ClaimVM.prototype.addNewTask = function () {
             this.newTask.entryDate(new Date());
             this.showNewTaskForm(true);
