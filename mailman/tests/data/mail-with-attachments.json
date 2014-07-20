@@ -1,0 +1,96 @@
+{
+  "Subject": "Test attachements",
+  "body-plain": "body here...\r\n",
+  "Content-Type": "multipart/mixed; boundary=\"089e01537be224841c04fea381bc\"",
+  "Message-Id": "<CAP_3Kjpr64gKQ8pxJFuCi=bRWjzMxFbN5+p2DrUYKiWQ5N0N-Q@mail.gmail.com>",
+  "Date": "Sun, 20 Jul 2014 12:41:46 -0500",
+  "Mime-Version": "1.0",
+  "body-html": "<div dir=\"ltr\">body here...</div>\r\n",
+  "attachments": [
+    {
+      "size": 475600,
+      "name": "bigbang.jpg",
+      "content-type": "image/jpeg",
+      "url": "https://api.mailgun.net/v2/domains/sandbox82f9b317bb2c4ea38436d21c26b9a6fe.mailgun.org/messages/WyI5ODFhOGRkYTU5IiwgWyJwYWNrZWQiLCAiMjBmODMwZjQtMTAzNS0xMWU0LTkxYTItYmM3NjRlMTAzM2IyIl0sICJtYWlsZ3VuIiwgIm5ld2Nva2UiXQ==/attachments/0"
+    },
+    {
+      "size": 774850,
+      "name": "NUIverse_010_3840x1080.jpg",
+      "content-type": "image/jpeg",
+      "url": "https://api.mailgun.net/v2/domains/sandbox82f9b317bb2c4ea38436d21c26b9a6fe.mailgun.org/messages/WyI5ODFhOGRkYTU5IiwgWyJwYWNrZWQiLCAiMjBmODMwZjQtMTAzNS0xMWU0LTkxYTItYmM3NjRlMTAzM2IyIl0sICJtYWlsZ3VuIiwgIm5ld2Nva2UiXQ==/attachments/1"
+    }
+  ],
+  "Dkim-Signature": "v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113; h=mime-version:date:message-id:subject:from:to:content-type; bh=Wqq0WPPzacEmBzrL1DBrm+UosvXpHZucfi3I3OjJNqo=; b=W+W0gMXCY4UMNRi68UX44j0qIb6Wbby3TosfcLoSzDzWVlKKwQxZ53X79Q48F4c6JJ T5prPe8EtaVnH1pGRWXIeodFvCTOd5u7Y58qQCmCoiu+qKfoE6mrmL9iHdwj7DWf1UZE TvJYIdRONoX1hD0n/BMaSsKTBoxeZu/2whNTFfuoM6oQm99QXD2Q/9pn0OYUAFPTmvSD yCOR7DCLxdFbK3wgWl9HBTLIkiKueGaGR8ESyqwUzo3V+IcrmbDz1i3zGWEBU0fWcECB 3lqHBjmoIIfcZ3cEnnxnF+mvDm/b7xR6JZl/Lipa2uL6mcGfh1AdEc5zdeztv+dSQWFc dJpw==",
+  "message-headers": [
+    [
+      "X-Envelope-From",
+      "<vctradn@gmail.com>"
+    ],
+    [
+      "Received",
+      "from mail-yh0-f48.google.com (mail-yh0-f48.google.com [209.85.213.48]) by mxa.mailgun.org with ESMTP id 53cbff5b.63816f0-in1; Sun, 20 Jul 2014 17:41:47 -0000 (UTC)"
+    ],
+    [
+      "Received",
+      "by mail-yh0-f48.google.com with SMTP id i57so3491120yha.35 for <postmaster@sandbox82f9b317bb2c4ea38436d21c26b9a6fe.mailgun.org>; Sun, 20 Jul 2014 10:41:46 -0700 (PDT)"
+    ],
+    [
+      "Dkim-Signature",
+      "v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113; h=mime-version:date:message-id:subject:from:to:content-type; bh=Wqq0WPPzacEmBzrL1DBrm+UosvXpHZucfi3I3OjJNqo=; b=W+W0gMXCY4UMNRi68UX44j0qIb6Wbby3TosfcLoSzDzWVlKKwQxZ53X79Q48F4c6JJ T5prPe8EtaVnH1pGRWXIeodFvCTOd5u7Y58qQCmCoiu+qKfoE6mrmL9iHdwj7DWf1UZE TvJYIdRONoX1hD0n/BMaSsKTBoxeZu/2whNTFfuoM6oQm99QXD2Q/9pn0OYUAFPTmvSD yCOR7DCLxdFbK3wgWl9HBTLIkiKueGaGR8ESyqwUzo3V+IcrmbDz1i3zGWEBU0fWcECB 3lqHBjmoIIfcZ3cEnnxnF+mvDm/b7xR6JZl/Lipa2uL6mcGfh1AdEc5zdeztv+dSQWFc dJpw=="
+    ],
+    [
+      "Mime-Version",
+      "1.0"
+    ],
+    [
+      "X-Received",
+      "by 10.236.32.65 with SMTP id n41mr31921798yha.117.1405878106606; Sun, 20 Jul 2014 10:41:46 -0700 (PDT)"
+    ],
+    [
+      "Received",
+      "by 10.170.191.82 with HTTP; Sun, 20 Jul 2014 10:41:46 -0700 (PDT)"
+    ],
+    [
+      "Date",
+      "Sun, 20 Jul 2014 12:41:46 -0500"
+    ],
+    [
+      "Message-Id",
+      "<CAP_3Kjpr64gKQ8pxJFuCi=bRWjzMxFbN5+p2DrUYKiWQ5N0N-Q@mail.gmail.com>"
+    ],
+    [
+      "Subject",
+      "Test attachements"
+    ],
+    [
+      "From",
+      "Víctor Adán <vctradn@gmail.com>"
+    ],
+    [
+      "To",
+      "postmaster@sandbox82f9b317bb2c4ea38436d21c26b9a6fe.mailgun.org"
+    ],
+    [
+      "Content-Type",
+      "multipart/mixed; boundary=\"089e01537be224841c04fea381bc\""
+    ],
+    [
+      "X-Mailgun-Incoming",
+      "Yes"
+    ]
+  ],
+  "To": "postmaster@sandbox82f9b317bb2c4ea38436d21c26b9a6fe.mailgun.org",
+  "recipients": "postmaster@sandbox82f9b317bb2c4ea38436d21c26b9a6fe.mailgun.org",
+  "X-Envelope-From": "<vctradn@gmail.com>",
+  "From": "Víctor Adán <vctradn@gmail.com>",
+  "stripped-signature": "",
+  "Received": "by 10.170.191.82 with HTTP; Sun, 20 Jul 2014 10:41:46 -0700 (PDT)",
+  "content-id-map": {},
+  "subject": "Test attachements",
+  "stripped-html": "<div dir=\"ltr\">body here...</div>\r\n",
+  "from": "Víctor Adán <vctradn@gmail.com>",
+  "sender": "vctradn@gmail.com",
+  "stripped-text": "body here...",
+  "X-Mailgun-Incoming": "Yes",
+  "X-Received": "by 10.236.32.65 with SMTP id n41mr31921798yha.117.1405878106606; Sun, 20 Jul 2014 10:41:46 -0700 (PDT)"
+}
