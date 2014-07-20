@@ -1,5 +1,6 @@
 var restify = require('restify');
 var claimsService = require('./claims/claimsService.js');
+var contactService = require('./services/contactService.js');
 var mongoUtils = require('./mongoUtils.js');
 
 var server;
@@ -13,6 +14,11 @@ function setupClaimsServiceRoutes() {
     server.get('/claim', claimsService.getAllClaims);
     server.get('/claim/:id', claimsService.getClaim);
     server.post('/claim', claimsService.saveClaim);
+};
+
+function setupContactServiceRoutes() {
+    server.get('/contact', contactService.listAllContacts);
+    server.post('/contact', contactService.addContact);
 };
 
 function setupStaticRoutes() {
@@ -42,6 +48,7 @@ function startServer() {
 
 init();
 setupClaimsServiceRoutes();
+setupContactServiceRoutes();
 setupStaticRoutes();
 mongoUtils.initCollections();
 startServer();
