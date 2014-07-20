@@ -6,7 +6,8 @@
     "dependencies": {
         "mongodb": "*",
         "restify": "*",
-        "underscore" : "*"
+        "underscore" : "*",
+        "formidable": "*"
     },
     "devDependencies": {
         "mocha": "*"

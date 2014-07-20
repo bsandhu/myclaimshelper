@@ -1,5 +1,5 @@
 define(['jquery', 'knockout', 'KOMap', 'app/ajaxUtils',
-        'app/model/claim', 'app/model/Task' ],
+        'app/model/claim', 'app/model/Task', 'dropzone' ],
     function ($, ko, koMap, ajaxUtils, Claim, Task) {
 
         function ClaimVM(claimId) {
@@ -20,6 +20,10 @@ define(['jquery', 'knockout', 'KOMap', 'app/ajaxUtils',
             } else {
                 this.claim.entryDate(new Date());
             }
+        };
+
+        ClaimVM.prototype.configureDropzone = function () {
+            thumbnailWidth
         };
 
         ClaimVM.prototype.addNewTask = function () {

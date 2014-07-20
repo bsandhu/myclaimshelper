@@ -1,11 +1,12 @@
 require.config({
     baseUrl: '/',
     paths: {
-        'jquery': 'lib/jquery.min',
-        'jquery-ui': 'lib/jquery-ui.min',
-        'knockout': 'lib/knockout',
-        'knockout-jqueryui': 'lib/knockout.jqueryui.min',
-        'KOMap': 'lib/knockout.mapping.min'
+        'jquery'    : 'lib/jquery.min',
+        'jquery-ui' : 'lib/jquery-ui.min',
+        'knockout'  : 'lib/knockout',
+        'KOMap'     : 'lib/knockout.mapping.min',
+        'dropzone'  : 'lib/dropzone.amd',
+        'knockout-jqueryui': 'lib/knockout.jqueryui.min'
     },
     shim: {
         'jquery-ui': {

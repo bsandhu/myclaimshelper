@@ -1,19 +1,26 @@
 var restify = require('restify');
 var claimsService = require('./claims/claimsService.js');
 var contactService = require('./services/contactService.js');
+var uploadService = require('./claims/uploadService.js');
 var mongoUtils = require('./mongoUtils.js');
 
 var server;
 
 function init() {
     server = restify.createServer();
-    server.use(restify.bodyParser());
+    server.use(restify.acceptParser(server.acceptable));
+    server.use(restify.authorizationParser());
+    server.use(restify.dateParser());
+    server.use(restify.queryParser());
+    server.use(restify.jsonp());
+    server.use(restify.gzipResponse());
 }
 
 function setupClaimsServiceRoutes() {
     server.get('/claim', claimsService.getAllClaims);
     server.get('/claim/:id', claimsService.getClaim);
     server.post('/claim', claimsService.saveClaim);
+    server.post('/upload', uploadService.uploadArtifact);
 };
 
 function setupContactServiceRoutes() {

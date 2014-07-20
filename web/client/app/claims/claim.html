@@ -2,6 +2,7 @@
     <script src="../../../lib/require.js"></script>
     <script src="../../../lib/requireConfig.js"></script>
     <link rel="stylesheet" type="text/css" href="../../css/app.css"/>
+    <link rel="stylesheet" type="text/css" href="../../css/dropzone.css"/>
     <link rel="stylesheet" type="text/css" href="../../css/jquery-ui.css">
 </head>
 
@@ -63,9 +64,23 @@
         </div>
     </div>
 
+
     <input type="button" data-bind="button: {label: 'Save'}, click: onSave"/>
     <input type="button" data-bind="button: {label: 'Cancel'}, click: onCancel"/>
 </div>
+
+<!-- File upload with DropZone -->
+<form action="/upload"
+      class="dropzone"
+      id="my-awesome-dropzone">
+</form>
+
+<!-- Vanilla file upload
+<form action="/upload" method="post" enctype="multipart/form-data">
+    <input type="file" name="upload" multiple="multiple"><br>
+    <input type="submit" value="Upload">
+</form>
+-->
 
 <div style="height: 15px"></div>
 <input type="button" data-bind="button: {label: 'Add new'}, click: addNewTask"/>
