@@ -7,18 +7,19 @@ var config = require('../config.js');
  */
 
 function processMail(req, res, next){
-    var attachments = _getAttachments(req);
-    console.log(attachments);
+    var attachments = _getEmbeddedAttachments(req);
     //writeEntry({'attachments': attachments}, 'ClaimEntries');
     res.send(200, 'Request Processed.');
     next();
 }
 
-function _getAttachments(req){
+function _getEmbeddedAttachments(req){
     var attachments = [];
     for (var i=1; i <= req.params['attachment-count']; i++){
-        attachments.push(req.params['attachment-' + i]);
+        attachments.push(req.files['attachment-' + i]);
     }
+    console.log('Attachments:');
+    console.log(JSON.stringify(attachments));
     return attachments
 }
 
