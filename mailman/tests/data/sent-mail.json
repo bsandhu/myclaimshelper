@@ -1,0 +1,15 @@
+{
+    "params":{
+        "subject": "the subject claim id:123",
+        "body-plain": "the body\r\n#tag1\r\n#tag2",
+        "attachment-count":"1"
+    },
+    "files":{
+        "attachment-1":{
+            "size":14,
+            "path":"/tmp/67e8f84cf7851523cb5f8635cf7208ed",
+            "name":"test.txt",
+            "type":"text/plain",
+            "mtime":"2014-07-21T02:26:02.086Z"}
+    }
+}

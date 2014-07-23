@@ -10,7 +10,7 @@ function init() {
 }
 
 function setupRoutes() {
-    server.post('/mailman', mailHandler.processMail);
+    server.post('/mailman', mailHandler.processMailRequest);
 }
 
 
