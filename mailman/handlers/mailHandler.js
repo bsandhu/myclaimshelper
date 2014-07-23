@@ -6,14 +6,28 @@ var config = require('../config.js');
  * Define an action pipeline that is easily editable
  */
 
-function processMail(req, res, next){
-    var attachments = _getEmbeddedAttachments(req);
+/* 
+ * Topmost function to handle mail 
+ */
+function processMailRequest(req, res, next){
+    var mailEntry = parseMailRequest(req);
     //writeEntry({'attachments': attachments}, 'ClaimEntries');
     res.send(200, 'Request Processed.');
     next();
 }
 
-function _getEmbeddedAttachments(req){
+function parseMailRequest(req){
+    var claimId = _getClaimId(req.params.subject);
+    var attachments = _getEmbeddedAttachmentInfo(req);
+    var tags = _getTags(req.params['body-plain'])
+    result = {'claimId': claimId,
+              'attachments': attachments,
+              'tags': tags,
+              'mail': req.params}
+    return result
+}
+
+function _getEmbeddedAttachmentInfo(req){
     var attachments = [];
     for (var i=1; i <= req.params['attachment-count']; i++){
         attachments.push(req.files['attachment-' + i]);
@@ -22,7 +36,6 @@ function _getEmbeddedAttachments(req){
     console.log(JSON.stringify(attachments));
     return attachments
 }
-
 
 /* 
  * Topmost function to handle mail 
