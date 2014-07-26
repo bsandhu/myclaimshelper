@@ -11,20 +11,21 @@ var config = require('../config.js');
  */
 function processMailRequest(req, res, next){
     var mailEntry = parseMailRequest(req);
-    //writeEntry({'attachments': attachments}, 'ClaimEntries');
-    res.send(200, 'Request Processed.');
-    next();
+    writeEntry(mailEntry, 'ClaimEntries', function(){
+        res.send(200, 'Request Processed.');
+        next();
+    });
 }
 
 function parseMailRequest(req){
     var claimId = _getClaimId(req.params.subject);
     var attachments = _getEmbeddedAttachmentInfo(req);
-    var tags = _getTags(req.params['body-plain'])
+    var tags = _getTags(req.params['body-plain']);
     result = {'claimId': claimId,
               'attachments': attachments,
               'tags': tags,
-              'mail': req.params}
-    return result
+              'mail': req.params};
+    return result;
 }
 
 function _getEmbeddedAttachmentInfo(req){
@@ -65,7 +66,7 @@ function _getEmbeddedAttachmentInfo(req){
     }
     console.log('Attachments:');
     console.log(JSON.stringify(attachments));
-    return attachments
+    return attachments;
 }
 
 /*
@@ -76,7 +77,7 @@ function _getClaimId(subject){
     var regex = RegExp('claim *id:[ \t]*([A-Za-z0-9_]+)', 'i');
     var claimid = subject.match(regex);
     if (claimid && claimid.length > 1)
-        return claimid[1]
+        return claimid[1];
     else throw 'Claim ID not found!'
 }
 
@@ -90,13 +91,14 @@ function _getTags(body){
     return tags
 }
 
-function writeEntry(entry, collectionName){
+function writeEntry(entry, collectionName, next){
     var connUrl = config.db;
     dbtools.run(connUrl, function(db){
         var entityCol = db.collection(collectionName);
         entityCol.insert(entry, {w: 1}, function (err, result) {
             if (err) throw err;
             console.log('Saved entry ' + entry);
+            next();
         });
     });
 }
