@@ -1,0 +1,98 @@
+<head>
+    <script src="../../../lib/require.js"></script>
+    <script src="../../../lib/requireConfig.js"></script>
+    <link rel="stylesheet" type="text/css" href="../../css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../../css/bootstrap-theme.css">
+    <link rel="stylesheet" type="text/css" href="../../css/jquery.dataTables.css">
+    <link rel="stylesheet" type="text/css" href="../../css/app.css">
+</head>
+
+<body>
+<h1>Claims</h1>
+<hr/>
+
+<div style="display: inline-block; width: 98%;">
+
+    <!-- **** Search panel **** -->
+    <div id="searchPanel"
+         style="padding: 5px;
+                display: inline-block;
+                width: 20%;
+                vertical-align: top;
+                background-color: #428bca;
+                min-height: 100%;">
+
+        <!-- Menu icon -->
+        <div class="inline alignRight">
+            <div class="inline glyphicon glyphicon-th-list"
+                 style="cursor: pointer"
+                 data-bind="click: toggleSearchPanel"></div>
+        </div>
+
+        <!-- Panel content -->
+        <div id="searchPanelContent">
+            <div class="inline" style="width: 100%">
+                <div class="inline" style="width: 60%">
+                    <button type="button" class="btn btn-default" style="width: 100%" data-bind="click: onAddNewClaim">
+                        <span class="glyphicon glyphicon-plus"></span>New Claim
+                    </button>
+                </div>
+            </div>
+
+            <div class="panelItem">
+                <div><b>Status</b></div>
+                <div class="inline" style="width: 100%">
+                    <div class="inline">All</div>
+                    <div class="badge alignRight">123</div>
+                </div>
+                <div style="width: 100%" class="inline">
+                    <div class="inline">Active</div>
+                    <div class="badge alignRight">45</div>
+                </div>
+            </div>
+
+            <div class="panelItem">
+                <div>Action required</div>
+                <div>Waiting for others</div>
+                <div>Due soon</div>
+            </div>
+
+            <div class="panelItem">
+                <div><b>Date</b></div>
+                <div>Past 2 weeks</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- **** Grid panel **** -->
+    <div id="gridPanel"
+         style="display: inline-block;
+            vertical-align: top;
+            width: 78%;
+            min-height: 100%;">
+
+        <!-- Menu icon -->
+        <div class="inline alignRight">
+            <div class="inline glyphicon glyphicon-th-list"
+                 style="cursor: pointer"
+                 data-bind="click: toggleGridPanel"></div>
+        </div>
+
+        <div id="gridPanelContent">
+            <!-- Bind DataTable wodget - via Knockout -->
+            <table cellpadding="0" cellspacing="0" border="0" class="display" id="example"
+                   data-bind="dataTable: {options: tableConfig, data: claims}">
+            </table>
+        </div>
+    </div>
+
+</div>
+</body>
+
+<script type="application/javascript">
+    require(['jquery', 'knockout', 'app/viewModels/appVM', 'datatables', 'app/utils/koDatatablesBinding', 'velocity'],
+            function ($, ko, AppVM, dataTables, koDatatables, velocity) {
+                console.log('Init KnockOut');
+                ko.applyBindings(new AppVM());
+            });
+</script>
