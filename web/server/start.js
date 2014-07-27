@@ -1,7 +1,7 @@
 var restify = require('restify');
-var claimsService = require('./claims/claimsService.js');
+var claimsService = require('./services/claimsService.js');
 var contactService = require('./services/contactService.js');
-var uploadService = require('./claims/uploadService.js');
+var uploadService = require('./services/uploadService.js');
 var mongoUtils = require('./mongoUtils.js');
 
 var server;
