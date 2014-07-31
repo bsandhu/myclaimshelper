@@ -9,11 +9,11 @@
     </div>
     <div>
         <div class="fieldLabel">Entry date</div>
-        <div class="inline" data-bind="text: claim.entryDate"></div>
+        <div class="inline" data-bind="text: claim().entryDate"></div>
     </div>
     <div>
         <div class="fieldLabel">Description</div>
-        <div class="inline" data-bind="text: claim.description"/>
+        <div class="inline" data-bind="text: claim().description"/>
     </div>
 
     <!-- Entries -->
@@ -50,15 +50,15 @@
 
     <div>
         <div class="inline narrow">Id</div>
-        <div class="inline" data-bind="text: claim._id"></div>
+        <div class="inline" data-bind="text: claim()._id"></div>
     </div>
     <div>
         <div class="inline narrow">Entry date</div>
-        <div class="inline" type="date" data-bind="text: claim.entryDate"></div>
+        <div class="inline" type="date" data-bind="text: claim().entryDate"></div>
     </div>
     <div>
         <div class="inline narrow">Description</div>
-        <textarea class="inline input-group" style="width: 70%; height: 10%" data-bind="value: claim.description"/>
+        <textarea class="inline input-group" style="width: 70%; height: 10%" data-bind="value: claim().description"/>
     </div>
 
 

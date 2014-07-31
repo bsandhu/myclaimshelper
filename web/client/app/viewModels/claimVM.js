@@ -7,12 +7,18 @@ define(['jquery', 'knockout', 'KOMap', 'dropzone',
             console.log('Init ClaimVM');
 
             // Model
-            this.claim = KOMap.fromJS(new Claim());
+            this.claim = ko.observable(this.newEmptyClaim());
             this.claimEntries = ko.observableArray();
 
             // View state
             this.inEditMode = ko.observable(false);
             this.setupEvListeners();
+        };
+
+        ClaimVM.prototype.newEmptyClaim = function(){
+            var jsClaimObject = new Claim();
+            var claimObjWithObservableAttributes = KOMap.fromJS(jsClaimObject);
+            return claimObjWithObservableAttributes;
         };
 
         ClaimVM.prototype.setupEvListeners = function () {
@@ -22,12 +28,14 @@ define(['jquery', 'knockout', 'KOMap', 'dropzone',
 
         ClaimVM.prototype.onShowClaim = function (evData) {
             console.log('Display claimId: ' + JSON.stringify(evData));
+            this.claim(this.newEmptyClaim());
             this.loadClaim(evData.claimId);
         };
 
         ClaimVM.prototype.onNewClaim = function () {
             console.log('Adding new claim');
-            this.claim.entryDate(new Date());
+            this.claim(this.newEmptyClaim());
+            this.claim().entryDate(new Date());
             this.inEditMode(true);
         };
 
