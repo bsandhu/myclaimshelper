@@ -1,49 +1,99 @@
-var claim = require('./../model/claim.js');
+var Claim = require('./../model/claim.js');
+var ClaimEntry = require('./../model/claimEntry.js');
 var mongoUtils = require('./../mongoUtils.js');
+var assert = require('assert');
 var _ = require('underscore');
 
-function saveClaim(req, res) {
-    var claim = req.body;
-    mongoUtils.run(function (db) {
+function saveOrUpdateClaim(req, res) {
+    saveOrUpdateEntity(req, res, 'Claims');
+};
 
-        var entityCol = db.collection('Claims');
-        if (!claim._id) {
-            claim._id = String(new Date().getTime());
-            entityCol.insert(claim, {w: 1}, function (err, result) {
-                console.log('Saving Claim');
-                sendResponse(res, err, result);
-            });
+function saveOrUpdateClaimEntry(req, res) {
+    saveOrUpdateEntity(req, res, 'ClaimEntries');
+};
+
+function claimsCollection(db) {
+    return db.collection('Claims');
+}
+
+function claimEntriesCollection(db) {
+    return db.collection('ClaimEntries');
+}
+
+function saveOrUpdateEntity(req, res, colName) {
+    mongoUtils.run(function update(db) {
+        var entity = req.body;
+        var entityCol = db.collection(colName);
+
+        if (!entity._id) {
+            entity._id = String(new Date().getTime());
+            entityCol.insert(entity,
+                {w: 1},
+                function onInsert(err, result) {
+                    console.log('Adding to collection ' + colName);
+                    sendResponse(res, err, result);
+                });
         } else {
-            entityCol.update({'_id': claim._id}, claim, {w: 1}, function (err, result) {
-                console.log('Updating Claim');
-                sendResponse(res, err, result);
-            });
+            entityCol.update({'_id': entity._id},
+                entity,
+                {w: 1},
+                function onUpdate(err, result) {
+                    console.log('Updating collection ' + colName);
+                    sendResponse(res, err, result);
+                });
         }
     });
 };
 
 function getClaim(req, res) {
+    assert.ok(req.params.id, 'Expecting ClaimId as a parameter');
     var claimId = req.params.id;
     console.log('Getting claim: ' + claimId);
 
     mongoUtils.run(function (db) {
-        var claims = db.collection('Claims');
-        claims.find({'_id': {'$eq': claimId}}).toArray(function (err, items) {
+        var onResults = function (err, items) {
             var resData = (items.length == 0)
                 ? 'No claim found with id ' + claimId
-                : _.extend(new claim.Claim(), items[0]);
+                : _.extend(new Claim(), items[0]);
             sendResponse(res, err, resData);
-        });
+        };
+        claimsCollection(db).find({'_id': {'$eq': claimId}}).toArray(onResults);
+    });
+}
+
+function getAllEntriesForClaim(req, res) {
+    assert.ok(req.params.id, 'Expecting ClaimId as a parameter');
+    var claimId = req.params.id;
+    console.log('Get all entries for Claim: ' + claimId);
+
+    mongoUtils.run(function (db) {
+        claimEntriesCollection(db).find({'claimId': claimId}).toArray(onResults);
+
+        function onResults(err, items) {
+            var modelObjs = _.map(items, convertToModel);
+            sendResponse(res, err, modelObjs);
+        };
+
+        function convertToModel(item) {
+            return _.extend(new ClaimEntry(), item);
+        };
     });
 }
 
 function getAllClaims(req, res) {
-    console.log('Get all app list');
+    console.log('Get all Claims');
+
     mongoUtils.run(function (db) {
-        var claims = db.collection('Claims');
-        claims.find().toArray(function (err, items) {
-            sendResponse(res, err, items);
-        });
+        claimsCollection(db).find().toArray(onResults);
+
+        function onResults(err, items) {
+            var modelObjs = _.map(items, convertToModel);
+            sendResponse(res, err, modelObjs);
+        };
+
+        function convertToModel(item) {
+            return _.extend(new Claim(), item);
+        };
     });
 }
 
@@ -58,6 +108,8 @@ function sendResponse(res, err, jsonData) {
 }
 
 
-exports.saveClaim = saveClaim;
+exports.saveOrUpdateClaim = saveOrUpdateClaim;
+exports.saveOrUpdateClaimEntry = saveOrUpdateClaimEntry;
 exports.getClaim = getClaim;
 exports.getAllClaims = getAllClaims;
+exports.getAllEntriesForClaim = getAllEntriesForClaim;

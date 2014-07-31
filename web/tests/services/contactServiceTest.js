@@ -1,10 +1,10 @@
 var assert = require('assert');
 var contactService = require('./../../server/services/contactService.js');
-var contact = require('./../../server/model/contact.js');
+var Contact = require('./../../server/model/Contact.js');
 
 describe('Contact Service', function() {
-  var testContact = new contact.Contact();
-  testContact.name = 'Test Contact';
+  var testContact = new Contact();
+  testContact.name = 'Test Contact' + new Date().getTime();
   testContact.job = 'Test Job';
   testContact.company = 'Test Company';
   testContact.email = 'Test Email';
@@ -12,10 +12,10 @@ describe('Contact Service', function() {
   testContact.cell = 'Test Cell';
 
   it('Add Contact', function(done) {
-    var req = {};
-    req.body = testContact;
+    var req = {body : testContact};
     var res = {};
-    res.json = function(err, data) {      
+
+    res.json = function(data) {
       assert(data);
       assert.equal(data.status, 'Success');
       assert.ok(testContact._id);

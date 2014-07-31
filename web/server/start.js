@@ -19,7 +19,7 @@ function init() {
 function setupClaimsServiceRoutes() {
     server.get('/claim', claimsService.getAllClaims);
     server.get('/claim/:id', claimsService.getClaim);
-    server.post('/claim', claimsService.saveClaim);
+    server.post('/claim', claimsService.saveOrUpdateClaim);
     server.post('/upload', uploadService.uploadArtifact);
 };
 
@@ -30,8 +30,8 @@ function setupContactServiceRoutes() {
 
 function setupStaticRoutes() {
     // If the path contains model, look for the whole path in the 'shared' dir
-    server.get(/\/models\/.*/, restify.serveStatic({
-        directory: 'shared'
+    server.get(/\/model\/.*/, restify.serveStatic({
+        directory: 'server'
     }));
     server.get(/\/app\/.*/, restify.serveStatic({
         directory: 'client'

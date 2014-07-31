@@ -7,19 +7,16 @@ if (typeof define !== 'function') {
 
 define([], function () {
 
-    function Claim() {
+    function ClaimEntry() {
+        this.claimId;
+
         this.entryDate;
         this.dueDate;
         this.updateDate;
-        this.entryDate;
+
         this.summary;
         this.description;
-        this.insured;
-        this.claimant;
-        this.location;
-        this.insuranceCompany;
-        this.insuranceCompanyFileNum;
     }
 
-    return Claim;
+    return ClaimEntry;
 });
