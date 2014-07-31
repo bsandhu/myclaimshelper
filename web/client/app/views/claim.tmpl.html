@@ -4,29 +4,37 @@
 <div data-bind="ifnot: inEditMode">
 
     <div>
-        <div class="inline narrow">Id</div>
+        <div class="fieldLabel">Id</div>
         <div class="inline" data-bind="text: claim._id"></div>
     </div>
     <div>
-        <div class="inline narrow">Entry date</div>
+        <div class="fieldLabel">Entry date</div>
         <div class="inline" data-bind="text: claim.entryDate"></div>
     </div>
     <div>
-        <div class="inline narrow">Description</div>
-        <div class="inline" data-bind="value: claim.description"/>
+        <div class="fieldLabel">Description</div>
+        <div class="inline" data-bind="text: claim.description"/>
     </div>
 
-    <hr/>
-    <h2>Entries</h2>
+    <!-- Entries -->
+    <div class="topMargin10 topBorder clear">
+        <div class="clear bottomMargin10"><h3>Entries</h3></div>
+    </div>
 
     <div data-bind="foreach: {data: claimEntries, as: 'entry'} ">
         <div class="inline">
             <div class="inline label">Description</div>
-            <div class="inline" data-bind="text: entry.description"></div>
+            <div class="inline" data-bind="value: entry.description"></div>
         </div>
         <div class="inline">
             <div class="inline label">Due Date</div>
             <div class="inline" data-bind="text: entry.entryDate"></div>
+        </div>
+    </div>
+
+    <div class="topMargin10 topBorder clear">
+        <div>
+            <a href="#home">Add New Entry</a>
         </div>
     </div>
 
@@ -50,7 +58,7 @@
     </div>
     <div>
         <div class="inline narrow">Description</div>
-        <textarea class="inline input-group" style="width: 30%; height: 5%" data-bind="value: claim.description"/>
+        <textarea class="inline input-group" style="width: 70%; height: 10%" data-bind="value: claim.description"/>
     </div>
 
 

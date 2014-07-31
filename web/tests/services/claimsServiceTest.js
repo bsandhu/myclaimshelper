@@ -17,7 +17,7 @@ describe('Claims Service', function () {
         res.json = function (data) {
             assert(data);
             assert.equal(data.status, 'Success');
-            assert.ok(testClaim._id);
+            assert.ok(data.data._id);
             done();
         };
         claimsService.saveOrUpdateClaim(req, res, 'Claims');
@@ -36,7 +36,7 @@ describe('Claims Service', function () {
         res.json = function (data) {
             assert(data);
             assert.equal(data.status, 'Success');
-            assert.ok(testEntry._id);
+            assert.ok(data.data._id);
             done();
         };
         claimsService.saveOrUpdateClaimEntry(req, res, 'Claims');

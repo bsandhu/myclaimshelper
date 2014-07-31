@@ -38,16 +38,15 @@ define(['jquery', 'knockout', 'KOMap', 'dropzone',
 
         ClaimVM.prototype.onSave = function () {
             var _this = this;
-            console.log('Saving Claim');
+            console.log('Saving Claim: ' + KOMap.toJSON(this.claim));
 
             ajaxUtils.post(
                 '/claim',
-                koMap.toJSON(this.claim),
-                function (response) {
+                KOMap.toJSON(this.claim),
+                function onSuccess(response) {
                     console.log('Saved claim: ' + JSON.stringify(response));
-                    _this.showNewClaimEntryForm(false);
-                    _this.claimId = response.data[0]._id;
-                    _this.loadClaim();
+                    _this.claimId = response.data._id;
+                    amplify.publish(Events.SUCCESS_NOTIFICATION, {msg: 'Saved'});
                 });
         };
 
