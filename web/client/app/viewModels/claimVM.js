@@ -1,4 +1,4 @@
-define(['jquery', 'knockout', 'KOMap', 'app/ajaxUtils',
+define(['jquery', 'knockout', 'KOMap', 'app/utils/ajaxUtils',
         'app/model/claim', 'app/model/Task', 'dropzone' ],
     function ($, ko, koMap, ajaxUtils, Claim, Task) {
 

@@ -24,6 +24,7 @@ function initCollection(collectionName) {
 
 function initCollections() {
     initCollection('Claims');
+    initCollection('ClaimEntries');
     initCollection('Contacts');
 }
 

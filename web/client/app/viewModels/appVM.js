@@ -4,6 +4,8 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'app/model/claim'],
         function AppVM() {
             console.log('Init AppVM');
             this.claims = ko.observableArray([]);
+            this.gridNavDelay = 100;
+
             this.load();
 
             this.tableConfig = ko.observable({
@@ -16,9 +18,8 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'app/model/claim'],
                 ],
                 "columnDefs": [
                     {
-                        // The `data` parameter refers to the data for the cell (defined by the
-                        // `data` option, which defaults to the column being worked with, in
-                        // this case `data: 0`.
+                        // The `data` parameter refers to the data for the cell
+                        // Publish an Amplify Ev on click
                         "render": function (data, type, row) {
                             var evName = 'SHOW_CLAIM';
                             return "<a href='#' " +
@@ -38,11 +39,11 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'app/model/claim'],
             var panelContentRef = $('#searchPanelContent');
 
             if (panelRef.width() <= 30) {
-                panelRef.velocity({ width: '20%' }, 250);
-                panelContentRef.velocity("fadeIn", { duration: 250 });
+                panelRef.velocity({ width: '20%' }, this.gridNavDelay);
+                panelContentRef.velocity("fadeIn", { duration: this.gridNavDelay });
             } else {
-                panelRef.velocity({ width: '30px' }, {duration: 250}, 'ease-in-out');
-                panelContentRef.velocity("fadeOut", { duration: 250 });
+                panelRef.velocity({ width: '30px' }, {duration: this.gridNavDelay}, 'ease-in-out');
+                panelContentRef.velocity("fadeOut", { duration: this.gridNavDelay });
 
             }
         };
@@ -52,13 +53,13 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'app/model/claim'],
             var panelContentRef = $("#gridPanelContent");
 
             if (panelRef.width() <= 30) {
-                panelRef.velocity({ width: '78%' }, 200);
+                panelRef.velocity({ width: '78%' }, this.gridNavDelay);
                 panelRef.toggleClass('gridPanelClosed');
-                panelContentRef.velocity("fadeIn", { duration: 200 });
+                panelContentRef.velocity("fadeIn", { duration: this.gridNavDelay });
             } else {
-                panelRef.velocity({ width: '30px' }, {duration: 200}, 'ease-in-out');
+                panelRef.velocity({ width: '30px' }, {duration: this.gridNavDelay}, 'ease-in-out');
                 panelRef.toggleClass('gridPanelClosed');
-                panelContentRef.velocity("fadeOut", { duration: 200 });
+                panelContentRef.velocity("fadeOut", { duration: this.gridNavDelay });
             }
         };
 

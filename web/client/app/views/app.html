@@ -1,10 +1,10 @@
 <head>
     <script src="../../../lib/require.js"></script>
     <script src="../../../lib/requireConfig.js"></script>
-    <link rel="stylesheet" type="text/css" href="../css/bootstrap.css">
-    <link rel="stylesheet" type="text/css" href="../css/bootstrap-theme.css">
-    <link rel="stylesheet" type="text/css" href="../css/jquery.dataTables.css">
-    <link rel="stylesheet" type="text/css" href="../css/app.css">
+    <link rel="stylesheet" type="text/css" href="../../css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../../css/bootstrap-theme.css">
+    <link rel="stylesheet" type="text/css" href="../../css/jquery.dataTables.css">
+    <link rel="stylesheet" type="text/css" href="../../css/app.css">
 </head>
 
 <body>
@@ -90,7 +90,7 @@
 </body>
 
 <script type="application/javascript">
-    require(['jquery', 'knockout', 'app/appVM', 'datatables', 'app/utils/koDatatablesBinding', 'velocity'],
+    require(['jquery', 'knockout', 'app/viewModels/appVM', 'datatables', 'app/utils/koDatatablesBinding', 'velocity'],
             function ($, ko, AppVM, dataTables, koDatatables, velocity) {
                 console.log('Init KnockOut');
                 ko.applyBindings(new AppVM());

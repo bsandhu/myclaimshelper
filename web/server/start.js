@@ -1,7 +1,7 @@
 var restify = require('restify');
-var claimsService = require('./claims/claimsService.js');
+var claimsService = require('./services/claimsService.js');
 var contactService = require('./services/contactService.js');
-var uploadService = require('./claims/uploadService.js');
+var uploadService = require('./services/uploadService.js');
 var mongoUtils = require('./mongoUtils.js');
 
 var server;
@@ -19,7 +19,7 @@ function init() {
 function setupClaimsServiceRoutes() {
     server.get('/claim', claimsService.getAllClaims);
     server.get('/claim/:id', claimsService.getClaim);
-    server.post('/claim', claimsService.saveClaim);
+    server.post('/claim', claimsService.saveOrUpdateClaim);
     server.post('/upload', uploadService.uploadArtifact);
 };
 
@@ -30,8 +30,8 @@ function setupContactServiceRoutes() {
 
 function setupStaticRoutes() {
     // If the path contains model, look for the whole path in the 'shared' dir
-    server.get(/\/models\/.*/, restify.serveStatic({
-        directory: 'shared'
+    server.get(/\/model\/.*/, restify.serveStatic({
+        directory: 'server'
     }));
     server.get(/\/app\/.*/, restify.serveStatic({
         directory: 'client'
