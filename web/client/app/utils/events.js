@@ -2,7 +2,9 @@ define([], function(){
 
     return {
         // Event names
-        SHOW_CLAIM       : 'ShowClaim',
-        NEW_CLAIM        : 'AddClaim'
+        CLAIMS_GRID_SELCTION : 'GridSelection',
+        SHOW_CLAIMS_GRID     : 'ShowClaimsGrid',
+        SHOW_CLAIM           : 'ShowClaim',
+        NEW_CLAIM            : 'AddClaim'
     }
 });

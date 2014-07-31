@@ -1,14 +1,14 @@
 define(['jquery', 'knockout', 'KOMap', 'dropzone',
         'model/claim', 'model/ClaimEntry',
-        'app/utils/ajaxUtils', 'app/utils/events' ],
-    function ($, ko, KOMap, dropzone, Claim, ClaimEntry, ajaxUtils, Events) {
+        'app/utils/ajaxUtils', 'app/utils/events', 'app/utils/router' ],
+    function ($, ko, KOMap, dropzone, Claim, ClaimEntry, ajaxUtils, Events, Router) {
 
         function ClaimVM() {
             console.log('Init ClaimVM');
 
             // Model
             this.claim = KOMap.fromJS(new Claim());
-            this.claimEntries = new ClaimEntry();
+            this.claimEntries = ko.observableArray();
 
             // View state
             this.inEditMode = ko.observable(false);
@@ -21,9 +21,8 @@ define(['jquery', 'knockout', 'KOMap', 'dropzone',
         };
 
         ClaimVM.prototype.onShowClaim = function (evData) {
-            console.log('Display claimId: ' + evData);
-            koUtils.clear(this.claim());
-            this.claimEntries([]);
+            console.log('Display claimId: ' + JSON.stringify(evData));
+            this.loadClaim(evData.claimId);
         };
 
         ClaimVM.prototype.onNewClaim = function () {
@@ -34,7 +33,7 @@ define(['jquery', 'knockout', 'KOMap', 'dropzone',
 
         ClaimVM.prototype.onCancel = function () {
             this.inEditMode(false);
-            this.showNewClaimEntryForm(false);
+            Router.routeToHome();
         };
 
         ClaimVM.prototype.onSave = function () {
@@ -52,12 +51,12 @@ define(['jquery', 'knockout', 'KOMap', 'dropzone',
                 });
         };
 
-        ClaimVM.prototype.loadClaim = function () {
+        ClaimVM.prototype.loadClaim = function (claimId) {
             var _this = this;
-            $.get('/claim/' + _this.claimId)
+            $.get('/claim/' + claimId)
                 .done(function (resp) {
                     console.log('Loaded claim ' + JSON.stringify(resp.data));
-                    koMap.fromJS(resp.data, {}, _this.claim);
+                    KOMap.fromJS(resp.data, {}, _this.claim);
                 })
         };
 

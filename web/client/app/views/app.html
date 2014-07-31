@@ -8,7 +8,7 @@
 </head>
 
 <body>
-<h1>Claims</h1>
+<a href="#/home"><h1>Claims</h1></a>
 <hr/>
 
 <div style="display: inline-block; width: 98%;">
@@ -105,8 +105,8 @@
      * Load libs and init Knockout - on app startup. See requireConfig.js
      */
     require(['jquery', 'knockout', 'KOAmd', 'text', 'datatables', 'app/utils/koDatatablesBinding', 'velocity',
-                'app/viewModels/appVM'],
-            function ($, ko, KOAmd, text, dataTables, koDatatables, velocity, AppVM) {
+                'app/utils/router', 'app/viewModels/appVM'],
+            function ($, ko, KOAmd, text, dataTables, koDatatables, velocity, Router, AppVM) {
                 console.log('Init KnockOut');
 
                 // Knockout AMD supoprt setup
@@ -117,7 +117,6 @@
                 // Knockout bindings init
                 ko.applyBindings(new AppVM());
 
-                // Router - PathJS
-                Path.listen();
+                Router.start();
             });
 </script>
