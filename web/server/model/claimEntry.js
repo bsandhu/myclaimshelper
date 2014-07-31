@@ -8,14 +8,14 @@ if (typeof define !== 'function') {
 define([], function () {
 
     function ClaimEntry() {
-        this.claimId;
+        this.claimId = undefined;
 
-        this.entryDate;
-        this.dueDate;
-        this.updateDate;
+        this.entryDate = undefined;
+        this.dueDate = undefined;
+        this.updateDate = undefined;
 
-        this.summary;
-        this.description;
+        this.summary = undefined;
+        this.description = undefined;
     }
 
     return ClaimEntry;
