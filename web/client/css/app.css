@@ -46,6 +46,16 @@
 }
 
 /**** Borders ****/
+
+.fieldLabel {
+    display: inline-block;
+    width: 100px;
+    text-align: right;
+    padding-right: 2px;
+    background-color: #F7F7F9;
+    font-weight: 500;
+}
+
 .topBorder {
     border-top: dotted;
     border-top-width: 1px;

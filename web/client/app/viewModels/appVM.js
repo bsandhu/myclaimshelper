@@ -60,8 +60,6 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'app/utils/even
         };
 
         AppVM.prototype.onAddNewClaim = function () {
-            this.isClaimPanelVisible(true);
-            this.collapseGridPanel();
             Router.routeToNewClaim();
         }
 
@@ -90,7 +88,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'app/utils/even
             var panelContentRef = $("#gridPanelContent");
 
             if (panelRef.width() <= 30) {
-                this.expandGridPanel();
+                Router.routeToHome();
             } else {
                 this.collapseGridPanel();
             }

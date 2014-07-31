@@ -14,6 +14,9 @@
 <div style="display: inline-block; width: 98%;">
 
     <!-- **** Search panel **** -->
+    <div data-bind="module: {name: 'app/viewModels/notifierVM', template: 'app/views/notifier'}"></div>
+
+    <!-- **** Search panel **** -->
     <div id="searchPanel"
          style="padding: 5px;
                 display: inline-block;
@@ -89,7 +92,7 @@
     </div>
 
     <!-- **** Claim module **** -->
-    <div class="inline">
+    <div class="inline" style="width: 75%">
         <div data-bind="module: {name: 'app/viewModels/claimVM', template: 'app/views/claim'}"></div>
     </div>
 
@@ -107,7 +110,9 @@
     require(['jquery', 'knockout', 'KOAmd', 'text', 'datatables', 'app/utils/koDatatablesBinding', 'velocity',
                 'app/utils/router', 'app/viewModels/appVM'],
             function ($, ko, KOAmd, text, dataTables, koDatatables, velocity, Router, AppVM) {
-                console.log('Init KnockOut');
+                console.log('Init App');
+
+                Router.start();
 
                 // Knockout AMD supoprt setup
                 ko.amdTemplateEngine.defaultRequireTextPluginName = "text";
@@ -116,7 +121,5 @@
 
                 // Knockout bindings init
                 ko.applyBindings(new AppVM());
-
-                Router.start();
             });
 </script>

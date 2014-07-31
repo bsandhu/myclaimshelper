@@ -29,17 +29,18 @@ function saveOrUpdateEntity(req, res, colName) {
             entity._id = String(new Date().getTime());
             entityCol.insert(entity,
                 {w: 1},
-                function onInsert(err, result) {
+                function onInsert(err, results) {
                     console.log('Adding to collection ' + colName);
-                    sendResponse(res, err, result);
+                    sendResponse(res, err, results[0]);
                 });
         } else {
             entityCol.update({'_id': entity._id},
                 entity,
                 {w: 1},
                 function onUpdate(err, result) {
-                    console.log('Updating collection ' + colName);
-                    sendResponse(res, err, result);
+                    console.log('Updated collection ' + colName);
+                    assert.equal(1, result);
+                    sendResponse(res, err, entity);
                 });
         }
     });

@@ -8,6 +8,8 @@ if (typeof define !== 'function') {
 define([], function () {
 
     function Claim() {
+        this._id = undefined;
+
         this.entryDate = undefined;
         this.dueDate = undefined;
         this.updateDate = undefined;
