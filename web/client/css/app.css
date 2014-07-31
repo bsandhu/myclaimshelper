@@ -26,8 +26,30 @@
     width: 200px;
 }
 
-.clear {
+.topMargin5 {
+    margin-top: 5px;
+}
 
+.topMargin10 {
+    margin-top: 10px;
+}
+
+.bottomMargin10 {
+    margin-bottom: 10px;
+}
+.leftMargin2 {
+    margin-left: 2px;
+}
+
+.clear {
+    clear: both;
+}
+
+/**** Borders ****/
+.topBorder {
+    border-top: dotted;
+    border-top-width: 1px;
+    border-top-color: #2d6ca2;
 }
 
 /**** Menus ****/

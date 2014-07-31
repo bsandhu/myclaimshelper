@@ -1,15 +1,20 @@
-define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim'],
-    function ($, ko, koMap, amplify, Claim) {
+define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'app/utils/events'],
+    function ($, ko, KOMap, amplify, Claim, Events) {
 
         function AppVM() {
             console.log('Init AppVM');
             this.gridNavDelay = 100;
 
+            // Model
             this.claims = ko.observableArray([]);
-            this.claim = KOMap.fromJS(new Claim());
 
-            this.load();
+            // View state
+            this.isClaimPanelVisible = ko.observable(false);
+            this.setupClaimsGrid();
+            this.loadClaims();
+        }
 
+        AppVM.prototype.setupClaimsGrid = function () {
             this.tableConfig = ko.observable({
                 "paging": true,
                 "ordering": true,
@@ -25,15 +30,13 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim'],
                         "render": function (data, type, row) {
                             var evName = 'SHOW_CLAIM';
                             return "<a href='#' " +
-                                      "onClick='amplify.publish(\"SHOW_CLAIM\"," + data + ")'>" + data + "</a>";
+                                "onClick='amplify.publish(\"SHOW_CLAIM\"," + data + ")'>" + data + "</a>";
                         },
                         "targets": 0
                     }
                 ]
             });
-
-            this.setupEvListeners();
-        }
+        };
 
         AppVM.prototype.toggleSearchPanel = function () {
             console.log('Search panel toggle');
@@ -66,37 +69,13 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim'],
         };
 
         AppVM.prototype.onAddNewClaim = function () {
-            console.log('Adding new claim');
-        }
-
-        AppVM.prototype.setupEvListeners = function () {
-            amplify.subscribe('SHOW_CLAIM', function(data){
-                console.log('Display claimId: ' + data);
-                this.toggleGridPanel();
-            }.bind(this));
-            //window.location.href = '/app/claims/claim.html?_id=new';
+            this.toggleGridPanel();
+            this.isClaimPanelVisible(true);
+            amplify.publish(Events.NEW_CLAIM);
         }
 
 
-        AppVM.prototype.loadClaim = function (claimId) {
-            var _this = this;
-            $.get('/claim/' + claimId)
-                .done(function (resp) {
-                    var data = resp.data;
-                    console.log('Loaded Claim ' + JSON.stringify(data).substring(1, 25) + '...');
-
-                    var tempArray = [];
-                    $.each(data, function (index, claim) {
-                        tempArray.push([claim._id, claim.description]);
-                    });
-                    _this.claims(tempArray);
-                })
-                .fail(function () {
-                    console.log('Fail');
-                })
-        };
-
-        AppVM.prototype.load = function () {
+        AppVM.prototype.loadClaims = function () {
             var _this = this;
             $.get('/claim')
                 .done(function (resp) {

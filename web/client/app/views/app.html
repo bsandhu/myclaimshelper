@@ -34,7 +34,8 @@
             <div class="inline" style="width: 100%">
                 <div class="inline" style="width: 60%">
                     <button type="button" class="btn btn-default" style="width: 100%" data-bind="click: onAddNewClaim">
-                        <span class="glyphicon glyphicon-plus"></span>New Claim
+                        <span class="glyphicon glyphicon-plus"></span>
+                        <span class="leftMargin2">New Claim</span>
                     </button>
                 </div>
             </div>
@@ -64,7 +65,7 @@
         </div>
     </div>
 
-    <!-- **** Grid panel **** -->
+    <!-- **** Claims list **** -->
     <div id="gridPanel"
          style="display: inline-block;
             vertical-align: top;
@@ -79,6 +80,7 @@
         </div>
 
         <div id="gridPanelContent">
+
             <!-- Bind DataTable wodget - via Knockout -->
             <table cellpadding="0" cellspacing="0" border="0" class="display" id="example"
                    data-bind="dataTable: {options: tableConfig, data: claims}">
@@ -86,8 +88,13 @@
         </div>
     </div>
 
-    <!-- **** claim panel **** -->
-    <div data-bind="module: {name: 'app/viewModels/claimVM', template: 'app/views/claim.tmpl.html'}"></div>
+    <!-- **** Claim module **** -->
+    <div class="inline">
+        <div data-bind="module: {name: 'app/viewModels/claimVM', template: 'app/views/claim'}"></div>
+    </div>
+
+    <!-- **** Claim Entry module **** -->
+    <!--<div data-bind="module: {name: 'app/viewModels/claimEntryVM', template: 'app/views/claimEntry'}"></div>-->
 
 </div>
 </body>
@@ -98,12 +105,19 @@
      * Load libs and init Knockout - on app startup. See requireConfig.js
      */
     require(['jquery', 'knockout', 'KOAmd', 'text', 'datatables', 'app/utils/koDatatablesBinding', 'velocity',
-             'app/viewModels/appVM'],
+                'app/viewModels/appVM'],
             function ($, ko, KOAmd, text, dataTables, koDatatables, velocity, AppVM) {
                 console.log('Init KnockOut');
 
+                // Knockout AMD supoprt setup
                 ko.amdTemplateEngine.defaultRequireTextPluginName = "text";
+                ko.amdTemplateEngine.defaultPath = "/";
+                ko.amdTemplateEngine.defaultSuffix = ".tmpl.html";
 
+                // Knockout bindings init
                 ko.applyBindings(new AppVM());
+
+                // Router - PathJS
+                Path.listen();
             });
 </script>

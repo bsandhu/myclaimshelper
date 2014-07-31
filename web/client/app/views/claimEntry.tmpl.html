@@ -1,37 +1,19 @@
-<div data-bind="if: showNewTaskForm">
-    <hr/>
-    <div class="inline">
-        <div class="inline label narrow">Entered on</div>
-        <div class="inline narrow">
-            <input type="text" data-bind="datepicker: {}, value: newTask.entryDate"/></div>
-    </div>
-    <div class="inline">
-        <div class="inline label narrow">Due on</div>
-        <div class="inline narrow">
-            <input type="text" data-bind="datepicker: {}, value: newTask.dueDate"/></div>
-    </div>
-    <div>
-        <div class="inline label narrow">Note</div>
-        <div class="inline narrow">
-            <textarea style="width: 400px; height: 60px"
-                      data-bind="value: newTask.description" placeholder="Note"></textarea>
-        </div>
-    </div>
-
-
-    <input type="button" data-bind="button: {label: 'Save'}, click: onSave"/>
-    <input type="button" data-bind="button: {label: 'Cancel'}, click: onCancel"/>
+<!--
+<div class="inline">
+    <div class="inline label narrow">Entered on</div>
+    <div class="inline narrow">
+        <input type="text" data-bind="datepicker: {}, value: newTask.entryDate"/></div>
 </div>
-
-<!-- File upload with DropZone -->
-<form action="/upload"
-      class="dropzone"
-      id="my-awesome-dropzone">
-</form>
-
-<!-- Vanilla file upload
-<form action="/upload" method="post" enctype="multipart/form-data">
-    <input type="file" name="upload" multiple="multiple"><br>
-    <input type="submit" value="Upload">
-</form>
+<div class="inline">
+    <div class="inline label narrow">Due on</div>
+    <div class="inline narrow">
+        <input type="text" data-bind="datepicker: {}, value: newTask.dueDate"/></div>
+</div>
+<div>
+    <div class="inline label narrow">Note</div>
+    <div class="inline narrow">
+        <textarea style="width: 400px; height: 60px"
+                  data-bind="value: newTask.description" placeholder="Note"></textarea>
+    </div>
+</div>
 -->

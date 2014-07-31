@@ -1,38 +1,45 @@
 define(['jquery', 'knockout', 'KOMap', 'dropzone',
-        'app/model/claim', 'app/model/ClaimEntry',
-        'app/utils/ajaxUtils', 'app/utils/constants' ],
-    function ($, ko, koMap, dropzone, Claim, ClaimEntry, ajaxUtils, constants) {
+        'model/claim', 'model/ClaimEntry',
+        'app/utils/ajaxUtils', 'app/utils/events' ],
+    function ($, ko, KOMap, dropzone, Claim, ClaimEntry, ajaxUtils, Events) {
 
         function ClaimVM() {
             console.log('Init ClaimVM');
 
-            this.claim = new Claim();
+            // Model
+            this.claim = KOMap.fromJS(new Claim());
             this.claimEntries = new ClaimEntry();
+
+            // View state
+            this.inEditMode = ko.observable(false);
+            this.setupEvListeners();
         };
 
         ClaimVM.prototype.setupEvListeners = function () {
-            amplify.subscribe(constants.SHOW_CLAIM, function(data){
-
-            });
-            amplify.subscribe(constants.NEW_CLAIM, function(){
-                this.addNewClaimEntry();
-            }.bind(this));
+            amplify.subscribe(Events.SHOW_CLAIM, this, this.onShowClaim);
+            amplify.subscribe(Events.NEW_CLAIM, this, this.onNewClaim);
         };
 
-        ClaimVM.prototype.addNewClaim = function () {
+        ClaimVM.prototype.onShowClaim = function (evData) {
+            console.log('Display claimId: ' + evData);
+            koUtils.clear(this.claim());
+            this.claimEntries([]);
+        };
+
+        ClaimVM.prototype.onNewClaim = function () {
+            console.log('Adding new claim');
             this.claim.entryDate(new Date());
-            this.showNewClaimForm(true);
+            this.inEditMode(true);
         };
 
         ClaimVM.prototype.onCancel = function () {
-            this.newClaimEntry.clear();
+            this.inEditMode(false);
             this.showNewClaimEntryForm(false);
         };
 
         ClaimVM.prototype.onSave = function () {
             var _this = this;
             console.log('Saving Claim');
-            this.claim.tasks.push(this.newClaimEntry);
 
             ajaxUtils.post(
                 '/claim',

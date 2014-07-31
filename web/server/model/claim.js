@@ -8,17 +8,17 @@ if (typeof define !== 'function') {
 define([], function () {
 
     function Claim() {
-        this.entryDate;
-        this.dueDate;
-        this.updateDate;
-        this.entryDate;
-        this.summary;
-        this.description;
-        this.insured;
-        this.claimant;
-        this.location;
-        this.insuranceCompany;
-        this.insuranceCompanyFileNum;
+        this.entryDate = undefined;
+        this.dueDate = undefined;
+        this.updateDate = undefined;
+
+        this.summary = undefined;
+        this.description = undefined;
+        this.insured = undefined;
+        this.claimant = undefined;
+        this.location = undefined;
+        this.insuranceCompany = undefined;
+        this.insuranceCompanyFileNum = undefined;
     }
 
     return Claim;
