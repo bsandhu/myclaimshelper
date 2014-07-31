@@ -86,13 +86,24 @@
         </div>
     </div>
 
+    <!-- **** claim panel **** -->
+    <div data-bind="module: {name: 'app/viewModels/claimVM', template: 'app/views/claim.tmpl.html'}"></div>
+
 </div>
 </body>
 
 <script type="application/javascript">
-    require(['jquery', 'knockout', 'app/viewModels/appVM', 'datatables', 'app/utils/koDatatablesBinding', 'velocity'],
-            function ($, ko, AppVM, dataTables, koDatatables, velocity) {
+
+    /**
+     * Load libs and init Knockout - on app startup. See requireConfig.js
+     */
+    require(['jquery', 'knockout', 'KOAmd', 'text', 'datatables', 'app/utils/koDatatablesBinding', 'velocity',
+             'app/viewModels/appVM'],
+            function ($, ko, KOAmd, text, dataTables, koDatatables, velocity, AppVM) {
                 console.log('Init KnockOut');
+
+                ko.amdTemplateEngine.defaultRequireTextPluginName = "text";
+
                 ko.applyBindings(new AppVM());
             });
 </script>

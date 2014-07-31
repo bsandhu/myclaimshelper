@@ -1,0 +1,29 @@
+<div>
+    <div class="inline narrow">Id</div>
+    <div class="inline" data-bind="text: claim._id"></div>
+</div>
+<div>
+    <div class="inline narrow">Entry date</div>
+    <div class="inline" data-bind="text: claim.entryDate"></div>
+</div>
+<div>
+    <div class="inline narrow">Description</div>
+    <input type="text" class="inline" data-bind="value: claim.description"></div>
+</div>
+
+<hr/>
+<h2>Tasks</h2>
+
+<div data-bind="foreach: {data: claim.tasks, as: 'task'} ">
+    <div class="inline">
+        <div class="inline label">Description</div>
+        <div class="inline" data-bind="text: task.description"></div>
+    </div>
+    <div class="inline">
+        <div class="inline label">Due Date</div>
+        <div class="inline" data-bind="text: task.entryDate"></div>
+    </div>
+</div>
+
+<div style="height: 15px"></div>
+<input type="button" data-bind="button: {label: 'Add new'}, click: addNewTask"/>

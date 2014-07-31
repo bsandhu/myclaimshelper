@@ -1,48 +1,45 @@
-define(['jquery', 'knockout', 'KOMap', 'app/utils/ajaxUtils',
-        'app/model/claim', 'app/model/Task', 'dropzone' ],
-    function ($, ko, koMap, ajaxUtils, Claim, Task) {
+define(['jquery', 'knockout', 'KOMap', 'dropzone',
+        'app/model/claim', 'app/model/ClaimEntry',
+        'app/utils/ajaxUtils', 'app/utils/constants' ],
+    function ($, ko, koMap, dropzone, Claim, ClaimEntry, ajaxUtils, constants) {
 
-        function ClaimVM(claimId) {
-            if (!claimId) {
-                throw 'Expecting Claim Id';
-            }
-            console.log('Init ClaimDetailsVM. ClaimId: ' + claimId);
-            var isNew = claimId === 'new';
-
-            this.claimId = claimId;
-            this.showNewTaskForm = ko.observable(false);
+        function ClaimVM() {
+            console.log('Init ClaimVM');
 
             this.claim = new Claim();
-            this.newTask = new Task();
-
-            if (!isNew) {
-                this.loadClaim();
-            } else {
-                this.claim.entryDate(new Date());
-            }
+            this.claimEntries = new ClaimEntry();
         };
 
-        ClaimVM.prototype.addNewTask = function () {
-            this.newTask.entryDate(new Date());
-            this.showNewTaskForm(true);
+        ClaimVM.prototype.setupEvListeners = function () {
+            amplify.subscribe(constants.SHOW_CLAIM, function(data){
+
+            });
+            amplify.subscribe(constants.NEW_CLAIM, function(){
+                this.addNewClaimEntry();
+            }.bind(this));
+        };
+
+        ClaimVM.prototype.addNewClaim = function () {
+            this.claim.entryDate(new Date());
+            this.showNewClaimForm(true);
         };
 
         ClaimVM.prototype.onCancel = function () {
-            this.newTask.clear();
-            this.showNewTaskForm(false);
+            this.newClaimEntry.clear();
+            this.showNewClaimEntryForm(false);
         };
 
         ClaimVM.prototype.onSave = function () {
             var _this = this;
             console.log('Saving Claim');
-            this.claim.tasks.push(this.newTask);
+            this.claim.tasks.push(this.newClaimEntry);
 
             ajaxUtils.post(
                 '/claim',
                 koMap.toJSON(this.claim),
                 function (response) {
                     console.log('Saved claim: ' + JSON.stringify(response));
-                    _this.showNewTaskForm(false);
+                    _this.showNewClaimEntryForm(false);
                     _this.claimId = response.data[0]._id;
                     _this.loadClaim();
                 });

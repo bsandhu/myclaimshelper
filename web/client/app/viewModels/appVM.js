@@ -1,10 +1,12 @@
-define(['jquery', 'knockout', 'KOMap', 'amplify', 'app/model/claim'],
+define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim'],
     function ($, ko, koMap, amplify, Claim) {
 
         function AppVM() {
             console.log('Init AppVM');
-            this.claims = ko.observableArray([]);
             this.gridNavDelay = 100;
+
+            this.claims = ko.observableArray([]);
+            this.claim = KOMap.fromJS(new Claim());
 
             this.load();
 
@@ -76,12 +78,31 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'app/model/claim'],
         }
 
 
+        AppVM.prototype.loadClaim = function (claimId) {
+            var _this = this;
+            $.get('/claim/' + claimId)
+                .done(function (resp) {
+                    var data = resp.data;
+                    console.log('Loaded Claim ' + JSON.stringify(data).substring(1, 25) + '...');
+
+                    var tempArray = [];
+                    $.each(data, function (index, claim) {
+                        tempArray.push([claim._id, claim.description]);
+                    });
+                    _this.claims(tempArray);
+                })
+                .fail(function () {
+                    console.log('Fail');
+                })
+        };
+
         AppVM.prototype.load = function () {
             var _this = this;
             $.get('/claim')
                 .done(function (resp) {
                     var data = resp.data;
-                    console.log('Loaded Claim ' + JSON.stringify(data));
+                    console.log('Loaded Claims ' + JSON.stringify(data).substring(1, 25) + '...');
+
                     var tempArray = [];
                     $.each(data, function (index, claim) {
                         tempArray.push([claim._id, claim.description]);

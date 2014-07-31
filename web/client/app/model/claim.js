@@ -19,5 +19,13 @@ define(['knockout'],
             this.tasks = ko.observableArray([]);
         };
 
+        Claim.prototype.clear = function(){
+          for(var attr in this){
+              if (ko.isObservable(attr)){
+                  attr(null);
+              }
+          }
+        }
+        ;
         return Claim;
     });
