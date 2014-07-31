@@ -1,26 +1,47 @@
+/**** Alignment ****/
+
 .inline {
     display: inline-block;
 }
 
+.alignLeft {
+    float: left;
+}
+
+.alignRight {
+    float: right;
+}
+
+/**** Dimensions ****/
+
 .narrow {
     width: 100px;
 }
+
 .normal {
     width: 150px;
 }
+
 .wide {
     width: 200px;
 }
+
 .clear {
 
 }
 
-.label {
-    color: #0b97c4;
-    margin-right: 2px;
-    text-align: right;
+/**** Menus ****/
+
+.panelItem {
+    font-size: 14px;
+    line-height: 20px;
+    padding: 15px 15px 15px 15px;
+    border-bottom-color: #EAEAEA;
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
+    color: #EAEAEA;
 }
-body {
-    background-image: url("/images/subtle_dots.png");
-    background-repeat: repeat;
+
+.gridPanelClosed {
+    background-color: #F5F5F8;
 }

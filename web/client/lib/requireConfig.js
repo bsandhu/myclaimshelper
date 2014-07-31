@@ -2,25 +2,30 @@ require.config({
     baseUrl: '/',
     paths: {
         'jquery'    : 'lib/jquery.min',
-        'jquery-ui' : 'lib/jquery-ui.min',
         'knockout'  : 'lib/knockout',
         'KOMap'     : 'lib/knockout.mapping.min',
         'dropzone'  : 'lib/dropzone.amd',
-        'knockout-jqueryui': 'lib/knockout.jqueryui.min'
+        'datatables': 'lib/jquery.dataTables',
+        'velocity'  : 'lib/jquery.velocity.min',
+        'amplify'   : 'lib/amplify'
     },
     shim: {
-        'jquery-ui': {
+        'velocity': {
             deps: ['jquery']
         },
         'knockout': {
             deps: ['jquery']
         },
-        'knockout-jqueryui': {
-            deps: ['knockout', 'jquery']
+        'dataTables': {
+            deps: ['jquery']
         },
         'KOMap': {
             deps: ['knockout'],
             exports: 'KOMap'
+        },
+        'amplify': {
+            deps: ["jquery"],
+            exports: "amplify"
         }
     }
 });
