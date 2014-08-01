@@ -1,6 +1,6 @@
 var assert = require('assert');
 var fs = require('fs');
-var mh = require('../handlers/mailHandler.js');
+var mh = require('../../server/handlers/mailHandler.js');
 
 describe('parseMailRequest', function(){
     it('gets key mail attributes', function(done){

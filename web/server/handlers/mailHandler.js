@@ -1,5 +1,4 @@
-var models = require('007-claimman/models/models.js');
-var dbtools = require('007-claimman/tools/dbtools.js');
+var dbtools = require('../mongoUtils.js');
 var config = require('../config.js');
 
 /*
