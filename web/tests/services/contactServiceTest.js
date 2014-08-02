@@ -1,6 +1,6 @@
 var assert = require('assert');
 var contactService = require('./../../server/services/contactService.js');
-var Contact = require('./../../server/model/Contact.js');
+var Contact = require('./../../server/model/contact.js');
 
 describe('Contact Service', function() {
   var testContact = new Contact();
