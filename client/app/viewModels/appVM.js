@@ -57,6 +57,12 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'app/utils/even
                 this.isClaimPanelVisible(true);
                 this.collapseGridPanel();
             });
+            amplify.subscribe(Events.NEW_CLAIM_ENTRY, this, function (data) {
+                console.log('AppVM - NEW_CLAIM_ENTRY ev');
+                this.isClaimEntryPanelVisible(true);
+                this.collapseGridPanel();
+                this.collapseClaimPanel();
+            });
         };
 
         AppVM.prototype.onAddNewClaim = function () {
