@@ -1,29 +1,99 @@
-<div>
-    <div class="inline narrow">Id</div>
-    <div class="inline" data-bind="text: claim._id"></div>
-</div>
-<div>
-    <div class="inline narrow">Entry date</div>
-    <div class="inline" data-bind="text: claim.entryDate"></div>
-</div>
-<div>
-    <div class="inline narrow">Description</div>
-    <input type="text" class="inline" data-bind="value: claim.description"></div>
-</div>
+<!-- ************************************************ -->
+<!--Display existing claim -->
+<!-- ************************************************ -->
+<div data-bind="ifnot: inEditMode">
 
-<hr/>
-<h2>Tasks</h2>
-
-<div data-bind="foreach: {data: claim.tasks, as: 'task'} ">
-    <div class="inline">
-        <div class="inline label">Description</div>
-        <div class="inline" data-bind="text: task.description"></div>
+    <div>
+        <div class="fieldLabel">Id</div>
+        <div class="inline" data-bind="text: claim._id"></div>
     </div>
-    <div class="inline">
-        <div class="inline label">Due Date</div>
-        <div class="inline" data-bind="text: task.entryDate"></div>
+    <div>
+        <div class="fieldLabel">Entry date</div>
+        <div class="inline" data-bind="text: claim().entryDate"></div>
     </div>
+    <div>
+        <div class="fieldLabel">Description</div>
+        <div class="inline" data-bind="text: claim().description"/>
+    </div>
+
+    <!-- Entries -->
+    <div class="topMargin10 topBorder clear">
+        <div class="clear bottomMargin10"><h3>Entries</h3></div>
+    </div>
+
+    <div data-bind="foreach: {data: claimEntries, as: 'entry'} ">
+        <div class="inline">
+            <div class="inline label">Description</div>
+            <div class="inline" data-bind="value: entry.description"></div>
+        </div>
+        <div class="inline">
+            <div class="inline label">Due Date</div>
+            <div class="inline" data-bind="text: entry.entryDate"></div>
+        </div>
+    </div>
+
+    <div class="topMargin10 topBorder clear">
+        <div>
+            <a href="#home">Add New Entry</a>
+        </div>
+    </div>
+
+    <div style="height: 15px"></div>
 </div>
 
-<div style="height: 15px"></div>
-<input type="button" data-bind="button: {label: 'Add new'}, click: addNewTask"/>
+<!-- ************************************************ -->
+<!--New/Edit claim form-->
+<!-- ************************************************ -->
+
+<div data-bind="if: inEditMode">
+    <h2>Add new Claim</h2>
+
+    <div>
+        <div class="inline narrow">Id</div>
+        <div class="inline" data-bind="text: claim()._id"></div>
+    </div>
+    <div>
+        <div class="inline narrow">Entry date</div>
+        <div class="inline" type="date" data-bind="text: claim().entryDate"></div>
+    </div>
+    <div>
+        <div class="inline narrow">Description</div>
+        <textarea class="inline input-group" style="width: 70%; height: 10%" data-bind="value: claim().description"/>
+    </div>
+
+
+    <!-- File upload with DropZone
+    <form action="/upload"
+          class="dropzone"
+          id="my-awesome-dropzone">
+    </form>
+    -->
+
+    <!-- Vanilla file upload
+    <form action="/upload" method="post" enctype="multipart/form-data">
+        <input type="file" name="upload" multiple="multiple"><br>
+        <input type="submit" value="Upload">
+    </form>
+    -->
+    <div class="topMargin10"/>
+    <div style="float: right" class="clear bottomMargin10">
+        <button type="button" class="btn btn-default" data-bind="click: onSave">
+            <span class="glyphicon glyphicon-floppy-disk"></span>
+            <span class="leftMargin2">Save</span>
+        </button>
+
+        <button type="button" class="btn btn-default" data-bind="click: onCancel">
+            <span class="glyphicon glyphicon-ban-circle"></span>
+            <span class="leftMargin2">Cancel</span>
+        </button>
+    </div>
+
+    <div class="topMargin10 topBorder clear">
+        <div class="clear bottomMargin10"><h3>Entries</h3></div>
+        <div>
+            <a href="#home">Add New Entry</a>
+        </div>
+    </div>
+
+</div>
+

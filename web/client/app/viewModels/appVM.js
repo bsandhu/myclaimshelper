@@ -1,15 +1,25 @@
-define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim'],
-    function ($, ko, koMap, amplify, Claim) {
+define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'app/utils/events', 'app/utils/router'],
+    function ($, ko, KOMap, amplify, Claim, Events, Router) {
 
         function AppVM() {
             console.log('Init AppVM');
             this.gridNavDelay = 100;
 
+            // Model
             this.claims = ko.observableArray([]);
-            this.claim = KOMap.fromJS(new Claim());
 
-            this.load();
+            // View state
+            this.isClaimPanelVisible = ko.observable(false);
+            this.setupEvListeners();
+            this.setupClaimsGrid();
+            this.loadClaims();
+        }
 
+        /*************************************************/
+        /* View state                                    */
+        /*************************************************/
+
+        AppVM.prototype.setupClaimsGrid = function () {
             this.tableConfig = ko.observable({
                 "paging": true,
                 "ordering": true,
@@ -23,17 +33,39 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim'],
                         // The `data` parameter refers to the data for the cell
                         // Publish an Amplify Ev on click
                         "render": function (data, type, row) {
-                            var evName = 'SHOW_CLAIM';
-                            return "<a href='#' " +
-                                      "onClick='amplify.publish(\"SHOW_CLAIM\"," + data + ")'>" + data + "</a>";
+                            return "<a href='#/claim/" + data + "''>" + data + "</a>";
                         },
                         "targets": 0
                     }
                 ]
             });
+        };
 
-            this.setupEvListeners();
+        AppVM.prototype.setupEvListeners = function () {
+            amplify.subscribe(Events.SHOW_CLAIMS_GRID, this, function () {
+                console.log('AppVM - SHOW_CLAIMS_GRID ev');
+                this.isClaimPanelVisible(false);
+                this.expandGridPanel();
+            });
+            amplify.subscribe(Events.SHOW_CLAIM, this, function (data) {
+                console.log('AppVM - SHOW_CLAIM ev');
+                this.isClaimPanelVisible(true);
+                this.collapseGridPanel();
+            });
+            amplify.subscribe(Events.NEW_CLAIM, this, function (data) {
+                console.log('AppVM - NEW_CLAIM ev');
+                this.isClaimPanelVisible(true);
+                this.collapseGridPanel();
+            });
+        };
+
+        AppVM.prototype.onAddNewClaim = function () {
+            Router.routeToNewClaim();
         }
+
+        /*************************************************/
+        /* Panels animation                              */
+        /*************************************************/
 
         AppVM.prototype.toggleSearchPanel = function () {
             console.log('Search panel toggle');
@@ -46,57 +78,49 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim'],
             } else {
                 panelRef.velocity({ width: '30px' }, {duration: this.gridNavDelay}, 'ease-in-out');
                 panelContentRef.velocity("fadeOut", { duration: this.gridNavDelay });
-
             }
         };
 
         AppVM.prototype.toggleGridPanel = function () {
+            console.log('Grid panel toggle');
+
             var panelRef = $("#gridPanel");
             var panelContentRef = $("#gridPanelContent");
 
             if (panelRef.width() <= 30) {
-                panelRef.velocity({ width: '78%' }, this.gridNavDelay);
-                panelRef.toggleClass('gridPanelClosed');
-                panelContentRef.velocity("fadeIn", { duration: this.gridNavDelay });
+                Router.routeToHome();
             } else {
-                panelRef.velocity({ width: '30px' }, {duration: this.gridNavDelay}, 'ease-in-out');
-                panelRef.toggleClass('gridPanelClosed');
-                panelContentRef.velocity("fadeOut", { duration: this.gridNavDelay });
+                this.collapseGridPanel();
             }
         };
 
-        AppVM.prototype.onAddNewClaim = function () {
-            console.log('Adding new claim');
-        }
+        AppVM.prototype.expandGridPanel = function () {
+            console.log('Expand grid panel');
 
-        AppVM.prototype.setupEvListeners = function () {
-            amplify.subscribe('SHOW_CLAIM', function(data){
-                console.log('Display claimId: ' + data);
-                this.toggleGridPanel();
-            }.bind(this));
-            //window.location.href = '/app/claims/claim.html?_id=new';
-        }
+            var panelRef = $("#gridPanel");
+            var panelContentRef = $("#gridPanelContent");
 
-
-        AppVM.prototype.loadClaim = function (claimId) {
-            var _this = this;
-            $.get('/claim/' + claimId)
-                .done(function (resp) {
-                    var data = resp.data;
-                    console.log('Loaded Claim ' + JSON.stringify(data).substring(1, 25) + '...');
-
-                    var tempArray = [];
-                    $.each(data, function (index, claim) {
-                        tempArray.push([claim._id, claim.description]);
-                    });
-                    _this.claims(tempArray);
-                })
-                .fail(function () {
-                    console.log('Fail');
-                })
+            panelRef.velocity({ width: '78%' }, this.gridNavDelay);
+            panelRef.toggleClass('gridPanelClosed');
+            panelContentRef.velocity("fadeIn", { duration: this.gridNavDelay });
         };
 
-        AppVM.prototype.load = function () {
+        AppVM.prototype.collapseGridPanel = function () {
+            console.log('Collapse grid panel');
+
+            var panelRef = $("#gridPanel");
+            var panelContentRef = $("#gridPanelContent");
+
+            panelRef.velocity({ width: '30px' }, {duration: this.gridNavDelay}, 'ease-in-out');
+            panelRef.toggleClass('gridPanelClosed');
+            panelContentRef.velocity("fadeOut", { duration: this.gridNavDelay });
+        };
+
+        /*************************************************/
+        /* Server calls                                  */
+        /*************************************************/
+
+        AppVM.prototype.loadClaims = function () {
             var _this = this;
             $.get('/claim')
                 .done(function (resp) {

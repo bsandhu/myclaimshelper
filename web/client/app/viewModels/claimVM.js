@@ -1,56 +1,69 @@
 define(['jquery', 'knockout', 'KOMap', 'dropzone',
-        'app/model/claim', 'app/model/ClaimEntry',
-        'app/utils/ajaxUtils', 'app/utils/constants' ],
-    function ($, ko, koMap, dropzone, Claim, ClaimEntry, ajaxUtils, constants) {
+        'model/claim', 'model/ClaimEntry',
+        'app/utils/ajaxUtils', 'app/utils/events', 'app/utils/router' ],
+    function ($, ko, KOMap, dropzone, Claim, ClaimEntry, ajaxUtils, Events, Router) {
 
         function ClaimVM() {
             console.log('Init ClaimVM');
 
-            this.claim = new Claim();
-            this.claimEntries = new ClaimEntry();
+            // Model
+            this.claim = ko.observable(this.newEmptyClaim());
+            this.claimEntries = ko.observableArray();
+
+            // View state
+            this.inEditMode = ko.observable(false);
+            this.setupEvListeners();
+        };
+
+        ClaimVM.prototype.newEmptyClaim = function(){
+            var jsClaimObject = new Claim();
+            var claimObjWithObservableAttributes = KOMap.fromJS(jsClaimObject);
+            return claimObjWithObservableAttributes;
         };
 
         ClaimVM.prototype.setupEvListeners = function () {
-            amplify.subscribe(constants.SHOW_CLAIM, function(data){
-
-            });
-            amplify.subscribe(constants.NEW_CLAIM, function(){
-                this.addNewClaimEntry();
-            }.bind(this));
+            amplify.subscribe(Events.SHOW_CLAIM, this, this.onShowClaim);
+            amplify.subscribe(Events.NEW_CLAIM, this, this.onNewClaim);
         };
 
-        ClaimVM.prototype.addNewClaim = function () {
-            this.claim.entryDate(new Date());
-            this.showNewClaimForm(true);
+        ClaimVM.prototype.onShowClaim = function (evData) {
+            console.log('Display claimId: ' + JSON.stringify(evData));
+            this.claim(this.newEmptyClaim());
+            this.loadClaim(evData.claimId);
+        };
+
+        ClaimVM.prototype.onNewClaim = function () {
+            console.log('Adding new claim');
+            this.claim(this.newEmptyClaim());
+            this.claim().entryDate(new Date());
+            this.inEditMode(true);
         };
 
         ClaimVM.prototype.onCancel = function () {
-            this.newClaimEntry.clear();
-            this.showNewClaimEntryForm(false);
+            this.inEditMode(false);
+            Router.routeToHome();
         };
 
         ClaimVM.prototype.onSave = function () {
             var _this = this;
-            console.log('Saving Claim');
-            this.claim.tasks.push(this.newClaimEntry);
+            console.log('Saving Claim: ' + KOMap.toJSON(this.claim));
 
             ajaxUtils.post(
                 '/claim',
-                koMap.toJSON(this.claim),
-                function (response) {
+                KOMap.toJSON(this.claim),
+                function onSuccess(response) {
                     console.log('Saved claim: ' + JSON.stringify(response));
-                    _this.showNewClaimEntryForm(false);
-                    _this.claimId = response.data[0]._id;
-                    _this.loadClaim();
+                    _this.claimId = response.data._id;
+                    amplify.publish(Events.SUCCESS_NOTIFICATION, {msg: 'Saved'});
                 });
         };
 
-        ClaimVM.prototype.loadClaim = function () {
+        ClaimVM.prototype.loadClaim = function (claimId) {
             var _this = this;
-            $.get('/claim/' + _this.claimId)
+            $.get('/claim/' + claimId)
                 .done(function (resp) {
                     console.log('Loaded claim ' + JSON.stringify(resp.data));
-                    koMap.fromJS(resp.data, {}, _this.claim);
+                    KOMap.fromJS(resp.data, {}, _this.claim);
                 })
         };
 

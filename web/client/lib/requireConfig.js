@@ -9,7 +9,8 @@ require.config({
         'datatables': 'lib/jquery.dataTables',      // Grid
         'velocity'  : 'lib/jquery.velocity.min',    // JS animations
         'amplify'   : 'lib/amplify',                // Pub/sub
-        'text'      : 'lib/require.text'            // Require plugin for html templates
+        'text'      : 'lib/require.text',           // Require plugin for html templates
+        'Path'      : 'lib/path'
     },
     shim: {
         'velocity': {
@@ -30,8 +31,11 @@ require.config({
             exports: 'KOAmd'
         },
         'amplify': {
-            deps: ["jquery"],
-            exports: "amplify"
+            deps: ['jquery'],
+            exports: 'amplify'
+        },
+        'Path' : {
+            exports: 'Path'
         }
     }
 });

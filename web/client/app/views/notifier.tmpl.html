@@ -1,0 +1,13 @@
+<div role="alert"
+     style="width: 80%; margin: auto; margin-bottom: 10;"
+     data-bind="visible: isVisible, css: bootstrapCSS"
+     id="notifier-container">
+
+    <button type="button" class="close" data-bind="click: onDismiss">
+        <span aria-hidden="true">&times;</span>
+        <span class="sr-only">Close</span>
+    </button>
+
+    <span data-bind="text: msg"></span>
+
+</div>

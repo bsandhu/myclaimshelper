@@ -12,6 +12,7 @@ function init() {
     server.use(restify.authorizationParser());
     server.use(restify.dateParser());
     server.use(restify.queryParser());
+    server.use(restify.bodyParser());   // Needed for parsing POST req body
     server.use(restify.jsonp());
     server.use(restify.gzipResponse());
 }
