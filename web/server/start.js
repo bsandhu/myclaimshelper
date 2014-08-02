@@ -2,7 +2,7 @@ var restify = require('restify');
 var claimsService = require('./services/claimsService.js');
 var contactService = require('./services/contactService.js');
 var uploadService = require('./services/uploadService.js');
-var mailHandler = require('./handlers/mailHandler.js');
+var mailService = require('./services/mailService.js');
 var mongoUtils = require('./mongoUtils.js');
 
 var server;
@@ -19,7 +19,7 @@ function init() {
 }
 
 function setupMailServiceRoutes(){
-    server.post('/mailman', mailHandler.processMailRequest);
+    server.post('/mailman', mailService.processMailRequest);
 };
 
 function setupClaimsServiceRoutes() {
