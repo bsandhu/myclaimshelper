@@ -53,6 +53,11 @@
     clear: both;
 }
 
+.sectionSeparator {
+    height: 3px;
+    background: #336CC2;
+}
+
 /**** Form elements ****/
 
 .fieldLabel {
@@ -84,4 +89,12 @@
 
 .gridPanelClosed {
     background-color: #F5F5F8;
+}
+
+.header {
+    height: 10%;
+    font-family: sans-serif;
+    font-size: 30;
+    margin-left: 5px;
+    vertical-align: middle;
 }

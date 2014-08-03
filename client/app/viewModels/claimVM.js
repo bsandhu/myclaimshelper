@@ -1,5 +1,5 @@
 define(['jquery', 'knockout', 'KOMap', 'dropzone',
-        'model/claim', 'model/ClaimEntry',
+        'model/claim', 'model/claimEntry',
         'app/utils/ajaxUtils', 'app/utils/events', 'app/utils/router' ],
     function ($, ko, KOMap, dropzone, Claim, ClaimEntry, ajaxUtils, Events, Router) {
 
