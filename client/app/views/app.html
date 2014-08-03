@@ -8,21 +8,18 @@
 </head>
 
 <body>
-<a href="#/home"><div class="header">Claims</div></a>
+<a href="#/home">
+    <div class="header">Agent</div>
+</a>
 <div class="sectionSeparator"></div>
 
-<div style="display: inline-flex; width: 100%; height: 80%; vertical-align: top; white-space: nowrap">
+<div style="display: inline-flex; width: 100%; height: 90%; vertical-align: top; white-space: nowrap">
 
     <!-- **** Search panel **** -->
     <div data-bind="module: {name: 'app/viewModels/notifierVM', template: 'app/views/notifier'}"></div>
 
     <!-- **** Search panel **** -->
-    <div id="searchPanel"
-         style="display: inline-block;
-                vertical-align: top;
-                background-color: #428bca;
-                min-height: 100%;
-                width: 20%">
+    <div id="searchPanel" class="slidingContainer" style="background-color: #428bca; width: 20%">
 
         <!-- Menu icon -->
         <div class="inline alignRight">
@@ -44,10 +41,11 @@
 
             <div class="panelItem">
                 <div><b>Status</b></div>
-                <div class="inline" style="width: 100%">
+                <div style="width: 100%" class="inline">
                     <div class="inline">All</div>
                     <div class="badge alignRight">123</div>
                 </div>
+                <div></div>
                 <div style="width: 100%" class="inline">
                     <div class="inline">Active</div>
                     <div class="badge alignRight">45</div>
@@ -89,13 +87,6 @@
     <!-- **** Claim module **** -->
     <div id="claimPanel" class="slidingContainer" style="width: 0%; background-color: #EBF2F7">
 
-        <!-- Menu icon
-        <div class="inline alignRight">
-            <div class="inline glyphicon glyphicon-th-list"
-                 style="cursor: pointer"
-                 data-bind="click: toggleClaimPanel"></div>
-        </div>
-        -->
         <div id="claimPanelContent">
             <div data-bind="module: {name: 'app/viewModels/claimVM', template: 'app/views/claim'}"></div>
         </div>
@@ -104,20 +95,14 @@
     <!-- **** Claim Entry module **** -->
     <div id="claimEntryPanel" class="slidingContainer" style="width: 0%; background-color: #EDEDED">
 
-        <!-- Menu icon
-        <div class="inline alignRight">
-            <div class="inline glyphicon glyphicon-th-list" style="cursor: pointer"
-                 data-bind="click: toggleClaimEntryPanel"></div>
-        </div>
-        -->
         <div id="claimEntryPanelContent">
             <div data-bind="module: {name: 'app/viewModels/claimEntryVM', template: 'app/views/claimEntry'}"></div>
         </div>
     </div>
 </div>
 
-<div class="sectionSeparator"></div>
-<div style="float: right; margin-right: 3px; color: midnightblue">Logicube 2014</div>
+<span style="float: right; margin-right: 3px; color: darkgray">Logicube 2014</span>
+
 </body>
 
 <script type="application/javascript">
