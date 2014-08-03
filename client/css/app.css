@@ -39,6 +39,7 @@
 .bottomMargin10 {
     margin-bottom: 10px;
 }
+
 .leftMargin2 {
     margin-left: 2px;
 }
@@ -51,6 +52,11 @@
 
 .clear {
     clear: both;
+}
+
+.sectionSeparator {
+    height: 3px;
+    background: #336CC2;
 }
 
 /**** Form elements ****/
@@ -70,6 +76,7 @@
     display: inline-block;
     vertical-align: top;
     min-height: 100%;
+    padding: 5px;
 }
 
 .panelItem {
@@ -84,4 +91,19 @@
 
 .gridPanelClosed {
     background-color: #F5F5F8;
+}
+
+.header {
+    width: 200;
+    color: black;
+    font-style: italic;
+    font-weight: bold;
+    font-size: 35;
+    font-family: sans-serif;
+
+    background-image: url("/images/007.jpg");
+    background-repeat: no-repeat;
+    vertical-align: middle;
+    background-position: right center;
+    background-size: 90;
 }

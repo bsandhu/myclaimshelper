@@ -8,26 +8,18 @@
 </head>
 
 <body>
-<a href="#/home"><h1>Claims</h1></a>
+<a href="#/home">
+    <div class="header">Agent</div>
+</a>
+<div class="sectionSeparator"></div>
 
-<div style="
-    height: 3px;
-    background: #336CC2;
-"></div>
-
-<div style="display: inline-block; width: 98%;">
+<div style="display: inline-flex; width: 100%; height: 90%; vertical-align: top; white-space: nowrap">
 
     <!-- **** Search panel **** -->
     <div data-bind="module: {name: 'app/viewModels/notifierVM', template: 'app/views/notifier'}"></div>
 
     <!-- **** Search panel **** -->
-    <div id="searchPanel"
-         style="padding: 5px;
-                display: inline-block;
-                width: 20%;
-                vertical-align: top;
-                background-color: #428bca;
-                min-height: 100%;">
+    <div id="searchPanel" class="slidingContainer" style="background-color: #428bca; width: 20%">
 
         <!-- Menu icon -->
         <div class="inline alignRight">
@@ -49,10 +41,11 @@
 
             <div class="panelItem">
                 <div><b>Status</b></div>
-                <div class="inline" style="width: 100%">
+                <div style="width: 100%" class="inline">
                     <div class="inline">All</div>
                     <div class="badge alignRight">123</div>
                 </div>
+                <div></div>
                 <div style="width: 100%" class="inline">
                     <div class="inline">Active</div>
                     <div class="badge alignRight">45</div>
@@ -73,7 +66,7 @@
     </div>
 
     <!-- **** Claims list **** -->
-    <div id="gridPanel" class="slidingContainer" style="width: 78%;">
+    <div id="gridPanel" class="slidingContainer" style="width: 80%; background-color: #F8F8FA">
 
         <!-- Menu icon -->
         <div class="inline alignRight">
@@ -92,32 +85,33 @@
     </div>
 
     <!-- **** Claim module **** -->
-    <div id="claimsPanel" class="slidingContainer" style="width: 75%; background-color: #EBF2F7">
-        <!-- Menu icon -->
-        <div class="inline alignRight">
-            <div class="inline glyphicon glyphicon-th-list"
-                 style="cursor: pointer"
-                 data-bind="click: toggleGridPanel"></div>
-        </div>
-        <div id="claimsPanelContent">
+    <div id="claimPanel" class="slidingContainer" style="width: 0%; background-color: #EBF2F7">
+
+        <div id="claimPanelContent">
             <div data-bind="module: {name: 'app/viewModels/claimVM', template: 'app/views/claim'}"></div>
         </div>
     </div>
 
     <!-- **** Claim Entry module **** -->
-    <div id="claimEntryPanel" class="slidingContainer" style="width: 70%">
-        <div data-bind="module: {name: 'app/viewModels/claimEntryVM', template: 'app/views/claimEntry'}"></div>
+    <div id="claimEntryPanel" class="slidingContainer" style="width: 0%; background-color: #EDEDED">
+
+        <div id="claimEntryPanelContent">
+            <div data-bind="module: {name: 'app/viewModels/claimEntryVM', template: 'app/views/claimEntry'}"></div>
+        </div>
     </div>
 </div>
+
+<span style="float: right; margin-right: 3px; color: darkgray">Logicube 2014</span>
+
 </body>
 
 <script type="application/javascript">
     /**
      * Load libs and init Knockout - on app startup. See requireConfig.js
      */
-    require(['jquery', 'knockout', 'KOAmd', 'text', 'datatables', 'app/utils/koDatatablesBinding', 'velocity',
-                'app/utils/router', 'app/viewModels/appVM'],
-            function ($, ko, KOAmd, text, dataTables, koDatatables, velocity, Router, AppVM) {
+    require(['jquery', 'knockout', 'KOAmd', 'text', 'amplify', 'app/utils/router', 'app/viewModels/appVM', 'app/utils/events',
+             'datatables', 'app/utils/koDatatablesBinding', 'velocity'],
+            function ($, ko, KOAmd, text, amplify, Router, AppVM, Events) {
                 console.log('Init App');
 
                 // Hash tag bases naviagtion - needed for SPAs
@@ -130,5 +124,7 @@
 
                 // Knockout bindings init
                 ko.applyBindings(new AppVM());
+
+                amplify.publish(Events.SHOW_CLAIMS_GRID);
             });
 </script>

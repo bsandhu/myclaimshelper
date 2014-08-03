@@ -20,19 +20,19 @@ function init() {
 
 function setupMailServiceRoutes(){
     server.post('/mailman', mailService.processMailRequest);
-};
+}
 
 function setupClaimsServiceRoutes() {
     server.get('/claim', claimsService.getAllClaims);
     server.get('/claim/:id', claimsService.getClaim);
     server.post('/claim', claimsService.saveOrUpdateClaim);
     server.post('/upload', uploadService.uploadArtifact);
-};
+}
 
 function setupContactServiceRoutes() {
     server.get('/contact', contactService.listAllContacts);
     server.post('/contact', contactService.addContact);
-};
+}
 
 function setupStaticRoutes() {
     // If the path contains model, look for the whole path in the 'shared' dir
@@ -50,6 +50,10 @@ function setupStaticRoutes() {
     }));
     server.get(/\/images\/.*/, restify.serveStatic({
         directory: 'client'
+    }));
+    server.get('/.*/ ', restify.serveStatic({
+        'directory': 'client',
+        'default'  : '/app/views/app.html'
     }));
 }
 

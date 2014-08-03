@@ -1,4 +1,4 @@
-define(['jquery', 'knockout', 'KOMap', 'model/claim', 'model/ClaimEntry',
+define(['jquery', 'knockout', 'KOMap', 'model/claim', 'model/claimEntry',
         'app/utils/ajaxUtils', 'app/utils/events' ],
     function ($, ko, KOMap, Claim, ClaimEntry, ajaxUtils, Events) {
 

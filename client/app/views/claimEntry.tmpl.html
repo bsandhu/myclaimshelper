@@ -1,17 +1,19 @@
 <div class="inline">
     <div class="inline label narrow">Entered on</div>
     <div class="inline narrow">
-        <input type="text" data-bind="datepicker: {}, value: newTask.entryDate"/></div>
+        <input type="date" data-bind="value: claimEntry().entryDate"/></div>
 </div>
+
 <div class="inline">
     <div class="inline label narrow">Due on</div>
     <div class="inline narrow">
-        <input type="text" data-bind="datepicker: {}, value: newTask.dueDate"/></div>
+        <input type="date" data-bind="value: claimEntry().dueDate"/></div>
 </div>
+
 <div>
     <div class="inline label narrow">Note</div>
     <div class="inline narrow">
         <textarea style="width: 400px; height: 60px"
-                  data-bind="value: newTask.description" placeholder="Note"></textarea>
+                  data-bind="value: claimEntry().description" placeholder="Note"></textarea>
     </div>
 </div>
