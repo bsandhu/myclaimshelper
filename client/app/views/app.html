@@ -9,7 +9,11 @@
 
 <body>
 <a href="#/home"><h1>Claims</h1></a>
-<hr/>
+
+<div style="
+    height: 3px;
+    background: #336CC2;
+"></div>
 
 <div style="display: inline-block; width: 98%;">
 
@@ -69,11 +73,7 @@
     </div>
 
     <!-- **** Claims list **** -->
-    <div id="gridPanel"
-         style="display: inline-block;
-            vertical-align: top;
-            width: 78%;
-            min-height: 100%;">
+    <div id="gridPanel" class="slidingContainer" style="width: 78%;">
 
         <!-- Menu icon -->
         <div class="inline alignRight">
@@ -84,7 +84,7 @@
 
         <div id="gridPanelContent">
 
-            <!-- Bind DataTable wodget - via Knockout -->
+            <!-- Bind DataTable widget - via Knockout -->
             <table cellpadding="0" cellspacing="0" border="0" class="display" id="example"
                    data-bind="dataTable: {options: tableConfig, data: claims}">
             </table>
@@ -92,18 +92,26 @@
     </div>
 
     <!-- **** Claim module **** -->
-    <div class="inline" style="width: 75%">
-        <div data-bind="module: {name: 'app/viewModels/claimVM', template: 'app/views/claim'}"></div>
+    <div id="claimsPanel" class="slidingContainer" style="width: 75%; background-color: #EBF2F7">
+        <!-- Menu icon -->
+        <div class="inline alignRight">
+            <div class="inline glyphicon glyphicon-th-list"
+                 style="cursor: pointer"
+                 data-bind="click: toggleGridPanel"></div>
+        </div>
+        <div id="claimsPanelContent">
+            <div data-bind="module: {name: 'app/viewModels/claimVM', template: 'app/views/claim'}"></div>
+        </div>
     </div>
 
     <!-- **** Claim Entry module **** -->
-    <!--<div data-bind="module: {name: 'app/viewModels/claimEntryVM', template: 'app/views/claimEntry'}"></div>-->
-
+    <div id="claimEntryPanel" class="slidingContainer" style="width: 70%">
+        <div data-bind="module: {name: 'app/viewModels/claimEntryVM', template: 'app/views/claimEntry'}"></div>
+    </div>
 </div>
 </body>
 
 <script type="application/javascript">
-
     /**
      * Load libs and init Knockout - on app startup. See requireConfig.js
      */
@@ -112,6 +120,7 @@
             function ($, ko, KOAmd, text, dataTables, koDatatables, velocity, Router, AppVM) {
                 console.log('Init App');
 
+                // Hash tag bases naviagtion - needed for SPAs
                 Router.start();
 
                 // Knockout AMD supoprt setup

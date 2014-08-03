@@ -26,6 +26,8 @@
     width: 200px;
 }
 
+/**** Margins and borders ****/
+
 .topMargin5 {
     margin-top: 5px;
 }
@@ -41,11 +43,17 @@
     margin-left: 2px;
 }
 
+.topBorder {
+    border-top: dotted;
+    border-top-width: 1px;
+    border-top-color: #2d6ca2;
+}
+
 .clear {
     clear: both;
 }
 
-/**** Borders ****/
+/**** Form elements ****/
 
 .fieldLabel {
     display: inline-block;
@@ -56,13 +64,13 @@
     font-weight: 500;
 }
 
-.topBorder {
-    border-top: dotted;
-    border-top-width: 1px;
-    border-top-color: #2d6ca2;
-}
+/**** Navigation panels ****/
 
-/**** Menus ****/
+.slidingContainer {
+    display: inline-block;
+    vertical-align: top;
+    min-height: 100%;
+}
 
 .panelItem {
     font-size: 14px;

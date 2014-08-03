@@ -31,6 +31,14 @@ define(['Path', 'app/utils/events'], function(Path, Events){
         Path.map("#/claim/:claimId").to(function(){
             amplify.publish(Events.SHOW_CLAIM, {claimId: this.params['claimId']});
         });
+
+        Path.map("#/claimEntry").to(function(){
+            amplify.publish(Events.NEW_CLAIM_ENTRY);
+        });
+
+        Path.map("#/claimEntry/:claimEntryId").to(function(){
+            amplify.publish(Events.SHOW_CLAIM_ENTRY, {claimEntryId: this.params['claimEntryId']});
+        });
     };
 
     Router.prototype.routeToHome = function(){
@@ -43,6 +51,10 @@ define(['Path', 'app/utils/events'], function(Path, Events){
 
     Router.prototype.routeToNewClaim = function(){
         window.location.hash = '#/claim';
+    };
+
+    Router.prototype.routeToNewClaimEntry = function(){
+        indow.location.hash = '#/claimEntry';
     };
 
     Router.prototype.start = function(){
