@@ -25,7 +25,9 @@ function setupMailServiceRoutes(){
 function setupClaimsServiceRoutes() {
     server.get('/claim', claimsService.getAllClaims);
     server.get('/claim/:id', claimsService.getClaim);
+
     server.post('/claim', claimsService.saveOrUpdateClaim);
+    server.post('/claimEntry', claimsService.saveOrUpdateClaimEntry);
     server.post('/upload', uploadService.uploadArtifact);
 }
 

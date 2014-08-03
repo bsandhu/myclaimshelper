@@ -8,15 +8,23 @@
 </head>
 
 <body>
-<a href="#/home">
-    <div class="header">Agent</div>
-</a>
+
+<div class="inline" style="width: 98%">
+    <div class="inline">
+        <a href="#/home">
+            <div class="headerLogo">Agent</div>
+        </a>
+    </div>
+    <!-- **** Notifications **** -->
+    <div data-bind="module: {name: 'app/viewModels/notifierVM', template: 'app/views/notifier'}"
+         class="inline" style="width: 50%"></div>
+</div>
+
+
 <div class="sectionSeparator"></div>
 
 <div style="display: inline-flex; width: 100%; height: 90%; vertical-align: top; white-space: nowrap">
 
-    <!-- **** Search panel **** -->
-    <div data-bind="module: {name: 'app/viewModels/notifierVM', template: 'app/views/notifier'}"></div>
 
     <!-- **** Search panel **** -->
     <div id="searchPanel" class="slidingContainer" style="background-color: #428bca; width: 20%">
@@ -101,7 +109,7 @@
     </div>
 </div>
 
-<span style="float: right; margin-right: 3px; color: darkgray">Logicube 2014</span>
+<span style="float: right; margin-right: 3px; color: darkgray"><i>Logicube 2014</i></span>
 
 </body>
 
@@ -110,12 +118,9 @@
      * Load libs and init Knockout - on app startup. See requireConfig.js
      */
     require(['jquery', 'knockout', 'KOAmd', 'text', 'amplify', 'app/utils/router', 'app/viewModels/appVM', 'app/utils/events',
-             'datatables', 'app/utils/koDatatablesBinding', 'velocity'],
+                'datatables', 'app/utils/koDatatablesBinding', 'velocity'],
             function ($, ko, KOAmd, text, amplify, Router, AppVM, Events) {
                 console.log('Init App');
-
-                // Hash tag bases naviagtion - needed for SPAs
-                Router.start();
 
                 // Knockout AMD supoprt setup
                 ko.amdTemplateEngine.defaultRequireTextPluginName = "text";
@@ -125,6 +130,7 @@
                 // Knockout bindings init
                 ko.applyBindings(new AppVM());
 
-                amplify.publish(Events.SHOW_CLAIMS_GRID);
+                // Hash tag bases naviagtion - needed for SPAs
+                Router.start();
             });
 </script>

@@ -1,4 +1,6 @@
-define(['Path', 'app/utils/events'], function(Path, Events){
+define(['Path', 'amplify', 'app/utils/events'],
+    function(Path, amplify, Events){
+    'use strict';
 
     /**
      * Tiny wrapper around PathJS.
@@ -45,16 +47,26 @@ define(['Path', 'app/utils/events'], function(Path, Events){
         window.location.hash = '#/home';
     };
 
-    Router.prototype.routeToClaim = function(){
-        window.location.hash = '#/claim';
-    };
-
     Router.prototype.routeToNewClaim = function(){
         window.location.hash = '#/claim';
     };
 
+    Router.prototype.routeToClaim = function(claimId){
+        if (claimId) {
+            window.location.hash = '#/claim/' + claimId;
+        }
+        this.routeToNewClaim();
+    };
+
     Router.prototype.routeToNewClaimEntry = function(){
-        indow.location.hash = '#/claimEntry';
+        window.location.hash = '#/claimEntry';
+    };
+
+    Router.prototype.routeToClaimEntry = function(claimEntryId){
+        if (claimEntryId) {
+            window.location.hash = '#/claimEntry/' + claimEntryId;
+        }
+        this.routeToNewClaimEntry();
     };
 
     Router.prototype.start = function(){

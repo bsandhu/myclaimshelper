@@ -1,6 +1,7 @@
-define(['jquery', 'knockout', 'KOMap', 'model/claim', 'model/claimEntry',
-        'app/utils/ajaxUtils', 'app/utils/events' ],
-    function ($, ko, KOMap, Claim, ClaimEntry, ajaxUtils, Events) {
+define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEntry',
+        'app/utils/ajaxUtils', 'app/utils/events', 'app/utils/router', 'app/utils/sessionKeys' ],
+    function ($, ko, KOMap, amplify, Claim, ClaimEntry, ajaxUtils, Events, Router, SessionKeys) {
+        'use strict';
 
         function ClaimEntryVM() {
             console.log('Init ClaimEntryVM');
@@ -11,7 +12,7 @@ define(['jquery', 'knockout', 'KOMap', 'model/claim', 'model/claimEntry',
             // View state
             this.inEditMode = ko.observable(false);
             this.setupEvListeners();
-        };
+        }
 
         ClaimEntryVM.prototype.newEmptyClaimEntry = function(){
             var jsEntryObject = new ClaimEntry();
@@ -30,11 +31,32 @@ define(['jquery', 'knockout', 'KOMap', 'model/claim', 'model/claimEntry',
             this.loadClaimEntry(evData.claimEntryId);
         };
 
-        ClaimEntryVM.prototype.onNewClaimEntry = function () {
+        ClaimEntryVM.prototype.onNewClaimEntry = function (evData) {
             console.log('Adding new claim entry');
             this.claimEntry(this.newEmptyClaimEntry());
             this.claimEntry().entryDate(new Date());
             this.inEditMode(true);
+        };
+
+        ClaimEntryVM.prototype.onSave = function () {
+            console.log('Saving ClaimEntry: ' + KOMap.toJSON(this.claimEntry));
+
+            var activeClaimId = amplify.store.sessionStorage(SessionKeys.ACTIVE_CLAIM_ID);
+            console.assert(activeClaimId, 'No claim active in session');
+            this.claimEntry().claimId(activeClaimId);
+
+            ajaxUtils.post(
+                '/claimEntry',
+                KOMap.toJSON(this.claimEntry),
+                function onSuccess(response) {
+                    console.log('Saved ClaimEntry: ' + JSON.stringify(response));
+                    amplify.publish(Events.SUCCESS_NOTIFICATION, {msg: 'Saved entry'});
+                });
+        };
+
+        ClaimEntryVM.prototype.onCancel = function () {
+            this.inEditMode(false);
+            Router.routeToClaim();
         };
 
         return ClaimEntryVM;
