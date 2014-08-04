@@ -1,7 +1,7 @@
-define(['jquery', 'knockout', 'KOMap', 'dropzone',
+define(['jquery', 'knockout', 'KOMap', 'amplify',
         'model/claim', 'model/claimEntry',
-        'app/utils/ajaxUtils', 'app/utils/events', 'app/utils/router' ],
-    function ($, ko, KOMap, dropzone, Claim, ClaimEntry, ajaxUtils, Events, Router) {
+        'app/utils/ajaxUtils', 'app/utils/events', 'app/utils/router', 'app/utils/sessionKeys'],
+    function ($, ko, KOMap, amplify, Claim, ClaimEntry, ajaxUtils, Events, Router, SessionKeys) {
 
         function ClaimVM() {
             console.log('Init ClaimVM');
@@ -24,6 +24,7 @@ define(['jquery', 'knockout', 'KOMap', 'dropzone',
         ClaimVM.prototype.setupEvListeners = function () {
             amplify.subscribe(Events.SHOW_CLAIM, this, this.onShowClaim);
             amplify.subscribe(Events.NEW_CLAIM, this, this.onNewClaim);
+            amplify.subscribe(Events.NEW_CLAIM_ENTRY, this, this.isClaimSaved);
         };
 
         ClaimVM.prototype.onShowClaim = function (evData) {
@@ -39,13 +40,19 @@ define(['jquery', 'knockout', 'KOMap', 'dropzone',
             this.inEditMode(true);
         };
 
+        ClaimVM.prototype.isClaimSaved = function () {
+            if (!this.claim()._id()) {
+                console.log('Adding entry to unsaved claim. Saving.');
+                this.onSave();
+            }
+        };
+
         ClaimVM.prototype.onCancel = function () {
             this.inEditMode(false);
             Router.routeToHome();
         };
 
         ClaimVM.prototype.onSave = function () {
-            var _this = this;
             console.log('Saving Claim: ' + KOMap.toJSON(this.claim));
 
             ajaxUtils.post(
@@ -53,18 +60,24 @@ define(['jquery', 'knockout', 'KOMap', 'dropzone',
                 KOMap.toJSON(this.claim),
                 function onSuccess(response) {
                     console.log('Saved claim: ' + JSON.stringify(response));
-                    _this.claimId = response.data._id;
-                    amplify.publish(Events.SUCCESS_NOTIFICATION, {msg: 'Saved'});
-                });
+                    this.claim()._id(response.data._id);
+                    amplify.publish(Events.SUCCESS_NOTIFICATION, {msg: 'Saved Claim'});
+                    this.storeInSession(this.claim()._id());
+                }.bind(this));
         };
 
         ClaimVM.prototype.loadClaim = function (claimId) {
-            var _this = this;
             $.get('/claim/' + claimId)
                 .done(function (resp) {
                     console.log('Loaded claim ' + JSON.stringify(resp.data));
-                    KOMap.fromJS(resp.data, {}, _this.claim);
-                })
+                    KOMap.fromJS(resp.data, {}, this.claim);
+                    this.storeInSession(claimId);
+                }.bind(this));
+        };
+
+        ClaimVM.prototype.storeInSession = function(claimId) {
+            amplify.store.sessionStorage(SessionKeys.ACTIVE_CLAIM_ID, claimId);
+            console.log('Stored CliamId: ' + claimId + ' in session storage');
         };
 
         return ClaimVM;

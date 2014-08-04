@@ -8,6 +8,7 @@ if (typeof define !== 'function') {
 define([], function () {
 
     function ClaimEntry() {
+        this._id = undefined;
         this.claimId = undefined;
 
         this.entryDate = undefined;
