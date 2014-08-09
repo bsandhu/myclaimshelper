@@ -26,7 +26,7 @@ function setupClaimsServiceRoutes() {
     server.get('/claim', claimsService.getAllClaims);
     server.get('/claim/:id', claimsService.getClaim);
 
-    server.post('/claim', claimsService.saveOrUpdateClaim);
+    server.get('/claimEntry/:id', claimsService.getAllEntriesForClaim);
     server.post('/claimEntry', claimsService.saveOrUpdateClaimEntry);
     server.post('/upload', uploadService.uploadArtifact);
 }

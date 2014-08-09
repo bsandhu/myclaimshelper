@@ -50,6 +50,12 @@
     border-top-color: #2d6ca2;
 }
 
+.bottomBorder {
+    border-bottom: dotted;
+    border-bottom-width: 1px;
+    border-bottom-color: #2d6ca2;
+}
+
 .clear {
     clear: both;
 }

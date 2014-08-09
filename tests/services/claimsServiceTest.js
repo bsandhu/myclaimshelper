@@ -53,12 +53,13 @@ describe('Claims Service', function () {
             assert(data);
             assert.equal(data.status, 'Success');
             assert.ok(testClaim._id);
+            assert.equal(testClaim.description, 'Test claim update');
             done();
         };
         claimsService.saveOrUpdateClaim(req, res, 'Claims');
     });
 
-    // TODO: Fix!
+    // TODO Won't pass on CodeShip. Can't figure out why
     it.skip('Get a Claim', function (done) {
         var req = {params: {id : testClaim._id}};
         var res = {};

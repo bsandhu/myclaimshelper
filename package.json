@@ -1,20 +1,21 @@
 {
-    "name": "007",
-    "version": "0.0.0",
-    "private": true,
-    "main": "./server/start.js",
+    "name"      : "007",
+    "version"   : "0.0.0",
+    "private"   : true,
+    "main"      : "./server/start.js",
     "dependencies": {
-        "mongodb": "*",
-        "restify": "*",
-        "underscore" : "*",
-        "formidable": "*",
-        "mailparser": ">=0.4.4",
-        "amdefine": ">=0.1.0"
+        "mongodb"    : "1.4.8",
+        "restify"    : "2.8.1",
+        "formidable" : "1.0.15",
+        "underscore" : "1.6.0",
+        "mailparser" : "0.4.5",
+        "amdefine"   : "0.1.0",
+        "q"          : "1.0.1"
     },
     "devDependencies": {
-        "mocha": "*"
+        "mocha": "1.21.4"
     },
     "engine": {
-        "node": ">=0.10"
+        "node": "0.10.30"
     }
 }

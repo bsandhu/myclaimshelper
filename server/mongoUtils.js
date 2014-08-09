@@ -1,4 +1,5 @@
 var MongoClient = require('mongodb').MongoClient;
+var Q = require('q');
 
 var connUrl = process.env.DB || 'mongodb://localhost:9090/AgentDb';
 
@@ -22,11 +23,35 @@ function initCollection(collectionName) {
     });
 }
 
+function incrementAndGet(sequenceName) {
+    var deferred = Q.defer();
+
+    run(function (db) {
+        var col = db.collection('Sequences');
+
+        col.findAndModify(
+            { _id: sequenceName },
+            [['_id', 1]],
+            { $inc: { seq: 1 } },
+            {upsert: true},
+            {new: true},
+            function onUpdate(err, doc) {
+                if (err) {
+                    deferred.reject(err);
+                }
+                deferred.resolve(doc.seq);
+            });
+    });
+    return deferred.promise;
+}
+
 function initCollections() {
     initCollection('Claims');
     initCollection('ClaimEntries');
     initCollection('Contacts');
+    initCollection('Sequences');
 }
 
 exports.run = run;
 exports.initCollections = initCollections;
+exports.incrementAndGet = incrementAndGet;

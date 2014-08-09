@@ -99,3 +99,18 @@
 
 </div>
 
+<!-- ************************************************ -->
+<!--List Entries -->
+<!-- ************************************************ -->
+
+<h3>Entries</h3>
+
+<div data-bind="foreach: {data: claimEntries, as: 'entry' }">
+    <div class="bottomBorderr">
+        <span>
+            <a data-bind="attr: {href: '#/claimEntry/' + attr._id">
+                <span data-bind="text: entry.description"></span>
+            </a>
+        </span>
+    </div>
+</div>
