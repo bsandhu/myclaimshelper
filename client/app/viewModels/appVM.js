@@ -12,7 +12,6 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'app/utils/even
             // View state
             this.setupEvListeners();
             this.setupClaimsGrid();
-            this.loadClaims();
         }
 
         /*************************************************/
@@ -24,18 +23,16 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'app/utils/even
                 "paging": true,
                 "ordering": true,
                 "info": true,
+                "order": [[0, "desc"]],
                 "columns": [
-                    { "title": "Id" },
+                    { "title": "Id"},
                     { "title": "Description" }
                 ],
                 "columnDefs": [
-                    {
-                        // The `data` parameter refers to the data for the cell
-                        // Publish an Amplify Ev on click
-                        "render": function (data, type, row) {
-                            return "<a href='#/claim/" + data + "''>" + data + "</a>";
-                        },
-                        "targets": 0
+                    // The `data` parameter refers to the data for the cell
+                    {"render": function (data, type, row) {
+                            return "<a href='#/claim/" + data + "''>" + data + "</a>";},
+                    "targets": 0
                     }
                 ]
             });
@@ -68,6 +65,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'app/utils/even
             this.expandGridPanel();
             this.collapseClaimPanel();
             this.collapseClaimEntryPanel();
+            this.loadClaims();
         };
 
         AppVM.prototype.transitionToClaimEntry = function() {

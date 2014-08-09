@@ -75,6 +75,15 @@ define(['jquery', 'knockout', 'KOMap', 'amplify',
                 }.bind(this));
         };
 
+        ClaimVM.prototype.loadEntriesForClaim = function (claimId) {
+            $.get('/claim/' + claimId)
+                .done(function (resp) {
+                    console.log('Loaded claim ' + JSON.stringify(resp.data));
+                    KOMap.fromJS(resp.data, {}, this.claim);
+                    this.storeInSession(claimId);
+                }.bind(this));
+        };
+
         ClaimVM.prototype.storeInSession = function(claimId) {
             amplify.store.sessionStorage(SessionKeys.ACTIVE_CLAIM_ID, claimId);
             console.log('Stored CliamId: ' + claimId + ' in session storage');
