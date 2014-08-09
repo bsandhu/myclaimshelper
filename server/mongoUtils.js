@@ -1,5 +1,5 @@
 var MongoClient = require('mongodb').MongoClient;
-var Q = require("Q");
+var Q = require('q');
 
 var connUrl = process.env.DB || 'mongodb://localhost:9090/AgentDb';
 
