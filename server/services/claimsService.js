@@ -62,7 +62,7 @@ function getClaim(req, res) {
 
     mongoUtils.run(function (db) {
         var onResults = function (err, items) {
-            var resData = (items.length === 0)
+            var resData = (_.isEmpty(items) || items.length === 0)
                 ? 'No claim found with id ' + claimId
                 : _.extend(new Claim(), items[0]);
             sendResponse(res, err, resData);
