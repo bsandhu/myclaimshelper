@@ -53,13 +53,13 @@ describe('Claims Service', function () {
             assert(data);
             assert.equal(data.status, 'Success');
             assert.ok(testClaim._id);
+            assert.equal(testClaim.description, 'Test claim update');
             done();
         };
         claimsService.saveOrUpdateClaim(req, res, 'Claims');
     });
 
-    // TODO: Fix!
-    it.skip('Get a Claim', function (done) {
+    it('Get a Claim', function (done) {
         var req = {params: {id : testClaim._id}};
         var res = {};
 

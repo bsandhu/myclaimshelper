@@ -1,4 +1,5 @@
 var MongoClient = require('mongodb').MongoClient;
+var Q = require("Q");
 
 var connUrl = process.env.DB || 'mongodb://localhost:9090/AgentDb';
 
@@ -22,25 +23,26 @@ function initCollection(collectionName) {
     });
 }
 
-function incrementAndGet(sequenceName, cb) {
+function incrementAndGet(sequenceName) {
+    var deferred = Q.defer();
+
     run(function (db) {
         var col = db.collection('Sequences');
+
         col.findAndModify(
             { _id: sequenceName },
-            [
-                ['_id', 1]
-            ],
+            [['_id', 1]],
             { $inc: { seq: 1 } },
             {upsert: true},
             {new: true},
-            onUpdate);
+            function onUpdate(err, doc) {
+                if (err) {
+                    deferred.reject(err);
+                }
+                deferred.resolve(doc.seq);
+            });
     });
-    function onUpdate(err, doc) {
-        if (err) {
-            throw err;
-        }
-        cb(doc.seq);
-    }
+    return deferred.promise;
 }
 
 function initCollections() {
