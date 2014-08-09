@@ -1,5 +1,5 @@
 var assert = require("assert");
-var Q = require("Q");
+var Q = require("q");
 var mongoUtils = require("./../server/mongoUtils.js");
 
 describe('MongoUtils', function () {
