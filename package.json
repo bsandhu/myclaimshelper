@@ -9,7 +9,8 @@
         "underscore" : "*",
         "formidable": "*",
         "mailparser": ">=0.4.4",
-        "amdefine": ">=0.1.0"
+        "amdefine": ">=0.1.0",
+        "q": ">=1.0.1"
     },
     "devDependencies": {
         "mocha": "*"
