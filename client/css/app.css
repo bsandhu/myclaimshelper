@@ -36,6 +36,14 @@
     margin-top: 10px;
 }
 
+.topMargin2PC {
+    margin-top: 2%;
+}
+
+.topPadding1PC {
+    margin-top: 1%;
+}
+
 .bottomMargin10 {
     margin-bottom: 10px;
 }
@@ -102,6 +110,21 @@
     color: #EAEAEA;
 }
 
+.listItem {
+    border-top: 1px;
+    border-top-style: solid;
+    border-color: #E2E4E7;
+    height: 35px;
+    padding-top: 8px;
+    padding-right: 3px;
+    padding-left: 3px;
+}
+
+.listItem:hover {
+    background-color: #E2E4E7;
+    cursor: pointer;
+}
+
 .headerLogo {
     width: 200;
     color: black;
@@ -116,3 +139,4 @@
     background-position: right center;
     background-size: 90;
 }
+
