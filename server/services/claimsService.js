@@ -56,18 +56,32 @@ function saveOrUpdateEntity(req, res, colName) {
 }
 
 function getClaim(req, res) {
-    assert.ok(req.params.id, 'Expecting ClaimId as a parameter');
-    var claimId = req.params.id;
-    console.log('Getting claim: ' + claimId);
+    getEntityById(req, res, 'Claims');
+}
+
+function getClaimEntry(req, res) {
+    getEntityById(req, res, 'ClaimEntries');
+}
+
+function getEntityById(req, res, colName) {
+    assert.ok(req.params.id, 'Expecting EntityId as a parameter');
+    var entityId = req.params.id;
+    console.log('Getting Entity: ' + entityId);
 
     mongoUtils.run(function (db) {
-        var onResults = function (err, items) {
-            var resData = (_.isEmpty(items) || items.length === 0)
-                ? 'No claim found with id ' + claimId
-                : _.extend(new Claim(), items[0]);
-            sendResponse(res, err, resData);
-        };
-        claimsCollection(db).find({'_id': {'$eq': claimId}}).toArray(onResults);
+        var entityCol = db.collection(colName);
+
+        entityCol.findOne({'_id': {'$eq': entityId}}, onResults);
+
+        function onResults(err, item) {
+            if (err){
+                sendResponse(res, err);
+            } else if (_.isEmpty(item)){
+                sendResponse(res, 'No records with id ' + entityId);
+            } else {
+                sendResponse(res, err, item);
+            }
+        }
     });
 }
 
@@ -121,5 +135,6 @@ function sendResponse(res, err, jsonData) {
 exports.saveOrUpdateClaim = saveOrUpdateClaim;
 exports.saveOrUpdateClaimEntry = saveOrUpdateClaimEntry;
 exports.getClaim = getClaim;
+exports.getClaimEntry = getClaimEntry;
 exports.getAllClaims = getAllClaims;
 exports.getAllEntriesForClaim = getAllEntriesForClaim;

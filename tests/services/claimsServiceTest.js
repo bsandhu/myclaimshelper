@@ -11,6 +11,11 @@ describe('Claims Service', function () {
     testClaim.dueDate = new Date(2014, 1, 10);
     testClaim.summary = "I am test entry";
 
+    var testEntry = new ClaimEntry();
+    testEntry.entryDate = new Date(2014, 2, 1);
+    testEntry.dueDate = new Date(2014, 2, 10);
+    testEntry.summary = "I am test Task too";
+
     it('Save claim', function (done) {
         var req = {body: testClaim};
         var res = {};
@@ -20,16 +25,11 @@ describe('Claims Service', function () {
             assert.ok(data.data._id);
             done();
         };
-        claimsService.saveOrUpdateClaim(req, res, 'Claims');
+        claimsService.saveOrUpdateClaim(req, res);
     });
 
     it('Save claim entry', function (done) {
-        var testEntry = new ClaimEntry();
         testEntry.claimId = testClaim._id;
-        testEntry.entryDate = new Date(2014, 2, 1);
-        testEntry.dueDate = new Date(2014, 2, 10);
-        testEntry.summary = "I am test Task too";
-
         var req = {body: testEntry};
         var res = {};
 
@@ -39,7 +39,7 @@ describe('Claims Service', function () {
             assert.ok(data.data._id);
             done();
         };
-        claimsService.saveOrUpdateClaimEntry(req, res, 'Claims');
+        claimsService.saveOrUpdateClaimEntry(req, res);
     });
 
     it('Update claim', function (done) {
@@ -59,8 +59,7 @@ describe('Claims Service', function () {
         claimsService.saveOrUpdateClaim(req, res, 'Claims');
     });
 
-    // TODO Won't pass on CodeShip. Can't figure out why
-    it.skip('Get a Claim', function (done) {
+    it('Get a Claim', function (done) {
         var req = {params: {id : testClaim._id}};
         var res = {};
 
@@ -75,6 +74,22 @@ describe('Claims Service', function () {
         claimsService.getClaim(req, res);
     });
 
+    it('Get a Claim Entry', function (done) {
+        var req = {params: {id : testEntry._id}};
+        var res = {};
+
+        res.json = function (data) {
+            assert(data);
+            assert.equal(data.status, 'Success');
+
+            var savedClaimEntry = data.data;
+            assert.ok(savedClaimEntry.claimId);
+            assert.equal(savedClaimEntry.summary, 'I am test Task too');
+            done();
+        };
+        claimsService.getClaimEntry(req, res);
+    });
+
     it('Get all entries for a Claim', function (done) {
         var req = {params: {id : testClaim._id}};
         var res = {};
@@ -87,11 +102,11 @@ describe('Claims Service', function () {
             assert.equal(entries.length, 1);
             assert.ok(entries[0] instanceof ClaimEntry);
             done();
-        }
+        };
         claimsService.getAllEntriesForClaim(req, res);
     });
 
-    it('Get all cliams', function (done) {
+    it('Get all claims', function (done) {
         var req = {params: {id : testClaim._id}};
         var res = {};
 
