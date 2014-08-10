@@ -1,4 +1,5 @@
 var restify = require('restify');
+var config = require('./config.js');
 var claimsService = require('./services/claimsService.js');
 var contactService = require('./services/contactService.js');
 var uploadService = require('./services/uploadService.js');
@@ -60,7 +61,7 @@ function setupStaticRoutes() {
 }
 
 function startServer() {
-    server.listen(process.env.PORT || 8080, function () {
+    server.listen(config.port, function () {
         console.log('%s listening at %s', server.name, server.url);
     });
 }
