@@ -52,10 +52,12 @@ define(['Path', 'amplify', 'app/utils/events'],
     };
 
     Router.prototype.routeToClaim = function(claimId){
+        console.log('Navigating to claim ' + claimId);
         if (claimId) {
             window.location.hash = '#/claim/' + claimId;
+        } else {
+            this.routeToNewClaim();
         }
-        this.routeToNewClaim();
     };
 
     Router.prototype.routeToNewClaimEntry = function(){
@@ -63,10 +65,12 @@ define(['Path', 'amplify', 'app/utils/events'],
     };
 
     Router.prototype.routeToClaimEntry = function(claimEntryId){
+        console.log('Navigating to claim entry ' + claimEntryId);
         if (claimEntryId) {
             window.location.hash = '#/claimEntry/' + claimEntryId;
+        } else {
+            this.routeToNewClaimEntry();
         }
-        this.routeToNewClaimEntry();
     };
 
     Router.prototype.start = function(){

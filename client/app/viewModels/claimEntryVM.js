@@ -10,7 +10,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
             this.claimEntry = ko.observable(this.newEmptyClaimEntry());
 
             // View state
-            this.inEditMode = ko.observable(false);
+            this.inEditMode = ko.observable(true);
             this.setupEvListeners();
         }
 
@@ -27,7 +27,6 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
 
         ClaimEntryVM.prototype.onShowClaimEntry = function (evData) {
             console.log('Display claimEntryId: ' + JSON.stringify(evData));
-            this.claim(this.newEmptyClaimEntry());
             this.loadClaimEntry(evData.claimEntryId);
         };
 
@@ -35,7 +34,6 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
             console.log('Adding new claim entry');
             this.claimEntry(this.newEmptyClaimEntry());
             this.claimEntry().entryDate(new Date());
-            this.inEditMode(true);
         };
 
         ClaimEntryVM.prototype.onSave = function () {
@@ -54,8 +52,18 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
                 });
         };
 
+        ClaimEntryVM.prototype.loadClaimEntry = function (claimEntryId) {
+            $.get('/claimEntry/' + claimEntryId)
+                .done(function (resp) {
+                    console.log('Loaded claim entry ' + JSON.stringify(resp.data));
+                    KOMap.fromJS(resp.data, {}, this.claimEntry);
+
+                    // TODO figure out if we need to track selected claim entry in session
+                    //  this.storeInSession(claimEntryId);
+                }.bind(this));
+        };
+
         ClaimEntryVM.prototype.onCancel = function () {
-            this.inEditMode(false);
             Router.routeToClaim();
         };
 

@@ -17,30 +17,6 @@
         <div class="narrow fieldLabel">Description</div>
         <div class="inline" data-bind="text: claim().description"/>
     </div>
-
-    <!-- Entries -->
-    <div class="topMargin10 topBorder clear">
-        <div class="clear bottomMargin10"><h3>Entries</h3></div>
-    </div>
-
-    <div data-bind="foreach: {data: claimEntries, as: 'entry'} ">
-        <div class="inline">
-            <div class="inline label">Description</div>
-            <div class="inline" data-bind="value: entry.description"></div>
-        </div>
-        <div class="inline">
-            <div class="inline label">Due Date</div>
-            <div class="inline" data-bind="text: entry.entryDate"></div>
-        </div>
-    </div>
-
-    <div class="topMargin10 topBorder clear">
-        <div>
-            <a href="#/claimEntry">Add New Entry</a>
-        </div>
-    </div>
-
-    <div style="height: 15px"></div>
 </div>
 
 <!-- ************************************************ -->
@@ -78,7 +54,38 @@
     </form>
     -->
     <div class="topMargin10"/>
-    <div style="float: right" class="clear bottomMargin10">
+</div>
+
+<!-- ************************************************ -->
+<!--List Entries -->
+<!-- ************************************************ -->
+
+<h3>Entries</h3>
+
+<div data-bind="foreach: {data: claimEntries, as: 'entry' }">
+    <div class="listItem" data-bind="click: $parent.onClaimEntryClick">
+        <div class="inline">
+            <a data-bind="attr: {href: '#/claimEntry/' + entry._id}">
+                <span data-bind="text: entry.description"></span>
+            </a>
+        </div>
+        <div class="inline alignRight">
+            <div class="glyphicon glyphicon-chevron-right"></div>
+        </div>
+    </div>
+</div>
+
+<!-- ************************************************ -->
+<!--New Entry -->
+<!-- ************************************************ -->
+
+<div class="topMargin2PC topBorder clear">
+    <div class="inline topPadding1PC ">
+        <spam class="glyphicon glyphicon-plus"></spam>
+        <a href="#/claimEntry">Add New Entry</a>
+    </div>
+
+    <div class="inline alignRight topPadding1PC ">
         <button type="button" class="btn btn-default" data-bind="click: onSave">
             <span class="glyphicon glyphicon-floppy-disk"></span>
             <span class="leftMargin2">Save</span>
@@ -90,27 +97,4 @@
         </button>
     </div>
 
-    <div class="topMargin10 topBorder clear">
-        <div class="clear bottomMargin10"><h3>Entries</h3></div>
-        <div>
-            <a href="#/claimEntry">Add New Entry</a>
-        </div>
-    </div>
-
-</div>
-
-<!-- ************************************************ -->
-<!--List Entries -->
-<!-- ************************************************ -->
-
-<h3>Entries</h3>
-
-<div data-bind="foreach: {data: claimEntries, as: 'entry' }">
-    <div class="bottomBorderr">
-        <span>
-            <a data-bind="attr: {href: '#/claimEntry/' + attr._id">
-                <span data-bind="text: entry.description"></span>
-            </a>
-        </span>
-    </div>
 </div>
