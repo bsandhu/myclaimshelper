@@ -36,6 +36,14 @@
     margin-top: 10px;
 }
 
+.topMargin2PC {
+    margin-top: 2%;
+}
+
+.topPadding1PC {
+    margin-top: 1%;
+}
+
 .bottomMargin10 {
     margin-bottom: 10px;
 }
@@ -92,6 +100,18 @@
     padding: 5px;
 }
 
+.collapsedcontainer {
+    cursor: pointer;
+    height: 100%;
+}
+
+.collapsedcontainerLabel {
+    transform: rotate(90deg) translate(100px, 0px);
+    color: lightgray;
+    font-family: Menlo, Monaco, Consolas, "Courier New", monospacesans-serif;
+    font-size: medium;
+}
+
 .panelItem {
     font-size: 14px;
     line-height: 20px;
@@ -100,6 +120,21 @@
     border-bottom-width: 1px;
     border-bottom-style: solid;
     color: #EAEAEA;
+}
+
+.listItem {
+    border-top: 1px;
+    border-top-style: solid;
+    border-color: #E2E4E7;
+    height: 35px;
+    padding-top: 8px;
+    padding-right: 3px;
+    padding-left: 3px;
+}
+
+.listItem:hover {
+    background-color: #E2E4E7;
+    cursor: pointer;
 }
 
 .headerLogo {
@@ -116,3 +151,4 @@
     background-position: right center;
     background-size: 90;
 }
+

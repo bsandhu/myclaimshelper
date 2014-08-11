@@ -71,6 +71,13 @@
                 <div>Past 2 weeks</div>
             </div>
         </div>
+
+        <!-- Collapsed label -->
+        <div id="searchPanelCollapsedContent" class="collapsedcontainer"
+             data-bind="click: toggleSearchPanel">
+            <div class="collapsedcontainerLabel">Search</div>
+        </div>
+
     </div>
 
     <!-- **** Claims list **** -->
@@ -84,11 +91,15 @@
         </div>
 
         <div id="gridPanelContent">
-
             <!-- Bind DataTable widget - via Knockout -->
             <table cellpadding="0" cellspacing="0" border="0" class="display" id="example"
                    data-bind="dataTable: {options: tableConfig, data: claims}">
             </table>
+        </div>
+
+        <div id="gridPanelCollapsedContent" class="collapsedcontainer"
+             data-bind="click: toggleGridPanel">
+            <div class="collapsedcontainerLabel">Search Results</div>
         </div>
     </div>
 

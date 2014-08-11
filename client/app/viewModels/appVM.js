@@ -10,6 +10,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'app/utils/even
             this.claims = ko.observableArray([]);
 
             // View state
+            this.hideSearchPanelCollapsedLabel();
             this.setupEvListeners();
             this.setupClaimsGrid();
         }
@@ -72,13 +73,13 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'app/utils/even
             this.collapseGridPanel();
             this.partialCollapseClaimPanel();
             this.expandClaimEntryPanel();
-        }
+        };
 
         AppVM.prototype.transitionToClaim = function() {
             this.collapseGridPanel();
             this.collapseClaimEntryPanel();
             this.expandClaimPanel();
-        }
+        };
 
 
         AppVM.prototype.onAddNewClaim = function () {
@@ -91,33 +92,53 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'app/utils/even
 
         AppVM.prototype.toggleSearchPanel = function () {
             console.log('Search panel toggle');
-            var panelRef = $('#searchPanel');
-            var panelContentRef = $('#searchPanelContent');
-
-            if (panelRef.width() <= 30) {
-                panelRef.velocity({ width: '18%' }, this.gridNavDelay);
-                panelContentRef.velocity("fadeIn", { duration: this.gridNavDelay });
+            if ($('#searchPanel').width() <= 30) {
+                this.expandSearchPanel();
             } else {
-                panelRef.velocity({ width: '30px' }, {duration: this.gridNavDelay}, 'ease-in-out');
-                panelContentRef.velocity("fadeOut", { duration: this.gridNavDelay });
+                this.collapseSearchPanel();
             }
+        };
+
+        AppVM.prototype.showSearchPanelCollapsedLabel = function(){
+            $('#searchPanelCollapsedContent').velocity("fadeIn", { duration: this.gridNavDelay });
+        };
+
+        AppVM.prototype.hideSearchPanelCollapsedLabel = function(){
+            $('#searchPanelCollapsedContent').hide();
+        };
+
+        AppVM.prototype.expandSearchPanel = function(){
+            this.hideSearchPanelCollapsedLabel();
+            $('#searchPanel').velocity({ width: '18%' }, this.gridNavDelay);
+            $('#searchPanelContent').velocity("fadeIn", { duration: this.gridNavDelay });
+        };
+
+        AppVM.prototype.collapseSearchPanel = function(){
+            this.showSearchPanelCollapsedLabel();
+            $('#searchPanel').velocity({ width: '30px' }, {duration: this.gridNavDelay}, 'ease-in-out');
+            $('#searchPanelContent').velocity("fadeOut", { duration: this.gridNavDelay });
         };
 
         // Grid panel
 
         AppVM.prototype.toggleGridPanel = function () {
-            var navFn = this.lessThat4PercentWide($("#gridPanel")) ? this.transitionToSearchResults.bind(this) : this.collapseGridPanel.bind(this);
-            navFn();
+            if(this.lessThat4PercentWide($("#gridPanel"))){
+                Router.routeToHome();
+            } else {
+                this.collapseGridPanel.bind(this);
+            }
         };
 
         AppVM.prototype.expandGridPanel = function () {
             console.log('Expand grid panel');
             $("#gridPanel").velocity({ width: '80%' }, this.gridNavDelay);
             $("#gridPanelContent").velocity("fadeIn", { duration: this.gridNavDelay });
+            $('#gridPanelCollapsedContent').hide();
         };
 
         AppVM.prototype.collapseGridPanel = function () {
             console.log('Collapse grid panel');
+            $('#gridPanelCollapsedContent').velocity("fadeIn", { duration: this.gridNavDelay });
             $("#gridPanel").velocity({ width: '4%' }, {duration: this.gridNavDelay}, 'ease-in-out');
             $("#gridPanelContent").velocity("fadeOut", { duration: this.gridNavDelay });
         };
