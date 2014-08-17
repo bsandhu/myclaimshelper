@@ -10,6 +10,7 @@ define([], function () {
     function ClaimEntry() {
         this._id = undefined;
         this.claimId = undefined;
+        this.tag = undefined;
 
         this.entryDate = undefined;
         this.dueDate = undefined;
@@ -17,6 +18,10 @@ define([], function () {
 
         this.summary = undefined;
         this.description = undefined;
+
+        // Attachments descriptors
+
+
     }
 
     return ClaimEntry;
