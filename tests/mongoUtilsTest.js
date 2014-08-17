@@ -1,6 +1,5 @@
-var assert = require("assert");
-var Q = require("q");
-var mongoUtils = require("./../server/mongoUtils.js");
+var assert = require('assert');
+var mongoUtils = require('./../server/mongoUtils.js');
 
 describe('MongoUtils', function () {
 
@@ -11,7 +10,7 @@ describe('MongoUtils', function () {
             return mongoUtils.incrementAndGet('TestSeq');
         }
 
-        Q.fcall(createSeqNum)
+        createSeqNum()
             .then(function (seqNum) {
                 firstSeqNumber = seqNum;
                 assert.ok(seqNum >= 0);
