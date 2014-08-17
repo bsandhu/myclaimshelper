@@ -48,6 +48,7 @@ function initCollections() {
     initCollection('Claims');
     initCollection('ClaimEntries');
     initCollection('Contacts');
+    initCollection('Files');
     initCollection('Sequences');
 }
 
