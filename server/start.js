@@ -5,6 +5,7 @@ var contactService = require('./services/contactService.js');
 var uploadService = require('./services/uploadService.js');
 var mailService = require('./services/mailService.js');
 var mongoUtils = require('./mongoUtils.js');
+var os = require('os');
 
 var server;
 
@@ -14,7 +15,13 @@ function init() {
     server.use(restify.authorizationParser());
     server.use(restify.dateParser());
     server.use(restify.queryParser());
-    server.use(restify.bodyParser());   // Needed for parsing POST req body
+
+    // Needed for parsing POST req body. Extract file upload.
+    server.use(restify.bodyParser({
+        uploadDir: os.tmpdir(),
+        mapParams: true,
+        mapFiles: true
+    }));
     server.use(restify.jsonp());
     server.use(restify.gzipResponse());
 }

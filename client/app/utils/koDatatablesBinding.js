@@ -30,5 +30,5 @@ define(['jquery', 'knockout', 'datatables'],
                     });
                 }
             }
-        }
+        };
     })
