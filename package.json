@@ -9,6 +9,7 @@
         "formidable" : "1.0.15",
         "underscore" : "1.6.0",
         "mailparser" : "0.4.5",
+        "mailgun-js" : "*",
         "amdefine"   : "0.1.0",
         "q"          : "1.0.1"
     },
