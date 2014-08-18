@@ -8,19 +8,47 @@ var jQuery = require('jquery-deferred');
  *  `Restify` parses uploaded file into a files parameter.
  *  It uses 'Fomidable' internally, so no need to do so manually
  */
-function uploadArtifact(req, res) {
+function uploadFile(req, res) {
     assert.ok(req.files.uploadedFile, 'Expecting uploadedFile as a parameter');
 
     var file = req.files.uploadedFile;
     console.info('Got file: ' + file.name + ', ' + file.path);
 
     saveToDB(file.name, file.path)
-        .done(function(seqNum){
+        .done(function okResponse(seqNum) {
             res.writeHead(200, {'content-type': 'text/plain'});
             res.write('Uploaded. Id ' + seqNum);
             res.end();
         })
-        .fail(function(){
+        .fail(function errResponse() {
+            res.writeHead(500, {'content-type': 'text/plain'});
+            res.write('Error');
+            res.end();
+        });
+}
+
+function downloadFile(req, res) {
+    var id = req.params.id;
+    var fileName = req.params.fileName;
+
+    readFromDB(id, fileName)
+        .done(function (stream) {
+            res.writeHead(200, {
+                'Content-type': 'application/octet-stream',
+                'Content-Disposition': 'attachment; filename="' + fileName + '"'
+            });
+
+            stream.on('data',
+                function sendToClient(chunk) {
+                    res.write(chunk);
+                }
+            );
+
+            stream.on('end', function () {
+                res.end();
+            });
+        })
+        .fail(function(err){
             res.writeHead(500, {'content-type': 'text/plain'});
             res.write('Error');
             res.end();
@@ -44,16 +72,16 @@ function saveToDB(fileName, filePath) {
             var gridStore = new GridStore(db, seqNum, fileName, "w+");
 
             // Open the file
-            gridStore.open(function(err, gridStore) {
+            gridStore.open(function (err, gridStore) {
 
                 // Write some data to the file
-                gridStore.writeFile(filePath, function(err, gridStore) {
+                gridStore.writeFile(filePath, function (err, gridStore) {
                     if (err) {
                         saveDeferred.reject(err);
                         return;
                     }
                     // Close (Flushes the data to MongoDB)
-                    gridStore.close(function(err, result) {
+                    gridStore.close(function (err, result) {
                         if (err) {
                             saveDeferred.reject(err);
                             return;
@@ -82,31 +110,32 @@ function readFromDB(_id, fileName) {
     var defer = jQuery.Deferred();
 
     mongoUtils.run(function (db) {
-        var gridStore = new GridStore(db, _id, fileName, "r");
+        var gridStore = new GridStore(db, Number(_id), fileName, "r");
         var gotEnd = false;
 
-        gridStore.open(function(err, gridStore) {
+        gridStore.open(function (err, gs) {
+            if (err) {
+                defer.reject(err);
+            }
 
-            gridStore.open(function(err, gs) {
+            // Create a stream to the file
+            var stream = gs.stream(true);
 
-                // Create a stream to the file
-                var stream = gs.stream(true);
-
-                stream.on("end", function() {
-                    gotEnd = true;
-                });
-
-                stream.on("close", function() {
-                    assert.ok(gotEnd);
-                    db.close();
-                });
-                defer.resolve(stream);
+            stream.on("end", function () {
+                gotEnd = true;
             });
+
+            stream.on("close", function () {
+                assert.ok(gotEnd);
+                db.close();
+            });
+            defer.resolve(stream);
         });
     });
     return defer;
 }
 
-exports.uploadArtifact = uploadArtifact;
+exports.uploadFile = uploadFile;
+exports.downloadFile = downloadFile;
 exports.saveToDB = saveToDB;
 exports.readFromDB = readFromDB;

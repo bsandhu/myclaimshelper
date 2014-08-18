@@ -41,4 +41,17 @@ describe('Upload Service', function () {
                 });
             });
     });
+
+    it('Download file', function (done) {
+        var req = {params: {id: fileId, fileName: FILE_NAME}};
+        var res = {};
+        res.writeHead = function () {};
+        res.write = function (chunk) {
+            assert.ok(chunk);
+        };
+        res.end = function () {
+            done();
+        };
+        uploadService.downloadFile(req, res);
+    });
 });
