@@ -1,7 +1,7 @@
 var Claim = require('./../model/claim.js');
 var ClaimEntry = require('./../model/claimEntry.js');
 var mongoUtils = require('./../mongoUtils.js');
-var Q = require('q');
+var jQuery = require('jquery-deferred');
 var assert = require('assert');
 var _ = require('underscore');
 
@@ -23,7 +23,7 @@ function claimEntriesCollection(db) {
 }
 
 function saveOrUpdateEntity(req, res, colName) {
-    function getseqNum() {
+    function getSeqNum() {
         return mongoUtils.incrementAndGet(colName);
     }
 
@@ -52,7 +52,7 @@ function saveOrUpdateEntity(req, res, colName) {
         });
     }
 
-    Q.fcall(getseqNum).then(dbCall).done();
+    getSeqNum().then(dbCall).done();
 }
 
 function getClaim(req, res) {

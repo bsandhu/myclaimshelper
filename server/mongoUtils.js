@@ -1,5 +1,5 @@
 var MongoClient = require('mongodb').MongoClient;
-var Q = require('q');
+var jQuery = require('jquery-deferred');
 var config = require('./config.js');
 
 function run(fn) {
@@ -23,7 +23,7 @@ function initCollection(collectionName) {
 }
 
 function incrementAndGet(sequenceName) {
-    var deferred = Q.defer();
+    var deferred = jQuery.Deferred();
 
     run(function (db) {
         var col = db.collection('Sequences');
@@ -41,13 +41,14 @@ function incrementAndGet(sequenceName) {
                 deferred.resolve(doc.seq);
             });
     });
-    return deferred.promise;
+    return deferred.promise();
 }
 
 function initCollections() {
     initCollection('Claims');
     initCollection('ClaimEntries');
     initCollection('Contacts');
+    initCollection('Files');
     initCollection('Sequences');
 }
 

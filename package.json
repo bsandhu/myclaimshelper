@@ -10,7 +10,7 @@
         "mailparser" : "0.4.5",
         "mailgun-js" : "*",
         "amdefine"   : "0.1.0",
-        "q"          : "1.0.1"
+        "jquery-deferred" : "0.3.0"
     },
     "devDependencies": {
         "mocha": "1.21.4"
