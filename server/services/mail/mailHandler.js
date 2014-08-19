@@ -1,6 +1,8 @@
 var Mailgun = require('mailgun-js');
 var MailParser = require('./mailParser.js').MailParser;
 var config = require('../../config.js');
+var mongojs = require('mongojs');
+var saveToDb = require('../uploadService.js').saveToDb;
 
 // MailHandler
 // create new claim
@@ -23,10 +25,13 @@ MailRequestHandler.prototype.processRequest = function(req, res){
         return false;
     }
     else{
-        // if no claim exists, create.
-        // store mail entry as ClaimEntry.
-        // store attachemts as such.
-        console.log('All good! ' + JSON.stringify(mailEntry));
+        console.log('Email entry: ' + JSON.stringify(mailEntry));
+        var db = mongojs(config.db, ['ClaimEntries']);
+        db.ClaimEntries.save(mailEntry);
+        // store attachemts as such...
+        for (attachment in mailEntry['attachments']){
+          saveToDb(attachment.name, attachment.path);
+        }
         return true;
     }
 };
