@@ -20,18 +20,27 @@ MailRequestHandler.prototype.processRequest = function(req, res){
     if (parser.errors.length > 0){
         //email respond with errors
         var body = 'ERROR: could not process request.\r\n' + parser.errors;
-        sendReply(req.params.from, req.params.subject, body)
+        sendReply(req.params.from, req.params.subject, body);
         console.log('Errors found: ' + parser.errors);
         return false;
     }
     else{
         console.log('Email entry: ' + JSON.stringify(mailEntry));
         var db = mongojs(config.db, ['ClaimEntries']);
-        db.ClaimEntries.save(mailEntry);
+        db.ClaimEntries.save(mailEntry.mail, function(err, data){
+		if (err){
+                    console.log(err);
+                    sendReply(req.params.from, req.params.subject, body);
+		}
+		else{
+                    console.log(data);
+                    sendReply(req.params.from, req.params.subject, '007 processed!');
+		}
+	});
         // store attachemts as such...
-        for (attachment in mailEntry['attachments']){
-          saveToDb(attachment.name, attachment.path);
-        }
+        //for (attachment in mailEntry['attachments']){
+        //  saveToDb(attachment.name, attachment.path);
+        //}
         return true;
     }
 };
