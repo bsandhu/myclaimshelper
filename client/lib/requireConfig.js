@@ -5,8 +5,6 @@ require.config({
         'knockout'  : 'lib/knockout',
         'KOMap'     : 'lib/knockout.mapping.min',   // Map KO <-> JSON
         'KOAmd'     : 'lib/knockout.amd.helpers',   // Load templates async
-        'dropzone'  : 'lib/dropzone.amd',           // Drag n drop file upload
-        'datatables': 'lib/jquery.dataTables',      // Grid
         'velocity'  : 'lib/jquery.velocity.min',    // JS animations
         'amplify'   : 'lib/amplify',                // Pub/sub
         'text'      : 'lib/require.text',           // Require plugin for html templates
@@ -17,9 +15,6 @@ require.config({
             deps: ['jquery']
         },
         'knockout': {
-            deps: ['jquery']
-        },
-        'dataTables': {
             deps: ['jquery']
         },
         'KOMap': {
