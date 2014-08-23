@@ -27,7 +27,6 @@ MailRequestHandler.prototype.processRequest = function(req, res){
     else{
         console.log('Email entry: ' + JSON.stringify(mailEntry));
         var db = mongojs(config.db, ['ClaimEntries']);
-<<<<<<< HEAD
         var data = {'description': mailEntry.mail.subject,
                     'mail':mailEntry.mail, 
                     'claimId':mailEntry.claimId};
