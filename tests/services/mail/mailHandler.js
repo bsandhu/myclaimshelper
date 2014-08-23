@@ -5,7 +5,7 @@ var ms = require('../../../server/services/mail/mailHandler.js');
 
 var mailHandler = new ms.MailRequestHandler();
 
-describe('parseRequest', function(){
+describe.skip('parseRequest', function(){
 
     it('succeeds', function(done){
         var req = {'params': {'subject': 'claimId:123',
