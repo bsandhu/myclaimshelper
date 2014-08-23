@@ -2,7 +2,7 @@ var Mailgun = require('mailgun-js');
 var MailParser = require('./mailParser.js').MailParser;
 var config = require('../../config.js');
 var mongojs = require('mongojs');
-var saveToDb = require('../uploadService.js').saveToDb;
+var saveToDB = require('../uploadService.js').saveToDB;
 
 // MailHandler
 // create new claim
@@ -38,9 +38,12 @@ MailRequestHandler.prototype.processRequest = function(req, res){
 		}
 	});
         // store attachemts as such...
-        //for (attachment in mailEntry['attachments']){
-        //  saveToDb(attachment.name, attachment.path);
-        //}
+        for (attachment in mailEntry['attachments']){
+            saveToDB(attachment.name, attachment.path).fail(function(){
+                var body = 'ERROR: failed to store attachment: ' + attachment.name;
+                sendReply(req.params.from, req.params.subject, body);
+            });
+        }
         return true;
     }
 };
