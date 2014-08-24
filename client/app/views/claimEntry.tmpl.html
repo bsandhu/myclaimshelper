@@ -9,21 +9,30 @@
 <div>
     <div class="inline narrow fieldLabel">Entered on</div>
     <div class="inline narrow">
-        <input class="textBox" type="date" data-bind="value: claimEntry().entryDate"/>
+        <input type="text" class="form-control normal" id="claimEntry-entryDate"
+               data-bind="datetimePicker: {
+                              datepicker: true,
+                              timepicker: true},
+                          value: claimEntry().entryDate"/>
     </div>
 </div>
 
 <div class="topMargin10">
     <div class="inline narrow fieldLabel">Due on</div>
     <div class="inline narrow">
-        <input class="textBox" type="date" data-bind="value: claimEntry().dueDate"/>
+        <input type="text" class="form-control normal" id="claimEntry-dueDate"
+               data-bind="datetimePicker: {
+                              datepicker: true,
+                              timepicker: true},
+                          value: claimEntry().dueDate"/>
+
     </div>
 </div>
 
 <div class="topMargin10">
     <div class="inline narrow fieldLabel">Note</div>
     <div class="inline narrow">
-        <textarea style="width: 400px; height: 60px"
+        <textarea style="width: 400px; height: 60px" class="form-control"
                   data-bind="value: claimEntry().description" placeholder="Note"></textarea>
     </div>
 </div>

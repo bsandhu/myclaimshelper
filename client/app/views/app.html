@@ -3,6 +3,7 @@
     <script src="../../../lib/requireConfig.js"></script>
     <link rel="stylesheet" type="text/css" href="../../css/bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../../css/bootstrap-theme.css">
+    <link rel="stylesheet" type="text/css" href="../../css/jquery.datetimepicker.css">
     <link rel="stylesheet" type="text/css" href="../../css/app.css">
 </head>
 
@@ -144,9 +145,9 @@
     /**
      * Load libs and init Knockout - on app startup. See requireConfig.js
      */
-    require(['jquery', 'knockout', 'KOAmd', 'text', 'amplify', 'app/utils/router', 'app/viewModels/appVM', 'app/utils/events',
-             'app/utils/koFileDragBinding', 'velocity'],
-            function ($, ko, KOAmd, text, amplify, Router, AppVM, Events) {
+    require(['jquery', 'knockout', 'KOAmd', 'text', 'amplify', 'app/utils/router', 'app/viewModels/appVM',
+             'app/utils/events', 'app/utils/koFileDragBinding', 'app/utils/koDatetimePickerBinding', 'velocity'],
+            function ($, ko, KOAmd, text, amplify, Router, AppVM) {
                 console.log('Init App');
 
                 // Knockout AMD supoprt setup

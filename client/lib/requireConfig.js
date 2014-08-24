@@ -8,10 +8,14 @@ require.config({
         'velocity'  : 'lib/jquery.velocity.min',    // JS animations
         'amplify'   : 'lib/amplify',                // Pub/sub
         'text'      : 'lib/require.text',           // Require plugin for html templates
-        'Path'      : 'lib/path'
+        'Path'      : 'lib/path',
+        'datetimepicker' : 'lib/jquery.datetimepicker'
     },
     shim: {
         'velocity': {
+            deps: ['jquery']
+        },
+        'datetimepicker': {
             deps: ['jquery']
         },
         'knockout': {

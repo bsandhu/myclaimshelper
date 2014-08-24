@@ -1,6 +1,7 @@
 define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEntry',
-        'app/utils/ajaxUtils', 'app/utils/events', 'app/utils/router', 'app/utils/sessionKeys' ],
-    function ($, ko, KOMap, amplify, Claim, ClaimEntry, ajaxUtils, Events, Router, SessionKeys) {
+        'app/utils/ajaxUtils', 'app/utils/events', 'app/utils/router', 'app/utils/sessionKeys',
+        'app/utils/dateUtils'],
+    function ($, ko, KOMap, amplify, Claim, ClaimEntry, ajaxUtils, Events, Router, SessionKeys, DateUtils) {
         'use strict';
 
         function ClaimEntryVM() {
@@ -33,7 +34,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
         ClaimEntryVM.prototype.onNewClaimEntry = function (evData) {
             console.log('Adding new claim entry');
             this.claimEntry(this.newEmptyClaimEntry());
-            this.claimEntry().entryDate(new Date());
+            this.claimEntry().entryDate(DateUtils.toDatetimePickerFormat(new Date()));
         };
 
         ClaimEntryVM.prototype.onSave = function () {
