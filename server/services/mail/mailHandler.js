@@ -3,15 +3,11 @@ var MailParser = require('./mailParser.js').MailParser;
 var config = require('../../config.js');
 var mongojs = require('mongojs');
 var saveToDB = require('../uploadService.js').saveToDB;
-
-// MailHandler
-// create new claim
-// create new entry
-// create new attachment
+var ClaimEntry = require("../../model/claimEntry.js");
+var claimsService = require("../../services/claimsService.js");
 
 
-function MailRequestHandler(){
-}
+function MailRequestHandler(){}
 
 MailRequestHandler.prototype.processRequest = function(req, res){
     res.send(200, 'Request received successfully.');
@@ -25,21 +21,21 @@ MailRequestHandler.prototype.processRequest = function(req, res){
         return false;
     }
     else{
-        console.log('Email entry: ' + JSON.stringify(mailEntry));
-        var db = mongojs(config.db, ['ClaimEntries']);
-        var data = {'description': mailEntry.mail.subject,
-                    'mail':mailEntry.mail, 
-                    'claimId':mailEntry.claimId};
-        db.ClaimEntries.save(data, function(err, data){
-		if (err){
+        var entry = new ClaimEntry();
+        entry.entryDate = new Date();
+        entry.summary = mailEntry.mail.subject;
+        entry.description = mailEntry.mail;
+        entry.claimId = mailEntry.claimId;
+        debugger
+        claimsService.saveOrUpdateClaimEntryObject(entry)
+                .done(function (entry){
+                    //console.log(entry);
+                    sendReply(req.params.from, req.params.subject, 'Success processing email!');
+		})
+                .fail(function (err){
                     console.log(err);
-                    sendReply(req.params.from, req.params.subject, body);
-		}
-		else{
-                    console.log(data);
-                    sendReply(req.params.from, req.params.subject, '007 processed!');
-		}
-	});
+                    sendReply(req.params.from, req.params.subject, err);
+		});
         // store attachemts as such...
         for (attachment in mailEntry['attachments']){
             saveToDB(attachment.name, attachment.path).fail(function(){
@@ -63,7 +59,7 @@ function sendReply(recipient, subject, body){
     };
     mailgun.messages().send(data, function(error, body){
         if (error) throw error;
-        console.log(body);
+        else console.log(body);
     });
 }
 
