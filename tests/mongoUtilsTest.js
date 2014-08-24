@@ -17,9 +17,12 @@ describe('MongoUtils', function () {
             })
             .then(createSeqNum)
             .then(function (seqNum) {
-                secondSeqNumber = seqNum;
-                assert.equal(secondSeqNumber, firstSeqNumber + 1);
-                done();
+                try {
+                    secondSeqNumber = seqNum;
+                    assert.equal(secondSeqNumber, firstSeqNumber + 1);
+                } finally {
+                    done();
+                }
             });
     });
 });
