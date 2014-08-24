@@ -42,6 +42,23 @@ describe('Claims Service', function () {
         claimsService.saveOrUpdateClaimEntry(req, res);
     });
 
+    it('Save claim entry object', function (done) {
+        var testEntry = new ClaimEntry();
+        testEntry.entryDate = new Date(2014, 2, 1);
+        testEntry.dueDate = new Date(2014, 2, 10);
+        testEntry.summary = "I am test Task too";
+
+        claimsService
+            .saveOrUpdateClaimEntryObject(testEntry)
+            .done(function(data) {
+                assert(data);
+                assert.equal(data.status, 'Success');
+                assert.ok(data.data._id);
+                done();
+
+            });
+    });
+
     it('Update claim', function (done) {
         testClaim.description = 'Test claim update';
 
