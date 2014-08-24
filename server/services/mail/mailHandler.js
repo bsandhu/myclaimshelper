@@ -1,7 +1,6 @@
 var Mailgun = require('mailgun-js');
 var MailParser = require('./mailParser.js').MailParser;
 var config = require('../../config.js');
-var mongojs = require('mongojs');
 var saveToDB = require('../uploadService.js').saveToDB;
 var ClaimEntry = require("../../model/claimEntry.js");
 var claimsService = require("../../services/claimsService.js");
@@ -26,7 +25,6 @@ MailRequestHandler.prototype.processRequest = function(req, res){
         entry.summary = mailEntry.mail.subject;
         entry.description = mailEntry.mail;
         entry.claimId = mailEntry.claimId;
-        debugger
         claimsService.saveOrUpdateClaimEntryObject(entry)
                 .done(function (entry){
                     //console.log(entry);
