@@ -1,12 +1,13 @@
-define(['jquery', 'knockout'],
+define(['jquery', 'knockout', 'KOMap'],
 
-    function ($, ko) {
+    function ($, ko, KOMap) {
         'use strict';
 
         ko.bindingHandlers.fileDrag = {
 
             init: function (element, valueAccessor, allBindings, viewModel, bindingContext) {
                 var binding = ko.utils.unwrapObservable(valueAccessor());
+                var attachments = allBindings.get('fileDrag');
 
                 // Setup UI elements
                 var outerContainer = $('<div class="fileDropBox"></div>');
@@ -48,14 +49,12 @@ define(['jquery', 'knockout'],
                     var imgContainer = $('<div></div>');
                     for (var i = 0; i < files.length; i++) {
                         imgContainer.append(createThumbnail(files[i]));
-
-                        var imgMsg = $('<div class="inline" style="font-size: small"></div>');
-                        imgMsg.append(files[i].name);
                         uploadFile(files[i])
-                            .done(function(msg){
-                                imgMsg.append('...' + msg);
+                            .done(function(fileMetadata){
+                                var metaObj = JSON.parse(fileMetadata);
+                                console.log(metaObj);
+                                attachments.push(KOMap.fromJS(metaObj));
                             });
-                        imgContainer.append(imgMsg);
                     }
                     outerContainer.append(imgContainer);
                 }

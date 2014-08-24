@@ -48,7 +48,7 @@
     margin-top: 1%;
 }
 
-.bottomMargin10 {
+.bottomMargin1pc {
     margin-bottom: 10px;
 }
 
@@ -82,10 +82,6 @@
 }
 
 /**** Form elements ****/
-
-.textBox {
-    height: 25px;
-}
 
 .fileDropBox {
     width: 100%;
@@ -176,3 +172,12 @@
     background-size: 90px;
 }
 
+/**** Grid ****/
+
+.table > tbody > tr:hover {
+    cursor: pointer;
+}
+
+.searchBox {
+    border-radius: 4px;
+}

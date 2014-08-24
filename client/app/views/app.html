@@ -1,9 +1,9 @@
-<head>
+<head xmlns="http://www.w3.org/1999/html">
     <script src="../../../lib/require.js"></script>
     <script src="../../../lib/requireConfig.js"></script>
     <link rel="stylesheet" type="text/css" href="../../css/bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../../css/bootstrap-theme.css">
-    <link rel="stylesheet" type="text/css" href="../../css/jquery.dataTables.css">
+    <link rel="stylesheet" type="text/css" href="../../css/jquery.datetimepicker.css">
     <link rel="stylesheet" type="text/css" href="../../css/app.css">
 </head>
 
@@ -84,16 +84,33 @@
     <div id="gridPanel" class="slidingContainer" style="width: 80%; background-color: #F8F8FA">
 
         <!-- Menu icon -->
-        <div class="inline alignRight">
+        <div class="alignRight">
             <div class="inline glyphicon glyphicon-th-list"
                  style="cursor: pointer"
                  data-bind="click: toggleGridPanel"></div>
         </div>
+        <div class="clear bottomMargin1pc"></div>
 
         <div id="gridPanelContent">
-            <!-- Bind DataTable widget - via Knockout -->
-            <table cellpadding="0" cellspacing="0" border="0" class="display" id="example"
-                   data-bind="dataTable: {options: tableConfig, data: claims}">
+            <div class="alignRight">
+                <input class="searchBox" style="width: 15pc" placeholder="Search..."
+                       data-bind="value: searchText, valueUpdate: 'afterkeydown'"/>
+                <span><a href="#" data-bind="click: onSearchClear">Clear</a></span>
+            </div>
+            <div class="clear bottomMargin1pc"></div>
+
+            <table class="table table-hover table-condensed">
+                <thead>
+                <th>Id</th>
+                <th>Description</th>
+                </thead>
+
+                <tbody data-bind="foreach : {data: searchResults, as: 'claim'}">
+                <tr data-bind="click: $parent.onClaimSelect">
+                    <td data-bind="text: claim._id" class="gridCell"></td>
+                    <td data-bind="text: claim.description" class="gridCell"></td>
+                </tr>
+                </tbody>
             </table>
         </div>
 
@@ -128,9 +145,9 @@
     /**
      * Load libs and init Knockout - on app startup. See requireConfig.js
      */
-    require(['jquery', 'knockout', 'KOAmd', 'text', 'amplify', 'app/utils/router', 'app/viewModels/appVM', 'app/utils/events',
-                'datatables', 'app/utils/koDatatablesBinding', 'app/utils/koFileDragBinding', 'velocity'],
-            function ($, ko, KOAmd, text, amplify, Router, AppVM, Events) {
+    require(['jquery', 'knockout', 'KOAmd', 'text', 'amplify', 'app/utils/router', 'app/viewModels/appVM',
+             'app/utils/events', 'app/utils/koFileDragBinding', 'app/utils/koDatetimePickerBinding', 'velocity'],
+            function ($, ko, KOAmd, text, amplify, Router, AppVM) {
                 console.log('Init App');
 
                 // Knockout AMD supoprt setup

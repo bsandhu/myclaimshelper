@@ -16,9 +16,15 @@ function uploadFile(req, res) {
 
     saveToDB(file.name, file.path)
         .done(function okResponse(seqNum) {
-            res.writeHead(200, {'content-type': 'text/plain'});
-            res.write('Uploaded. Id ' + seqNum);
-            res.end();
+            var fileMetadata = {
+               id   : seqNum,
+               name : file.name,
+               size : file.size
+            };
+            console.log('Processes file. Metadata: ' + JSON.stringify(fileMetadata));
+            res.statusCode = 200;
+            res.setHeader('content-type', 'application/json');
+            res.end(JSON.stringify(fileMetadata));
         })
         .fail(function errResponse() {
             res.writeHead(500, {'content-type': 'text/plain'});
@@ -28,31 +34,31 @@ function uploadFile(req, res) {
 }
 
 function downloadFile(req, res) {
-    var id = req.params.id;
-    var fileName = req.params.fileName;
+    var id = Number(req.params.id);
 
-    readFromDB(id, fileName)
-        .done(function (stream) {
-            res.writeHead(200, {
-                'Content-type': 'application/octet-stream',
-                'Content-Disposition': 'attachment; filename="' + fileName + '"'
-            });
-
-            stream.on('data',
-                function sendToClient(chunk) {
-                    res.write(chunk);
-                }
-            );
-
-            stream.on('end', function () {
-                res.end();
-            });
-        })
-        .fail(function(err){
+    jQuery
+        .when(getFileMetadata(id), readFromDB(id))
+        .done(streamFileToClient)
+        .fail(function (err) {
             res.writeHead(500, {'content-type': 'text/plain'});
             res.write('Error');
             res.end();
         });
+
+    function streamFileToClient(fileMeta, stream) {
+        res.writeHead(200, {
+            'Content-type': fileMeta.contentType,
+            'Content-Disposition': 'attachment; filename="' + fileMeta.filename + '"'
+        });
+        stream.on('data',
+            function sendToClient(chunk) {
+                res.write(chunk);
+            }
+        );
+        stream.on('end', function () {
+            res.end();
+        });
+    }
 }
 
 /******************************************************/
@@ -106,11 +112,11 @@ function saveToDB(fileName, filePath) {
  * @returns Stream representing the file being read
  * @see uploadServiceTest.js
  */
-function readFromDB(_id, fileName) {
+function readFromDB(_id) {
     var defer = jQuery.Deferred();
 
     mongoUtils.run(function (db) {
-        var gridStore = new GridStore(db, Number(_id), fileName, "r");
+        var gridStore = new GridStore(db, _id, '', "r");
         var gotEnd = false;
 
         gridStore.open(function (err, gs) {
@@ -134,6 +140,26 @@ function readFromDB(_id, fileName) {
     });
     return defer;
 }
+
+/*
+ * @returns MetaData document for the file from the GirdFS `fs.files` collection
+ */
+function getFileMetadata(id) {
+    var defer = jQuery.Deferred();
+
+    mongoUtils.run(function (db) {
+        var col = db.collection('fs.files');
+        col.findOne({'_id': id}, function (err, item) {
+            if (err) {
+                console.error(err);
+                defer.reject(err);
+            }
+            defer.resolve(item);
+        });
+    });
+    return defer;
+}
+
 
 exports.uploadFile = uploadFile;
 exports.downloadFile = downloadFile;

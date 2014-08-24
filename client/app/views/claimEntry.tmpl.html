@@ -1,4 +1,4 @@
-<h3>New Entry</h3>
+<h3>Entry</h3>
 
 <div>
     <div class="inline narrow fieldLabel">Id</div>
@@ -9,21 +9,30 @@
 <div>
     <div class="inline narrow fieldLabel">Entered on</div>
     <div class="inline narrow">
-        <input class="textBox" type="date" data-bind="value: claimEntry().entryDate"/>
+        <input type="text" class="form-control normal" id="claimEntry-entryDate"
+               data-bind="datetimePicker: {
+                              datepicker: true,
+                              timepicker: true},
+                          value: claimEntry().entryDate"/>
     </div>
 </div>
 
 <div class="topMargin10">
     <div class="inline narrow fieldLabel">Due on</div>
     <div class="inline narrow">
-        <input class="textBox" type="date" data-bind="value: claimEntry().dueDate"/>
+        <input type="text" class="form-control normal" id="claimEntry-dueDate"
+               data-bind="datetimePicker: {
+                              datepicker: true,
+                              timepicker: true},
+                          value: claimEntry().dueDate"/>
+
     </div>
 </div>
 
 <div class="topMargin10">
     <div class="inline narrow fieldLabel">Note</div>
     <div class="inline narrow">
-        <textarea style="width: 400px; height: 60px"
+        <textarea style="width: 400px; height: 60px" class="form-control"
                   data-bind="value: claimEntry().description" placeholder="Note"></textarea>
     </div>
 </div>
@@ -31,13 +40,21 @@
 <!-- File upload component -->
 <div class="topMargin10">
     <div class="inline narrow fieldLabel">Attach docs</div>
-    <div data-bind="fileDrag"></div>
+    <div data-bind="fileDrag: claimEntry().attachments"></div>
 </div>
+
+<div data-bind="foreach: {data: claimEntry().attachments, as: 'file'}">
+    <div>
+        <a data-bind="attr: {href: '/download?id=' + file.id()}"><span data-bind="text: file.name"></span></a>
+        <span data-bind="text: file.size"></span>
+    </div>
+</div>
+
 <!-- Separator -->
 <div class="topMargin10 topBorder"/>
 
 <!-- Buttons -->
-<div style="float: right" class="clear bottomMargin10 topMargin10">
+<div style="float: right" class="clear bottomMargin1pc topMargin10">
     <button type="button" class="btn btn-default" data-bind="click: onSave">
         <span class="glyphicon glyphicon-floppy-disk"></span>
         <span class="leftMargin2">Save</span>
