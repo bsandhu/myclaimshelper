@@ -27,7 +27,10 @@ MailRequestHandler.prototype.processRequest = function(req, res){
     else{
         console.log('Email entry: ' + JSON.stringify(mailEntry));
         var db = mongojs(config.db, ['ClaimEntries']);
-        db.ClaimEntries.save(mailEntry.mail, function(err, data){
+        var data = {'description': mailEntry.mail.subject,
+                    'mail':mailEntry.mail, 
+                    'claimId':mailEntry.claimId};
+        db.ClaimEntries.save(data, function(err, data){
 		if (err){
                     console.log(err);
                     sendReply(req.params.from, req.params.subject, body);
