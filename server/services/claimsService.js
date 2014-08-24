@@ -6,12 +6,34 @@ var assert = require('assert');
 var _ = require('underscore');
 
 
+/********************************************************/
+/* Save/Update API                                      */
+/********************************************************/
+
 function saveOrUpdateClaim(req, res) {
-    saveOrUpdateEntity(req, res, 'Claims');
+    _saveOrUpdateEntity(req, res, 'Claims');
 }
 
 function saveOrUpdateClaimEntry(req, res) {
-    saveOrUpdateEntity(req, res, 'ClaimEntries');
+    _saveOrUpdateEntity(req, res, 'ClaimEntries');
+}
+
+/**
+ * @param claimEntry model Object
+ * @returns Deferred for the JSON response
+ * @See claimsServiceTest#Save claim entry object for usage
+ */
+function saveOrUpdateClaimEntryObject(claimEntry) {
+    assert.ok(claimEntry instanceof ClaimEntry, 'Expecting instance of ClaimEntry object');
+
+    var defer = jQuery.Deferred();
+    var resp = {};
+    resp.json = function (jsonData) {
+        defer.resolve(jsonData);
+    };
+    var req = {body: claimEntry};
+    _saveOrUpdateEntity(req, resp, 'ClaimEntries');
+    return defer;
 }
 
 function claimsCollection(db) {
@@ -22,12 +44,12 @@ function claimEntriesCollection(db) {
     return db.collection('ClaimEntries');
 }
 
-function saveOrUpdateEntity(req, res, colName) {
+function _saveOrUpdateEntity(req, res, colName) {
     function getSeqNum() {
         return mongoUtils.incrementAndGet(colName);
     }
 
-    function dbCall(seqNum){
+    function dbCall(seqNum) {
         mongoUtils.run(function update(db) {
             var entity = req.body;
             var entityCol = db.collection(colName);
@@ -55,6 +77,10 @@ function saveOrUpdateEntity(req, res, colName) {
     getSeqNum().then(dbCall).done();
 }
 
+/********************************************************/
+/* Read API                                             */
+/********************************************************/
+
 function getClaim(req, res) {
     getEntityById(req, res, 'Claims');
 }
@@ -74,9 +100,9 @@ function getEntityById(req, res, colName) {
         entityCol.findOne({'_id': {'$eq': entityId}}, onResults);
 
         function onResults(err, item) {
-            if (err){
+            if (err) {
                 sendResponse(res, err);
-            } else if (_.isEmpty(item)){
+            } else if (_.isEmpty(item)) {
                 sendResponse(res, 'No records with id ' + entityId);
             } else {
                 sendResponse(res, err, item);
@@ -134,6 +160,7 @@ function sendResponse(res, err, jsonData) {
 
 exports.saveOrUpdateClaim = saveOrUpdateClaim;
 exports.saveOrUpdateClaimEntry = saveOrUpdateClaimEntry;
+exports.saveOrUpdateClaimEntryObject = saveOrUpdateClaimEntryObject;
 exports.getClaim = getClaim;
 exports.getClaimEntry = getClaimEntry;
 exports.getAllClaims = getAllClaims;
