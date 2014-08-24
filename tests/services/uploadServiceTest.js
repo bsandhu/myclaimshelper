@@ -19,15 +19,6 @@ describe('Upload Service', function () {
             });
     });
 
-    it('Save fail', function (done) {
-        uploadService
-            .saveToDB('testUpload.png', 'badPath')
-            .fail(function (err) {
-                assert.ok(err);
-                done();
-            });
-    });
-
     it('Read file from DB', function (done) {
         uploadService.readFromDB(fileId, FILE_NAME)
             .done(function (stream) {
