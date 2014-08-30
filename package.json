@@ -5,7 +5,6 @@
     "main"      : "./server/start.js",
     "dependencies": {
         "mongodb"    : "1.4.*",
-        "mongojs"    : "0.13.*",
         "restify"    : "2.8.1",
         "underscore" : "1.6.0",
         "mailparser" : "0.4.5",
