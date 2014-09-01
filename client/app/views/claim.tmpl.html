@@ -8,37 +8,37 @@
     <div class="bottomMargin">
         <div class="inline">
             <b><span>Date received:</span></b>
-            <span data-bind="text: claim().dateReceived"></span>
+            <span data-bind="text: claim().dateReceived() || 'None'"></span>
         </div>
         <div class="inline">
             <b><span>Date due:</span></b>
-            <span data-bind="text: claim().dateDue"></span>
+            <span data-bind="text: claim().dateDue() || 'None'"></span>
         </div>
         <div class="inline">
             <b><span>Date of loss:</span></b>
-            <span data-bind="text: claim().dateOfLoss"></span>
+            <span data-bind="text: claim().dateOfLoss() || 'None'"></span>
         </div>
     </div>
 
     <div class="bottomMargin">
         <div class="inline">
             <b><span>Insured Attorney:</span></b>
-            <span data-bind="text: (claim().insuredAttorneyContact.firstName() || '') + ' ' + (claim().insuredAttorneyContact.lastName() || '') "></span>
+            <span data-bind="text: niceName(claim().insuredAttorneyContact)"></span>
         </div>
         <div class="inline">
             <b><span>Insured contact:</span></b>
-            <span data-bind="text: (claim().insuredContact.firstName() || '')  + ' ' + (claim().insuredContact.lastName() || '') "></span>
+            <span data-bind="text: niceName(claim().insuredContact) "></span>
         </div>
     </div>
 
     <div class="bottomMargin">
         <div class="inline">
             <b><span>Claimant attorney:</span></b>
-            <span data-bind="text: (claim().claimantsAttorneyContact.firstName() || '') + ' ' + (claim().claimantsAttorneyContact.lastName() || '')"></span>
+            <span data-bind="text: niceName(claim().claimantsAttorneyContact)"></span>
         </div>
         <div class="inline">
             <b><span>Claimant contact:</span></b>
-            <span data-bind="text: (claim().claimantsContact.firstName() || '')  + ' ' + (claim().claimantsContact.lastName() || '') "></span>
+            <span data-bind="text: niceName(claim().claimantsContact) "></span>
         </div>
     </div>
 

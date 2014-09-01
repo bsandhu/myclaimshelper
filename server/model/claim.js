@@ -17,6 +17,7 @@ define([], function () {
         this.dateDue = undefined;
         this.dateOfLoss = undefined;
         this.updateDate = undefined;
+        this.entryDate = undefined;
 
         this.locationStreetAddress = undefined;
         this.locationCity = undefined;
