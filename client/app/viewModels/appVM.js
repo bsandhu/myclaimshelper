@@ -17,6 +17,11 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'app/utils/even
             this.setupSearchListeners();
         }
 
+        AppVM.prototype.startRouter = function () {
+            // Hash tag based naviagtion - needed for SPAs
+            Router.start();
+        };
+
         AppVM.prototype.onClaimSelect = function (claim) {
             Router.routeToClaim(claim._id());
         };
