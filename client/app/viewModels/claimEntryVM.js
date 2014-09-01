@@ -15,7 +15,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
             this.setupEvListeners();
         }
 
-        ClaimEntryVM.prototype.newEmptyClaimEntry = function(){
+        ClaimEntryVM.prototype.newEmptyClaimEntry = function () {
             var jsEntryObject = new ClaimEntry();
             var entryObjWithObservableAttributes = KOMap.fromJS(jsEntryObject);
             return entryObjWithObservableAttributes;
@@ -35,6 +35,12 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
             console.log('Adding new claim entry');
             this.claimEntry(this.newEmptyClaimEntry());
             this.claimEntry().entryDate(DateUtils.toDatetimePickerFormat(new Date()));
+        };
+
+        ClaimEntryVM.prototype.niceHeader = function(){
+            return (this.claimEntry()._id === undefined)
+                    ? 'New Entry'
+                    : this.claimEntry().summary() || '';
         };
 
         /**
@@ -71,7 +77,14 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
                     KOMap.fromJS(resp.data, {}, this.claimEntry);
 
                     // TODO figure out if we need to track selected claim entry in session
-                    //  this.storeInSession(claimEntryId);
+
+                    window.setTimeout(function setT() {
+                        var txtArea = $("#claimEntry-textArea");
+                        txtArea.height(60);
+                        var scrollHeight = txtArea[0].scrollHeight;
+                        txtArea.height(scrollHeight > 500 ? 500 : scrollHeight);
+                    }, 1);
+
                 }.bind(this));
         };
 

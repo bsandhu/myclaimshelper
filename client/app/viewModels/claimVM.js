@@ -51,6 +51,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify',
             console.log('Adding new claim');
             this.claim(this.newEmptyClaim());
             this.claim().entryDate(DateUtils.toDatetimePickerFormat(new Date()));
+            this.claimEntries([]);
             this.inEditMode(true);
         };
 

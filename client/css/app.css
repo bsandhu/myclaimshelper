@@ -23,23 +23,23 @@ div {
 /**** Width Dimensions ****/
 
 .narrower {
-    width: 50px;
+    min-width: 50px;
 }
 
 .narrow {
-    width: 100px;
+    min-width: 100px;
 }
 
 .normal {
-    width: 150px;
+    min-width: 150px;
 }
 
 .wide {
-    width: 200px;
+    min-width: 200px;
 }
 
 .wider {
-    width: 250px;
+    min-width: 250px;
 }
 
 /**** Margins and borders ****/
