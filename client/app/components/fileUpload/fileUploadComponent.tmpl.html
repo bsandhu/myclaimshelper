@@ -1,0 +1,22 @@
+<div class="fileDropBox"
+     data-bind="event: {'dragenter': dragenter,
+                        'dragover': dragover,
+                        'drop': drop}">
+
+    <input type="file" class="topMargin leftMargin" multiple
+           data-bind="event: {'change': handleFilesSelection}">
+
+    <div class="backgroundLabel">Drag n drop here</div>
+
+    <!-- List attachments -->
+    <ol class="topMargin5" data-bind="foreach: {data: claimEntry().attachments, as: 'file'}">
+        <li>
+            <span class="leftMargin">
+                <a data-bind="attr: {href: '/download?id=' + file.id()}">
+                    <span data-bind="text: file.name"></span>
+                </a>
+            </span>
+            <span data-bind="text: Math.round(file.size()/1024, 2) + 'K' "></span>
+        </li>
+    </ol>
+</div>

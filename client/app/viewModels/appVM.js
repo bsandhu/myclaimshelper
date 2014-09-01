@@ -182,7 +182,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'app/utils/even
         };
 
         AppVM.prototype.partialCollapseClaimPanel = function () {
-            $("#claimPanel").velocity({ width: '45%' }, {duration: this.gridNavDelay}, 'ease-in-out');
+            $("#claimPanel").velocity({ width: '30%' }, {duration: this.gridNavDelay}, 'ease-in-out');
         };
 
         // Claim Entry panel

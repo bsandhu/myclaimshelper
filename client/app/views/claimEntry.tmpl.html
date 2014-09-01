@@ -9,7 +9,7 @@
 <div>
     <div class="inline narrow fieldLabel">Entered on</div>
     <div class="inline narrow">
-        <input type="text" class="form-control normal" id="claimEntry-entryDate"
+        <input type="text" class="form-control normal input-sm" id="claimEntry-entryDate"
                data-bind="datetimePicker: {
                               datepicker: true,
                               timepicker: true},
@@ -20,7 +20,7 @@
 <div class="topMargin">
     <div class="inline narrow fieldLabel">Due on</div>
     <div class="inline narrow">
-        <input type="text" class="form-control normal" id="claimEntry-dueDate"
+        <input type="text" class="form-control normal input-sm" id="claimEntry-dueDate"
                data-bind="datetimePicker: {
                               datepicker: true,
                               timepicker: true},
@@ -30,23 +30,22 @@
 </div>
 
 <div class="topMargin">
-    <div class="inline narrow fieldLabel">Note</div>
-    <div class="inline narrow">
-        <textarea style="width: 400px; height: 60px" class="form-control"
+    <div class="narrow fieldLabel" style="display: table-cell">
+        Note
+    </div>
+    <div class="inline" style="display: table-cell; width: 80%; padding-left: 3px">
+        <textarea class="form-control" rows="3"
                   data-bind="value: claimEntry().description" placeholder="Note"></textarea>
     </div>
 </div>
 
 <!-- File upload component -->
 <div class="topMargin">
-    <div class="inline narrow fieldLabel">Attach docs</div>
-    <div data-bind="fileDrag: claimEntry().attachments"></div>
-</div>
-
-<div data-bind="foreach: {data: claimEntry().attachments, as: 'file'}">
-    <div>
-        <a data-bind="attr: {href: '/download?id=' + file.id()}"><span data-bind="text: file.name"></span></a>
-        <span data-bind="text: file.size"></span>
+    <div class="narrow fieldLabel" style="display: table-cell">
+        Attachments
+    </div>
+    <div class="inline" style="display: table-cell; width: 80%; padding-left: 3px">
+        <file-upload-component params="'claimEntry': claimEntry"></file-upload-component>
     </div>
 </div>
 

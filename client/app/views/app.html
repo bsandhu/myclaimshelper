@@ -146,7 +146,7 @@
      * Load libs and init Knockout - on app startup. See requireConfig.js
      */
     require(['jquery', 'knockout', 'KOAmd', 'text', 'amplify', 'app/utils/router', 'app/viewModels/appVM',
-             'app/utils/events', 'app/utils/koFileDragBinding', 'app/utils/koDatetimePickerBinding', 'velocity'],
+             'app/utils/events', 'app/utils/koDatetimePickerBinding', 'velocity'],
             function ($, ko, KOAmd, text, amplify, Router, AppVM) {
                 console.log('Init App');
 
@@ -157,6 +157,7 @@
 
                 // Register components
                 ko.components.register('contact-component', {require: 'app/components/contact/contactComponent'});
+                ko.components.register('file-upload-component', {require: 'app/components/fileUpload/fileUploadComponent'});
 
                 // Knockout bindings init
                 ko.applyBindings(new AppVM());

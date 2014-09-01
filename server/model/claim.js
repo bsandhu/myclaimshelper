@@ -39,8 +39,6 @@ define([], function () {
 
         this.insuranceCompanyFileNum = undefined;
         this.insuranceCompanyName = undefined;
-
-        this.attachmentIds = [];
     }
 
     return Claim;
