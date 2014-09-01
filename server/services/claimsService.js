@@ -7,6 +7,39 @@ var _ = require('underscore');
 
 
 /********************************************************/
+/* Delete API                                      */
+/********************************************************/
+
+function deleteClaim(claimId) {
+    var defer = jQuery.Deferred();
+
+    jQuery.when(_deleteEntity({_id: claimId}, 'Claims'),
+               _deleteEntity({claimId: claimId}, 'ClaimEntries'))
+         .then(defer.resolve())
+         .fail(defer.reject());
+    return defer;
+}
+
+function _deleteEntity(predicate, colName) {
+    var defer = jQuery.Deferred();
+
+    mongoUtils.run(
+        function remove(db) {
+            var entityCol = db.collection(colName);
+            entityCol.remove(predicate,
+                {w: 1},
+                function onRemove(err, result) {
+                    if (err) {
+                        defer.reject(err);
+                    } else {
+                        defer.resolve(result);
+                    }
+                });
+        });
+    return defer;
+
+}
+/********************************************************/
 /* Save/Update API                                      */
 /********************************************************/
 
@@ -165,3 +198,4 @@ exports.getClaim = getClaim;
 exports.getClaimEntry = getClaimEntry;
 exports.getAllClaims = getAllClaims;
 exports.getAllEntriesForClaim = getAllEntriesForClaim;
+exports.deleteClaim = deleteClaim;

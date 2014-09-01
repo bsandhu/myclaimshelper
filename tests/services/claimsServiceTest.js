@@ -16,6 +16,14 @@ describe('Claims Service', function () {
     testEntry.dueDate = new Date(2014, 2, 10);
     testEntry.summary = "I am test Task too";
 
+    after(function(done) {
+        assert.ok(testClaim._id);
+        claimsService
+            .deleteClaim(testClaim._id)
+            .done(done)
+            .fail('Failed to cleanup test data');
+    });
+
     it('Save claim', function (done) {
         var req = {body: testClaim};
         var res = {};
