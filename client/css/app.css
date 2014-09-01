@@ -1,7 +1,15 @@
 /**** Alignment ****/
 
+div {
+    white-space: normal;
+}
+
 .inline {
     display: inline-block;
+}
+
+.tableCell {
+    display: table-cell;
 }
 
 .alignLeft {
@@ -12,7 +20,11 @@
     float: right;
 }
 
-/**** Dimensions ****/
+/**** Width Dimensions ****/
+
+.narrower {
+    width: 50px;
+}
 
 .narrow {
     width: 100px;
@@ -26,38 +38,32 @@
     width: 200px;
 }
 
+.wider {
+    width: 250px;
+}
+
 /**** Margins and borders ****/
 
-.topMargin5 {
-    margin-top: 5px;
+.topMargin {
+    margin-top: 2px;
 }
 
-.topMargin10 {
-    margin-top: 10px;
+.bottomMargin {
+    margin-bottom: 2px;
 }
 
-.topMargin1PC {
-    margin-top: 1%;
-}
-
-.topMargin2PC {
-    margin-top: 2%;
-}
-
-.topPadding1PC {
-    margin-top: 1%;
-}
-
-.bottomMargin1pc {
-    margin-bottom: 10px;
-}
-
-.leftMargin2 {
+.leftMargin {
     margin-left: 2px;
 }
 
-.leftMargin1PC {
-    margin-left: 1%;
+.rightMargin {
+    margin-right: 2px;
+}
+
+.topBorderSolid {
+    border-top: solid;
+    border-top-width: 1px;
+    border-top-color: #E2E4E7;
 }
 
 .topBorder {

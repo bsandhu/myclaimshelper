@@ -8,12 +8,22 @@ if (typeof define !== 'function') {
 define([], function () {
 
     function Contact() {
-        this.name;
-        this.job;
-        this.company;
-        this.email;
-        this.phone;
-        this.cell;
+        this._id = undefined;
+
+        this.isBusiness = undefined;
+        this.role = undefined;
+
+        this.firstName = undefined;
+        this.lastName = undefined;
+        this.businessName = undefined;
+
+        this.streetAddress = undefined;
+        this.city = undefined;
+        this.zip = undefined;
+
+        this.email = undefined;
+        this.phone = undefined;
+        this.cell = undefined;
     }
 
     return Contact;

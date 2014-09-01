@@ -1,36 +1,157 @@
+<h3 data-bind="text: 'Claim' + (claim()._id() || '')"></h3>
+
 <!-- ************************************************ -->
-<!--Claim form-->
+<!-- Claim static display -->
+<!-- ************************************************ -->
+
+<div data-bind="ifnot: inEditMode">
+    <div class="bottomMargin">
+        <div class="inline">
+            <b><span>Date received:</span></b>
+            <span data-bind="text: claim().dateReceived"></span>
+        </div>
+        <div class="inline">
+            <b><span>Date due:</span></b>
+            <span data-bind="text: claim().dateDue"></span>
+        </div>
+        <div class="inline">
+            <b><span>Date of loss:</span></b>
+            <span data-bind="text: claim().dateOfLoss"></span>
+        </div>
+    </div>
+
+    <div class="bottomMargin">
+        <div class="inline">
+            <b><span>Insured Attorney:</span></b>
+            <span data-bind="text: (claim().insuredAttorneyContact.firstName() || '') + ' ' + (claim().insuredAttorneyContact.lastName() || '') "></span>
+        </div>
+        <div class="inline">
+            <b><span>Insured contact:</span></b>
+            <span data-bind="text: (claim().insuredContact.firstName() || '')  + ' ' + (claim().insuredContact.lastName() || '') "></span>
+        </div>
+    </div>
+
+    <div class="bottomMargin">
+        <div class="inline">
+            <b><span>Claimant attorney:</span></b>
+            <span data-bind="text: (claim().claimantsAttorneyContact.firstName() || '') + ' ' + (claim().claimantsAttorneyContact.lastName() || '')"></span>
+        </div>
+        <div class="inline">
+            <b><span>Claimant contact:</span></b>
+            <span data-bind="text: (claim().claimantsContact.firstName() || '')  + ' ' + (claim().claimantsContact.lastName() || '') "></span>
+        </div>
+    </div>
+
+    <div class="alignRight rightMargin">
+        <span class="glyphicon glyphicon-pencil"></span>
+        <span class="leftMargin"><a href="#" data-bind="click: onEditModeClick.bind($data)">Edit</a></span>
+    </div>
+</div>
+
+
+<!-- ************************************************ -->
+<!-- Claim entry form -->
 <!-- ************************************************ -->
 
 <div data-bind="if: inEditMode">
-    <h3>Claim</h3>
-
     <div>
-        <div class="inline narrow">Id</div>
-        <div class="inline" data-bind="text: claim()._id"></div>
+        <div class="topBorderSolid"><h5>Insurance Company</h5></div>
+
+        <div class="inline bottomMargin">
+            <div class="inline">
+                <div class="inline narrow fieldLabel">Name</div>
+                <input type="text" class="inline wider form-control input-sm"
+                       data-bind="text: claim().insuranceCompanyName"></div>
+        </div>
+        <div class="inline normal"></div>
+        <div class="inline">
+            <div class="inline narrow fieldLabel">File num.</div>
+            <input type="text" class="inline normal form-control input-sm"
+                   data-bind="text: claim().insuranceCompanyFileNum"></div>
     </div>
 
-    <div>
-        <div class="inline narrow">Entry date</div>
-        <input type="text" class="form-control normal inline" id="claimEntry-entryDate"
-               data-bind="datetimePicker: {
+    <div class="bottomMargin">
+        <div class="inline">
+            <div class="inline narrow fieldLabel">Date Received</div>
+            <input type="text" class="form-control normal inline input-sm"
+                   data-bind="datetimePicker: {
                               datepicker: true,
                               timepicker: true},
-                          value: claim().entryDate"/>
-    </div>
-    <div>
-        <div class="inline narrow">Description</div>
-        <textarea class="inline form-control" style="width: 70%; height: 10%" data-bind="value: claim().description"/>
+                          value: claim().dateReceived"/>
+        </div>
+        <div class="inline">
+            <div class="inline narrow fieldLabel">Date Due</div>
+            <input type="text" class="form-control normal inline input-sm"
+                   data-bind="datetimePicker: {
+                              datepicker: true,
+                              timepicker: true},
+                          value: claim().dateDue"/>
+        </div>
+        <div class="inline">
+            <div class="inline narrow fieldLabel">Date of Loss</div>
+            <input type="text" class="form-control normal inline input-sm"
+                   data-bind="datetimePicker: {
+                              datepicker: true,
+                              timepicker: true},
+                          value: claim().dateOfLoss"/>
+        </div>
     </div>
 
-    <div class="topMargin10"/>
+    <!-- **** Insured **** -->
+    <div class="topBorderSolid"><h5>Insured</h5></div>
+
+    <div class="bottomMargin">
+        <div class="narrow fieldLabel tableCell" style="display: table-cell">Attorney</div>
+        <div style="display: table-cell">
+            <contact-component params="contact : claim().insuredAttorneyContact,
+                                       idSuffix: 'claim-insuredAttny',
+                                        isBusinessOptionApplicable: true"></contact-component>
+        </div>
+    </div>
+
+    <div class="bottomMargin">
+        <div class="narrow fieldLabel tableCell" style="display: table-cell">Contact</div>
+        <div style="display: table-cell">
+            <contact-component params="contact : claim().insuredContact,
+                                       idSuffix: 'claim-insuredContact',
+                                       isBusinessOptionApplicable: false"></contact-component>
+        </div>
+    </div>
+
+    <!-- **** Claimant **** -->
+    <div class="topBorderSolid"><h5>Claimant</h5></div>
+
+    <div class="bottomMargin">
+        <div class="narrow fieldLabel" style="display: table-cell">Attorney</div>
+        <div style="display: table-cell">
+            <contact-component params="contact : claim().claimantsAttorneyContact,
+                                       idSuffix: 'claim-claimantAttny',
+                                       isBusinessOptionApplicable: true"></contact-component>
+        </div>
+    </div>
+    <div class="bottomMargin">
+        <div class="narrow fieldLabel" style="display: table-cell">Contact</div>
+        <div style="display: table-cell">
+            <contact-component params="contact : claim().claimantsContact,
+                                       idSuffix: 'claim-claimantContact',
+                                       isBusinessOptionApplicable: false"></contact-component>
+        </div>
+    </div>
+
+    <div class="topBorderSolid bottomMargin"></div>
+
+    <div style="width: 80%">
+        <textarea class="form-control" rows="4" placeholder="Notes" data-bind="value: claim().description"/>
+    </div>
+
+    <div class="topMargin"/>
 </div>
 
 <!-- ************************************************ -->
 <!--List Claim Entries -->
 <!-- ************************************************ -->
 
-<h3>Entries</h3>
+<div><h3>Entries</h3></div>
 
 <div data-bind="foreach: {data: claimEntries, as: 'entry' }">
     <div class="listItem" data-bind="click: $parent.onClaimEntryClick">
@@ -49,21 +170,21 @@
 <!--New Entry -->
 <!-- ************************************************ -->
 
-<div class="topMargin2PC topBorder clear">
-    <div class="inline topPadding1PC ">
+<div class="topMargin topBorder clear">
+    <div class="inline topPadding ">
         <spam class="glyphicon glyphicon-plus"></spam>
         <a href="#/claimEntry">Add New Entry</a>
     </div>
 
-    <div class="inline alignRight topPadding1PC ">
+    <div class="inline alignRight topPadding ">
         <button type="button" class="btn btn-default" data-bind="click: onSave">
             <span class="glyphicon glyphicon-floppy-disk"></span>
-            <span class="leftMargin2">Save</span>
+            <span class="leftMargin">Save</span>
         </button>
 
         <button type="button" class="btn btn-default" data-bind="click: onCancel">
             <span class="glyphicon glyphicon-ban-circle"></span>
-            <span class="leftMargin2">Cancel</span>
+            <span class="leftMargin">Cancel</span>
         </button>
     </div>
 

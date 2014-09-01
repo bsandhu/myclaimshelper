@@ -11,6 +11,6 @@ define(['jquery'],
 
         return {
             'toDatetimePickerFormat': toDatetimePickerFormat,
-            'DATETIME_PICKER_FORMAT' : '9999/19/39 29:59'
+            'DATETIME_PICKER_FORMAT' : '9999/12/31 24:59'
         };
     });

@@ -10,17 +10,37 @@ define([], function () {
     function Claim() {
         this._id = undefined;
 
-        this.entryDate = undefined;
-        this.dueDate = undefined;
-        this.updateDate = undefined;
-
         this.summary = undefined;
         this.description = undefined;
-        this.insured = undefined;
-        this.claimant = undefined;
-        this.location = undefined;
-        this.insuranceCompany = undefined;
+
+        this.dateReceived = undefined;
+        this.dateDue = undefined;
+        this.dateOfLoss = undefined;
+        this.updateDate = undefined;
+
+        this.locationStreetAddress = undefined;
+        this.locationCity = undefined;
+        this.locationZip = undefined;
+
+        this.insuredContact = undefined;
+        this.insuredContactId = undefined;
+
+        this.insuredAttorneyContact = undefined;
+        this.insuredAttorneyContactId = undefined;
+
+        this.claimantContact = undefined;
+        this.claimantContactId = undefined;
+
+        this.claimantsAttorneyContact = undefined;
+        this.claimantsAttorneyContactId = undefined;
+
+        this.insuranceCoContactId = undefined;
+        this.insuranceCoContact = undefined;
+
         this.insuranceCompanyFileNum = undefined;
+        this.insuranceCompanyName = undefined;
+
+        this.attachmentIds = [];
     }
 
     return Claim;

@@ -138,4 +138,6 @@ describe('Claims Service', function () {
 
         claimsService.getAllClaims(req, res);
     });
+
+
 });
