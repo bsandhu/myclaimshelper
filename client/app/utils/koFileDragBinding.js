@@ -15,7 +15,7 @@ define(['jquery', 'knockout', 'KOMap'],
                 outerContainer.bind('dragover', dragover);
                 outerContainer.bind('drop', drop);
 
-                var manualUpload = $('<input type="file" class="topMargin1PC leftMargin1PC" multiple>');
+                var manualUpload = $('<input type="file" class="topMargin1PC leftMargin" multiple>');
                 manualUpload.change(handleFilesSelection);
                 outerContainer.append(manualUpload);
 

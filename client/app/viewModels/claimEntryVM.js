@@ -37,11 +37,19 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
             this.claimEntry().entryDate(DateUtils.toDatetimePickerFormat(new Date()));
         };
 
+        /**
+         * Since only once Claim can be active, its assumed to be the parent
+         */
+        ClaimEntryVM.prototype.getActiveClaimId = function () {
+            var activeClaimId = amplify.store.sessionStorage(SessionKeys.ACTIVE_CLAIM_ID);
+            console.assert(activeClaimId, 'No claim active in session');
+            return activeClaimId;
+        };
+
         ClaimEntryVM.prototype.onSave = function () {
             console.log('Saving ClaimEntry: ' + KOMap.toJSON(this.claimEntry));
 
-            var activeClaimId = amplify.store.sessionStorage(SessionKeys.ACTIVE_CLAIM_ID);
-            console.assert(activeClaimId, 'No claim active in session');
+            var activeClaimId = this.getActiveClaimId();
             this.claimEntry().claimId(activeClaimId);
 
             ajaxUtils.post(
@@ -50,6 +58,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
                 function onSuccess(response) {
                     console.log('Saved ClaimEntry: ' + JSON.stringify(response));
                     amplify.publish(Events.SUCCESS_NOTIFICATION, {msg: 'Saved entry'});
+                    amplify.publish(Events.SAVED_CLAIM_ENTRY, {claimId: activeClaimId, claimEntryId: response.data._id});
                 });
         };
 
@@ -65,7 +74,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
         };
 
         ClaimEntryVM.prototype.onCancel = function () {
-            Router.routeToClaim();
+            Router.routeToClaim(this.getActiveClaimId());
         };
 
         return ClaimEntryVM;

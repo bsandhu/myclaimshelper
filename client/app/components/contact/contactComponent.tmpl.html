@@ -1,0 +1,81 @@
+<div>
+
+    <!--Is a Business?-->
+    <div class="inline wide bottomMargin" data-bind="visible: isBusinessOptionApplicable">
+        <div class="inline">
+            <input type="radio"
+                   value=true
+                   data-bind="attr: {id: 1 + idSuffix(), name: 3 + idSuffix()},
+                              checked: contact().isBusiness"/>
+            <label data-bind="attr: {for: 1 + idSuffix()}">Business</label>
+        </div>
+
+        <div class="inline" style="min-width: 5px"></div>
+
+        <div class="inline">
+            <input type="radio"
+                   value=false
+                   data-bind="attr: {id: 2 + idSuffix(), name: 3 + idSuffix()},
+                              checked: contact().isBusiness"/>
+            <label data-bind="attr: {for: 2 + idSuffix()}">Individual</label>
+        </div>
+    </div>
+    <div class="clear"></div>
+
+    <!--Name-->
+    <div class="inline bottomMargin">
+
+        <!--Individual-->
+        <div class="inline bottomMargin" data-bind="if: contact().isBusiness() != 'true'">
+            <div class="inline">
+                <input type="text" class="form-control normal input-sm" placeholder="First name"
+                       data-bind="value: contact().firstName"/>
+            </div>
+            <div class="inline">
+                <input type="text" class="form-control normal input-sm" placeholder="Last name"
+                       data-bind="value: contact().lastName"/>
+            </div>
+        </div>
+
+        <!--Business-->
+        <div class="inline bottomMargin" data-bind="if: contact().isBusiness() == 'true'">
+            <div class="inline">
+                <input type="text" class="form-control normal input-sm" placeholder="Business name"
+                       data-bind="value: contact().businessName"/>
+            </div>
+        </div>
+
+        <div class="inline">
+            <strong><a href="#" data-bind="click: onDetailsClick">...</a></strong>
+        </div>
+
+    </div>
+
+    <!-- Details -->
+    <div data-bind="visible: showDetails">
+
+        <!--Address-->
+        <div class="inline">
+            <input type="text" class="form-control wider input-sm" placeholder="Address"
+                   data-bind="value: contact().streetAddress"/>
+        </div>
+
+        <div class="inline bottomMargin">
+            <input type="text" class="form-control normal input-sm" placeholder="City"
+                   data-bind="value: contact().city"/>
+        </div>
+        <div class="inline bottomMargin">
+            <input type="text" class="form-control narrow input-sm" placeholder="Zip"
+                   data-bind="value: contact().zip"/>
+        </div>
+
+        <!--Phone-->
+        <div>
+            <div class="inline bottomMargin">
+                <input type="tel" class="form-control normal input-sm" placeholder="Phone"
+                       data-bind="value: contact().phone"/>
+            </div>
+        </div>
+
+    </div>
+</div>

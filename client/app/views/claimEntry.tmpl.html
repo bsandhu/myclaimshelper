@@ -17,7 +17,7 @@
     </div>
 </div>
 
-<div class="topMargin10">
+<div class="topMargin">
     <div class="inline narrow fieldLabel">Due on</div>
     <div class="inline narrow">
         <input type="text" class="form-control normal" id="claimEntry-dueDate"
@@ -29,7 +29,7 @@
     </div>
 </div>
 
-<div class="topMargin10">
+<div class="topMargin">
     <div class="inline narrow fieldLabel">Note</div>
     <div class="inline narrow">
         <textarea style="width: 400px; height: 60px" class="form-control"
@@ -38,7 +38,7 @@
 </div>
 
 <!-- File upload component -->
-<div class="topMargin10">
+<div class="topMargin">
     <div class="inline narrow fieldLabel">Attach docs</div>
     <div data-bind="fileDrag: claimEntry().attachments"></div>
 </div>
@@ -51,17 +51,17 @@
 </div>
 
 <!-- Separator -->
-<div class="topMargin10 topBorder"/>
+<div class="topMargin topBorder"/>
 
 <!-- Buttons -->
-<div style="float: right" class="clear bottomMargin1pc topMargin10">
+<div style="float: right" class="clear bottomMargin topMargin">
     <button type="button" class="btn btn-default" data-bind="click: onSave">
         <span class="glyphicon glyphicon-floppy-disk"></span>
-        <span class="leftMargin2">Save</span>
+        <span class="leftMargin">Save</span>
     </button>
 
     <button type="button" class="btn btn-default" data-bind="click: onCancel">
         <span class="glyphicon glyphicon-ban-circle"></span>
-        <span class="leftMargin2">Cancel</span>
+        <span class="leftMargin">Cancel</span>
     </button>
 </div>

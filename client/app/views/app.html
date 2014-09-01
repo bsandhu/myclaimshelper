@@ -42,7 +42,7 @@
                 <div class="inline" style="width: 60%">
                     <button type="button" class="btn btn-default" style="width: 100%" data-bind="click: onAddNewClaim">
                         <span class="glyphicon glyphicon-plus"></span>
-                        <span class="leftMargin2">New Claim</span>
+                        <span class="leftMargin">New Claim</span>
                     </button>
                 </div>
             </div>
@@ -89,7 +89,7 @@
                  style="cursor: pointer"
                  data-bind="click: toggleGridPanel"></div>
         </div>
-        <div class="clear bottomMargin1pc"></div>
+        <div class="clear bottomMargin"></div>
 
         <div id="gridPanelContent">
             <div class="alignRight">
@@ -97,7 +97,7 @@
                        data-bind="value: searchText, valueUpdate: 'afterkeydown'"/>
                 <span><a href="#" data-bind="click: onSearchClear">Clear</a></span>
             </div>
-            <div class="clear bottomMargin1pc"></div>
+            <div class="clear bottomMargin"></div>
 
             <table class="table table-hover table-condensed">
                 <thead>
@@ -155,10 +155,15 @@
                 ko.amdTemplateEngine.defaultPath = "/";
                 ko.amdTemplateEngine.defaultSuffix = ".tmpl.html";
 
+                // Register components
+                ko.components.register('contact-component', {require: 'app/components/contact/contactComponent'});
+
                 // Knockout bindings init
                 ko.applyBindings(new AppVM());
 
                 // Hash tag bases naviagtion - needed for SPAs
                 Router.start();
+
+
             });
 </script>

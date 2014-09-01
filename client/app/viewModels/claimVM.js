@@ -1,8 +1,8 @@
 define(['jquery', 'knockout', 'KOMap', 'amplify',
-        'model/claim', 'model/claimEntry',
+        'model/claim', 'model/claimEntry', 'model/contact',
         'app/utils/ajaxUtils', 'app/utils/events', 'app/utils/router', 'app/utils/sessionKeys',
         'app/utils/dateUtils'],
-    function ($, ko, KOMap, amplify, Claim, ClaimEntry, ajaxUtils, Events, Router, SessionKeys, DateUtils) {
+    function ($, ko, KOMap, amplify, Claim, ClaimEntry, Contact, ajaxUtils, Events, Router, SessionKeys, DateUtils) {
 
         function ClaimVM() {
             console.log('Init ClaimVM');
@@ -12,12 +12,18 @@ define(['jquery', 'knockout', 'KOMap', 'amplify',
             this.claimEntries = ko.observableArray();
 
             // View state
-            this.inEditMode = ko.observable(true);
+            this.inEditMode = ko.observable(false);
             this.setupEvListeners();
         }
 
         ClaimVM.prototype.newEmptyClaim = function(){
             var jsClaimObject = new Claim();
+            jsClaimObject.claimantsAttorneyContact = new Contact();
+            jsClaimObject.claimantsContact = new Contact();
+            jsClaimObject.insuredAttorneyContact = new Contact();
+            jsClaimObject.insuredContact = new Contact();
+
+            jsClaimObject.claimantsAttorneyContact.firstName = 'foo';
             var claimObjWithObservableAttributes = KOMap.fromJS(jsClaimObject);
             return claimObjWithObservableAttributes;
         };
@@ -26,6 +32,11 @@ define(['jquery', 'knockout', 'KOMap', 'amplify',
             amplify.subscribe(Events.SHOW_CLAIM, this, this.onShowClaim);
             amplify.subscribe(Events.NEW_CLAIM, this, this.onNewClaim);
             amplify.subscribe(Events.NEW_CLAIM_ENTRY, this, this.isClaimSaved);
+            amplify.subscribe(Events.SAVED_CLAIM_ENTRY, this, this.refreshClaimEntriesListing);
+        };
+
+        ClaimVM.prototype.onEditModeClick = function(){
+            this.inEditMode(true);
         };
 
         ClaimVM.prototype.onShowClaim = function (evData) {
@@ -34,12 +45,20 @@ define(['jquery', 'knockout', 'KOMap', 'amplify',
 
             this.loadClaim(evData.claimId);
             this.loadEntriesForClaim(evData.claimId);
+            this.inEditMode(false);
         };
 
         ClaimVM.prototype.onNewClaim = function () {
             console.log('Adding new claim');
             this.claim(this.newEmptyClaim());
             this.claim().entryDate(DateUtils.toDatetimePickerFormat(new Date()));
+            this.inEditMode(true);
+        };
+
+        ClaimVM.prototype.refreshClaimEntriesListing = function(){
+            var claimId = this.claim()._id();
+            console.log('Refresh entries list. ClaimId ' + claimId);
+            this.loadEntriesForClaim(claimId);
         };
 
         ClaimVM.prototype.isClaimSaved = function () {
