@@ -66,6 +66,8 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
             $.get('/claimEntry/' + claimEntryId)
                 .done(function (resp) {
                     console.log('Loaded claim entry ' + JSON.stringify(resp.data));
+
+                    // Populate with JSON data
                     KOMap.fromJS(resp.data, {}, this.claimEntry);
 
                     // TODO figure out if we need to track selected claim entry in session
