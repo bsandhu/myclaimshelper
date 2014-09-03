@@ -1,4 +1,4 @@
-<h3 data-bind="text: 'Claim' + (claim()._id() || '')"></h3>
+<h4 data-bind="text: 'Claim' + (claim()._id() || '')"></h4>
 
 <!-- ************************************************ -->
 <!-- Claim static display -->
@@ -6,39 +6,41 @@
 
 <div data-bind="ifnot: inEditMode">
     <div class="bottomMargin">
-        <div class="inline">
-            <b><span>Date received:</span></b>
-            <span data-bind="text: claim().dateReceived"></span>
+        <div class="inline rightMargin">
+            <span>
+                <span><strong>Date received:</strong></span>
+                <span data-bind="text: claim().dateReceived() || 'None'"></span>
+            </span>
         </div>
-        <div class="inline">
-            <b><span>Date due:</span></b>
-            <span data-bind="text: claim().dateDue"></span>
+        <div class="inline rightMargin">
+            <span><strong>Date due:</strong></span>
+            <span data-bind="text: claim().dateDue() || 'None'"></span>
         </div>
-        <div class="inline">
-            <b><span>Date of loss:</span></b>
-            <span data-bind="text: claim().dateOfLoss"></span>
-        </div>
-    </div>
-
-    <div class="bottomMargin">
-        <div class="inline">
-            <b><span>Insured Attorney:</span></b>
-            <span data-bind="text: (claim().insuredAttorneyContact.firstName() || '') + ' ' + (claim().insuredAttorneyContact.lastName() || '') "></span>
-        </div>
-        <div class="inline">
-            <b><span>Insured contact:</span></b>
-            <span data-bind="text: (claim().insuredContact.firstName() || '')  + ' ' + (claim().insuredContact.lastName() || '') "></span>
+        <div class="inline rightMargin">
+            <span><strong>Date of loss:</strong></span>
+            <span data-bind="text: claim().dateOfLoss() || 'None'"></span>
         </div>
     </div>
 
     <div class="bottomMargin">
-        <div class="inline">
-            <b><span>Claimant attorney:</span></b>
-            <span data-bind="text: (claim().claimantsAttorneyContact.firstName() || '') + ' ' + (claim().claimantsAttorneyContact.lastName() || '')"></span>
+        <div class="inline rightMargin">
+            <span><strong>Insured Attorney:</strong></span>
+            <span data-bind="text: niceName(claim().insuredAttorneyContact)"></span>
         </div>
-        <div class="inline">
-            <b><span>Claimant contact:</span></b>
-            <span data-bind="text: (claim().claimantsContact.firstName() || '')  + ' ' + (claim().claimantsContact.lastName() || '') "></span>
+        <div class="inline rightMargin">
+            <span><strong>Insured contact:</strong></span>
+            <span data-bind="text: niceName(claim().insuredContact) "></span>
+        </div>
+    </div>
+
+    <div class="bottomMargin">
+        <div class="inline rightMargin">
+            <span><strong>Claimant attorney:</strong></span>
+            <span data-bind="text: niceName(claim().claimantsAttorneyContact)"></span>
+        </div>
+        <div class="inline rightMargin">
+            <span><strong>Claimant contact:</strong></span>
+            <span data-bind="text: niceName(claim().claimantsContact) "></span>
         </div>
     </div>
 
@@ -60,132 +62,145 @@
         <div class="inline bottomMargin">
             <div class="inline">
                 <div class="inline narrow fieldLabel">Name</div>
-                <input type="text" class="inline wider form-control input-sm"
-                       data-bind="text: claim().insuranceCompanyName"></div>
+                <div class="inline wider">
+                    <input type="text" class="form-control input-sm"
+                           data-bind="value: claim().insuranceCompanyName">
+                </div>
+                <div class="inline narrow fieldLabel">File num.</div>
+                <div class="inline narrow">
+                    <input type="text" class="form-control input-sm"
+                           data-bind="value: claim().insuranceCompanyFileNum">
+                </div>
+            </div>
         </div>
-        <div class="inline normal"></div>
-        <div class="inline">
-            <div class="inline narrow fieldLabel">File num.</div>
-            <input type="text" class="inline normal form-control input-sm"
-                   data-bind="text: claim().insuranceCompanyFileNum"></div>
-    </div>
 
-    <div class="bottomMargin">
-        <div class="inline">
-            <div class="inline narrow fieldLabel">Date Received</div>
-            <input type="text" class="form-control normal inline input-sm"
-                   data-bind="datetimePicker: {
-                              datepicker: true,
-                              timepicker: true},
-                          value: claim().dateReceived"/>
+        <div class="bottomMargin">
+            <div class="inline">
+                <div class="inline narrow fieldLabel">Date Received</div>
+                <div class="inline normal">
+                    <input type="text" class="form-control input-sm"
+                           data-bind="datetimePicker: {
+                                  datepicker: true,
+                                  timepicker: true},
+                                  value: claim().dateReceived"/>
+                </div>
+            </div>
+            <div class="inline">
+                <div class="inline narrow fieldLabel">Date Due</div>
+                <div class="inline normal">
+                    <input type="text" class="form-control input-sm"
+                           data-bind="datetimePicker: {
+                                  datepicker: true,
+                                  timepicker: true},
+                                  value: claim().dateDue"/>
+                </div>
+            </div>
+            <div class="inline">
+                <div class="inline narrow fieldLabel">Date of Loss</div>
+                <div class="inline normal">
+                    <input type="text" class="form-control input-sm"
+                           data-bind="datetimePicker: {
+                                  datepicker: true,
+                                  timepicker: true},
+                                  value: claim().dateOfLoss"/>
+                </div>
+            </div>
         </div>
-        <div class="inline">
-            <div class="inline narrow fieldLabel">Date Due</div>
-            <input type="text" class="form-control normal inline input-sm"
-                   data-bind="datetimePicker: {
-                              datepicker: true,
-                              timepicker: true},
-                          value: claim().dateDue"/>
-        </div>
-        <div class="inline">
-            <div class="inline narrow fieldLabel">Date of Loss</div>
-            <input type="text" class="form-control normal inline input-sm"
-                   data-bind="datetimePicker: {
-                              datepicker: true,
-                              timepicker: true},
-                          value: claim().dateOfLoss"/>
-        </div>
-    </div>
 
-    <!-- **** Insured **** -->
-    <div class="topBorderSolid"><h5>Insured</h5></div>
+        <!-- **** Insured **** -->
+        <div class="topBorderSolid"><h5>Insured</h5></div>
 
-    <div class="bottomMargin">
-        <div class="narrow fieldLabel tableCell" style="display: table-cell">Attorney</div>
-        <div style="display: table-cell">
-            <contact-component params="contact : claim().insuredAttorneyContact,
+        <div class="bottomMargin">
+            <div class="narrow fieldLabel tableCell" style="display: table-cell">Attorney</div>
+            <div style="display: table-cell">
+                <contact-component params="contact : claim().insuredAttorneyContact,
                                        idSuffix: 'claim-insuredAttny',
                                         isBusinessOptionApplicable: true"></contact-component>
+            </div>
         </div>
-    </div>
 
-    <div class="bottomMargin">
-        <div class="narrow fieldLabel tableCell" style="display: table-cell">Contact</div>
-        <div style="display: table-cell">
-            <contact-component params="contact : claim().insuredContact,
+        <div class="bottomMargin">
+            <div class="narrow fieldLabel tableCell" style="display: table-cell">Contact</div>
+            <div style="display: table-cell">
+                <contact-component params="contact : claim().insuredContact,
                                        idSuffix: 'claim-insuredContact',
                                        isBusinessOptionApplicable: false"></contact-component>
+            </div>
         </div>
-    </div>
 
-    <!-- **** Claimant **** -->
-    <div class="topBorderSolid"><h5>Claimant</h5></div>
+        <!-- **** Claimant **** -->
+        <div class="topBorderSolid"><h5>Claimant</h5></div>
 
-    <div class="bottomMargin">
-        <div class="narrow fieldLabel" style="display: table-cell">Attorney</div>
-        <div style="display: table-cell">
-            <contact-component params="contact : claim().claimantsAttorneyContact,
+        <div class="bottomMargin">
+            <div class="narrow fieldLabel" style="display: table-cell">Attorney</div>
+            <div style="display: table-cell">
+                <contact-component params="contact : claim().claimantsAttorneyContact,
                                        idSuffix: 'claim-claimantAttny',
                                        isBusinessOptionApplicable: true"></contact-component>
+            </div>
         </div>
-    </div>
-    <div class="bottomMargin">
-        <div class="narrow fieldLabel" style="display: table-cell">Contact</div>
-        <div style="display: table-cell">
-            <contact-component params="contact : claim().claimantsContact,
+        <div class="bottomMargin">
+            <div class="narrow fieldLabel" style="display: table-cell">Contact</div>
+            <div style="display: table-cell">
+                <contact-component params="contact : claim().claimantsContact,
                                        idSuffix: 'claim-claimantContact',
                                        isBusinessOptionApplicable: false"></contact-component>
+            </div>
+        </div>
+
+        <div class="topBorderSolid bottomMargin"></div>
+
+        <div class="topMargin">
+            <div class="narrow fieldLabel" style="display: table-cell">
+                Description
+            </div>
+            <div class="inline" style="display: table-cell; width: 95%; padding-left: 3px">
+                <textarea class="form-control" rows="3" id="claimEntry-textArea"
+                          data-bind="value: claim().description" placeholder="Note"></textarea>
+            </div>
+        </div>
+        <div class="topMargin"/>
+    </div>
+</div>
+    <!-- ************************************************ -->
+    <!--List Claim Entries -->
+    <!-- ************************************************ -->
+
+    <div><h3>Entries</h3></div>
+
+    <div data-bind="foreach: {data: claimEntries, as: 'entry' }">
+        <div class="listItem" data-bind="click: $parent.onClaimEntryClick">
+            <div class="inline">
+                <a data-bind="attr: {href: '#/claimEntry/' + entry._id}">
+                    <span data-bind="text: entry.summary"></span>
+                </a>
+            </div>
+            <div class="inline alignRight">
+                <div class="glyphicon glyphicon-chevron-right"></div>
+            </div>
         </div>
     </div>
 
-    <div class="topBorderSolid bottomMargin"></div>
+    <!-- ************************************************ -->
+    <!--New Entry -->
+    <!-- ************************************************ -->
 
-    <div style="width: 80%">
-        <textarea class="form-control" rows="4" placeholder="Notes" data-bind="value: claim().description"/>
-    </div>
-
-    <div class="topMargin"/>
-</div>
-
-<!-- ************************************************ -->
-<!--List Claim Entries -->
-<!-- ************************************************ -->
-
-<div><h3>Entries</h3></div>
-
-<div data-bind="foreach: {data: claimEntries, as: 'entry' }">
-    <div class="listItem" data-bind="click: $parent.onClaimEntryClick">
-        <div class="inline">
-            <a data-bind="attr: {href: '#/claimEntry/' + entry._id}">
-                <span data-bind="text: entry.description"></span>
-            </a>
+    <div class="topMargin5 topBorder clear">
+        <div class="inline topMargin5">
+            <spam class="glyphicon glyphicon-plus"></spam>
+            <a href="#/claimEntry">Add New Entry</a>
         </div>
-        <div class="inline alignRight">
-            <div class="glyphicon glyphicon-chevron-right"></div>
+
+        <div class="inline alignRight topMargin5">
+            <button type="button" class="btn btn-default" data-bind="click: onSave">
+                <span class="glyphicon glyphicon-floppy-disk"></span>
+                <span class="leftMargin">Save</span>
+            </button>
+
+            <button type="button" class="btn btn-default" data-bind="click: onCancel">
+                <span class="glyphicon glyphicon-ban-circle"></span>
+                <span class="leftMargin">Cancel</span>
+            </button>
         </div>
+
     </div>
-</div>
-
-<!-- ************************************************ -->
-<!--New Entry -->
-<!-- ************************************************ -->
-
-<div class="topMargin topBorder clear">
-    <div class="inline topPadding ">
-        <spam class="glyphicon glyphicon-plus"></spam>
-        <a href="#/claimEntry">Add New Entry</a>
-    </div>
-
-    <div class="inline alignRight topPadding ">
-        <button type="button" class="btn btn-default" data-bind="click: onSave">
-            <span class="glyphicon glyphicon-floppy-disk"></span>
-            <span class="leftMargin">Save</span>
-        </button>
-
-        <button type="button" class="btn btn-default" data-bind="click: onCancel">
-            <span class="glyphicon glyphicon-ban-circle"></span>
-            <span class="leftMargin">Cancel</span>
-        </button>
-    </div>
-
-</div>

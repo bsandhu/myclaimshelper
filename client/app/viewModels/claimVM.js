@@ -23,7 +23,6 @@ define(['jquery', 'knockout', 'KOMap', 'amplify',
             jsClaimObject.insuredAttorneyContact = new Contact();
             jsClaimObject.insuredContact = new Contact();
 
-            jsClaimObject.claimantsAttorneyContact.firstName = 'foo';
             var claimObjWithObservableAttributes = KOMap.fromJS(jsClaimObject);
             return claimObjWithObservableAttributes;
         };
@@ -52,6 +51,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify',
             console.log('Adding new claim');
             this.claim(this.newEmptyClaim());
             this.claim().entryDate(DateUtils.toDatetimePickerFormat(new Date()));
+            this.claimEntries([]);
             this.inEditMode(true);
         };
 
@@ -66,6 +66,12 @@ define(['jquery', 'knockout', 'KOMap', 'amplify',
                 console.log('Adding entry to unsaved claim. Saving.');
                 this.onSave();
             }
+        };
+
+        ClaimVM.prototype.niceName = function(contact) {
+            var nice = (contact.firstName() || '') + (contact.lastName() || '');
+            return nice.length > 0 ? nice : 'None';
+
         };
 
         ClaimVM.prototype.onCancel = function () {

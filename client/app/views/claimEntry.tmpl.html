@@ -1,4 +1,4 @@
-<h3>Entry</h3>
+<h4 data-bind="text: niceHeader()"></h4>
 
 <div>
     <div class="inline narrow fieldLabel">Id</div>
@@ -31,10 +31,20 @@
 
 <div class="topMargin">
     <div class="narrow fieldLabel" style="display: table-cell">
-        Note
+        Summary
     </div>
-    <div class="inline" style="display: table-cell; width: 80%; padding-left: 3px">
-        <textarea class="form-control" rows="3"
+    <div class="inline" style="display: table-cell; width: 95%; padding-left: 3px">
+        <textarea class="form-control" rows="1"
+                  data-bind="value: claimEntry().summary" placeholder="Note"></textarea>
+    </div>
+</div>
+
+<div class="topMargin">
+    <div class="narrow fieldLabel" style="display: table-cell">
+        Description
+    </div>
+    <div class="inline" style="display: table-cell; width: 95%; padding-left: 3px">
+        <textarea class="form-control" rows="3" id="claimEntry-textArea"
                   data-bind="value: claimEntry().description" placeholder="Note"></textarea>
     </div>
 </div>
@@ -44,7 +54,7 @@
     <div class="narrow fieldLabel" style="display: table-cell">
         Attachments
     </div>
-    <div class="inline" style="display: table-cell; width: 80%; padding-left: 3px">
+    <div class="inline" style="display: table-cell; width: 95%; padding-left: 3px">
         <file-upload-component params="'claimEntry': claimEntry"></file-upload-component>
     </div>
 </div>
