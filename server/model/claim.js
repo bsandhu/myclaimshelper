@@ -39,12 +39,9 @@ define([], function () {
         this.insuranceCoContact = undefined;
 
         this.insuranceCompanyFileNum = undefined;
-<<<<<<< HEAD
         this.insuranceCompanyName = undefined;
-=======
 
         this.state = undefined;
->>>>>>> add status field to claim model
     }
 
     return Claim;
