@@ -183,7 +183,6 @@ function getAllClaims(req, res) {
 function searchClaims(req, res) {
     assert.ok(req.params.search, 'Expecting Search as a parameter');
     var search = req.params.search;
-//    var query = JSON.parse('{"' + decodeURI(search).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g,'":"') + '"}');
     var query = JSON.parse(search);
 
     console.log('Searching for Claim with query: ' + search);
