@@ -84,6 +84,7 @@ function saveToDB(fileName, filePath) {
                 gridStore.writeFile(filePath, function (err, gridStore) {
                     if (err) {
                         saveDeferred.reject(err);
+                        db.close();
                         return;
                     }
                     // Close (Flushes the data to MongoDB)
