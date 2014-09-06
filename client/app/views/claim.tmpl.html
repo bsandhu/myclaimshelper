@@ -162,45 +162,62 @@
         <div class="topMargin"/>
     </div>
 </div>
-    <!-- ************************************************ -->
-    <!--List Claim Entries -->
-    <!-- ************************************************ -->
+<!-- ************************************************ -->
+<!--List Claim Entries -->
+<!-- ************************************************ -->
 
-    <div><h3>Entries</h3></div>
+<div data-bind="foreach: {data: claimEntries, as: 'entry' }" style="display: table; width: 98%" class="rightMargin" id="claimEntriesList">
 
-    <div data-bind="foreach: {data: claimEntries, as: 'entry' }">
-        <div class="listItem" data-bind="click: $parent.onClaimEntryClick">
-            <div class="inline">
-                <a data-bind="attr: {href: '#/claimEntry/' + entry._id}">
-                    <span data-bind="text: entry.summary"></span>
+    <div style="display: table-header-group;" data-bind="if: $index() == 0" class="listHeader">
+        <div style="display: table-row">
+            <div style="display: table-cell">Tasks</div>
+            <div style="display: table-cell">
+                <a href="#" data-bind="click: $parent.onSortEntries.bind($parent)">
+                    Entered on
+                    <span data-bind="css: {'glyphicon-sort-by-attributes': $parent.sortDir() == 'asc',
+                                           'glyphicon-sort-by-attributes-alt': $parent.sortDir() == 'desc'}"
+                          class="glyphicon"></span>
                 </a>
             </div>
-            <div class="inline alignRight">
-                <div class="glyphicon glyphicon-chevron-right"></div>
-            </div>
         </div>
     </div>
 
-    <!-- ************************************************ -->
-    <!--New Entry -->
-    <!-- ************************************************ -->
-
-    <div class="topMargin5 topBorder clear">
-        <div class="inline topMargin5">
-            <spam class="glyphicon glyphicon-plus"></spam>
-            <a href="#/claimEntry">Add New Entry</a>
+    <div style="display: table-row" class="listItem"
+         data-bind="click: $parent.onClaimEntryClick">
+        <div style="min-width: 20%; display: table-cell">
+            <a data-bind="attr: {href: '#/claimEntry/' + entry._id}">
+                <span data-bind="text: entry.summary"></span>
+            </a>
         </div>
-
-        <div class="inline alignRight topMargin5">
-            <button type="button" class="btn btn-default" data-bind="click: onSave">
-                <span class="glyphicon glyphicon-floppy-disk"></span>
-                <span class="leftMargin">Save</span>
-            </button>
-
-            <button type="button" class="btn btn-default" data-bind="click: onCancel">
-                <span class="glyphicon glyphicon-ban-circle"></span>
-                <span class="leftMargin">Cancel</span>
-            </button>
+        <div style="display: table-cell" class="rightMargin">
+            <span data-bind="text: entry.entryDate"></span>
         </div>
-
+        <div style="display: table-cell" class="rightMargin">
+            <div class="glyphicon glyphicon-chevron-right"></div>
+        </div>
     </div>
+</div>
+
+<!-- ************************************************ -->
+<!--New Entry -->
+<!-- ************************************************ -->
+
+<div class="topMargin5 topBorder clear">
+    <div class="inline topMargin5">
+        <spam class="glyphicon glyphicon-plus"></spam>
+        <a href="#/claimEntry">Add New Entry</a>
+    </div>
+
+    <div class="inline alignRight topMargin5">
+        <button type="button" class="btn btn-default" data-bind="click: onSave">
+            <span class="glyphicon glyphicon-floppy-disk"></span>
+            <span class="leftMargin">Save</span>
+        </button>
+
+        <button type="button" class="btn btn-default" data-bind="click: onCancel">
+            <span class="glyphicon glyphicon-ban-circle"></span>
+            <span class="leftMargin">Cancel</span>
+        </button>
+    </div>
+
+</div>

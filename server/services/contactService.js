@@ -11,12 +11,14 @@ function addContact(req, res) {
             contactsCol.insert(contact, {w: 1}, function (err, result) {
                 console.log('Saving contact');
                 sendResponse(res, err, result);
+                db.close();
             });
         }
         else {
             contactsCol.update({'_id': contact._id}, contact, {w: 1}, function (err, result) {
                 console.log('Updating contact');
                 sendResponse(res, err, result);
+                db.close();
             });
         }
     });
@@ -28,6 +30,7 @@ function listAllContacts(req, res) {
         var contactsCol = db.collection('Contacts');
         contactsCol.find().toArray(function (err, items) {
             sendResponse(res, err, items);
+            db.close();
         });
     });
 }

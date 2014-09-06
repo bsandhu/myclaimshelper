@@ -34,6 +34,7 @@ function _deleteEntity(predicate, colName) {
                     } else {
                         defer.resolve(result);
                     }
+                    db.close();
                 });
         });
     return defer;
@@ -94,6 +95,7 @@ function _saveOrUpdateEntity(req, res, colName) {
                     function onInsert(err, results) {
                         console.log('Adding to collection ' + colName);
                         sendResponse(res, err, results[0]);
+                        db.close();
                     });
             } else {
                 entityCol.update({'_id': entity._id},
@@ -102,6 +104,7 @@ function _saveOrUpdateEntity(req, res, colName) {
                     function onUpdate(err, result) {
                         console.log('Updated collection ' + colName);
                         sendResponse(res, err, entity);
+                        db.close();
                     });
             }
         });
@@ -140,6 +143,7 @@ function getEntityById(req, res, colName) {
             } else {
                 sendResponse(res, err, item);
             }
+            db.close();
         }
     });
 }
@@ -155,6 +159,7 @@ function getAllEntriesForClaim(req, res) {
         function onResults(err, items) {
             var modelObjs = _.map(items, convertToModel);
             sendResponse(res, err, modelObjs);
+            db.close();
         }
 
         function convertToModel(item) {
@@ -172,6 +177,7 @@ function getAllClaims(req, res) {
         function onResults(err, items) {
             var modelObjs = _.map(items, convertToModel);
             sendResponse(res, err, modelObjs);
+            db.close();
         }
 
         function convertToModel(item) {
