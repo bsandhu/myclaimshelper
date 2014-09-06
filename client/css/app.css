@@ -44,6 +44,10 @@ div {
 
 /**** Margins and borders ****/
 
+.topMargin10 {
+    margin-top: 10px;
+}
+
 .topMargin5 {
     margin-top: 5px;
 }

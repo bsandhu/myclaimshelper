@@ -68,6 +68,9 @@ function setupStaticRoutes() {
     server.get(/\/images\/.*/, restify.serveStatic({
         directory: 'client'
     }));
+    server.get(/\/help\/.*/, restify.serveStatic({
+        directory: 'client'
+    }));
     server.get('/.*/ ', restify.serveStatic({
         'directory': 'client',
         'default'  : '/app/views/app.html'
