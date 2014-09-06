@@ -10,13 +10,14 @@ define(['jquery', 'knockout', 'KOMap', 'amplify',
             // Model
             this.claim = ko.observable(this.newEmptyClaim());
             this.claimEntries = ko.observableArray();
+            this.sortDir = ko.observable('desc');
 
             // View state
             this.inEditMode = ko.observable(false);
             this.setupEvListeners();
         }
 
-        ClaimVM.prototype.newEmptyClaim = function(){
+        ClaimVM.prototype.newEmptyClaim = function () {
             var jsClaimObject = new Claim();
             jsClaimObject.claimantsAttorneyContact = new Contact();
             jsClaimObject.claimantsContact = new Contact();
@@ -34,8 +35,31 @@ define(['jquery', 'knockout', 'KOMap', 'amplify',
             amplify.subscribe(Events.SAVED_CLAIM_ENTRY, this, this.refreshClaimEntriesListing);
         };
 
-        ClaimVM.prototype.onEditModeClick = function(){
+        ClaimVM.prototype.onEditModeClick = function () {
             this.inEditMode(true);
+        };
+
+        ClaimVM.prototype.onSortEntries = function () {
+            this.sortDir(this.sortDir() === 'desc' ? 'asc' : 'desc');
+            this.sortEntries();
+        };
+
+        ClaimVM.prototype.sortEntries = function () {
+            function sortAsc(a, b) {
+                var dateA = new Date(Date.parse(a.entryDate));
+                var dateB = new Date(Date.parse(b.entryDate));
+                return dateA.getTime() - dateB.getTime();
+            }
+
+            function sortDesc(a, b) {
+                var dateA = new Date(Date.parse(a.entryDate));
+                var dateB = new Date(Date.parse(b.entryDate));
+                return dateB.getTime() - dateA.getTime();
+            }
+
+            var tmpArray = this.claimEntries.removeAll();
+            tmpArray.sort(this.sortDir() === 'desc' ? sortDesc : sortAsc);
+            this.claimEntries(tmpArray);
         };
 
         ClaimVM.prototype.onShowClaim = function (evData) {
@@ -55,7 +79,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify',
             this.inEditMode(true);
         };
 
-        ClaimVM.prototype.refreshClaimEntriesListing = function(){
+        ClaimVM.prototype.refreshClaimEntriesListing = function () {
             var claimId = this.claim()._id();
             console.log('Refresh entries list. ClaimId ' + claimId);
             this.loadEntriesForClaim(claimId);
@@ -68,7 +92,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify',
             }
         };
 
-        ClaimVM.prototype.niceName = function(contact) {
+        ClaimVM.prototype.niceName = function (contact) {
             var nice = (contact.firstName() || '') + (contact.lastName() || '');
             return nice.length > 0 ? nice : 'None';
 
@@ -78,7 +102,11 @@ define(['jquery', 'knockout', 'KOMap', 'amplify',
             Router.routeToHome();
         };
 
-        ClaimVM.prototype.onClaimEntryClick = function (entry) {
+        ClaimVM.prototype.onClaimEntryClick = function (entry, ev) {
+            // Toggle row highlight
+            $('#claimEntriesList div[class|="listItem listItemSelected"]').removeClass('listItemSelected');
+            $(ev.target).closest('div[class="listItem"]').addClass('listItemSelected');
+
             Router.routeToClaimEntry(entry._id);
         };
 
@@ -110,12 +138,17 @@ define(['jquery', 'knockout', 'KOMap', 'amplify',
                 .done(function (resp) {
                     console.log('Loaded claim entries' + JSON.stringify(resp.data));
                     this.claimEntries(resp.data);
+                    this.sortEntries();
                 }.bind(this));
         };
 
-        ClaimVM.prototype.storeInSession = function(claimId) {
+        ClaimVM.prototype.storeInSession = function (claimId) {
             amplify.store.sessionStorage(SessionKeys.ACTIVE_CLAIM_ID, claimId);
             console.log('Stored CliamId: ' + claimId + ' in session storage');
+        };
+
+        ClaimVM.prototype.getActiveClaimEntryId = function () {
+            return amplify.store.sessionStorage(SessionKeys.ACTIVE_CLAIM_ENTRY_ID);
         };
 
         return ClaimVM;
