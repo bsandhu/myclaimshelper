@@ -64,13 +64,9 @@
 
 <!-- Buttons -->
 <div style="float: right" class="clear bottomMargin topMargin">
-    <button type="button" class="btn btn-default" data-bind="click: onSave">
-        <span class="glyphicon glyphicon-floppy-disk"></span>
-        <span class="leftMargin">Save</span>
-    </button>
-
-    <button type="button" class="btn btn-default" data-bind="click: onCancel">
-        <span class="glyphicon glyphicon-ban-circle"></span>
-        <span class="leftMargin">Cancel</span>
-    </button>
+    <button type="button" class="btn"
+            data-bind="click: onSave,
+                       css: { 'btn-primary' : stateChange(),
+                              'btn-default' : !stateChange()}">Save</button>
+    <button type="button" class="btn btn-default" data-bind="click: onCancel">Cancel</button>
 </div>
