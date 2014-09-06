@@ -186,6 +186,24 @@ function getAllClaims(req, res) {
     });
 }
 
+function searchClaims(req, res) {
+    assert.ok(req.params.search, 'Expecting Search as a parameter');
+    var search = req.params.search;
+    var query = JSON.parse(search);
+
+    console.log('Searching for Claim with query: ' + search);
+    mongoUtils.run(function (db) {
+        claimsCollection(db).find(query).toArray(onResults);
+
+        function onResults(err, items) {
+            var resData = (items.length == 0)
+                ? 'No claims match this search ' + search
+                : _.extend(new Claim(), items);
+            sendResponse(res, err, resData);
+        }
+    });
+}
+
 function sendResponse(res, err, jsonData) {
     if (err) {
         console.error('Error: ' + err);
@@ -205,3 +223,4 @@ exports.getClaimEntry = getClaimEntry;
 exports.getAllClaims = getAllClaims;
 exports.getAllEntriesForClaim = getAllEntriesForClaim;
 exports.deleteClaim = deleteClaim;
+exports.searchClaims = searchClaims;

@@ -42,6 +42,8 @@ function setupClaimsServiceRoutes() {
 
     server.post('/upload', uploadService.uploadFile);
     server.get('/download', uploadService.downloadFile);
+
+    server.get('/claim/search/:search', claimsService.searchClaims);
 }
 
 function setupContactServiceRoutes() {

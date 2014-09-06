@@ -40,6 +40,8 @@ define([], function () {
 
         this.insuranceCompanyFileNum = undefined;
         this.insuranceCompanyName = undefined;
+
+        this.state = undefined;
     }
 
     return Claim;

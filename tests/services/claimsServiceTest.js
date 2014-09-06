@@ -10,6 +10,7 @@ describe('Claims Service', function () {
     testClaim.entryDate = new Date(2014, 1, 1);
     testClaim.dueDate = new Date(2014, 1, 10);
     testClaim.summary = "I am test entry";
+    testClaim.state = 'open';
 
     var testEntry = new ClaimEntry();
     testEntry.entryDate = new Date(2014, 2, 1);
@@ -147,5 +148,19 @@ describe('Claims Service', function () {
         claimsService.getAllClaims(req, res);
     });
 
+    it('Search through claims', function(done) {
+        var req = {params: {search : '{"state":"open"}'}};
+        var res = {};
+
+        res.json = function (data) {
+            assert(data);
+            assert.equal(data.status, 'Success');
+
+            var claim = data.data[0];
+            assert.equal(claim.state, testClaim.state);
+            done();
+        };
+        claimsService.searchClaims(req, res);
+    });
 
 });
