@@ -155,11 +155,20 @@ div {
     color: #EAEAEA;
 }
 
+.listHeader {
+    background-color: #DDEDF5;
+    height: 35px;
+    line-height: 35px;
+    font-weight: bold;
+    font-size: medium
+}
+
 .listItem {
     border-top: 1px;
     border-top-style: solid;
     border-color: #E2E4E7;
     height: 35px;
+    line-height: 35px;
     padding-top: 8px;
     padding-right: 3px;
     padding-left: 3px;
@@ -168,6 +177,10 @@ div {
 .listItem:hover {
     background-color: #E2E4E7;
     cursor: pointer;
+}
+
+.listItemSelected {
+    background-color: #E2E4E7;
 }
 
 .headerLogo {

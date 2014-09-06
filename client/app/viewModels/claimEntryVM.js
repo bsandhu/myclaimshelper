@@ -37,19 +37,10 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
             this.claimEntry().entryDate(DateUtils.toDatetimePickerFormat(new Date()));
         };
 
-        ClaimEntryVM.prototype.niceHeader = function(){
+        ClaimEntryVM.prototype.niceHeader = function () {
             return (this.claimEntry()._id === undefined)
-                    ? 'New Entry'
-                    : this.claimEntry().summary() || '';
-        };
-
-        /**
-         * Since only once Claim can be active, its assumed to be the parent
-         */
-        ClaimEntryVM.prototype.getActiveClaimId = function () {
-            var activeClaimId = amplify.store.sessionStorage(SessionKeys.ACTIVE_CLAIM_ID);
-            console.assert(activeClaimId, 'No claim active in session');
-            return activeClaimId;
+                ? 'New Entry'
+                : this.claimEntry().summary() || '';
         };
 
         ClaimEntryVM.prototype.onSave = function () {
@@ -57,6 +48,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
 
             var activeClaimId = this.getActiveClaimId();
             this.claimEntry().claimId(activeClaimId);
+            this.claimEntry().entryDate();
 
             ajaxUtils.post(
                 '/claimEntry',
@@ -76,7 +68,8 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
                     // Populate with JSON data
                     KOMap.fromJS(resp.data, {}, this.claimEntry);
 
-                    // TODO figure out if we need to track selected claim entry in session
+                    // Put in seesion
+                    this.storeInSession(this.claimEntry()._id());
 
                     window.setTimeout(function setT() {
                         var txtArea = $("#claimEntry-textArea");
@@ -86,6 +79,20 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
                     }, 1);
 
                 }.bind(this));
+        };
+
+        /**
+         * Since only once Claim can be active, its assumed to be the parent
+         */
+        ClaimEntryVM.prototype.getActiveClaimId = function () {
+            var activeClaimId = amplify.store.sessionStorage(SessionKeys.ACTIVE_CLAIM_ID);
+            console.assert(activeClaimId, 'No claim active in session');
+            return activeClaimId;
+        };
+
+        ClaimEntryVM.prototype.storeInSession = function (claimEntryId) {
+            amplify.store.sessionStorage(SessionKeys.ACTIVE_CLAIM_ENTRY_ID, claimEntryId);
+            console.log('Stored CliamEntryId: ' + claimEntryId + ' in session storage');
         };
 
         ClaimEntryVM.prototype.onCancel = function () {

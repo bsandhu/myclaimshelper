@@ -11,7 +11,8 @@ define(['jquery', 'knockout', 'KOMap', 'app/utils/dateUtils', 'datetimepicker'],
             init: function (element, valueAccessor, allBindings, viewModel, bindingContext) {
                 var config = ko.utils.unwrapObservable(valueAccessor());
 
-                config.mask = DateUtils.DATETIME_PICKER_FORMAT;
+                config.mask = true;
+                config.format = DateUtils.DATETIME_PICKER_FORMAT;
 
                 $(element).datetimepicker(config);
             },
