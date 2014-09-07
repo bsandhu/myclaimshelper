@@ -114,12 +114,24 @@
                 <thead>
                 <th>Id</th>
                 <th>Description</th>
+                <th>Insurance Company</th>
+                <th>Insurance Co. File No.</th>
+                <th>Date Received</th>
+                <th>Entry Date</th>
+                <th>Due Date</th>
+                <th>State</th>
                 </thead>
 
                 <tbody data-bind="foreach : {data: searchResults, as: 'claim'}">
                 <tr data-bind="click: $parent.onClaimSelect">
                     <td data-bind="text: claim._id" class="gridCell"></td>
                     <td data-bind="text: claim.description" class="gridCell"></td>
+                    <td data-bind="text: claim.insuranceCompanyName" class="gridCell"></td>
+                    <td data-bind="text: claim.insuranceCompanyFileNumber" class="gridCell"></td>
+                    <td data-bind="text: claim.dateReceived" class="gridCell"></td>
+                    <td data-bind="text: claim.entryDate" class="gridCell"></td>
+                    <td data-bind="text: claim.dateDue" class="gridCell"></td>
+                    <td data-bind="text: claim.state" class="gridCell"></td>
                 </tr>
                 </tbody>
             </table>
