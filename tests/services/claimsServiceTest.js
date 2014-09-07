@@ -1,7 +1,10 @@
 var assert = require("assert");
 var claimsService = require("./../../server/services/claimsService.js");
+var contactService = require('./../../server/services/contactService.js');
 var Claim = require("./../../server/model/claim.js");
 var ClaimEntry = require("./../../server/model/claimEntry.js");
+var jQuery = require('jquery-deferred');
+
 
 describe('Claims Service', function () {
 
@@ -11,6 +14,7 @@ describe('Claims Service', function () {
     testClaim.dueDate = new Date(2014, 1, 10);
     testClaim.summary = "I am test entry";
     testClaim.state = 'open';
+    testClaim.insuredContact = {firstName: 'TestFist', lastName: 'TestLast',  city: 'TestCity', zip: 11010};
 
     var testEntry = new ClaimEntry();
     testEntry.entryDate = new Date(2014, 2, 1);
@@ -19,10 +23,12 @@ describe('Claims Service', function () {
 
     after(function(done) {
         assert.ok(testClaim._id);
-        claimsService
-            .deleteClaim(testClaim._id)
-            .done(done)
-            .fail('Failed to cleanup test data');
+
+        jQuery.when(
+            claimsService.deleteClaim(testClaim._id),
+            contactService.deleteContact(testClaim.insuredContactId)
+                .done(done)
+                .fail('Failed to cleanup test data'));
     });
 
     it('Save claim', function (done) {
@@ -31,7 +37,21 @@ describe('Claims Service', function () {
         res.json = function (data) {
             assert(data);
             assert.equal(data.status, 'Success');
-            assert.ok(data.data._id);
+
+            var claim = data.data;
+            assert.ok(claim._id);
+            testClaim._id = claim._id;
+
+            // Contact ref
+            assert.ok(claim.insuredContactId);
+            assert.ok(!claim.hasOwnProperty('insuredContact'));
+
+            // Saved with all model attributes even if no data is supplied
+            assert.ok(claim.hasOwnProperty('claimantContactId'));
+            assert.ok(!claim.claimantContactId);
+
+            assert.ok(claim.hasOwnProperty('claimantsAttorneyContactId'));
+            assert.ok(!claim.claimantsAttorneyContactId);
             done();
         };
         claimsService.saveOrUpdateClaim(req, res);
@@ -64,7 +84,6 @@ describe('Claims Service', function () {
                 assert.equal(data.status, 'Success');
                 assert.ok(data.data._id);
                 done();
-
             });
     });
 
@@ -95,6 +114,12 @@ describe('Claims Service', function () {
 
             var savedClaim = data.data;
             assert.equal(savedClaim.description, 'Test claim update');
+
+            var savedContact = savedClaim.insuredContact;
+            assert.ok(savedContact._id);
+            assert.equal(savedContact.firstName, 'TestFist');
+            assert.equal(savedContact.lastName, 'TestLast');
+            assert.equal(savedContact.zip, 11010);
             done();
         };
         claimsService.getClaim(req, res);

@@ -20,9 +20,10 @@ define(['jquery', 'knockout', 'KOMap', 'amplify',
         ClaimVM.prototype.newEmptyClaim = function () {
             var jsClaimObject = new Claim();
             jsClaimObject.claimantsAttorneyContact = new Contact();
-            jsClaimObject.claimantsContact = new Contact();
+            jsClaimObject.claimantContact = new Contact();
             jsClaimObject.insuredAttorneyContact = new Contact();
             jsClaimObject.insuredContact = new Contact();
+            jsClaimObject.insuranceCoContact = new Contact();
 
             var claimObjWithObservableAttributes = KOMap.fromJS(jsClaimObject);
             return claimObjWithObservableAttributes;
@@ -118,7 +119,15 @@ define(['jquery', 'knockout', 'KOMap', 'amplify',
                 KOMap.toJSON(this.claim),
                 function onSuccess(response) {
                     console.log('Saved claim: ' + JSON.stringify(response));
+
+                    // Update Ids gen. by the server
                     this.claim()._id(response.data._id);
+                    this.claim().insuredContact._id(response.data.insuredContactId);
+                    this.claim().insuredAttorneyContact._id(response.data.insuredAttorneyContactId);
+                    this.claim().claimantContact._id(response.data.claimantContactId);
+                    this.claim().claimantsAttorneyContact._id(response.data.claimantsAttorneyContactId);
+                    this.claim().insuranceCoContact._id(response.data.insuranceCoContactId);
+
                     amplify.publish(Events.SUCCESS_NOTIFICATION, {msg: 'Saved Claim'});
                     this.storeInSession(this.claim()._id());
                 }.bind(this));

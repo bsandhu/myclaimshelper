@@ -40,7 +40,7 @@
         </div>
         <div class="inline rightMargin">
             <span><strong>Claimant contact:</strong></span>
-            <span data-bind="text: niceName(claim().claimantsContact) "></span>
+            <span data-bind="text: niceName(claim().claimantContact) "></span>
         </div>
     </div>
 
@@ -64,7 +64,8 @@
                 <div class="inline narrow fieldLabel">Name</div>
                 <div class="inline wider">
                     <input type="text" class="form-control input-sm"
-                           data-bind="value: claim().insuranceCompanyName">
+                           data-bind="value: claim().insuranceCompanyName"
+                            autocomplete="on">
                 </div>
                 <div class="inline narrow fieldLabel">File num.</div>
                 <div class="inline narrow">
@@ -142,7 +143,7 @@
         <div class="bottomMargin">
             <div class="narrow fieldLabel" style="display: table-cell">Contact</div>
             <div style="display: table-cell">
-                <contact-component params="contact : claim().claimantsContact,
+                <contact-component params="contact : claim().claimantContact,
                                        idSuffix: 'claim-claimantContact',
                                        isBusinessOptionApplicable: false"></contact-component>
             </div>
