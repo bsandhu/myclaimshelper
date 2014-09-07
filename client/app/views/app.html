@@ -9,13 +9,25 @@
 
 <body>
 
+<!-- **** Header **** -->
 <div class="inline" style="width: 98%">
+
+    <!-- Logo -->
     <div class="inline">
         <a href="#/home">
             <div class="headerLogo">Agent</div>
         </a>
     </div>
-    <!-- **** Notifications **** -->
+
+    <!-- Help -->
+    <div class="inline alignRight rightMargin topMargin10" style="cursor: pointer">
+        <a data-bind="click: onHelpClick">
+            <span class="glyphicon glyphicon-question-sign"></span>
+            <span>Help</span>
+        </a>
+    </div>
+
+    <!-- Notifications -->
     <div data-bind="module: {name: 'app/viewModels/notifierVM', template: 'app/views/notifier'}"
          class="inline" style="width: 50%"></div>
 </div>
@@ -24,7 +36,6 @@
 <div class="sectionSeparator"></div>
 
 <div style="display: inline-flex; width: 100%; height: 90%; vertical-align: top; white-space: nowrap">
-
 
     <!-- **** Search panel **** -->
     <div id="searchPanel" class="slidingContainer" style="background-color: #428bca; width: 20%">
@@ -147,7 +158,7 @@
      * Load libs and init Knockout - on app startup. See requireConfig.js
      */
     require(['jquery', 'knockout', 'KOAmd', 'text', 'amplify', 'app/viewModels/appVM',
-             'app/utils/events', 'app/utils/koDatetimePickerBinding', 'velocity'],
+                'app/utils/events', 'app/utils/koDatetimePickerBinding', 'velocity'],
             function ($, ko, KOAmd, text, amplify, AppVM) {
                 console.log('Init App');
 

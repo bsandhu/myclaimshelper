@@ -26,6 +26,10 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'app/utils/even
             Router.routeToClaim(claim._id());
         };
 
+        AppVM.prototype.onHelpClick = function (claim) {
+            window.open('/help/help.html', 'Agent help');
+        };
+
         AppVM.prototype.onSearchClear = function () {
             var temp = [];
             $.each(this.claims(), function (index, claim) {
