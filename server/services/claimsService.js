@@ -1,6 +1,10 @@
 var Claim = require('./../model/claim.js');
+var Contact = require('./../model/contact.js');
 var ClaimEntry = require('./../model/claimEntry.js');
 var mongoUtils = require('./../mongoUtils.js');
+var serviceUtils = require('./../serviceUtils.js');
+var contactService = require('./contactService.js');
+
 var jQuery = require('jquery-deferred');
 var assert = require('assert');
 var _ = require('underscore');
@@ -13,43 +17,67 @@ var _ = require('underscore');
 function deleteClaim(claimId) {
     var defer = jQuery.Deferred();
 
-    jQuery.when(_deleteEntity({_id: claimId}, 'Claims'),
-               _deleteEntity({claimId: claimId}, 'ClaimEntries'))
-         .then(defer.resolve())
-         .fail(defer.reject());
+    jQuery.when(
+        mongoUtils.deleteEntity({_id: claimId}, 'Claims'),
+        mongoUtils.deleteEntity({claimId: claimId}, 'ClaimEntries'))
+        .then(defer.resolve())
+        .fail(defer.reject());
     return defer;
 }
 
-function _deleteEntity(predicate, colName) {
-    var defer = jQuery.Deferred();
-
-    mongoUtils.run(
-        function remove(db) {
-            var entityCol = db.collection(colName);
-            entityCol.remove(predicate,
-                {w: 1},
-                function onRemove(err, result) {
-                    if (err) {
-                        defer.reject(err);
-                    } else {
-                        defer.resolve(result);
-                    }
-                    db.close();
-                });
-        });
-    return defer;
-
-}
 /********************************************************/
 /* Save/Update API                                      */
 /********************************************************/
 
 function saveOrUpdateClaim(req, res) {
-    _saveOrUpdateEntity(req, res, 'Claims');
+
+    function setReferenceToContactObj(contactAttrName) {
+        var defer = jQuery.Deferred();
+        var contactObj = _.extend(new Contact(), claim[contactAttrName]);
+        delete claim[contactAttrName];
+
+        if (_.isEmpty(contactObj.firstName) && _.isEmpty(contactObj.lastName)) {
+            console.log('No ' + contactAttrName + 'set. Skip setting Mongo reference');
+            defer.reject();
+            return;
+        }
+        contactService
+            .saveOrUpdateContactObject(contactObj)
+            .always(function (result) {
+                if (result.status.toLowerCase() === 'success') {
+                    claim[ contactAttrName + 'Id'] = result.data._id;
+                    defer.resolve();
+                } else {
+                    console.log('Error saving contact ref object for ' + contactAttrName);
+                    defer.reject();
+                }
+            });
+        return defer;
+    }
+
+    var claim = req.body;
+    claim = _.extend(new Claim(), claim);
+
+    jQuery.when(
+        setReferenceToContactObj('insuredContact'),
+        setReferenceToContactObj('insuredAttorneyContact'),
+        setReferenceToContactObj('claimantContact'),
+        setReferenceToContactObj('claimantsAttorneyContact'),
+        setReferenceToContactObj('insuranceCoContact')
+    ).then(function () {
+        mongoUtils.saveOrUpdateEntity(claim, 'Claims')
+            .always(function (err, results) {
+                sendResponse(res, err, results);
+            });
+    });
 }
 
 function saveOrUpdateClaimEntry(req, res) {
-    _saveOrUpdateEntity(req, res, 'ClaimEntries');
+    var entity = req.body;
+    mongoUtils.saveOrUpdateEntity(entity, 'ClaimEntries')
+        .always(function (err, results) {
+            sendResponse(res, err, results);
+        });
 }
 
 /**
@@ -61,12 +89,10 @@ function saveOrUpdateClaimEntryObject(claimEntry) {
     assert.ok(claimEntry instanceof ClaimEntry, 'Expecting instance of ClaimEntry object');
 
     var defer = jQuery.Deferred();
-    var resp = {};
-    resp.json = function (jsonData) {
-        defer.resolve(jsonData);
-    };
-    var req = {body: claimEntry};
-    _saveOrUpdateEntity(req, resp, 'ClaimEntries');
+    mongoUtils.saveOrUpdateEntity(claimEntry, 'ClaimEntries')
+        .always(function (err, results) {
+            defer.resolve(serviceUtils.createResponse(err, results));
+        });
     return defer;
 }
 
@@ -78,74 +104,56 @@ function claimEntriesCollection(db) {
     return db.collection('ClaimEntries');
 }
 
-function _saveOrUpdateEntity(req, res, colName) {
-    function getSeqNum() {
-        return mongoUtils.incrementAndGet(colName);
-    }
-
-    function dbCall(seqNum) {
-        mongoUtils.run(function update(db) {
-            var entity = req.body;
-            var entityCol = db.collection(colName);
-
-            if (!entity._id) {
-                entity._id = String(seqNum);
-                entityCol.insert(entity,
-                    {w: 1},
-                    function onInsert(err, results) {
-                        console.log('Adding to collection ' + colName);
-                        sendResponse(res, err, results[0]);
-                        db.close();
-                    });
-            } else {
-                entityCol.update({'_id': entity._id},
-                    entity,
-                    {w: 1},
-                    function onUpdate(err, result) {
-                        console.log('Updated collection ' + colName);
-                        sendResponse(res, err, entity);
-                        db.close();
-                    });
-            }
-        });
-    }
-
-    getSeqNum().then(dbCall).done();
-}
-
 /********************************************************/
 /* Read API                                             */
 /********************************************************/
 
 function getClaim(req, res) {
-    getEntityById(req, res, 'Claims');
+    assert.ok(req.params.id, 'Expecting ClaimId as a parameter');
+    var entityId = req.params.id;
+
+    function populateContactRef(claim, contactAttrName) {
+        var defer = jQuery.Deferred();
+        var contactId = claim[contactAttrName + 'Id'];
+
+        contactService
+            .getContactObject(contactId)
+            .done(function (result) {
+                var contactObj = result.status.toLowerCase() === 'success' ? result.data : new Contact();
+                claim[contactAttrName] = contactObj;
+                defer.resolve();
+            });
+        return defer;
+    }
+
+    mongoUtils.getEntityById(entityId, 'Claims')
+        .always(function (err, results) {
+            if (err) {
+                sendResponse(res, err, results);
+            } else {
+                var claim = results;
+                jQuery.when(
+                    populateContactRef(claim, 'insuredContact'),
+                    populateContactRef(claim, 'insuredContact'),
+                    populateContactRef(claim, 'insuredAttorneyContact'),
+                    populateContactRef(claim, 'claimantContact'),
+                    populateContactRef(claim, 'claimantsAttorneyContact'),
+                    populateContactRef(claim, 'insuranceCoContact')
+                ).then(function () {
+                    sendResponse(res, err, results);
+                });
+            }
+        });
 }
 
 function getClaimEntry(req, res) {
-    getEntityById(req, res, 'ClaimEntries');
-}
-
-function getEntityById(req, res, colName) {
-    assert.ok(req.params.id, 'Expecting EntityId as a parameter');
+    assert.ok(req.params.id, 'Expecting ClaimEntryId as a parameter');
     var entityId = req.params.id;
-    console.log('Getting Entity: ' + entityId);
 
-    mongoUtils.run(function (db) {
-        var entityCol = db.collection(colName);
-
-        entityCol.findOne({'_id': {'$eq': entityId}}, onResults);
-
-        function onResults(err, item) {
-            if (err) {
-                sendResponse(res, err);
-            } else if (_.isEmpty(item)) {
-                sendResponse(res, 'No records with id ' + entityId);
-            } else {
-                sendResponse(res, err, item);
-            }
-            db.close();
-        }
-    });
+    mongoUtils.getEntityById(entityId, 'ClaimEntries')
+        .always(function (err, results) {
+            sendResponse(res, err, results);
+        });
 }
 
 function getAllEntriesForClaim(req, res) {
@@ -196,7 +204,7 @@ function searchClaims(req, res) {
         claimsCollection(db).find(query).toArray(onResults);
 
         function onResults(err, items) {
-            var resData = (items.length == 0)
+            var resData = (items.length === 0)
                 ? 'No claims match this search ' + search
                 : _.extend(new Claim(), items);
             sendResponse(res, err, resData);

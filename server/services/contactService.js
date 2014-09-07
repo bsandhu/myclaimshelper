@@ -1,27 +1,38 @@
-var contact = require('./../model/contact.js');
+var assert = require('assert');
+var Contact = require('./../model/contact.js');
 var mongoUtils = require('./../mongoUtils.js');
+var serviceUtils = require('./../serviceUtils.js');
+var jQuery = require('jquery-deferred');
 
-function addContact(req, res) {
-    var contact = req.body;
 
-    mongoUtils.run(function (db) {
-        var contactsCol = db.collection('Contacts');
-        if (!contact._id) {
-            contact._id = req.body.name;
-            contactsCol.insert(contact, {w: 1}, function (err, result) {
-                console.log('Saving contact');
-                sendResponse(res, err, result);
-                db.close();
-            });
-        }
-        else {
-            contactsCol.update({'_id': contact._id}, contact, {w: 1}, function (err, result) {
-                console.log('Updating contact');
-                sendResponse(res, err, result);
-                db.close();
-            });
-        }
-    });
+function saveOrUpdateContactObject(contactObj) {
+    assert.ok(contactObj instanceof Contact, 'Expecting instance of Contact object');
+    var defer = jQuery.Deferred();
+
+    mongoUtils.saveOrUpdateEntity(contactObj, 'Contacts')
+        .always(function (err, results) {
+            defer.resolve(serviceUtils.createResponse(err, results));
+        });
+    return defer;
+}
+
+function getContactObject(contactId) {
+    var defer = jQuery.Deferred();
+
+    mongoUtils.getEntityById(contactId, 'Contacts')
+        .always(function (err, results) {
+            defer.resolve(serviceUtils.createResponse(err, results));
+        });
+    return defer;
+}
+
+function deleteContact(contactId) {
+    var defer = jQuery.Deferred();
+
+    jQuery.when(mongoUtils.deleteEntity({_id: contactId}, 'Contacts'))
+        .then(defer.resolve())
+        .fail(defer.reject());
+    return defer;
 }
 
 function listAllContacts(req, res) {
@@ -45,5 +56,7 @@ function sendResponse(res, err, jsonData) {
     }
 }
 
-exports.addContact = addContact;
+exports.saveOrUpdateContactObject = saveOrUpdateContactObject;
+exports.getContactObject = getContactObject;
 exports.listAllContacts = listAllContacts;
+exports.deleteContact = deleteContact;

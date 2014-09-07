@@ -23,6 +23,7 @@ define([], function () {
         this.locationCity = undefined;
         this.locationZip = undefined;
 
+        // All the contacts are instances of 'Contact'
         this.insuredContact = undefined;
         this.insuredContactId = undefined;
 
@@ -41,6 +42,7 @@ define([], function () {
         this.insuranceCompanyFileNum = undefined;
         this.insuranceCompanyName = undefined;
 
+        // Closed, open, onHold etc.
         this.state = undefined;
     }
 
