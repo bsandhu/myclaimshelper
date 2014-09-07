@@ -12,8 +12,28 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
 
             // View state
             this.inEditMode = ko.observable(true);
+            this.stateChange = ko.observable(false);
+
             this.setupEvListeners();
+            this.startStateTracking();
         }
+
+        ClaimEntryVM.prototype.startStateTracking = function () {
+            this.claimEntryState = ko.computed(function(){
+                return KOMap.toJSON(this.claimEntry);
+            }, this);
+            this.claimEntryState.extend({ rateLimit: { timeout: 100, method: "notifyWhenChangesStop" } });
+
+            this.stateChangeSubsciption = this.claimEntryState.subscribe(function(val){
+                this.stateChange(true);
+                console.log('ClaimEntry state change');
+            }, this);
+        };
+
+        ClaimEntryVM.prototype.stopStateTracking = function () {
+            this.stateChangeSubsciption.dispose();
+            this.stateChange(false);
+        };
 
         ClaimEntryVM.prototype.newEmptyClaimEntry = function () {
             var jsEntryObject = new ClaimEntry();
@@ -45,6 +65,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
 
         ClaimEntryVM.prototype.onSave = function () {
             console.log('Saving ClaimEntry: ' + KOMap.toJSON(this.claimEntry));
+            this.stopStateTracking();
 
             var activeClaimId = this.getActiveClaimId();
             this.claimEntry().claimId(activeClaimId);
@@ -57,10 +78,14 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
                     console.log('Saved ClaimEntry: ' + JSON.stringify(response));
                     amplify.publish(Events.SUCCESS_NOTIFICATION, {msg: 'Saved entry'});
                     amplify.publish(Events.SAVED_CLAIM_ENTRY, {claimId: activeClaimId, claimEntryId: response.data._id});
-                });
+
+                    this.startStateTracking();
+                }.bind(this));
         };
 
         ClaimEntryVM.prototype.loadClaimEntry = function (claimEntryId) {
+            this.stopStateTracking();
+
             $.get('/claimEntry/' + claimEntryId)
                 .done(function (resp) {
                     console.log('Loaded claim entry ' + JSON.stringify(resp.data));
@@ -68,8 +93,10 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
                     // Populate with JSON data
                     KOMap.fromJS(resp.data, {}, this.claimEntry);
 
-                    // Put in seesion
+                    // Put in session
                     this.storeInSession(this.claimEntry()._id());
+
+                    this.startStateTracking();
 
                     window.setTimeout(function setT() {
                         var txtArea = $("#claimEntry-textArea");
