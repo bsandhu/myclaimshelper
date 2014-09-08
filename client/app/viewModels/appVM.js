@@ -46,12 +46,16 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'app/utils/even
             function onSearchTxtUpdate(txt) {
                 var localMatches = [];
                 console.log('Search... ' + txt);
-                if (!txt || txt.length < 3) {
+                if (txt.length === 0) {
+                    _this.onSearchClear();
+                    return;
+                }
+                if (txt.length < 3) {
                     return;
                 }
                 $.each(_this.claims(),
                     function filterBySearchText(index, claim) {
-                        var desc = claim.description() || '';
+                        var desc = KOMap.toJSON(claim) || '';
                         if (desc.toUpperCase().search(_this.searchText().toUpperCase()) >= 0) {
                             localMatches.push(claim);
                         }
