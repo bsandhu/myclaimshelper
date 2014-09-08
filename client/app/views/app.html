@@ -104,7 +104,7 @@
 
         <div id="gridPanelContent">
             <div class="alignRight">
-                <input class="searchBox" style="width: 15pc" placeholder="Search..."
+                <input class="searchBox" style="width: 15pc" placeholder="Find on page..."
                        data-bind="value: searchText, valueUpdate: 'afterkeydown'"/>
                 <span><a href="#" data-bind="click: onSearchClear">Clear</a></span>
             </div>
@@ -124,14 +124,14 @@
 
                 <tbody data-bind="foreach : {data: searchResults, as: 'claim'}">
                 <tr data-bind="click: $parent.onClaimSelect">
-                    <td data-bind="text: claim._id" class="gridCell"></td>
-                    <td data-bind="text: claim.description" class="gridCell"></td>
-                    <td data-bind="text: claim.insuranceCompanyName" class="gridCell"></td>
-                    <td data-bind="text: claim.insuranceCompanyFileNumber" class="gridCell"></td>
-                    <td data-bind="text: claim.dateReceived" class="gridCell"></td>
-                    <td data-bind="text: claim.entryDate" class="gridCell"></td>
-                    <td data-bind="text: claim.dateDue" class="gridCell"></td>
-                    <td data-bind="text: claim.state" class="gridCell"></td>
+                    <td data-bind="text: claim._id"></td>
+                    <td data-bind="text: claim.description"></td>
+                    <td data-bind="text: claim.insuranceCompanyName"></td>
+                    <td data-bind="text: claim.insuranceCompanyFileNum"></td>
+                    <td data-bind="text: claim.dateReceived"></td>
+                    <td data-bind="text: claim.entryDate"></td>
+                    <td data-bind="text: claim.dateDue"></td>
+                    <td data-bind="text: claim.state"></td>
                 </tr>
                 </tbody>
             </table>
