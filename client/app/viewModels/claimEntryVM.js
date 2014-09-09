@@ -52,9 +52,13 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
         };
 
         ClaimEntryVM.prototype.onNewClaimEntry = function (evData) {
-            console.log('Adding new claim entry');
+            var tag = Boolean(evData.entryType) ? evData.entryType : 'other';
+
             this.claimEntry(this.newEmptyClaimEntry());
+            this.claimEntry().tag(tag);
             this.claimEntry().entryDate(DateUtils.toDatetimePickerFormat(new Date()));
+
+            console.log('Adding new claim entry. Tag:' + tag);
         };
 
         ClaimEntryVM.prototype.niceHeader = function () {

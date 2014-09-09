@@ -9,6 +9,7 @@ require.config({
         'amplify'   : 'lib/amplify',                // Pub/sub
         'text'      : 'lib/require.text',           // Require plugin for html templates
         'Path'      : 'lib/path',
+        'bootstrap' : 'lib/bootstrap',
         'datetimepicker' : 'lib/jquery.datetimepicker'
     },
     shim: {
@@ -16,6 +17,9 @@ require.config({
             deps: ['jquery']
         },
         'datetimepicker': {
+            deps: ['jquery']
+        },
+        'bootstrap': {
             deps: ['jquery']
         },
         'knockout': {

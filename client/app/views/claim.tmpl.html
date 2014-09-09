@@ -65,7 +65,7 @@
                 <div class="inline wider">
                     <input type="text" class="form-control input-sm"
                            data-bind="value: claim().insuranceCompanyName"
-                            autocomplete="on">
+                           autocomplete="on">
                 </div>
                 <div class="inline narrow fieldLabel">File num.</div>
                 <div class="inline narrow">
@@ -174,6 +174,7 @@
 
         <div style="display: table-header-group;" data-bind="if: $index() == 0" class="listHeader">
             <div style="display: table-row">
+                <div style="display: table-cell">&nbsp;</div>
                 <div style="display: table-cell">Tasks</div>
                 <div style="display: table-cell">
                     <a href="#" data-bind="click: $parent.onSortEntries.bind($parent)">
@@ -186,8 +187,16 @@
             </div>
         </div>
 
+        <!-- Claim entry row -->
         <div style="display: table-row" class="listItem"
              data-bind="click: $parent.onClaimEntryClick">
+            <div style="display: table-cell; min-width: 15px">
+                <span class="glyphicon leftMargin"
+                        data-bind="css: {'glyphicon-earphone'   : entry.tag == 'phone',
+                                         'glyphicon-map-marker' : entry.tag == 'visit',
+                                         'glyphicon-camera'     : entry.tag == 'photos',
+                                         'glyphicon-envelope'   : entry.tag == 'email'}"></span>
+            </div>
             <div style="min-width: 20%; display: table-cell">
                 <a data-bind="attr: {href: '#/claimEntry/' + entry._id}">
                     <span data-bind="text: entry.summary"></span>
@@ -207,12 +216,19 @@
 <!--New Entry -->
 <!-- ************************************************ -->
 
-<div data-bind="ifnot: inEditMode">
-    <div class="topMargin5 topBorder clear">
-        <div class="inline topMargin5">
-            <spam class="glyphicon glyphicon-plus"></spam>
-            <a href="#/claimEntry">Add New Entry</a>
-        </div>
+<div data-bind="ifnot: inEditMode" class="topMargin5 topBorder clear">
+    <div class="btn-group topMargin5">
+        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+            <span class="glyphicon glyphicon-plus"></span>
+            Add New Entry <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu" role="menu">
+            <li><a href="#/claimEntry/new/phone">Phone</a></li>
+            <li><a href="#/claimEntry/new/visit">Site visit</a></li>
+            <li><a href="#/claimEntry/new/photos">Photos</a></li>
+            <li class="divider"></li>
+            <li><a href="#/claimEntry/new/other">Other</a></li>
+        </ul>
     </div>
 </div>
 
@@ -228,3 +244,5 @@
         </div>
     </div>
 </div>
+
+<!-- Split button -->
