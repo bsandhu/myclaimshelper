@@ -105,8 +105,8 @@ define(['jquery', 'knockout', 'KOMap', 'amplify',
 
         ClaimVM.prototype.onClaimEntryClick = function (entry, ev) {
             // Toggle row highlight
-            $('#claimEntriesList div[class|="listItem listItemSelected"]').removeClass('listItemSelected');
-            $(ev.target).closest('div[class="listItem"]').addClass('listItemSelected');
+            $('#claimEntriesList tr').removeClass('info');
+            $(ev.target).closest('tr').addClass('info');
 
             Router.routeToClaimEntry(entry._id);
         };

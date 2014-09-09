@@ -31,15 +31,15 @@ define(['Path', 'amplify', 'app/utils/events'],
         });
 
         Path.map("#/claim/:claimId").to(function(){
-            amplify.publish(Events.SHOW_CLAIM, {claimId: this.params['claimId']});
+            amplify.publish(Events.SHOW_CLAIM, {claimId: this.params.claimId});
         });
 
-        Path.map("#/claimEntry").to(function(){
-            amplify.publish(Events.NEW_CLAIM_ENTRY);
+        Path.map("#/claimEntry/new/:entryType").to(function(){
+            amplify.publish(Events.NEW_CLAIM_ENTRY, {entryType: this.params.entryType});
         });
 
         Path.map("#/claimEntry/:claimEntryId").to(function(){
-            amplify.publish(Events.SHOW_CLAIM_ENTRY, {claimEntryId: this.params['claimEntryId']});
+            amplify.publish(Events.SHOW_CLAIM_ENTRY, {claimEntryId: this.params.claimEntryId});
         });
     };
 
@@ -61,7 +61,7 @@ define(['Path', 'amplify', 'app/utils/events'],
     };
 
     Router.prototype.routeToNewClaimEntry = function(){
-        window.location.hash = '#/claimEntry';
+        window.location.hash = '#/claimEntry/new/other';
     };
 
     Router.prototype.routeToClaimEntry = function(claimEntryId){

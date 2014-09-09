@@ -104,13 +104,13 @@
 
         <div id="gridPanelContent">
             <div class="alignRight">
-                <input class="searchBox" style="width: 15pc" placeholder="Find on page..."
+                <input class="searchBox" style="width: 15pc" placeholder="Find on page..." type="search"
                        data-bind="value: searchText, valueUpdate: 'afterkeydown'"/>
                 <span><a href="#" data-bind="click: onSearchClear">Clear</a></span>
             </div>
             <div class="clear bottomMargin"></div>
 
-            <table class="table table-hover table-condensed">
+            <table class="table table-hover table-condensed table-striped">
                 <thead>
                 <th>Id</th>
                 <th>Description</th>
@@ -170,7 +170,7 @@
      * Load libs and init Knockout - on app startup. See requireConfig.js
      */
     require(['jquery', 'knockout', 'KOAmd', 'text', 'amplify', 'app/viewModels/appVM',
-                'app/utils/events', 'app/utils/koDatetimePickerBinding', 'velocity'],
+                'app/utils/events', 'app/utils/koDatetimePickerBinding', 'velocity', 'bootstrap'],
             function ($, ko, KOAmd, text, amplify, AppVM) {
                 console.log('Init App');
 
