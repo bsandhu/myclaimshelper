@@ -1,19 +1,22 @@
 define(['jquery', 'knockout', 'KOMap', 'amplify',
-        'model/claim', 'model/claimEntry', 'model/contact',
+        'model/claim', 'model/claimEntry', 'model/contact', 'model/states',
         'app/utils/ajaxUtils', 'app/utils/events', 'app/utils/router', 'app/utils/sessionKeys',
         'app/utils/dateUtils'],
-    function ($, ko, KOMap, amplify, Claim, ClaimEntry, Contact, ajaxUtils, Events, Router, SessionKeys, DateUtils) {
+    function ($, ko, KOMap, amplify, Claim, ClaimEntry, Contact, States,
+              ajaxUtils, Events, Router, SessionKeys, DateUtils) {
 
         function ClaimVM() {
             console.log('Init ClaimVM');
 
             // Model
+            this.States = States;
             this.claim = ko.observable(this.newEmptyClaim());
             this.claimEntries = ko.observableArray();
             this.sortDir = ko.observable('desc');
 
             // View state
             this.inEditMode = ko.observable(false);
+            this.showStatusForEntryId = ko.observable();
             this.setupEvListeners();
         }
 
@@ -34,6 +37,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify',
             amplify.subscribe(Events.NEW_CLAIM, this, this.onNewClaim);
             amplify.subscribe(Events.NEW_CLAIM_ENTRY, this, this.isClaimSaved);
             amplify.subscribe(Events.SAVED_CLAIM_ENTRY, this, this.refreshClaimEntriesListing);
+            window.onclick = this.onDismissStatus.bind(this);
         };
 
         ClaimVM.prototype.onEditModeClick = function () {
@@ -80,6 +84,13 @@ define(['jquery', 'knockout', 'KOMap', 'amplify',
             this.inEditMode(true);
         };
 
+        ClaimVM.prototype.onEntryStatusUpdate = function (status, entry, ev) {
+            console.log('Raise Claim Entry status update Ev. ' + entry._id);
+            amplify.publish(Events.UPDATE_CLAIM_ENTRY_STATUS, {'claimEntryId': entry._id, 'status': status});
+            ev.stopImmediatePropagation();
+            this.onDismissStatus();
+        };
+
         ClaimVM.prototype.refreshClaimEntriesListing = function () {
             var claimId = this.claim()._id();
             console.log('Refresh entries list. ClaimId ' + claimId);
@@ -97,6 +108,15 @@ define(['jquery', 'knockout', 'KOMap', 'amplify',
             var nice = (contact.firstName() || '') + (contact.lastName() || '');
             return nice.length > 0 ? nice : 'None';
 
+        };
+
+        ClaimVM.prototype.onStatusFocus = function (evData, ev) {
+            this.showStatusForEntryId(evData._id);
+            ev.stopPropagation();
+        };
+
+        ClaimVM.prototype.onDismissStatus = function () {
+            this.showStatusForEntryId(null);
         };
 
         ClaimVM.prototype.onCancel = function () {

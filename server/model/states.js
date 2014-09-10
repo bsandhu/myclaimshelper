@@ -10,7 +10,8 @@ define([], function () {
     return {
         TODO    : 'ToDo',
         Complete: 'Complete',
-        Pending : 'Pending'
+        Pending : 'Pending',
+        None    : 'None'
     };
 
 });

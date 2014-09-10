@@ -175,13 +175,14 @@
             <th>&nbsp;</th>
             <th>Tasks</th>
             <th>
-                <a href="#" data-bind="click: onSortEntries.bind($parent)">
+                <a href="#" data-bind="click: onSortEntries.bind($data)">
                     Entered on
                     <span data-bind="css: {'glyphicon-sort-by-attributes': sortDir() == 'asc',
                                            'glyphicon-sort-by-attributes-alt': sortDir() == 'desc'}"
                           class="glyphicon"></span>
                 </a>
             </th>
+            <th>Status</th>
         </tr>
         </thead>
 
@@ -191,9 +192,9 @@
             <td style="min-width: 15px">
                 <span class="glyphicon leftMargin"
                       data-bind="css: {'glyphicon-earphone'   : entry.tag == 'phone',
-                                         'glyphicon-map-marker' : entry.tag == 'visit',
-                                         'glyphicon-camera'     : entry.tag == 'photos',
-                                         'glyphicon-envelope'   : entry.tag == 'email'}"></span>
+                                       'glyphicon-map-marker' : entry.tag == 'visit',
+                                       'glyphicon-camera'     : entry.tag == 'photos',
+                                       'glyphicon-envelope'   : entry.tag == 'email'}"></span>
             </td>
             <td style="min-width: 20%;">
                 <a data-bind="attr: {href: '#/claimEntry/' + entry._id}">
@@ -202,6 +203,41 @@
             </td>
             <td class="rightMargin">
                 <span data-bind="text: entry.entryDate"></span>
+            </td>
+            <td>
+                <!-- Current state -->
+                <a href="#" data-bind="event: { mouseover: $parent.onStatusFocus.bind($parent)}">
+                    <span class="glyphicon"
+                          data-bind="css: {'glyphicon-unchecked': entry.state == undefined || entry.state == $parent.States.None,
+                                           'glyphicon-inbox': entry.state == $parent.States.TODO,
+                                           'glyphicon-time' : entry.state == $parent.States.Pending,
+                                           'glyphicon-ok'   : entry.state == $parent.States.Complete}"></span>
+                </a>
+
+                <!-- Pick new State -->
+                <div style="z-index: 9999; width: 135px; position: fixed" class="list-group"
+                     data-bind="visible: $parent.showStatusForEntryId() == entry._id">
+                    <a data-bind="click: $parent.onEntryStatusUpdate.bind($parent, $parent.States.TODO)"
+                       class="list-group-item" href="#">
+                        <span class="glyphicon glyphicon-inbox"></span>
+                        <span class="leftMargin">To Do</span>
+                    </a>
+                    <a data-bind="click: $parent.onEntryStatusUpdate.bind($parent, $parent.States.Complete)"
+                       href="#" class="list-group-item">
+                        <span class="glyphicon glyphicon-ok"></span>
+                        <span class="leftMargin">Complete</span>
+                    </a>
+                    <a data-bind="click: $parent.onEntryStatusUpdate.bind($parent, $parent.States.Pending)"
+                       href="#" class="list-group-item">
+                        <span class="glyphicon glyphicon-time"></span>
+                        <span class="leftMargin">Pending</span>
+                    </a>
+                    <a data-bind="click: $parent.onEntryStatusUpdate.bind($parent, $parent.States.None)"
+                       href="#" class="list-group-item">
+                        <span class="glyphicon glyphicon-unchecked"></span>
+                        <span class="leftMargin">Clear</span>
+                    </a>
+                </div>
             </td>
             <td class=" rightMargin">
                 <div class="glyphicon glyphicon-chevron-right"></div>
@@ -244,5 +280,3 @@
         </div>
     </div>
 </div>
-
-<!-- Split button -->

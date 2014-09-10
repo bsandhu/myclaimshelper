@@ -1,7 +1,7 @@
-define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEntry',
+define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEntry', 'model/states',
         'app/utils/ajaxUtils', 'app/utils/events', 'app/utils/router', 'app/utils/sessionKeys',
         'app/utils/dateUtils'],
-    function ($, ko, KOMap, amplify, Claim, ClaimEntry, ajaxUtils, Events, Router, SessionKeys, DateUtils) {
+    function ($, ko, KOMap, amplify, Claim, ClaimEntry, States, ajaxUtils, Events, Router, SessionKeys, DateUtils) {
         'use strict';
 
         function ClaimEntryVM() {
@@ -44,6 +44,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
         ClaimEntryVM.prototype.setupEvListeners = function () {
             amplify.subscribe(Events.SHOW_CLAIM_ENTRY, this, this.onShowClaimEntry);
             amplify.subscribe(Events.NEW_CLAIM_ENTRY, this, this.onNewClaimEntry);
+            amplify.subscribe(Events.UPDATE_CLAIM_ENTRY_STATUS, this, this.onStatusUpdate);
         };
 
         ClaimEntryVM.prototype.onShowClaimEntry = function (evData) {
@@ -57,8 +58,31 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
             this.claimEntry(this.newEmptyClaimEntry());
             this.claimEntry().tag(tag);
             this.claimEntry().entryDate(DateUtils.toDatetimePickerFormat(new Date()));
+            this.claimEntry().state(States.TODO);
 
             console.log('Adding new claim entry. Tag:' + tag);
+        };
+
+        /**
+         * @param evData {'claimEntryId': entry._id, 'status': status});
+         */
+        ClaimEntryVM.prototype.onStatusUpdate = function(evData){
+            console.log('Modify ClaimEntry: ' + JSON.stringify(evData));
+            var claimEntryId = evData.claimEntryId;
+            var claimId = this.getActiveClaimId();
+
+            this.stopStateTracking();
+
+            ajaxUtils.post(
+                '/claimEntry/modify',
+                JSON.stringify({_id: claimEntryId, attrsAsJson: {state: evData.status}}),
+                function onSuccess(response) {
+                    console.log('Saved ClaimEntry: ' + JSON.stringify(response));
+                    amplify.publish(Events.SUCCESS_NOTIFICATION, {msg: 'Saved entry'});
+                    amplify.publish(Events.SAVED_CLAIM_ENTRY, {claimId: claimId, claimEntryId: claimEntryId});
+
+                    this.startStateTracking();
+                }.bind(this));
         };
 
         ClaimEntryVM.prototype.niceHeader = function () {
@@ -129,6 +153,8 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
         ClaimEntryVM.prototype.onCancel = function () {
             Router.routeToClaim(this.getActiveClaimId());
         };
+
+
 
         return ClaimEntryVM;
     });
