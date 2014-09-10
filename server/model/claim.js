@@ -42,7 +42,7 @@ define([], function () {
         this.insuranceCompanyFileNum = undefined;
         this.insuranceCompanyName = undefined;
 
-        // Closed, open, onHold etc.
+        // TODO, Complete, Pending
         this.state = undefined;
     }
 
