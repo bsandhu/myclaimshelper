@@ -3,6 +3,7 @@ var claimsService = require("./../../server/services/claimsService.js");
 var contactService = require('./../../server/services/contactService.js');
 var Claim = require("./../../server/model/claim.js");
 var ClaimEntry = require("./../../server/model/claimEntry.js");
+var States= require("./../../server/model/states.js");
 var jQuery = require('jquery-deferred');
 
 
@@ -69,6 +70,19 @@ describe('Claims Service', function () {
             done();
         };
         claimsService.saveOrUpdateClaimEntry(req, res);
+    });
+
+    it('Modify claim entry', function (done) {
+        testEntry.claimId = testClaim._id;
+        var req = {body: {_id: testClaim._id, attrsAsJson: {state: States.Pending}}};
+        var res = {};
+
+        res.json = function (data) {
+            assert(data);
+            assert.equal(data.status, 'Success');
+            done();
+        };
+        claimsService.modifyClaimEntry(req, res);
     });
 
     it('Save claim entry object', function (done) {
