@@ -85,6 +85,24 @@ function saveOrUpdateEntity(entity, colName) {
     return defer;
 }
 
+function modifyEntityAttr(entityId, colName, attributesAsJson) {
+    var defer = jQuery.Deferred();
+
+    run(function update(db) {
+        var entityCol = db.collection(colName);
+        entityCol.update(
+            {'_id': entityId},
+            {$set: attributesAsJson},
+            {w: 1},
+            function onUpdate(err, result) {
+                console.log('Modified Mongo collection ' + colName + '. Id: ' + entityId);
+                defer.resolve(err, entityId);
+                db.close();
+            });
+    });
+    return defer;
+}
+
 function getEntityById(entityId, colName) {
     console.log('Getting Entity: ' + entityId);
     var defer = jQuery.Deferred();
@@ -138,5 +156,6 @@ exports.run = run;
 exports.initCollections = initCollections;
 exports.incrementAndGet = incrementAndGet;
 exports.saveOrUpdateEntity = saveOrUpdateEntity;
+exports.modifyEntityAttr = modifyEntityAttr;
 exports.getEntityById = getEntityById;
 exports.deleteEntity = deleteEntity;

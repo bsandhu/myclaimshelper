@@ -11,8 +11,9 @@ define([], function(){
         SHOW_CLAIM_ENTRY     : 'ShowClaimEntry',
         NEW_CLAIM_ENTRY      : 'NewClaimEntry',
         SAVED_CLAIM_ENTRY    : 'SavedClaimEntry',
+        UPDATE_CLAIM_ENTRY_STATUS : 'UpdateClaimEntryStatus',
 
         SUCCESS_NOTIFICATION : 'SuccessNotification',
         FAILURE_NOTIFICATION : 'FailureNotification'
-    }
+    };
 });

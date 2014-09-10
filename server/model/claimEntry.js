@@ -21,6 +21,9 @@ define([], function () {
 
         // Attachments descriptors - the content is stored in Momgo GridFS
         this.attachments = [];
+
+        // Status - one of states.js
+        this.state = undefined;
     }
 
     return ClaimEntry;

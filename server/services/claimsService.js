@@ -80,6 +80,13 @@ function saveOrUpdateClaimEntry(req, res) {
         });
 }
 
+function modifyClaimEntry(req, res) {
+    mongoUtils.modifyEntityAttr(req.body._id, 'ClaimEntries', req.body.attrsAsJson)
+        .always(function (err, results) {
+            sendResponse(res, err, results);
+        });
+}
+
 /**
  * @param claimEntry model Object
  * @returns Deferred for the JSON response
@@ -225,6 +232,7 @@ function sendResponse(res, err, jsonData) {
 
 exports.saveOrUpdateClaim = saveOrUpdateClaim;
 exports.saveOrUpdateClaimEntry = saveOrUpdateClaimEntry;
+exports.modifyClaimEntry = modifyClaimEntry;
 exports.saveOrUpdateClaimEntryObject = saveOrUpdateClaimEntryObject;
 exports.getClaim = getClaim;
 exports.getClaimEntry = getClaimEntry;
