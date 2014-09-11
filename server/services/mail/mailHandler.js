@@ -26,6 +26,8 @@ MailRequestHandler.prototype.processRequest = function (req, res) {
         entry.description = mailEntry.mail['body-plain'];
         entry.claimId = mailEntry.claimId;
         entry.tag = mailEntry.tags;
+        entry.tag.push('email');
+
         // store attachemts as such...
         mailEntry['attachments'].forEach(function (attachment) {
             saveToDB(attachment.name, attachment.path)

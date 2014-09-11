@@ -190,11 +190,12 @@
         <tbody data-bind="foreach: {data: claimEntries, as: 'entry' }">
         <tr data-bind="click: $parent.onClaimEntryClick">
             <td style="min-width: 15px">
+                <!-- Tag -->
                 <span class="glyphicon leftMargin"
-                      data-bind="css: {'glyphicon-earphone'   : entry.tag == 'phone',
-                                       'glyphicon-map-marker' : entry.tag == 'visit',
-                                       'glyphicon-camera'     : entry.tag == 'photos',
-                                       'glyphicon-envelope'   : entry.tag == 'email'}"></span>
+                      data-bind="css: {'glyphicon-earphone'   : entry.tag.toString().search('phone') >= 0,
+                                       'glyphicon-map-marker' : entry.tag.toString().search('visit') >= 0,
+                                       'glyphicon-camera'     : entry.tag.toString().search('photos') >= 0,
+                                       'glyphicon-envelope'   : entry.tag.toString().search('email') >= 0}"></span>
             </td>
             <td style="min-width: 20%;">
                 <a data-bind="attr: {href: '#/claimEntry/' + entry._id}">
@@ -209,9 +210,9 @@
                 <a href="#" data-bind="event: { mouseover: $parent.onStatusFocus.bind($parent)}">
                     <span class="glyphicon"
                           data-bind="css: {'glyphicon-unchecked': entry.state == undefined || entry.state == $parent.States.None,
-                                           'glyphicon-inbox': entry.state == $parent.States.TODO,
-                                           'glyphicon-time' : entry.state == $parent.States.Pending,
-                                           'glyphicon-ok'   : entry.state == $parent.States.Complete}"></span>
+                                           'glyphicon-inbox'    : entry.state == $parent.States.TODO,
+                                           'glyphicon-time'     : entry.state == $parent.States.Pending,
+                                           'glyphicon-ok'       : entry.state == $parent.States.Complete}"></span>
                 </a>
 
                 <!-- Pick new State -->
@@ -259,11 +260,30 @@
             Add New Entry <span class="caret"></span>
         </button>
         <ul class="dropdown-menu" role="menu">
-            <li><a href="#/claimEntry/new/phone">Phone</a></li>
-            <li><a href="#/claimEntry/new/visit">Site visit</a></li>
-            <li><a href="#/claimEntry/new/photos">Photos</a></li>
+            <li>
+                <a href="#/claimEntry/new/phone">
+                    <span class="glyphicon glyphicon-earphone"></span>
+                    <span class="leftMargin5">Phone</span>
+                </a>
+            </li>
+            <li>
+                <a href="#/claimEntry/new/visit">
+                    <span class="glyphicon glyphicon-map-marker"></span>
+                    <span class="leftMargin5">Site visit</span>
+                </a>
+            </li>
+            <li>
+                <a href="#/claimEntry/new/photos">
+                    <span class="glyphicon glyphicon-camera"></span>
+                    <span class="leftMargin5">Photos</span>
+                </a>
+            </li>
             <li class="divider"></li>
-            <li><a href="#/claimEntry/new/other">Other</a></li>
+            <li>
+                <a href="#/claimEntry/new/other">
+                    <span class="leftMargin5">Other</span>
+                </a>
+            </li>
         </ul>
     </div>
 </div>
