@@ -10,7 +10,7 @@ define([], function () {
     function ClaimEntry() {
         this._id = undefined;
         this.claimId = undefined;
-        this.tag = undefined;
+        this.tag = [];
 
         this.entryDate = undefined;
         this.dueDate = undefined;

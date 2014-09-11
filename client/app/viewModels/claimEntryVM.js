@@ -56,7 +56,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
             var tag = Boolean(evData.entryType) ? evData.entryType : 'other';
 
             this.claimEntry(this.newEmptyClaimEntry());
-            this.claimEntry().tag(tag);
+            this.claimEntry().tag([tag]);
             this.claimEntry().entryDate(DateUtils.toDatetimePickerFormat(new Date()));
             this.claimEntry().state(States.TODO);
 
