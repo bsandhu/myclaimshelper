@@ -25,7 +25,7 @@ MailRequestHandler.prototype.processRequest = function (req, res) {
         entry.summary = mailEntry.mail.subject;
         entry.description = mailEntry.mail['body-plain'];
         entry.claimId = mailEntry.claimId;
-        entry.tag = mailEntry.tags;
+        entry.tag = mailEntry.tags || [];
         entry.tag.push('email');
 
         // store attachemts as such...
