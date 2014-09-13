@@ -15,9 +15,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'app/utils/even
                 {name: 'All', query: '{}'},
                 {name: 'Active', query: '{"state":"open"}'},
                 {name: 'On Hold', query: '{"state":"hold"}'},
-                {name: 'Closed', query: '{"state":"closed"}'},
-                {name: 'NULL TEST', query: '{"state":null}'},
-                {name: 'GEICO TEST', query: '{"insuranceCompanyName":"Gieco"}'}
+                {name: 'Closed', query: '{"state":"closed"}'}
             ];
 
             // View state
