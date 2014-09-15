@@ -61,13 +61,7 @@
             <div class="panelItem">
                 <div><b>Status</b></div>
                 <div style="width: 100%" class="inline">
-                    <div class="inline">All</div>
-                    <div class="badge alignRight">123</div>
-                </div>
-                <div></div>
-                <div style="width: 100%" class="inline">
-                    <div class="inline">Active</div>
-                    <div class="badge alignRight">45</div>
+                    <select class="form-control" data-bind="options: states, value: status, optionsText: 'name', selectedOptions: stateChoice"></select>
                 </div>
             </div>
 

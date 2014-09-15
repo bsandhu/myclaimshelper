@@ -10,6 +10,13 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'app/utils/even
             this.claims = ko.observableArray([]);
             this.searchResults = ko.observableArray([]);
             this.searchText = ko.observable('');
+            this.stateChoice = ko.observable();
+            this.states = [
+                {name: 'All', query: '{}'},
+                {name: 'Active', query: '{"state":"open"}'},
+                {name: 'On Hold', query: '{"state":"hold"}'},
+                {name: 'Closed', query: '{"state":"closed"}'}
+            ];
 
             // View state
             this.hideSearchPanelCollapsedLabel();
@@ -28,6 +35,16 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'app/utils/even
 
         AppVM.prototype.onHelpClick = function (claim) {
             window.open('/help/help.html', 'Agent help');
+        };
+
+        AppVM.prototype.queryDB = function() {
+            var _this = this;
+            this.stateChoice.subscribe(userSelectQuery);
+
+            function userSelectQuery(selectedOption) {
+                console.log(selectedOption[0].query);
+                _this.searchClaims(selectedOption[0].query);
+            }
         };
 
         AppVM.prototype.onSearchClear = function () {
@@ -97,6 +114,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'app/utils/even
             this.collapseClaimPanel();
             this.collapseClaimEntryPanel();
             this.loadClaims();
+            this.queryDB();
         };
 
         AppVM.prototype.transitionToClaimEntry = function () {
@@ -236,6 +254,29 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'app/utils/even
                 })
                 .fail(function () {
                     console.log('Fail');
+                });
+        };
+
+        // searching through claims on DB
+        AppVM.prototype.searchClaims = function(query) {
+            console.log('sending query to server...');
+            var _this = this;
+            $.get('claim/search/' + query)
+                .done(function (res) {
+                    var data = res.data;
+                    console.log(JSON.stringify(data));
+
+                    var tempArray = [];
+                    $.each(data, function(index, claim) {
+                        var koClaim = KOMap.fromJS(claim, {}, new Claim());
+                        tempArray.push(koClaim);
+                    });
+
+                    _this.claims(tempArray);
+                    _this.searchResults(tempArray);
+                })
+                .fail(function() {
+                    console.log('Problem with DB query');
                 });
         };
 
