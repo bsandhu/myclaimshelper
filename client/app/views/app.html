@@ -3,6 +3,7 @@
     <script src="../../../lib/requireConfig.js"></script>
     <link rel="stylesheet" type="text/css" href="../../css/bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../../css/bootstrap-theme.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="../../css/jquery.datetimepicker.css">
     <link rel="stylesheet" type="text/css" href="../../css/app.css">
 </head>
@@ -10,20 +11,20 @@
 <body>
 
 <!-- **** Header **** -->
-<div class="inline" style="width: 98%">
+<div class="inline header" style="width: 100%">
 
     <!-- Logo -->
     <div class="inline">
         <a href="#/home">
-            <div class="headerLogo">Agent</div>
+            <div class="headerLogo headerLabel">Agent 007</div>
         </a>
     </div>
 
     <!-- Help -->
-    <div class="inline alignRight rightMargin topMargin10" style="cursor: pointer">
-        <a data-bind="click: onHelpClick">
+    <div class="inline alignRight rightMargin5 topMargin10" style="cursor: pointer">
+        <a data-bind="click: onHelpClick" class="headerLabel">
             <span class="glyphicon glyphicon-question-sign"></span>
-            <span>Help</span>
+            <span >Help</span>
         </a>
     </div>
 
@@ -32,48 +33,50 @@
          class="inline" style="width: 50%"></div>
 </div>
 
-
-<div class="sectionSeparator"></div>
-
 <div style="display: inline-flex; width: 100%; height: 90%; vertical-align: top; white-space: nowrap">
 
     <!-- **** Search panel **** -->
-    <div id="searchPanel" class="slidingContainer" style="background-color: #428bca; width: 20%">
+    <div id="searchPanel" class="slidingContainer searchPanel">
 
         <!-- Menu icon -->
-        <div class="inline alignRight">
-            <div class="inline glyphicon glyphicon-th-list"
+        <div class="alignRight rightMargin topMargin5">
+            <div class="fa fa-align-justify fa-lg toggleButton"
                  style="cursor: pointer"
                  data-bind="click: toggleSearchPanel"></div>
         </div>
+        <div class="clear"></div>
 
         <!-- Panel content -->
         <div id="searchPanelContent">
-            <div class="inline" style="width: 100%">
-                <div class="inline" style="width: 60%">
+            <div class="topMargin5">
+                <div style="width: 90%; margin: auto">
                     <button type="button" class="btn btn-default" style="width: 100%" data-bind="click: onAddNewClaim">
-                        <span class="glyphicon glyphicon-plus"></span>
+                        <span class="fa fa-plus"></span>
                         <span class="leftMargin">New Claim</span>
                     </button>
                 </div>
             </div>
 
-            <div class="panelItem">
-                <div><b>Status</b></div>
-                <div style="width: 100%" class="inline">
-                    <select class="form-control" data-bind="options: states, value: status, optionsText: 'name', selectedOptions: stateChoice"></select>
+            <div>
+                <div class="searchPanelItem"><b>Status</b></div>
+                <div>
+                    <select class="form-control" style="width: 90%; margin: auto"
+                            data-bind="options: states,
+                                       value: status,
+                                       optionsText: 'name',
+                                       selectedOptions: stateChoice"></select>
                 </div>
             </div>
 
-            <div class="panelItem">
-                <div>Action required</div>
-                <div>Waiting for others</div>
-                <div>Due soon</div>
+            <div>
+                <div class="searchPanelItem">Action required</div>
+                <div class="searchPanelItem">Waiting for others</div>
+                <div class="searchPanelItem">Due soon</div>
             </div>
 
-            <div class="panelItem">
-                <div><b>Date</b></div>
-                <div>Past 2 weeks</div>
+            <div>
+                <div class="searchPanelItem"><b>Date</b></div>
+                <div class="searchPanelItem">Past 2 weeks</div>
             </div>
         </div>
 
@@ -86,70 +89,70 @@
     </div>
 
     <!-- **** Claims list **** -->
-    <div id="gridPanel" class="slidingContainer" style="width: 80%; background-color: #F8F8FA">
+    <div id="gridPanel" class="slidingContainer gridPanel">
 
-        <!-- Menu icon -->
-        <div class="alignRight">
-            <div class="inline glyphicon glyphicon-th-list"
-                 style="cursor: pointer"
-                 data-bind="click: toggleGridPanel"></div>
-        </div>
-        <div class="clear bottomMargin"></div>
+        <div id="gridPanelContent" class="gridPanelContent">
 
-        <div id="gridPanelContent">
-            <div class="alignRight">
-                <input class="searchBox" style="width: 15pc" placeholder="Find on page..." type="search"
-                       data-bind="value: searchText, valueUpdate: 'afterkeydown'"/>
-                <span><a href="#" data-bind="click: onSearchClear">Clear</a></span>
+            <!-- Search -->
+            <div class="wider alignRight">
+                <div class="input-group alignRight">
+                    <input type="text" class="form-control input-sm" placeholder="Find on page...">
+                      <span class="input-group-btn">
+                        <button class="btn btn-default btn-sm" type="button">
+                            Go
+                        </button>
+                      </span>
+                </div>
             </div>
             <div class="clear bottomMargin"></div>
 
-            <table class="table table-hover table-condensed table-striped">
-                <thead>
-                <th>Id</th>
-                <th>Description</th>
-                <th>Insurance Company</th>
-                <th>Insurance Co. File No.</th>
-                <th>Date Received</th>
-                <th>Entry Date</th>
-                <th>Due Date</th>
-                <th>State</th>
-                </thead>
+            <div class="panel panel-default">
+                <table class="table table-hover table-condensed">
+                    <thead>
+                    <th>Id</th>
+                    <th>Description</th>
+                    <th>Insurance Company</th>
+                    <th>Insurance Co. File No.</th>
+                    <th>Date Received</th>
+                    <th>Entry Date</th>
+                    <th>Due Date</th>
+                    <th>State</th>
+                    </thead>
 
-                <tbody data-bind="foreach : {data: searchResults, as: 'claim'}">
-                <tr data-bind="click: $parent.onClaimSelect">
-                    <td data-bind="text: claim._id"></td>
-                    <td data-bind="text: claim.description"></td>
-                    <td data-bind="text: claim.insuranceCompanyName"></td>
-                    <td data-bind="text: claim.insuranceCompanyFileNum"></td>
-                    <td data-bind="text: claim.dateReceived"></td>
-                    <td data-bind="text: claim.entryDate"></td>
-                    <td data-bind="text: claim.dateDue"></td>
-                    <td data-bind="text: claim.state"></td>
-                </tr>
-                </tbody>
-            </table>
+                    <tbody data-bind="foreach : {data: searchResults, as: 'claim'}">
+                    <tr data-bind="click: $parent.onClaimSelect">
+                        <td data-bind="text: claim._id"></td>
+                        <td data-bind="text: claim.description"></td>
+                        <td data-bind="text: claim.insuranceCompanyName"></td>
+                        <td data-bind="text: claim.insuranceCompanyFileNum"></td>
+                        <td data-bind="text: claim.dateReceived"></td>
+                        <td data-bind="text: claim.entryDate"></td>
+                        <td data-bind="text: claim.dateDue"></td>
+                        <td data-bind="text: claim.state"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
 
-        <div id="gridPanelCollapsedContent" class="collapsedcontainer"
+        <div id="gridPanelCollapsedContent" class="collapsedcontainer gridPanelCollapsedContent"
              data-bind="click: toggleGridPanel">
             <div class="collapsedcontainerLabel">Search Results</div>
         </div>
     </div>
 
     <!-- **** Claim module **** -->
-    <div id="claimPanel" class="slidingContainer" style="width: 0%; background-color: #EBF2F7">
-
-        <div id="claimPanelContent">
+    <div id="claimPanel" class="slidingContainer claimPanel" style="width: 0%;">
+        <div id="claimPanelContent" class="claimPanelContent">
             <div data-bind="module: {name: 'app/viewModels/claimVM', template: 'app/views/claim',
-                                     afterRender: startRouter}"></div>
+                                         afterRender: startRouter}"></div>
         </div>
     </div>
 
     <!-- **** Claim Entry module **** -->
-    <div id="claimEntryPanel" class="slidingContainer" style="width: 0%; background-color: #EDEDED">
+    <div id="claimEntryPanel" class="slidingContainer claimEntryPanel" style="width: 0%;">
 
-        <div id="claimEntryPanelContent">
+        <div id="claimEntryPanelContent" class="claimEntryPanelContent">
             <div data-bind="module: {name: 'app/viewModels/claimEntryVM', template: 'app/views/claimEntry'}"></div>
         </div>
     </div>

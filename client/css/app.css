@@ -1,3 +1,23 @@
+.body {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 12px;
+    line-height: 18px;
+}
+
+tbody {
+    background-color: #ffffff;
+    color: rgb(119, 119, 119);
+    font-size: 14px;
+    font-family: 'Open Sans', sans-serif;
+}
+
+thead {
+    background-color: #ffffff;
+    color: rgb(119, 119, 119);
+    font-size: 14px;
+    font-family: 'Open Sans', sans-serif;
+}
+
 /**** Alignment ****/
 
 div {
@@ -23,22 +43,26 @@ div {
 /**** Width Dimensions ****/
 
 .narrower {
-    min-width: 50px;
+    width: 50px;
 }
 
 .narrow {
+    width: 100px;
     min-width: 100px;
 }
 
 .normal {
+    width: 150px;
     min-width: 150px;
 }
 
 .wide {
+    width: 200px;
     min-width: 200px;
 }
 
 .wider {
+    width: 250px;
     min-width: 250px;
 }
 
@@ -60,6 +84,10 @@ div {
     margin-bottom: 2px;
 }
 
+.bottomMargin5 {
+    margin-bottom: 5px;
+}
+
 .leftMargin {
     margin-left: 2px;
 }
@@ -70,6 +98,10 @@ div {
 
 .rightMargin {
     margin-right: 2px;
+}
+
+.rightMargin5 {
+    margin-right: 5px;
 }
 
 .topBorderSolid {
@@ -92,11 +124,6 @@ div {
 
 .clear {
     clear: both;
-}
-
-.sectionSeparator {
-    height: 3px;
-    background: #336CC2;
 }
 
 /**** Form elements ****/
@@ -134,11 +161,29 @@ div {
 
 /**** Navigation panels ****/
 
+.header {
+    background: #2B333C;
+    border-bottom-color: #415160;
+}
+
+.headerLabel {
+    font-family: 'Open Sans', sans-serif;
+    color: rgb(190, 207, 224);
+}
+
+.headerLogo {
+    width: 200px;
+    font-size: 18px;
+    height: 45px;
+    line-height: 45px;
+    vertical-align: middle;
+    margin-left: 10px;
+}
+
 .slidingContainer {
     display: inline-block;
     vertical-align: top;
     min-height: 100%;
-    padding: 5px;
 }
 
 .collapsedcontainer {
@@ -149,69 +194,112 @@ div {
 .collapsedcontainerLabel {
     transform: rotate(90deg) translate(100px, 0px);
     color: lightgray;
-    font-family: Menlo, Monaco, Consolas, "Courier New", monospacesans-serif;
     font-size: medium;
 }
 
-.panelItem {
-    font-size: 14px;
-    line-height: 20px;
-    padding: 15px 15px 15px 15px;
-    border-bottom-color: #EAEAEA;
-    border-bottom-width: 1px;
-    border-bottom-style: solid;
-    color: #EAEAEA;
-}
-
-.listHeader {
-    background-color: #DDEDF5;
-    height: 35px;
-    line-height: 35px;
-    font-weight: bold;
-    font-size: medium
-}
-
-.listItem {
-    border-top: 1px;
-    border-top-style: solid;
-    border-color: #E2E4E7;
-    height: 35px;
-    line-height: 35px;
-    padding-top: 8px;
-    padding-right: 3px;
-    padding-left: 3px;
-}
-
-.listItem:hover {
-    background-color: #E2E4E7;
-    cursor: pointer;
-}
-
-.listItemSelected {
-    background-color: #E2E4E7;
-}
-
-.headerLogo {
-    width: 200px;
-    color: black;
-    font-style: italic;
-    font-weight: bold;
-    font-size: 35;
-    font-family: sans-serif;
-
-    background-image: url("/images/007.jpg");
-    background-repeat: no-repeat;
-    vertical-align: middle;
-    background-position: right center;
-    background-size: 90px;
-}
-
-/**** Grid ****/
+/**** Search panel ****/
 
 .table > tbody > tr:hover {
     cursor: pointer;
 }
 
-.searchBox {
-    border-radius: 4px;
+.toggleButton {
+    color: rgb(190, 207, 224);
 }
+
+.toggleButton:HOVER {
+    color: white    ;
+}
+
+.searchPanel {
+    width: 15%;
+    background-color: #4C5B6B;
+    color: rgb(119, 119, 119);
+    border-right-color: rgb(65, 81, 96);
+    border-right-style: solid;
+    border-right-width: 1px;
+}
+
+.searchPanelItem {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 10px;
+    color: rgb(190, 207, 224);
+    font-family: 'Open Sans', sans-serif;
+    font-size: 13px;
+    height: auto;
+    text-shadow: rgba(0, 0, 0, 0.0470588) 0px 1px 1px;
+    border-top-color: rgb(80, 98, 116);
+    border-top-style: solid;
+    border-top-width: 1px;}
+
+.searchPanelItem:HOVER {
+    background-color: #35404B;
+    color: #ffffff;
+    cursor: pointer;
+    border-left-style: solid;
+    border-left-width: 3px;
+    border-left-color: #FFFDDB;
+    transition-duration: 0.2s;
+    transition-property: all;
+    transition-timing-function: ease;
+}
+
+
+#searchclear {
+    position: absolute;
+    right: 5px;
+    top: 0;
+    bottom: 0;
+    height: 14px;
+    margin: auto;
+    font-size: 14px;
+    cursor: pointer;
+    color: #ccc;
+}
+
+/**** Claims list panel ****/
+
+.gridPanel {
+    background-color: #F7F7F7;
+    color: rgb(119, 119, 119);
+}
+
+.gridPanelContent {
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 5px;
+}
+
+.gridPanelCollapsedContent {
+    background-color: #4C6887;
+    padding: 0px;
+}
+
+/**** Claim panel ****/
+
+.claimPanel {
+    background-color: #F9F9F9;
+    color: rgb(119, 119, 119);
+}
+
+.claimPanelContent {
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 5px;
+}
+
+/**** Claim panel ****/
+
+.claimEntryPanel {
+    background-color: #F9F9F9;
+    color: rgb(119, 119, 119);
+}
+
+.claimEntryPanelContent {
+    padding-top: 5px;
+}
+
+
+
+

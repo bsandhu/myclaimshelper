@@ -179,7 +179,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'app/utils/even
 
         AppVM.prototype.expandGridPanel = function () {
             console.log('Expand grid panel');
-            $("#gridPanel").velocity({ width: '80%' }, this.gridNavDelay);
+            $("#gridPanel").velocity({ width: '100%' }, this.gridNavDelay);
             $("#gridPanelContent").velocity("fadeIn", { duration: this.gridNavDelay });
             $('#gridPanelCollapsedContent').hide();
         };
@@ -203,7 +203,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'app/utils/even
         };
 
         AppVM.prototype.expandClaimPanel = function () {
-            $("#claimPanel").velocity({ width: '70%' }, this.gridNavDelay);
+            $("#claimPanel").velocity({ width: '96%' }, this.gridNavDelay);
             $("#claimPanelContent").velocity("fadeIn", { duration: this.gridNavDelay });
         };
 
@@ -224,7 +224,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'app/utils/even
         };
 
         AppVM.prototype.expandClaimEntryPanel = function () {
-            $("#claimEntryPanel").velocity({ width: '55%' }, this.gridNavDelay);
+            $("#claimEntryPanel").velocity({ 'width': '50%' }, this.gridNavDelay);
             $("#claimEntryPanelContent").velocity("fadeIn", { duration: this.gridNavDelay });
         };
 
