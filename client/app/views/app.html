@@ -21,10 +21,10 @@
     </div>
 
     <!-- Help -->
-    <div class="inline alignRight rightMargin5 topMargin10" style="cursor: pointer">
+    <div class="inline alignRight rightMargin10 topMargin10" style="cursor: pointer">
         <a data-bind="click: onHelpClick" class="headerLabel">
             <span class="glyphicon glyphicon-question-sign"></span>
-            <span >Help</span>
+            <span>Help</span>
         </a>
     </div>
 
@@ -48,6 +48,8 @@
 
         <!-- Panel content -->
         <div id="searchPanelContent">
+
+            <!-- New claim -->
             <div class="topMargin5">
                 <div style="width: 90%; margin: auto">
                     <button type="button" class="btn btn-default" style="width: 100%" data-bind="click: onAddNewClaim">
@@ -56,28 +58,41 @@
                     </button>
                 </div>
             </div>
+            <div class="clear topMargin10"></div>
 
             <div>
-                <div class="searchPanelItem"><b>Status</b></div>
-                <div>
-                    <select class="form-control" style="width: 90%; margin: auto"
-                            data-bind="options: states,
-                                       value: status,
-                                       optionsText: 'name',
-                                       selectedOptions: stateChoice"></select>
-                </div>
+                <select class="form-control" style="width: 90%; margin: auto"
+                        data-bind="options: states,
+                                   value: status,
+                                   optionsText: 'name',
+                                   selectedOptions: stateChoice"></select>
             </div>
 
             <div>
+                <div class="searchPanelItemGroup">
+                    <span class="fa fa-flag"></span>
+                    <span class="leftMargin">Status</span>
+                </div>
                 <div class="searchPanelItem">Action required</div>
                 <div class="searchPanelItem">Waiting for others</div>
                 <div class="searchPanelItem">Due soon</div>
             </div>
 
             <div>
-                <div class="searchPanelItem"><b>Date</b></div>
+                <div class="searchPanelItemGroup">
+                    <span class="fa fa-dot-circle-o"></span>
+                    <span class="leftMargin">Date</span>
+                </div>
                 <div class="searchPanelItem">Past 2 weeks</div>
             </div>
+
+            <div>
+                <div class="searchPanelItemGroup">
+                    <span class="fa fa-calculator"></span>
+                    <span class="leftMargin">Billing</span>
+                </div>
+            </div>
+
         </div>
 
         <!-- Collapsed label -->
