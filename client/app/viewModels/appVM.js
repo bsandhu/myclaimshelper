@@ -12,10 +12,10 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'app/utils/even
             this.searchText = ko.observable('');
             this.stateChoice = ko.observable();
             this.states = [
-                {name: 'All', query: '{}'},
-                {name: 'Active', query: '{"state":"open"}'},
+                {name: 'All',     query: '{}'},
+                {name: 'Active',  query: '{"state":"open"}'},
                 {name: 'On Hold', query: '{"state":"hold"}'},
-                {name: 'Closed', query: '{"state":"closed"}'}
+                {name: 'Closed',  query: '{"state":"closed"}'}
             ];
 
             // View state

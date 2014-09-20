@@ -104,6 +104,10 @@ div {
     margin-right: 5px;
 }
 
+.rightMargin10 {
+    margin-right: 10px;
+}
+
 .topBorderSolid {
     border-top: solid;
     border-top-width: 1px;
@@ -213,11 +217,21 @@ div {
 
 .searchPanel {
     width: 15%;
-    background-color: #4C5B6B;
+    background-color: #4C5B6A;
     color: rgb(119, 119, 119);
+    font-size: 13px;
+
     border-right-color: rgb(65, 81, 96);
     border-right-style: solid;
     border-right-width: 1px;
+}
+
+.searchPanelItemGroup {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 5px;
+    color: rgb(190, 207, 224);
+    font-size: 14px;
 }
 
 .searchPanelItem {
@@ -225,10 +239,10 @@ div {
     padding-bottom: 10px;
     padding-left: 10px;
     color: rgb(190, 207, 224);
-    font-family: 'Open Sans', sans-serif;
-    font-size: 13px;
+
     height: auto;
     text-shadow: rgba(0, 0, 0, 0.0470588) 0px 1px 1px;
+    background-color: #44515E;
     border-top-color: rgb(80, 98, 116);
     border-top-style: solid;
     border-top-width: 1px;}
