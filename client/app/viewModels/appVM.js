@@ -109,11 +109,9 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'app/utils/even
             });
             amplify.subscribe(Events.FAILURE_NOTIFICATION, this, function() {
                 console.log('AppVM - FAILURE_NOTIFICATION ev');
-                //this.transitionToSearchResults(this);
             });
             amplify.subscribe(Events.SUCCESS_NOTIFICATION, this, function() {
                 console.log('AppVM - SUCCESS_NOTIFICATION ev');
-                //this.transitionToSearchResults(this);
             });
         };
 
