@@ -107,6 +107,14 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'app/utils/even
                 console.log('AppVM - NEW_CLAIM_ENTRY ev');
                 this.transitionToClaimEntry(this);
             });
+            amplify.subscribe(Events.FAILURE_NOTIFICATION, this, function() {
+                console.log('AppVM - FAILURE_NOTIFICATION ev');
+                //this.transitionToSearchResults(this);
+            });
+            amplify.subscribe(Events.SUCCESS_NOTIFICATION, this, function() {
+                console.log('AppVM - SUCCESS_NOTIFICATION ev');
+                //this.transitionToSearchResults(this);
+            });
         };
 
         AppVM.prototype.transitionToSearchResults = function () {
@@ -264,19 +272,27 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'app/utils/even
             $.get('claim/search/' + query)
                 .done(function (res) {
                     var data = res.data;
+                    var tempArray = [];
                     console.log(JSON.stringify(data));
 
-                    var tempArray = [];
-                    $.each(data, function(index, claim) {
-                        var koClaim = KOMap.fromJS(claim, {}, new Claim());
-                        tempArray.push(koClaim);
-                    });
+                    if (data[0] != 'N') {
+                        $.each(data, function(index, claim) {
+                            var koClaim = KOMap.fromJS(claim, {}, new Claim());
+                            tempArray.push(koClaim);
+                        });
 
+                        amplify.publish(Events.SUCCESS_NOTIFICATION, {msg: 'Found Claims'});
+                    }
+                    else {
+                        amplify.publish(Events.FAILURE_NOTIFICATION, {msg: 'No Claims Found'});
+                    }
                     _this.claims(tempArray);
                     _this.searchResults(tempArray);
+
                 })
                 .fail(function() {
                     console.log('Problem with DB query');
+                    amplify.publish(Events.FAILURE_NOTIFICATION, {msg: 'Problem with DB'});
                 });
         };
 
