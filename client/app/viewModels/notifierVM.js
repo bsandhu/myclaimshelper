@@ -34,6 +34,8 @@ define(['knockout', 'amplify', 'app/utils/events'], function (ko, amplify, Event
         this.msg(msg);
         var panelRef = $("#notifier-container");
         panelRef.velocity("fadeIn", { duration: 200});
+        panelRef.velocity("fadeOut", { delay: 5000 , duration: 200});
+
     };
 
     return new NotifierVM();
