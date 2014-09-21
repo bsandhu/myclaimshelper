@@ -18,7 +18,7 @@ function deleteClaim(claimId) {
     var defer = jQuery.Deferred();
 
     jQuery.when(
-        mongoUtils.deleteEntity({_id: claimId}, 'Claims'),
+        mongoUtils.deleteEntity({_id: claimId}, mongoUtils.CLAIMS_COL_NAME),
         mongoUtils.deleteEntity({claimId: claimId}, 'ClaimEntries'))
         .then(defer.resolve())
         .fail(defer.reject());
@@ -65,7 +65,7 @@ function saveOrUpdateClaim(req, res) {
         setReferenceToContactObj('claimantsAttorneyContact'),
         setReferenceToContactObj('insuranceCoContact')
     ).then(function () {
-        mongoUtils.saveOrUpdateEntity(claim, 'Claims')
+        mongoUtils.saveOrUpdateEntity(claim, mongoUtils.CLAIMS_COL_NAME)
             .always(function (err, results) {
                 sendResponse(res, err, results);
             });
@@ -74,14 +74,14 @@ function saveOrUpdateClaim(req, res) {
 
 function saveOrUpdateClaimEntry(req, res) {
     var entity = req.body;
-    mongoUtils.saveOrUpdateEntity(entity, 'ClaimEntries')
+    mongoUtils.saveOrUpdateEntity(entity, mongoUtils.CLAIM_ENTRIES_COL_NAME)
         .always(function (err, results) {
             sendResponse(res, err, results);
         });
 }
 
 function modifyClaimEntry(req, res) {
-    mongoUtils.modifyEntityAttr(req.body._id, 'ClaimEntries', req.body.attrsAsJson)
+    mongoUtils.modifyEntityAttr(req.body._id, mongoUtils.CLAIM_ENTRIES_COL_NAME, req.body.attrsAsJson)
         .always(function (err, results) {
             sendResponse(res, err, results);
         });
@@ -96,7 +96,7 @@ function saveOrUpdateClaimEntryObject(claimEntry) {
     assert.ok(claimEntry instanceof ClaimEntry, 'Expecting instance of ClaimEntry object');
 
     var defer = jQuery.Deferred();
-    mongoUtils.saveOrUpdateEntity(claimEntry, 'ClaimEntries')
+    mongoUtils.saveOrUpdateEntity(claimEntry, mongoUtils.CLAIM_ENTRIES_COL_NAME)
         .always(function (err, results) {
             defer.resolve(serviceUtils.createResponse(err, results));
         });
@@ -104,11 +104,11 @@ function saveOrUpdateClaimEntryObject(claimEntry) {
 }
 
 function claimsCollection(db) {
-    return db.collection('Claims');
+    return db.collection(mongoUtils.CLAIMS_COL_NAME);
 }
 
 function claimEntriesCollection(db) {
-    return db.collection('ClaimEntries');
+    return db.collection(mongoUtils.CLAIM_ENTRIES_COL_NAME);
 }
 
 /********************************************************/
@@ -133,7 +133,7 @@ function getClaim(req, res) {
         return defer;
     }
 
-    mongoUtils.getEntityById(entityId, 'Claims')
+    mongoUtils.getEntityById(entityId, mongoUtils.CLAIMS_COL_NAME)
         .always(function (err, results) {
             if (err) {
                 sendResponse(res, err, results);
@@ -157,7 +157,7 @@ function getClaimEntry(req, res) {
     assert.ok(req.params.id, 'Expecting ClaimEntryId as a parameter');
     var entityId = req.params.id;
 
-    mongoUtils.getEntityById(entityId, 'ClaimEntries')
+    mongoUtils.getEntityById(entityId, mongoUtils.CLAIM_ENTRIES_COL_NAME)
         .always(function (err, results) {
             sendResponse(res, err, results);
         });

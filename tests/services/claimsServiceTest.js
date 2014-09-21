@@ -1,4 +1,5 @@
 var assert = require("assert");
+var mongoUtils = require("./../../server/mongoUtils.js");
 var claimsService = require("./../../server/services/claimsService.js");
 var contactService = require('./../../server/services/contactService.js');
 var Claim = require("./../../server/model/claim.js");
@@ -115,7 +116,7 @@ describe('Claims Service', function () {
             assert.equal(testClaim.description, 'Test claim update');
             done();
         };
-        claimsService.saveOrUpdateClaim(req, res, 'Claims');
+        claimsService.saveOrUpdateClaim(req, res, mongoUtils.CLAIMS_COL_NAME);
     });
 
     it('Get a Claim', function (done) {
