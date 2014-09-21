@@ -269,6 +269,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'app/utils/even
         AppVM.prototype.searchClaims = function(query) {
             console.log('sending query to server...');
             var _this = this;
+            $("#notifier-container").hide();
             $.get('claim/search/' + query)
                 .done(function (res) {
                     var data = res.data;
