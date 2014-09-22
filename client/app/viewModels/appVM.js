@@ -285,7 +285,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
             var _this = this;
             $("#notifier-container").hide();
 
-            $.get('claim/search/' + query)
+            $.getJSON('claim/search/' + query)
                 .done(function (res) {
                     var data = res.data;
                     var tempArray = [];
@@ -315,7 +315,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
             console.log('Searching for claim entries: ' + query);
             var _this = this;
 
-            $.get('claimEntry/search/' + query)
+            $.getJSON('claimEntry/search/' + query)
                 .done(function (res) {
                     var data = res.data;
                     var tempArray = [];

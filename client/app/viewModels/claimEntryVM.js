@@ -57,7 +57,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
 
             this.claimEntry(this.newEmptyClaimEntry());
             this.claimEntry().tag([tag]);
-            this.claimEntry().entryDate(DateUtils.toDatetimePickerFormat(new Date()));
+            this.claimEntry().entryDate(new Date());
             this.claimEntry().state(States.TODO);
 
             console.log('Adding new claim entry. Tag:' + tag);
@@ -114,7 +114,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
         ClaimEntryVM.prototype.loadClaimEntry = function (claimEntryId) {
             this.stopStateTracking();
 
-            $.get('/claimEntry/' + claimEntryId)
+            $.getJSON('/claimEntry/' + claimEntryId)
                 .done(function (resp) {
                     console.log('Loaded claim entry ' + JSON.stringify(resp.data));
 
