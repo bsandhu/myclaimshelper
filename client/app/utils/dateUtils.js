@@ -4,8 +4,8 @@ if (typeof define !== 'function') {
     var define = require('amdefine')(module);
 }
 
-define(['jquery'],
-    function ($) {
+define([],
+    function () {
 
         function toDatetimePickerFormat(jsDate) {
             if (!jsDate instanceof Date) {
