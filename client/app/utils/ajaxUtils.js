@@ -20,5 +20,5 @@ define(['jquery'],
 
         return {
             'post': post
-        }
+        };
     });

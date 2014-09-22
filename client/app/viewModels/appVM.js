@@ -245,7 +245,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'app/utils/even
 
         AppVM.prototype.loadClaims = function () {
             var _this = this;
-            $.get('/claim')
+            $.getJSON('/claim')
                 .done(function (resp) {
                     var data = resp.data;
                     console.log('Loaded Claims ' + JSON.stringify(data).substring(1, 25) + '...');
@@ -268,7 +268,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'app/utils/even
             console.log('sending query to server...');
             var _this = this;
             $("#notifier-container").hide();
-            $.get('claim/search/' + query)
+            $.getJSON('claim/search/' + query)
                 .done(function (res) {
                     var data = res.data;
                     var tempArray = [];
