@@ -79,7 +79,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify',
         ClaimVM.prototype.onNewClaim = function () {
             console.log('Adding new claim');
             this.claim(this.newEmptyClaim());
-            this.claim().entryDate(DateUtils.toDatetimePickerFormat(new Date()));
+            this.claim().entryDate(new Date());
             this.claimEntries([]);
             this.inEditMode(true);
         };
@@ -154,7 +154,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify',
         };
 
         ClaimVM.prototype.loadClaim = function (claimId) {
-            $.get('/claim/' + claimId)
+            $.getJSON('/claim/' + claimId)
                 .done(function (resp) {
                     console.log('Loaded claim ' + JSON.stringify(resp.data));
                     KOMap.fromJS(resp.data, {}, this.claim);
@@ -163,7 +163,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify',
         };
 
         ClaimVM.prototype.loadEntriesForClaim = function (claimId) {
-            $.get('/claim/' + claimId + '/entries')
+            $.getJSON('/claim/' + claimId + '/entries')
                 .done(function (resp) {
                     console.log('Loaded claim entries' + JSON.stringify(resp.data));
                     this.claimEntries(resp.data);
