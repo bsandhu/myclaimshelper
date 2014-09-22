@@ -59,13 +59,13 @@ define(['jquery'],
             var nativeJSONParse = JSON.parse;
             JSON.parse = function (data) {
                 console.log('Parsing ' + data);
+
                 return nativeJSONParse(data, function dateHandle(key, val) {
-                    if (key.substring(key.length - 4, key.length).toLowerCase() === 'date') {
-                        return new Date(Number(val));
-                    } else {
-                        return val;
-                    }
+                    return endWithDate(key) ? new Date(Number(val)) : val;
                 });
+                function endWithDate(key) {
+                    return key.substring(key.length - 4, key.length).toLowerCase() === 'date';
+                }
             };
         }
 

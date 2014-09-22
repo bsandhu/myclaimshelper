@@ -26,4 +26,14 @@ describe('DateUtils', function () {
         assert.equal(toDate('01/01/2014 00:00').getTime(), new Date(2014, 0, 1, 0, 0).getTime());
         assert.equal(toDate('09/22/2014 10:10').getTime(), new Date(2014, 8, 22, 10, 10).getTime());
     });
+
+    it ('Must convert FROM DatePicker toStr', function() {
+        dateUtils.enableJSONDateHandling();
+
+        var obj = JSON.parse("{\"dueDate\": 1391230800000}");
+        assert.ok(obj.dueDate instanceof Date);
+        assert.equal(obj.dueDate.getMonth(), 1);
+        assert.equal(obj.dueDate.getDate(), 1);
+        assert.equal(obj.dueDate.getFullYear(), 2014);
+    });
 });
