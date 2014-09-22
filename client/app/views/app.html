@@ -108,6 +108,20 @@
 
         <div id="gridPanelContent" class="gridPanelContent">
 
+            <!-- View selection -->
+            <div class="alignLeft">
+                <div class="btn-group">
+                    <button type="button" class="btn btn-default btn-sm"
+                            data-bind="click: onClaimsListViewClick">
+                        <span class="fa fa-list"></span>
+                    </button>
+                    <button type="button" class="btn btn-default btn-sm"
+                            data-bind="click: onClaimsSummaryViewClick">
+                        <span class="fa fa-star"></span>
+                    </button>
+                </div>
+            </div>
+
             <!-- Search -->
             <div class="wider alignRight">
                 <div class="input-group alignRight">
@@ -121,33 +135,8 @@
             </div>
             <div class="clear bottomMargin"></div>
 
-            <div class="panel panel-default">
-                <table class="table table-hover table-condensed">
-                    <thead>
-                    <th>Id</th>
-                    <th>Description</th>
-                    <th>Insurance Company</th>
-                    <th>Insurance Co. File No.</th>
-                    <th>Date Received</th>
-                    <th>Entry Date</th>
-                    <th>Due Date</th>
-                    <th>State</th>
-                    </thead>
-
-                    <tbody data-bind="foreach : {data: searchResults, as: 'claim'}">
-                    <tr data-bind="click: $parent.onClaimSelect">
-                        <td data-bind="text: claim._id"></td>
-                        <td data-bind="text: claim.description"></td>
-                        <td data-bind="text: claim.insuranceCompanyName"></td>
-                        <td data-bind="text: claim.insuranceCompanyFileNum"></td>
-                        <td data-bind="text: claim.dateReceived"></td>
-                        <td data-bind="text: claim.entryDate"></td>
-                        <td data-bind="text: claim.dateDue"></td>
-                        <td data-bind="text: claim.state"></td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
+            <!-- View -->
+            <div data-bind="template: { name: claimsListTmpl}"></div>
         </div>
 
         <div id="gridPanelCollapsedContent" class="collapsedcontainer gridPanelCollapsedContent"
