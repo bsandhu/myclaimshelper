@@ -9,7 +9,7 @@ function saveOrUpdateContactObject(contactObj) {
     assert.ok(contactObj instanceof Contact, 'Expecting instance of Contact object');
     var defer = jQuery.Deferred();
 
-    mongoUtils.saveOrUpdateEntity(contactObj, 'Contacts')
+    mongoUtils.saveOrUpdateEntity(contactObj, mongoUtils.CONTACTS_COL_NAME)
         .always(function (err, results) {
             defer.resolve(serviceUtils.createResponse(err, results));
         });
@@ -19,7 +19,7 @@ function saveOrUpdateContactObject(contactObj) {
 function getContactObject(contactId) {
     var defer = jQuery.Deferred();
 
-    mongoUtils.getEntityById(contactId, 'Contacts')
+    mongoUtils.getEntityById(contactId, mongoUtils.CONTACTS_COL_NAME)
         .always(function (err, results) {
             defer.resolve(serviceUtils.createResponse(err, results));
         });
@@ -29,7 +29,7 @@ function getContactObject(contactId) {
 function deleteContact(contactId) {
     var defer = jQuery.Deferred();
 
-    jQuery.when(mongoUtils.deleteEntity({_id: contactId}, 'Contacts'))
+    jQuery.when(mongoUtils.deleteEntity({_id: contactId}, mongoUtils.CONTACTS_COL_NAME))
         .then(defer.resolve())
         .fail(defer.reject());
     return defer;
@@ -38,7 +38,7 @@ function deleteContact(contactId) {
 function listAllContacts(req, res) {
     console.log('getting all contacts');
     mongoUtils.run(function (db) {
-        var contactsCol = db.collection('Contacts');
+        var contactsCol = db.collection(mongoUtils.CONTACTS_COL_NAME);
         contactsCol.find().toArray(function (err, items) {
             sendResponse(res, err, items);
             db.close();

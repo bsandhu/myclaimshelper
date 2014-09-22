@@ -41,8 +41,10 @@ function incrementAndGet(sequenceName) {
             function onUpdate(err, doc) {
                 if (err) {
                     deferred.reject(err);
+                    db.close();
                 }
                 deferred.resolve(doc.seq);
+                db.close();
             });
     });
     return deferred.promise();
@@ -71,7 +73,7 @@ function saveOrUpdateEntity(entity, colName) {
             } else {
                 entityCol.update({'_id': entity._id},
                     entity,
-                    {w: 1},
+                    {w: 1, upsert: true},
                     function onUpdate(err, result) {
                         console.log('Updated Mongo collection ' + colName + '. Id: ' + entity._id);
                         defer.resolve(err, entity);
@@ -159,3 +161,7 @@ exports.saveOrUpdateEntity = saveOrUpdateEntity;
 exports.modifyEntityAttr = modifyEntityAttr;
 exports.getEntityById = getEntityById;
 exports.deleteEntity = deleteEntity;
+
+exports.CLAIMS_COL_NAME        = 'Claims';
+exports.CLAIM_ENTRIES_COL_NAME = 'ClaimEntries';
+exports.CONTACTS_COL_NAME      = 'Contacts';
