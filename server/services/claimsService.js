@@ -258,3 +258,4 @@ exports.getAllClaims = getAllClaims;
 exports.getAllEntriesForClaim = getAllEntriesForClaim;
 exports.deleteClaim = deleteClaim;
 exports.searchClaims = searchClaims;
+exports.searchClaimEntries = searchClaimEntries;
