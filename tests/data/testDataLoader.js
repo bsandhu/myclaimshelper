@@ -54,5 +54,5 @@ function populateDB(){
 // Uncomment the one you need and run from command line.
 //   Example: ~/src/Agent/007> node tests/data/testDataLoader.js
 
-//nukeDB().then(populateDB());
+nukeDB().then(populateDB());
 //populateDB();
