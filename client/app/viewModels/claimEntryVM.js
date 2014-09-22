@@ -119,7 +119,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
                     console.log('Loaded claim entry ' + JSON.stringify(resp.data));
 
                     // Populate with JSON data
-                    KOMap.fromJS(resp.data, {}, this.claimEntry);
+                    KOMap.fromJS(resp.data[0], {}, this.claimEntry);
 
                     // Put in session
                     this.storeInSession(this.claimEntry()._id());

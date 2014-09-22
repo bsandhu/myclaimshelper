@@ -148,7 +148,7 @@ describe('Claims Service', function () {
             assert(data);
             assert.equal(data.status, 'Success');
 
-            var savedClaimEntry = data.data;
+            var savedClaimEntry = data.data[0];
             assert.ok(savedClaimEntry.claimId);
             assert.equal(savedClaimEntry.summary, 'I am test Task too');
             done();
@@ -189,6 +189,21 @@ describe('Claims Service', function () {
     });
 
     it('Search through claims', function(done) {
+        var req = {params: {search : '{"state":"open"}'}};
+        var res = {};
+
+        res.json = function (data) {
+            assert(data);
+            assert.equal(data.status, 'Success');
+
+            var claim = data.data[0];
+            assert.equal(claim.state, testClaim.state);
+            done();
+        };
+        claimsService.searchClaims(req, res);
+    });
+
+    it('Search through claim entries', function(done) {
         var req = {params: {search : '{"state":"open"}'}};
         var res = {};
 

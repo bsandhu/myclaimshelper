@@ -5,6 +5,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'app/utils/even
         function AppVM() {
             console.log('Init AppVM');
             this.gridNavDelay = 100;
+            this.claimsListTmpl = ko.observable('app/views/claimsSummary');
 
             // Model
             this.claims = ko.observableArray([]);
@@ -35,6 +36,14 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'app/utils/even
 
         AppVM.prototype.onHelpClick = function (claim) {
             window.open('/help/help.html', 'Agent help');
+        };
+
+        AppVM.prototype.onClaimsListViewClick = function () {
+            this.claimsListTmpl('app/views/claimsList');
+        };
+
+        AppVM.prototype.onClaimsSummaryViewClick = function () {
+            this.claimsListTmpl('app/views/claimsSummary');
         };
 
         AppVM.prototype.queryDB = function() {
