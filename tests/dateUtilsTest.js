@@ -40,7 +40,6 @@ describe('DateUtils', function () {
     it('Make nice date', function () {
         assert.equal(dateUtils.niceDate(new Date(2014, 0, 2, 10, 10)), 'Jan 2  10:10');
         assert.equal(dateUtils.niceDate(new Date(2014, 8, 22, 10, 10)), 'Sep 22  10:10');
-        assert.equal(dateUtils.niceDate(new Date(100)), 'Dec 31 1969 19:00');
         assert.equal(dateUtils.niceDate(undefined), '');
     });
 
