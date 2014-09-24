@@ -59,17 +59,17 @@ define([],
             var nativeJSONParse = JSON.parse;
             JSON.parse = function (data) {
                 return nativeJSONParse(data, function dateHandle(key, val) {
-                    return endWithDate(key) ? new Date(Number(val)) : val;
+                    return isDateAttr(key) ? new Date(Number(val)) : val;
                 });
-                function endWithDate(key) {
-                    return key.substring(key.length - 4, key.length).toLowerCase() === 'date';
+                function isDateAttr(key) {
+                    return key.toLowerCase().search('date') >= 0;
                 }
             };
         }
 
         function niceDate(date) {
-            if (date === undefined || date === null) {
-                return '';
+            if (date === undefined || date === null || date === '') {
+                return 'None';
             }
             if (!(date instanceof Date)) {
                 return date;

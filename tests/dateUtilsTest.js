@@ -35,12 +35,19 @@ describe('DateUtils', function () {
         assert.equal(obj.dueDate.getMonth(), 1);
         assert.equal(obj.dueDate.getDate(), 1);
         assert.equal(obj.dueDate.getFullYear(), 2014);
+
+        obj = JSON.parse("{\"dateReceived\": 1391230800000}");
+        assert.ok(obj.dateReceived instanceof Date);
+        assert.equal(obj.dateReceived.getMonth(), 1);
+        assert.equal(obj.dateReceived.getDate(), 1);
+        assert.equal(obj.dateReceived.getFullYear(), 2014);
     });
 
     it('Make nice date', function () {
         assert.equal(dateUtils.niceDate(new Date(2014, 0, 2, 10, 10)), 'Jan 2  10:10');
         assert.equal(dateUtils.niceDate(new Date(2014, 8, 22, 10, 10)), 'Sep 22  10:10');
-        assert.equal(dateUtils.niceDate(undefined), '');
+        assert.equal(dateUtils.niceDate(undefined), 'None');
+        assert.equal(dateUtils.niceDate(null), 'None');
     });
 
     it('isEqualIgnoringTime', function () {

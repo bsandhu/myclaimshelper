@@ -139,26 +139,27 @@
             </div>
             <div class="clear bottomMargin"></div>
 
-            <!-- Claims list -->
+            <!-- Claims list Component -->
             <div data-bind="component: 'claims-list-component',
                             visible  : showClaimsList"></div>
 
-            <!-- Summary -->
+            <!-- Summary Component -->
             <div data-bind="component: 'summary-component',
                             visible  : showSummary"></div>
         </div>
 
         <div id="gridPanelCollapsedContent" class="collapsedcontainer gridPanelCollapsedContent"
              data-bind="click: toggleGridPanel">
-            <div class="collapsedcontainerLabel">Search Results</div>
+            <div class="collapsedcontainerLabel">Dashboard</div>
         </div>
     </div>
 
     <!-- **** Claim module **** -->
     <div id="claimPanel" class="slidingContainer claimPanel" style="width: 0%;">
         <div id="claimPanelContent" class="claimPanelContent">
-            <div data-bind="module: {name: 'app/viewModels/claimVM', template: 'app/views/claim',
-                                         afterRender: startRouter}"></div>
+            <div data-bind="module: {name: 'app/viewModels/claimVM',
+                                     template: 'app/views/claim',
+                                     afterRender: startRouter}"></div>
         </div>
     </div>
 
