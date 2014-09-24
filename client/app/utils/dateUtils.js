@@ -49,7 +49,6 @@ define([],
          * JSON -> Date: Milli secs to JS Date
          */
         function enableJSONDateHandling() {
-
             // Override outgoing JSON Date parsing
             Date.prototype.toJSON = function () {
                 return this.getTime();
@@ -67,7 +66,10 @@ define([],
             };
         }
 
-        function niceDate(date) {
+        function niceDate(date, includeTime) {
+            if (includeTime === undefined) {
+                includeTime = true;
+            }
             if (date === undefined || date === null || date === '') {
                 return 'None';
             }
@@ -75,34 +77,46 @@ define([],
                 return date;
             }
             var monthNames = [ "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" ];
+            var dayNames   = [ "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" ];
+
             var month = monthNames[date.getMonth()];
             var day = date.getDate();
+            var dayName = dayNames[date.getDay()];
             var year = date.getFullYear() === new Date().getFullYear() ? '' : date.getFullYear();
             var time = date.getHours() + ':' + prefixZero(date.getMinutes());
-            return month + ' ' + day + ' ' + year + ' ' + time;
+
+            if (isToday(date)) {
+                return includeTime ? 'Today ' + time : 'Today';
+            } else if(isThisWeek(date)) {
+                return includeTime ?  dayName + ' ' + time : dayName;
+            } else if (includeTime) {
+                return month + ' ' + day + ' ' + year + ' ' + time;
+            } else {
+                return month + ' ' + day + ' ' + year;
+            }
         }
 
-        function isEqualIgnoringTime(date1, date2) {
-            // Empty values are equal
-            if ((date1 === null || date1 === undefined || date1 === '') &&
-                (date2 === null || date2 === undefined || date2 === '')) {
-                return true;
-            }
-            // Dates ignore time component
-            if ((date1 instanceof Date) && (date2 instanceof Date)){
-                return date1.getMonth() === date2.getMonth() &&
-                       date1.getDate() === date2.getDate() &&
-                       date1.getFullYear() === date2.getFullYear();
-            }
-            return date1 === date2;
+        function isThisWeek(date) {
+            var daysInWeek = 6;
+            var millisInADay = 86400000;
+
+            var today = new Date();
+            var endOfWeekInMillis = today.getTime() + ((daysInWeek - today.getDay()) * millisInADay);
+            var startOfWeekInMillis = today.getTime() - (today.getDay() * millisInADay);
+
+            return date.getTime() >= startOfWeekInMillis && date.getTime() <= endOfWeekInMillis;
+        }
+
+        function isToday(date) {
+            var today = new Date();
+            return date.getDate() === today.getDate() && date.getFullYear() === today.getFullYear() && date.getMonth() === today.getMonth();
         }
 
         return {
-            'niceDate'                : niceDate,
-            'toDatetimePickerFormat'  : toDatetimePickerFormat,
+            'niceDate': niceDate,
+            'toDatetimePickerFormat': toDatetimePickerFormat,
             'fromDatetimePickerFormat': fromDatetimePickerFormat,
-            'enableJSONDateHandling'  : enableJSONDateHandling,
-            'isEqualIgnoringTime'    : isEqualIgnoringTime,
-            'DATETIME_PICKER_FORMAT'  : 'm/d/Y H:i'
+            'enableJSONDateHandling': enableJSONDateHandling,
+            'DATETIME_PICKER_FORMAT': 'm/d/Y H:i'
         };
     });

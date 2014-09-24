@@ -13,8 +13,8 @@ define(['knockout', 'amplify', 'app/utils/events', 'text!app/components/notifier
 
         NotifierVM.prototype.onDismiss = function () {
             this.msg('');
-            var panelRef = $("#notifier-container");
-            panelRef.velocity("fadeOut", { duration: 200});
+            this.isVisible(false);
+            $("#notifier-container").velocity("stop");
         };
 
         NotifierVM.prototype.setupEventListeners = function () {
@@ -34,9 +34,10 @@ define(['knockout', 'amplify', 'app/utils/events', 'text!app/components/notifier
 
         NotifierVM.prototype.display = function (msg) {
             this.msg(msg);
+            this.isVisible(true);
             var panelRef = $("#notifier-container");
-            panelRef.velocity("fadeIn", { duration: 50});
-            panelRef.velocity("fadeOut", { delay: 5000, duration: 200});
+            panelRef.velocity("fadeIn",  { duration: 50, easing: 'easeIn'});
+            panelRef.velocity("fadeOut", { delay: 5000, duration: 200, easing: 'easeOut'});
         };
 
         return {viewModel: NotifierVM, template: notifierView};
