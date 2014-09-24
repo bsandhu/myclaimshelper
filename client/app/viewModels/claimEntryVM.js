@@ -18,6 +18,15 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
             this.startStateTracking();
         }
 
+        ClaimEntryVM.prototype.newEmptyClaimEntry = function () {
+            var jsEntryObject = new ClaimEntry();
+            var entryObjWithObservableAttributes = KOMap.fromJS(jsEntryObject);
+            return entryObjWithObservableAttributes;
+        };
+
+        /**
+         * Tracks changes to the Claim entry object. Used to highlight 'save' button on the UI
+         */
         ClaimEntryVM.prototype.startStateTracking = function () {
             this.claimEntryState = ko.computed(function(){
                 return KOMap.toJSON(this.claimEntry);
@@ -35,11 +44,9 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
             this.stateChange(false);
         };
 
-        ClaimEntryVM.prototype.newEmptyClaimEntry = function () {
-            var jsEntryObject = new ClaimEntry();
-            var entryObjWithObservableAttributes = KOMap.fromJS(jsEntryObject);
-            return entryObjWithObservableAttributes;
-        };
+        /***********************************************************/
+        /* Event handlers                                          */
+        /***********************************************************/
 
         ClaimEntryVM.prototype.setupEvListeners = function () {
             amplify.subscribe(Events.SHOW_CLAIM_ENTRY, this, this.onShowClaimEntry);
@@ -48,11 +55,12 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
         };
 
         ClaimEntryVM.prototype.onShowClaimEntry = function (evData) {
-            console.log('Display claimEntryId: ' + JSON.stringify(evData));
+            console.log('ClaimEntryVM - SHOW_CLAIM_ENTRY ev ' + JSON.stringify(evData));
             this.loadClaimEntry(evData.claimEntryId);
         };
 
         ClaimEntryVM.prototype.onNewClaimEntry = function (evData) {
+            console.log('ClaimEntryVM - NEW_CLAIM_ENTRY ev ' + JSON.stringify(evData));
             var tag = Boolean(evData.entryType) ? evData.entryType : 'other';
 
             this.claimEntry(this.newEmptyClaimEntry());
@@ -67,7 +75,8 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
          * @param evData {'claimEntryId': entry._id, 'status': status});
          */
         ClaimEntryVM.prototype.onStatusUpdate = function(evData){
-            console.log('Modify ClaimEntry: ' + JSON.stringify(evData));
+            console.log('ClaimEntryVM - UPDATE_CLAIM_ENTRY_STATUS ev ' + JSON.stringify(evData));
+
             var claimEntryId = evData.claimEntryId;
             var claimId = this.getActiveClaimId();
 
@@ -90,6 +99,10 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
                 ? 'New Entry'
                 : this.claimEntry().summary() || '';
         };
+
+        /***********************************************************/
+        /* Server calls                                            */
+        /***********************************************************/
 
         ClaimEntryVM.prototype.onSave = function () {
             console.log('Saving ClaimEntry: ' + KOMap.toJSON(this.claimEntry));
@@ -153,8 +166,6 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
         ClaimEntryVM.prototype.onCancel = function () {
             Router.routeToClaim(this.getActiveClaimId());
         };
-
-
 
         return ClaimEntryVM;
     });

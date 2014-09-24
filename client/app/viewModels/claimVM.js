@@ -10,6 +10,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify',
 
             // Model
             this.States = States;
+            this.DateUtils = DateUtils;
             this.claim = ko.observable(this.newEmptyClaim());
             this.claimEntries = ko.observableArray();
             this.sortDir = ko.observable('desc');
@@ -32,10 +33,15 @@ define(['jquery', 'knockout', 'KOMap', 'amplify',
             return claimObjWithObservableAttributes;
         };
 
+        /***********************************************************/
+        /* Event handlers                                          */
+        /***********************************************************/
+
         ClaimVM.prototype.setupEvListeners = function () {
             amplify.subscribe(Events.SHOW_CLAIM, this, this.onShowClaim);
             amplify.subscribe(Events.NEW_CLAIM, this, this.onNewClaim);
-            amplify.subscribe(Events.NEW_CLAIM_ENTRY, this, this.isClaimSaved);
+            amplify.subscribe(Events.NEW_CLAIM_ENTRY, this, this.onNewClaimEntry);
+            amplify.subscribe(Events.SHOW_CLAIM_ENTRY, this, this.onShowClaimEntry);
             amplify.subscribe(Events.SAVED_CLAIM_ENTRY, this, this.refreshClaimEntriesListing);
             window.onclick = this.onDismissStatus.bind(this);
         };
@@ -43,6 +49,76 @@ define(['jquery', 'knockout', 'KOMap', 'amplify',
         ClaimVM.prototype.onEditModeClick = function () {
             this.inEditMode(true);
         };
+
+        ClaimVM.prototype.onShowClaim = function (evData) {
+            console.log('ClaimVM - SHOW_CLAIM ev' + JSON.stringify(evData));
+            console.assert(evData.claimId, 'Expecting claim Id on event data');
+
+            // Need to load?
+            if (String(this.claim()._id()) === String(evData.claimId)) {
+                console.log('Claim Id ' + evData.claimId + ' already loaded. Skipping');
+                return;
+            }
+            // Clear
+            this.claim(this.newEmptyClaim());
+            // Re-load
+            this.loadClaim(evData.claimId);
+            this.loadEntriesForClaim(evData.claimId);
+            this.inEditMode(false);
+        };
+
+        ClaimVM.prototype.onNewClaim = function () {
+            console.log('ClaimVM - NEW_CLAIM ev');
+            this.claim(this.newEmptyClaim());
+            this.claim().entryDate(new Date());
+            this.claimEntries([]);
+            this.inEditMode(true);
+        };
+
+        ClaimVM.prototype.onNewClaimEntry = function () {
+            console.log('ClaimVM - NEW_CLAIM_ENTRY ev');
+            if (!this.claim()._id()) {
+                console.log('Adding entry to unsaved claim. Saving.');
+                this.onSave();
+            }
+        };
+
+        ClaimVM.prototype.onShowClaimEntry = function (evData) {
+            console.log('ClaimVM - SHOW_CLAIM_ENTRY ev ' + JSON.stringify(evData));
+            this.onShowClaim({claimId: evData.claimId});
+        };
+
+        ClaimVM.prototype.onEntryStatusUpdate = function (status, entry, ev) {
+            console.log('Raise Claim Entry status update Ev. ' + entry._id);
+            amplify.publish(Events.UPDATE_CLAIM_ENTRY_STATUS, {'claimEntryId': entry._id, 'status': status});
+            ev.stopImmediatePropagation();
+            this.onDismissStatus();
+        };
+
+        ClaimVM.prototype.onStatusFocus = function (evData, ev) {
+            this.showStatusForEntryId(evData._id);
+            ev.stopPropagation();
+        };
+
+        ClaimVM.prototype.onDismissStatus = function () {
+            this.showStatusForEntryId(null);
+        };
+
+        ClaimVM.prototype.onCancel = function () {
+            Router.routeToHome();
+        };
+
+        ClaimVM.prototype.onClaimEntryClick = function (entry, ev) {
+            // Toggle row highlight
+            $('#claimEntriesList tr').removeClass('info');
+            $(ev.target).closest('tr').addClass('info');
+
+            Router.routeToClaimEntry(this.claim()._id(), entry._id);
+        };
+
+        /***********************************************************/
+        /* View state                                              */
+        /***********************************************************/
 
         ClaimVM.prototype.onSortEntries = function () {
             this.sortDir(this.sortDir() === 'desc' ? 'asc' : 'desc');
@@ -67,41 +143,10 @@ define(['jquery', 'knockout', 'KOMap', 'amplify',
             this.claimEntries(tmpArray);
         };
 
-        ClaimVM.prototype.onShowClaim = function (evData) {
-            console.log('Display claimId: ' + JSON.stringify(evData));
-            this.claim(this.newEmptyClaim());
-
-            this.loadClaim(evData.claimId);
-            this.loadEntriesForClaim(evData.claimId);
-            this.inEditMode(false);
-        };
-
-        ClaimVM.prototype.onNewClaim = function () {
-            console.log('Adding new claim');
-            this.claim(this.newEmptyClaim());
-            this.claim().entryDate(new Date());
-            this.claimEntries([]);
-            this.inEditMode(true);
-        };
-
-        ClaimVM.prototype.onEntryStatusUpdate = function (status, entry, ev) {
-            console.log('Raise Claim Entry status update Ev. ' + entry._id);
-            amplify.publish(Events.UPDATE_CLAIM_ENTRY_STATUS, {'claimEntryId': entry._id, 'status': status});
-            ev.stopImmediatePropagation();
-            this.onDismissStatus();
-        };
-
         ClaimVM.prototype.refreshClaimEntriesListing = function () {
             var claimId = this.claim()._id();
             console.log('Refresh entries list. ClaimId ' + claimId);
             this.loadEntriesForClaim(claimId);
-        };
-
-        ClaimVM.prototype.isClaimSaved = function () {
-            if (!this.claim()._id()) {
-                console.log('Adding entry to unsaved claim. Saving.');
-                this.onSave();
-            }
         };
 
         ClaimVM.prototype.niceName = function (contact) {
@@ -110,26 +155,9 @@ define(['jquery', 'knockout', 'KOMap', 'amplify',
 
         };
 
-        ClaimVM.prototype.onStatusFocus = function (evData, ev) {
-            this.showStatusForEntryId(evData._id);
-            ev.stopPropagation();
-        };
-
-        ClaimVM.prototype.onDismissStatus = function () {
-            this.showStatusForEntryId(null);
-        };
-
-        ClaimVM.prototype.onCancel = function () {
-            Router.routeToHome();
-        };
-
-        ClaimVM.prototype.onClaimEntryClick = function (entry, ev) {
-            // Toggle row highlight
-            $('#claimEntriesList tr').removeClass('info');
-            $(ev.target).closest('tr').addClass('info');
-
-            Router.routeToClaimEntry(entry._id);
-        };
+        /***********************************************************/
+        /* Server calls                                            */
+        /***********************************************************/
 
         ClaimVM.prototype.onSave = function () {
             console.log('Saving Claim: ' + KOMap.toJSON(this.claim));
@@ -150,6 +178,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify',
 
                     amplify.publish(Events.SUCCESS_NOTIFICATION, {msg: 'Saved Claim'});
                     this.storeInSession(this.claim()._id());
+                    this.inEditMode(false);
                 }.bind(this));
         };
 
@@ -173,7 +202,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify',
 
         ClaimVM.prototype.storeInSession = function (claimId) {
             amplify.store.sessionStorage(SessionKeys.ACTIVE_CLAIM_ID, claimId);
-            console.log('Stored CliamId: ' + claimId + ' in session storage');
+            console.log('Stored ClaimId: ' + claimId + ' in session storage');
         };
 
         ClaimVM.prototype.getActiveClaimEntryId = function () {

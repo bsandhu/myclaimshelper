@@ -11,21 +11,21 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
 
             // Summary dimensions meta data
             this.summaryDimensions = ko.observableArray([
-                {description: 'Date Entered On',
-                    dimension: 'entryDate',
-                    isInSameGroup: this.DateUtils.isEqualIgnoringTime,
-                    sortFn: function (entry1, entry2) {
-                        var date1InMillis = entry1.entryDate ? entry1.entryDate().getTime() : 0;
-                        var date2InMillis = entry2.entryDate ? entry2.entryDate().getTime() : 0;
-                        return date1InMillis - date2InMillis;
-                    }
-                },
                 {description: 'Date Due',
                     dimension: 'dueDate',
                     isInSameGroup: this.DateUtils.isEqualIgnoringTime,
                     sortFn: function (entry1, entry2) {
                         var date1InMillis = entry1.dueDate ? entry1.dueDate().getTime() : 0;
                         var date2InMillis = entry2.dueDate ? entry2.dueDate().getTime() : 0;
+                        return date1InMillis - date2InMillis;
+                    }
+                },
+                {description: 'Date Entered On',
+                    dimension: 'entryDate',
+                    isInSameGroup: this.DateUtils.isEqualIgnoringTime,
+                    sortFn: function (entry1, entry2) {
+                        var date1InMillis = entry1.entryDate ? entry1.entryDate().getTime() : 0;
+                        var date2InMillis = entry2.entryDate ? entry2.entryDate().getTime() : 0;
                         return date1InMillis - date2InMillis;
                     }
                 },
@@ -62,6 +62,10 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
 
             this.claimEntries = ko.observableArray([]);
         }
+
+        SummaryVM.prototype.onClaimEntrySelect = function (entry) {
+            Router.routeToClaimEntry(entry.claimId(), entry._id());
+        };
 
         SummaryVM.prototype.setupSummaryDimensionListener = function () {
             this.summaryDimension.subscribe(function (val) {

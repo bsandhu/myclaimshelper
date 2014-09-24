@@ -37,7 +37,7 @@
                 <thead>
                 <th>&nbsp;</th>
                 <th>&nbsp;</th>
-                <th>Id</th>
+                <th>Claim</th>
                 <th>Summary</th>
                 <th>Entry Date</th>
                 <th>Due Date</th>
@@ -59,12 +59,17 @@
                                        dragenter: $parent.onSummaryRowDragEnter.bind($parent),
                                        dragover:  $parent.onSummaryRowDragOver.bind($parent),
                                        dragleave: $parent.onSummaryRowDragLeave.bind($parent)},
-                               attr: {'data-entryId': entry._id}">
+                               attr: {'data-entryId': entry._id},
+                               click: $parent.onClaimEntrySelect">
                     <td class="summaryDimensionDrag" title="Click and Drag to reorder">
                         <span class="fa fa-ellipsis-v"></span>
                     </td>
-                    <td><input type="checkbox"></td>
-                    <td data-bind="text: entry._id"></td>
+                    <td>
+                        <input type="checkbox">
+                    </td>
+                    <td>
+                        <span data-bind="text: entry.claimId"><span
+                    </td>
                     <td data-bind="text: entry.summary"></td>
                     <td class="summaryDimensionCell">
                         <span data-bind="text: $parent.DateUtils.niceDate(entry.entryDate())"></span>
