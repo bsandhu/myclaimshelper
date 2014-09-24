@@ -118,6 +118,10 @@ div {
     margin-right: 10px;
 }
 
+.paddingRight5 {
+    padding-right: 5px;
+}
+
 .topBorderSolid {
     border-top: solid;
     border-top-width: 1px;
@@ -307,6 +311,12 @@ div {
     line-height: 31px;
     padding: 0 0 0 10px;
     color: #045FB4;
+    font-weight: 500;
+}
+
+.summaryDimensionGroupSubHeader {
+    color: #045FB4;
+    font-weight: 300;
 }
 
 .summaryDimensionDrag {

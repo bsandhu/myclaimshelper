@@ -154,12 +154,12 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
 
         // Grid panel (summary)
 
-        AppVM.prototype.lessThat4PercentWide = function (elem) {
-            return (elem.width() / elem.parent().width() * 100).toFixed(0) <= 4;
+        AppVM.prototype.lessThat3PercentWide = function (elem) {
+            return (elem.width() / elem.parent().width() * 100).toFixed(0) <= 3;
         };
 
         AppVM.prototype.toggleGridPanel = function () {
-            if (this.lessThat4PercentWide($("#gridPanel"))) {
+            if (this.lessThat3PercentWide($("#gridPanel"))) {
                 Router.routeToHome();
             } else {
                 this.collapseGridPanel.bind(this);
@@ -178,7 +178,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
         AppVM.prototype.collapseGridPanel = function () {
             if (this.searchPanelState !== 'collapsed') {
                 $('#gridPanelCollapsedContent').velocity("fadeIn", { duration: this.gridNavDelay });
-                $("#gridPanel").velocity({ width: '4%' }, {duration: this.gridNavDelay}, this.gridNavEffect);
+                $("#gridPanel").velocity({ width: '3%' }, {duration: this.gridNavDelay}, this.gridNavEffect);
                 $("#gridPanelContent").velocity("fadeOut", { duration: this.gridNavDelay });
                 this.searchPanelState = 'collapsed';
             }

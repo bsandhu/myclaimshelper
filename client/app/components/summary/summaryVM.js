@@ -24,8 +24,8 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
                     dimension: 'entryDate',
                     isInSameGroup: this.DateUtils.isEqualIgnoringTime,
                     sortFn: function (entry1, entry2) {
-                        var date1InMillis = entry1.entryDate ? entry1.entryDate().getTime() : 0;
-                        var date2InMillis = entry2.entryDate ? entry2.entryDate().getTime() : 0;
+                        var date1InMillis = entry1.entryDate ? entry1.entryDate().getTime() : '';
+                        var date2InMillis = entry2.entryDate ? entry2.entryDate().getTime() : '';
                         return date1InMillis - date2InMillis;
                     }
                 },
@@ -61,7 +61,46 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
             this.summaryDimensionCounter = ko.observable();
 
             this.claimEntries = ko.observableArray([]);
+            this.setupDimensionGrouping();
         }
+
+        SummaryVM.prototype.setupDimensionGrouping = function(){
+            this.claimEntriesByDimension = ko.computed(function(){
+                var dimension = this.summaryDimension().dimension;
+                var groups = {};
+                $.each(this.claimEntries(), function(index, entry){
+                    var dimensionVal = entry[dimension] ? entry[dimension]() : '';
+                    var groupName = this.getGroupName(dimensionVal);
+                    if (!(groupName in groups)) {
+                        groups[groupName] = [];
+                    }
+                    groups[groupName].push(entry);
+                }.bind(this));
+                console.log(groups);
+                return groups;
+            }, this);
+
+            this.dimensionKeys = ko.computed(function(){
+                var keys = [];
+                $.each(this.claimEntriesByDimension(), function(group){
+                    keys.push(group);
+                });
+                console.log(keys);
+                return keys;
+            }, this);
+        };
+
+        SummaryVM.prototype.getGroupName = function(dimension) {
+            // Empty
+            if ((dimension === null || dimension === undefined || dimension === '')) {
+                return '';
+            }
+            // Dates ignore time component
+            if (dimension instanceof Date){
+                return DateUtils.niceDate(dimension, false);
+            }
+            return String(dimension);
+        };
 
         SummaryVM.prototype.onClaimEntrySelect = function (entry) {
             Router.routeToClaimEntry(entry.claimId(), entry._id());
@@ -72,10 +111,6 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
                 console.log('Summary dimension changed ' + JSON.stringify(val));
                 this.searchClaimEntries();
             }, this);
-        };
-
-        SummaryVM.prototype.sortByDimension = function (entriesArray) {
-            entriesArray.sort(this.summaryDimension().sortFn);
         };
 
         SummaryVM.prototype.searchClaimEntries = function (query) {
@@ -90,31 +125,16 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
                     var tempArray = $.map(res.data, function (claimEntry) {
                         return KOMap.fromJS(claimEntry, {}, new ClaimEntry());
                     });
-
-                    _this.sortByDimension(tempArray);
                     _this.claimEntries(tempArray);
                 });
         };
 
-        SummaryVM.prototype.valueChange = function (index) {
-            if (index === 0) {
-                return false;
-            }
-            var tempArray = this.claimEntries();
-            var dimension = this.summaryDimension().dimension;
-            var inSameGroup = this.summaryDimension().isInSameGroup;
-
-            var dimension1 = tempArray[index][dimension];
-            var dimension2 = tempArray[index - 1][dimension];
-            var dimension1Val = dimension1 ? dimension1() : '';
-            var dimension2Val = dimension2 ? dimension2() : '';
-
-            //console.log('Value change: ' + dimension1Val + ' ' + dimension2Val + ' ' + inSameGroup(dimension1Val, dimension2Val));
-            return !inSameGroup(dimension1Val, dimension2Val);
-        };
+        /************************************************************/
+        /* Drag n drop                                              */
+        /************************************************************/
 
         SummaryVM.prototype.onSummaryRowDragOver = function (entry, ev) {
-            // No-op
+            // No-op - needed for Chrome to auto create nice drag icon
         };
 
         SummaryVM.prototype.onSummaryRowDragEnd = function (entry, ev) {

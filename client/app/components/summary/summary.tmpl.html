@@ -44,44 +44,50 @@
                 <th>State</th>
                 </thead>
 
-                <tbody data-bind="foreach : {data: claimEntries, as: 'entry'}">
-                <!--TODO <tr data-bind="click: $parent.onClaimSelect">-->
+                <tbody data-bind="foreach : {data: dimensionKeys, as: 'groupKey'}">
+                    <tr>
+                        <td colspan="7">
+                            <span class="fa fa-angle-double-right"></span>
+                            <span class="summaryDimensionGroupHeader"
+                                  data-bind="text: $parent.summaryDimension().description"></span>
+                            <span class="paddingRight5"></span>
+                            <span class="summaryDimensionGroupSubHeader"
+                                  data-bind="text: groupKey"></span>
+                            <span class="summaryDimensionGroupSubHeader"
+                                  data-bind="text: '(' + ($parent.claimEntriesByDimension()[groupKey].length) + ')'"></span>
+                        </td>
+                    </tr>
 
-                <tr data-bind="if: $parent.valueChange($index())">
-                    <td colspan="7" class="summaryDimensionGroupHeader">
-                        <span class="fa fa-angle-double-right"></span>
-                        <span data-bind="text: $parent.summaryDimension().description"></span>
-                    </td>
-                </tr>
-
-                <tr draggable="true" class="summaryDimensionRow"
-                    data-bind="event: {dragend  : $parent.onSummaryRowDragEnd.bind($parent),
-                                       dragenter: $parent.onSummaryRowDragEnter.bind($parent),
-                                       dragover:  $parent.onSummaryRowDragOver.bind($parent),
-                                       dragleave: $parent.onSummaryRowDragLeave.bind($parent)},
-                               attr: {'data-entryId': entry._id},
-                               click: $parent.onClaimEntrySelect">
-                    <td class="summaryDimensionDrag" title="Click and Drag to reorder">
-                        <span class="fa fa-ellipsis-v"></span>
-                    </td>
-                    <td>
-                        <input type="checkbox">
-                    </td>
-                    <td>
-                        <span data-bind="text: entry.claimId"><span
-                    </td>
-                    <td data-bind="text: entry.summary"></td>
-                    <td class="summaryDimensionCell">
-                        <span data-bind="text: $parent.DateUtils.niceDate(entry.entryDate())"></span>
-                        <span class="fa fa-pencil"></span>
-                    </td>
-                    <td class="summaryDimensionCell">
-                        <span data-bind="text: $parent.DateUtils.niceDate(entry.dueDate ? entry.dueDate() : '')"></span>
-                        <span class="fa fa-pencil"></span>
-                    </td>
-                    <td data-bind="text: entry.state"></td>
-                </tr>
-                </tbody>
+                    <!-- ko foreach: $parent.claimEntriesByDimension()[groupKey] -->
+                        <tr draggable="true" class="summaryDimensionRow"
+                            data-bind="event: {dragend  : $parents[1].onSummaryRowDragEnd.bind($parents[1]),
+                                               dragenter: $parents[1].onSummaryRowDragEnter.bind($parents[1]),
+                                               dragover:  $parents[1].onSummaryRowDragOver.bind($parents[1]),
+                                               dragleave: $parents[1].onSummaryRowDragLeave.bind($parents[1])},
+                                       attr: {'data-entryId': $data._id},
+                                       click: $parents[1].onClaimEntrySelect">
+                            <td class="summaryDimensionDrag" title="Click and Drag to reorder">
+                                <span class="fa fa-ellipsis-v"></span>
+                            </td>
+                            <td>
+                                <input type="checkbox">
+                            </td>
+                            <td>
+                                <span data-bind="text: $data.claimId"><span
+                            </td>
+                            <td data-bind="text: $data.summary"></td>
+                            <td class="summaryDimensionCell">
+                                <span data-bind="text: $parents[1].DateUtils.niceDate($data.entryDate())"></span>
+                                <span class="fa fa-pencil"></span>
+                            </td>
+                            <td class="summaryDimensionCell">
+                                <span data-bind="text: $parents[1].DateUtils.niceDate($data.dueDate ? $data.dueDate() : '')"></span>
+                                <span class="fa fa-pencil"></span>
+                            </td>
+                            <td data-bind="text: $data.state"></td>
+                        </tr>
+                    <!-- /ko -->
+                    </tbody>
             </table>
         </div>
 
