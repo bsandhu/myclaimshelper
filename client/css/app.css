@@ -306,10 +306,40 @@ div {
     margin: 0;
     line-height: 31px;
     padding: 0 0 0 10px;
-    background: #fafafa;
-    border-bottom: 1px solid #e7e7e7;
-    border-top: 1px solid #f4f4f4;
+    color: #045FB4;
+}
+
+.summaryDimensionDrag {
+    cursor: move;
+    opacity: 0;
     color: #999;
+}
+
+.summaryDimensionRow:hover td:first-child {
+    opacity: .9;
+    transition-duration: 0.25s;
+    transition-property: opacity;
+    transition-timing-function: ease;
+}
+
+.summaryDimensionRow td:nth-child(2) {
+    padding-right: 5px;
+    border-right-color: rgb(255, 225, 235);
+    border-right-style: double;
+}
+
+.summaryRowDragOver {
+    border-top-style: solid;
+    border-top-width: 2px;
+    border-top-color: #2b669a;
+}
+
+.summaryDimensionCell span:last-child {
+    opacity: 0;
+}
+
+.summaryDimensionRow:hover .summaryDimensionCell span:last-child {
+    opacity: .9;
 }
 
 /**** Claim panel ****/

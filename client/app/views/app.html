@@ -32,8 +32,7 @@
     </div>
 
     <!-- Notifications -->
-    <div data-bind="module: {name: 'app/viewModels/notifierVM', template: 'app/views/notifier'}"
-         class="inline" style="width: 50%"></div>
+    <div data-bind="component: 'notifier-component'"></div>
 </div>
 
 <div style="display: inline-flex; width: 100%; height: 90%; vertical-align: top; white-space: nowrap">
@@ -117,10 +116,12 @@
                     <button type="button" class="btn btn-default btn-sm"
                             data-bind="click: onClaimsListViewClick">
                         <span class="fa fa-list"></span>
+                        <span>Claims</span>
                     </button>
                     <button type="button" class="btn btn-default btn-sm"
                             data-bind="click: onClaimsSummaryViewClick">
-                        <span class="fa fa-star"></span>
+                        <span class="fa fa-tasks"></span>
+                        <span>Task summary</span>
                     </button>
                 </div>
             </div>
@@ -138,8 +139,13 @@
             </div>
             <div class="clear bottomMargin"></div>
 
-            <!-- View -->
-            <div data-bind="template: { name: claimsListTmpl}"></div>
+            <!-- Claims list -->
+            <div data-bind="component: 'claims-list-component',
+                            visible  : showClaimsList"></div>
+
+            <!-- Summary -->
+            <div data-bind="component: 'summary-component',
+                            visible  : showSummary"></div>
         </div>
 
         <div id="gridPanelCollapsedContent" class="collapsedcontainer gridPanelCollapsedContent"
@@ -186,8 +192,11 @@
                 ko.amdTemplateEngine.defaultSuffix = ".tmpl.html";
 
                 // Register components
-                ko.components.register('contact-component', {require: 'app/components/contact/contactComponent'});
+                ko.components.register('contact-component',     {require: 'app/components/contact/contactComponent'});
                 ko.components.register('file-upload-component', {require: 'app/components/fileUpload/fileUploadComponent'});
+                ko.components.register('summary-component',     {require: 'app/components/summary/summaryVM'});
+                ko.components.register('claims-list-component', {require: 'app/components/claimsList/claimsListVM'});
+                ko.components.register('notifier-component',     {require: 'app/components/notifier/notifierVM'});
 
                 // Knockout bindings init
                 ko.applyBindings(new AppVM());

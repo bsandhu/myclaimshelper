@@ -1,22 +1,17 @@
-define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEntry', 'app/utils/events', 'app/utils/router'],
-    function ($, ko, KOMap, amplify, Claim, ClaimEntry, Events, Router) {
+define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEntry', 'model/states', 'app/utils/events',
+        'app/utils/router', 'app/utils/dateUtils', 'app/utils/ajaxUtils'],
+    function ($, ko, KOMap, amplify, Claim, ClaimEntry, States, Events, Router, DateUtils, AjaxUtils) {
         'use strict';
 
         function AppVM() {
             console.log('Init AppVM');
             this.gridNavDelay = 100;
-            this.claimsListTmpl = ko.observable('app/views/claimsSummary');
+            this.DateUtils = DateUtils;
 
-            // Summary
-            this.summaryDimension = ko.observable();
-            this.summaryDimensionCounter = ko.observable();
+            this.showSummary = ko.observable(true);
+            this.showClaimsList = ko.observable(false);
 
             // Model
-            this.claims = ko.observableArray([]);
-            this.claimEntries = ko.observableArray([]);
-
-            this.searchResults = ko.observableArray([]);
-            this.searchText = ko.observable('');
             this.stateChoice = ko.observable();
             this.states = [
                 {name: 'All', query: '{}'},
@@ -28,7 +23,6 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
             // View state
             this.hideSearchPanelCollapsedLabel();
             this.setupEvListeners();
-            this.setupSearchListeners();
         }
 
         AppVM.prototype.startRouter = function () {
@@ -36,21 +30,23 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
             Router.start();
         };
 
-        AppVM.prototype.onClaimSelect = function (claim) {
-            Router.routeToClaim(claim._id());
-        };
-
         AppVM.prototype.onHelpClick = function (claim) {
             window.open('/help/help.html', 'Agent help');
         };
 
         AppVM.prototype.onClaimsListViewClick = function () {
-            this.claimsListTmpl('app/views/claimsList');
+            this.showClaimsList(true);
+            this.showSummary(false);
         };
 
         AppVM.prototype.onClaimsSummaryViewClick = function () {
-            this.claimsListTmpl('app/views/claimsSummary');
+            this.showClaimsList(false);
+            this.showSummary(true);
         };
+
+        /*************************************************/
+        /* Search                                        */
+        /*************************************************/
 
         AppVM.prototype.onStateSelect = function () {
             var _this = this;
@@ -59,41 +55,6 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
                     console.log(selectedOption[0].query);
                     _this.searchClaims(selectedOption[0].query);
                 });
-        };
-
-        AppVM.prototype.onSearchClear = function () {
-            var temp = [];
-            $.each(this.claims(), function (index, claim) {
-                temp.push(claim);
-            });
-            this.searchResults(temp);
-            this.searchText('');
-        };
-
-        AppVM.prototype.setupSearchListeners = function () {
-            this.searchText.subscribe(onSearchTxtUpdate);
-            var _this = this;
-
-            function onSearchTxtUpdate(txt) {
-                var localMatches = [];
-                console.log('Search... ' + txt);
-                if (txt.length === 0) {
-                    _this.onSearchClear();
-                    return;
-                }
-                if (txt.length < 3) {
-                    return;
-                }
-                $.each(_this.claims(),
-                    function filterBySearchText(index, claim) {
-                        var desc = KOMap.toJSON(claim) || '';
-                        if (desc.toUpperCase().search(_this.searchText().toUpperCase()) >= 0) {
-                            localMatches.push(claim);
-                        }
-                    }
-                );
-                _this.searchResults(localMatches);
-            }
         };
 
         /*************************************************/
@@ -133,11 +94,6 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
             this.expandGridPanel();
             this.collapseClaimPanel();
             this.collapseClaimEntryPanel();
-
-            this.onSummaryDimensionSelect();
-            this.summaryDimension('entryDate');
-//            this.loadClaims();
-//            this.onStateSelect();
         };
 
         AppVM.prototype.transitionToClaimEntry = function () {
@@ -151,7 +107,6 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
             this.collapseClaimEntryPanel();
             this.expandClaimPanel();
         };
-
 
         AppVM.prototype.onAddNewClaim = function () {
             Router.routeToNewClaim();
@@ -254,101 +209,6 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
         AppVM.prototype.collapseClaimEntryPanel = function () {
             $("#claimEntryPanel").velocity({ width: '0%' }, {duration: this.gridNavDelay}, 'ease-in-out');
             $("#claimEntryPanelContent").velocity("fadeOut", { duration: this.gridNavDelay });
-        };
-
-        /*************************************************/
-        /* Server calls                                  */
-        /*************************************************/
-
-        AppVM.prototype.loadClaims = function () {
-            var _this = this;
-            $.get('/claim')
-                .done(function (resp) {
-                    var data = resp.data;
-                    console.log('Loaded Claims ' + JSON.stringify(data).substring(1, 25) + '...');
-
-                    var tempArray = [];
-                    $.each(data, function (index, claim) {
-                        var koClaim = KOMap.fromJS(claim, {}, new Claim());
-                        tempArray.push(koClaim);
-                    });
-                    _this.claims(tempArray);
-                    _this.searchResults(tempArray);
-                })
-                .fail(function () {
-                    console.log('Fail');
-                });
-        };
-
-        AppVM.prototype.searchClaims = function (query) {
-            console.log('Searching for claims: ' + query);
-            var _this = this;
-            $("#notifier-container").hide();
-
-            $.getJSON('claim/search/' + query)
-                .done(function (res) {
-                    var data = res.data;
-                    var tempArray = [];
-                    console.log(JSON.stringify(data));
-
-                    if (data[0] != 'N') {
-                        $.each(data, function (index, claim) {
-                            var koClaim = KOMap.fromJS(claim, {}, new Claim());
-                            tempArray.push(koClaim);
-                        });
-                        amplify.publish(Events.SUCCESS_NOTIFICATION, {msg: 'Found Claims'});
-                    }
-                    else {
-                        amplify.publish(Events.FAILURE_NOTIFICATION, {msg: 'No Claims Found'});
-                    }
-                    _this.claims(tempArray);
-                    _this.searchResults(tempArray);
-
-                })
-                .fail(function () {
-                    console.log('Problem with DB query');
-                    amplify.publish(Events.FAILURE_NOTIFICATION, {msg: 'Problem with DB'});
-                });
-        };
-
-        AppVM.prototype.searchClaimEntries = function (query) {
-            console.log('Searching for claim entries: ' + query);
-            var _this = this;
-
-            $.getJSON('claimEntry/search/' + query)
-                .done(function (res) {
-                    var data = res.data;
-                    var tempArray = [];
-                    console.log(JSON.stringify(data));
-                    $.each(data, function (index, claimEntry) {
-                        var koClaim = KOMap.fromJS(claimEntry, {}, new ClaimEntry());
-                        tempArray.push(koClaim);
-                    });
-                    _this.claimEntries(tempArray);
-                });
-        };
-
-        AppVM.prototype.onSummaryDimensionSelect = function(){
-            this.summaryDimension.subscribe(function(val){
-                console.log('summary dimension changed ' + val);
-                this.searchClaimEntries("{}");
-            }, this);
-        };
-
-        AppVM.prototype.valueChange = function(index){
-            console.log('Value change on index: ' + index + ', dimension: ' + this.summaryDimension());
-            if (index === 0) {
-                return false;
-            }
-            var tempArray = this.claimEntries();
-            return tempArray[index][this.summaryDimension()] !== tempArray[index - 1][this.summaryDimension()];
-        };
-
-        AppVM.prototype.niceSummaryDimensionLabel = function(dimension){
-            var map = {'entryDate' : 'Entered on',
-                       'dueDate'   : 'Due on',
-                       'status'    : 'Status'};
-            return dimension in map ? map[dimension] : dimension;
         };
 
         return AppVM;
