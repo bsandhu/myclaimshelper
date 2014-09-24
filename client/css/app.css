@@ -1,5 +1,12 @@
-html { height: 100% }
-body { height: 100%; margin: 0; padding: 0 }
+html {
+    height: 100%
+}
+
+body {
+    height: 100%;
+    margin: 0;
+    padding: 0
+}
 
 .body {
     font-family: 'Open Sans', sans-serif;
@@ -215,7 +222,7 @@ div {
 }
 
 .toggleButton:HOVER {
-    color: white    ;
+    color: white;
 }
 
 .searchPanel {
@@ -248,7 +255,8 @@ div {
     background-color: #44515E;
     border-top-color: rgb(80, 98, 116);
     border-top-style: solid;
-    border-top-width: 1px;}
+    border-top-width: 1px;
+}
 
 .searchPanelItem:HOVER {
     background-color: #35404B;
@@ -261,7 +269,6 @@ div {
     transition-property: all;
     transition-timing-function: ease;
 }
-
 
 #searchclear {
     position: absolute;
@@ -291,6 +298,48 @@ div {
 .gridPanelCollapsedContent {
     background-color: #4C6887;
     padding: 0px;
+}
+
+/**** Claims summary panel ****/
+
+.summaryDimensionGroupHeader {
+    margin: 0;
+    line-height: 31px;
+    padding: 0 0 0 10px;
+    color: #045FB4;
+}
+
+.summaryDimensionDrag {
+    cursor: move;
+    opacity: 0;
+    color: #999;
+}
+
+.summaryDimensionRow:hover td:first-child {
+    opacity: .9;
+    transition-duration: 0.25s;
+    transition-property: opacity;
+    transition-timing-function: ease;
+}
+
+.summaryDimensionRow td:nth-child(2) {
+    padding-right: 5px;
+    border-right-color: rgb(255, 225, 235);
+    border-right-style: double;
+}
+
+.summaryRowDragOver {
+    border-top-style: solid;
+    border-top-width: 2px;
+    border-top-color: #2b669a;
+}
+
+.summaryDimensionCell span:last-child {
+    opacity: 0;
+}
+
+.summaryDimensionRow:hover .summaryDimensionCell span:last-child {
+    opacity: .9;
 }
 
 /**** Claim panel ****/

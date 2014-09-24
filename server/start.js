@@ -36,15 +36,16 @@ function setupClaimsServiceRoutes() {
     server.get('/claim/:id', claimsService.getClaim);
     server.get('/claim/:id/entries', claimsService.getAllEntriesForClaim);
     server.post('/claim', claimsService.saveOrUpdateClaim);
+    server.get('/claim/search/:search', claimsService.searchClaims);
 
     server.get('/claimEntry/:id', claimsService.getClaimEntry);
     server.post('/claimEntry', claimsService.saveOrUpdateClaimEntry);
     server.post('/claimEntry/modify', claimsService.modifyClaimEntry);
+    server.get('/claimEntry/search/:search', claimsService.searchClaimEntries);
 
     server.post('/upload', uploadService.uploadFile);
     server.get('/download', uploadService.downloadFile);
 
-    server.get('/claim/search/:search', claimsService.searchClaims);
 }
 
 function setupContactServiceRoutes() {

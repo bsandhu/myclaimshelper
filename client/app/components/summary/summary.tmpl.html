@@ -1,0 +1,90 @@
+<div class="panel panel-default">
+    <div class="panel-heading">
+
+        <form class="form-inline" role="form">
+            <div class="form-group">
+                <!-- Group By -->
+                <span>Arrange by</span>
+                <select class="form-control input-sm"
+                        data-bind="value: summaryDimension,
+                                   options: summaryDimensions,
+                                   optionsText: 'description'"></select>
+            </div>
+            <div class="form-group">
+                <!-- Time range -->
+                <div class="btn-group">
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                        <span class="fa fa-clock-o"></span>
+                        <span>Time Range</span>
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" role="menu">
+                        <li>
+                        <li><a href="#">Next 2 days</a></li>
+                        <li><a href="#">Next 3 days</a></li>
+                        <li><a href="#">Next 5 days</a></li>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="panel-body">
+
+        <div class="panel panel-default">
+            <table class="table table-hover table-condensed summaryTable">
+                <thead>
+                <th>&nbsp;</th>
+                <th>&nbsp;</th>
+                <th>Claim</th>
+                <th>Summary</th>
+                <th>Entry Date</th>
+                <th>Due Date</th>
+                <th>State</th>
+                </thead>
+
+                <tbody data-bind="foreach : {data: claimEntries, as: 'entry'}">
+                <!--TODO <tr data-bind="click: $parent.onClaimSelect">-->
+
+                <tr data-bind="if: $parent.valueChange($index())">
+                    <td colspan="7" class="summaryDimensionGroupHeader">
+                        <span class="fa fa-angle-double-right"></span>
+                        <span data-bind="text: $parent.summaryDimension().description"></span>
+                    </td>
+                </tr>
+
+                <tr draggable="true" class="summaryDimensionRow"
+                    data-bind="event: {dragend  : $parent.onSummaryRowDragEnd.bind($parent),
+                                       dragenter: $parent.onSummaryRowDragEnter.bind($parent),
+                                       dragover:  $parent.onSummaryRowDragOver.bind($parent),
+                                       dragleave: $parent.onSummaryRowDragLeave.bind($parent)},
+                               attr: {'data-entryId': entry._id},
+                               click: $parent.onClaimEntrySelect">
+                    <td class="summaryDimensionDrag" title="Click and Drag to reorder">
+                        <span class="fa fa-ellipsis-v"></span>
+                    </td>
+                    <td>
+                        <input type="checkbox">
+                    </td>
+                    <td>
+                        <span data-bind="text: entry.claimId"><span
+                    </td>
+                    <td data-bind="text: entry.summary"></td>
+                    <td class="summaryDimensionCell">
+                        <span data-bind="text: $parent.DateUtils.niceDate(entry.entryDate())"></span>
+                        <span class="fa fa-pencil"></span>
+                    </td>
+                    <td class="summaryDimensionCell">
+                        <span data-bind="text: $parent.DateUtils.niceDate(entry.dueDate ? entry.dueDate() : '')"></span>
+                        <span class="fa fa-pencil"></span>
+                    </td>
+                    <td data-bind="text: entry.state"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+    <!-- End panel bosy -->
+</div>

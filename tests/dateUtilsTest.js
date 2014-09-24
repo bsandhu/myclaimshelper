@@ -11,15 +11,15 @@ describe('DateUtils', function () {
         // JS month is 0 indexed
         assert.equal(toStr(new Date(2014, 8, 22)), '09/22/2014 00:00');
         assert.equal(toStr(new Date(2014, 8, 22)), '09/22/2014 00:00');
-        assert.equal(toStr(new Date(2014, 0, 1)),  '01/01/2014 00:00');
+        assert.equal(toStr(new Date(2014, 0, 1)), '01/01/2014 00:00');
         assert.equal(toStr(new Date(2014, 11, 1)), '12/01/2014 00:00');
 
         assert.equal(toStr(new Date(2014, 8, 22, 10, 10)), '09/22/2014 10:10');
         assert.equal(toStr(new Date(2014, 8, 22, 15, 50)), '09/22/2014 15:50');
-        assert.equal(toStr(new Date(2014, 0, 1, 12, 32)),  '01/01/2014 12:32');
+        assert.equal(toStr(new Date(2014, 0, 1, 12, 32)), '01/01/2014 12:32');
     });
 
-    it ('Must convert FROM DatePicker toStr', function(){
+    it('Must convert FROM DatePicker toStr', function () {
         // JS month is 0 indexed
         assert.equal(toDate('09/22/2014 00:00').getTime(), new Date(2014, 8, 22, 0, 0).getTime());
         assert.equal(toDate('09/22/2014 00:00').getTime(), new Date(2014, 8, 22, 0, 0).getTime());
@@ -27,7 +27,7 @@ describe('DateUtils', function () {
         assert.equal(toDate('09/22/2014 10:10').getTime(), new Date(2014, 8, 22, 10, 10).getTime());
     });
 
-    it ('Must convert FROM DatePicker toStr', function() {
+    it('Must convert FROM DatePicker toStr', function () {
         dateUtils.enableJSONDateHandling();
 
         var obj = JSON.parse("{\"dueDate\": 1391230800000}");
@@ -35,5 +35,28 @@ describe('DateUtils', function () {
         assert.equal(obj.dueDate.getMonth(), 1);
         assert.equal(obj.dueDate.getDate(), 1);
         assert.equal(obj.dueDate.getFullYear(), 2014);
+
+        obj = JSON.parse("{\"dateReceived\": 1391230800000}");
+        assert.ok(obj.dateReceived instanceof Date);
+        assert.equal(obj.dateReceived.getMonth(), 1);
+        assert.equal(obj.dateReceived.getDate(), 1);
+        assert.equal(obj.dateReceived.getFullYear(), 2014);
     });
+
+    it('Make nice date', function () {
+        assert.equal(dateUtils.niceDate(new Date(2014, 0, 2, 10, 10)), 'Jan 2  10:10');
+        assert.equal(dateUtils.niceDate(new Date(2014, 8, 22, 10, 10)), 'Sep 22  10:10');
+        assert.equal(dateUtils.niceDate(undefined), 'None');
+        assert.equal(dateUtils.niceDate(null), 'None');
+    });
+
+    it('isEqualIgnoringTime', function () {
+        assert.ok(dateUtils.isEqualIgnoringTime('', null));
+        assert.ok(dateUtils.isEqualIgnoringTime(undefined, null));
+        assert.ok(!dateUtils.isEqualIgnoringTime(undefined, ' '));
+
+        assert.ok(dateUtils.isEqualIgnoringTime(new Date(), new Date()));
+        assert.ok(dateUtils.isEqualIgnoringTime(new Date(2014, 7, 21, 22, 07), new Date(2014, 7, 21, 22, 08)));
+    });
+
 });

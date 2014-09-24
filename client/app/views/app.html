@@ -32,8 +32,7 @@
     </div>
 
     <!-- Notifications -->
-    <div data-bind="module: {name: 'app/viewModels/notifierVM', template: 'app/views/notifier'}"
-         class="inline" style="width: 50%"></div>
+    <div data-bind="component: 'notifier-component'"></div>
 </div>
 
 <div style="display: inline-flex; width: 100%; height: 90%; vertical-align: top; white-space: nowrap">
@@ -111,6 +110,22 @@
 
         <div id="gridPanelContent" class="gridPanelContent">
 
+            <!-- View selection -->
+            <div class="alignLeft">
+                <div class="btn-group">
+                    <button type="button" class="btn btn-default btn-sm"
+                            data-bind="click: onClaimsListViewClick">
+                        <span class="fa fa-list"></span>
+                        <span>Claims</span>
+                    </button>
+                    <button type="button" class="btn btn-default btn-sm"
+                            data-bind="click: onClaimsSummaryViewClick">
+                        <span class="fa fa-tasks"></span>
+                        <span>Task summary</span>
+                    </button>
+                </div>
+            </div>
+
             <!-- Search -->
             <div class="wider alignRight">
                 <div class="input-group alignRight">
@@ -124,46 +139,27 @@
             </div>
             <div class="clear bottomMargin"></div>
 
-            <div class="panel panel-default">
-                <table class="table table-hover table-condensed">
-                    <thead>
-                    <th>Id</th>
-                    <th>Description</th>
-                    <th>Insurance Company</th>
-                    <th>Insurance Co. File No.</th>
-                    <th>Date Received</th>
-                    <th>Entry Date</th>
-                    <th>Due Date</th>
-                    <th>State</th>
-                    </thead>
+            <!-- Claims list Component -->
+            <div data-bind="component: 'claims-list-component',
+                            visible  : showClaimsList"></div>
 
-                    <tbody data-bind="foreach : {data: searchResults, as: 'claim'}">
-                    <tr data-bind="click: $parent.onClaimSelect">
-                        <td data-bind="text: claim._id"></td>
-                        <td data-bind="text: claim.description"></td>
-                        <td data-bind="text: claim.insuranceCompanyName"></td>
-                        <td data-bind="text: claim.insuranceCompanyFileNum"></td>
-                        <td data-bind="text: claim.dateReceived"></td>
-                        <td data-bind="text: claim.entryDate"></td>
-                        <td data-bind="text: claim.dateDue"></td>
-                        <td data-bind="text: claim.state"></td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
+            <!-- Summary Component -->
+            <div data-bind="component: 'summary-component',
+                            visible  : showSummary"></div>
         </div>
 
         <div id="gridPanelCollapsedContent" class="collapsedcontainer gridPanelCollapsedContent"
              data-bind="click: toggleGridPanel">
-            <div class="collapsedcontainerLabel">Search Results</div>
+            <div class="collapsedcontainerLabel">Dashboard</div>
         </div>
     </div>
 
     <!-- **** Claim module **** -->
     <div id="claimPanel" class="slidingContainer claimPanel" style="width: 0%;">
         <div id="claimPanelContent" class="claimPanelContent">
-            <div data-bind="module: {name: 'app/viewModels/claimVM', template: 'app/views/claim',
-                                         afterRender: startRouter}"></div>
+            <div data-bind="module: {name: 'app/viewModels/claimVM',
+                                     template: 'app/views/claim',
+                                     afterRender: startRouter}"></div>
         </div>
     </div>
 
@@ -197,8 +193,11 @@
                 ko.amdTemplateEngine.defaultSuffix = ".tmpl.html";
 
                 // Register components
-                ko.components.register('contact-component', {require: 'app/components/contact/contactComponent'});
+                ko.components.register('contact-component',     {require: 'app/components/contact/contactComponent'});
                 ko.components.register('file-upload-component', {require: 'app/components/fileUpload/fileUploadComponent'});
+                ko.components.register('summary-component',     {require: 'app/components/summary/summaryVM'});
+                ko.components.register('claims-list-component', {require: 'app/components/claimsList/claimsListVM'});
+                ko.components.register('notifier-component',     {require: 'app/components/notifier/notifierVM'});
 
                 // Knockout bindings init
                 ko.applyBindings(new AppVM());

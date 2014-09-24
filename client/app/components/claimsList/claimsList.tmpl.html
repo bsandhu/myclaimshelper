@@ -1,0 +1,29 @@
+<!-- Note: Div container is managed by parent -->
+
+<div class="panel panel-default">
+    <table class="table table-hover table-condensed">
+        <thead>
+        <th>Id</th>
+        <th>Description</th>
+        <th>Insurance Company</th>
+        <th>Insurance Co. File No.</th>
+        <th>Date Received</th>
+        <th>Entry Date</th>
+        <th>Due Date</th>
+        <th>State</th>
+        </thead>
+
+        <tbody data-bind="foreach : {data: searchResults, as: 'claim'}">
+        <tr data-bind="click: $parent.onClaimSelect">
+            <td data-bind="text: claim._id"></td>
+            <td data-bind="text: claim.description"></td>
+            <td data-bind="text: claim.insuranceCompanyName"></td>
+            <td data-bind="text: claim.insuranceCompanyFileNum"></td>
+            <td data-bind="text: claim.dateReceived"></td>
+            <td data-bind="text: claim.entryDate"></td>
+            <td data-bind="text: claim.dateDue"></td>
+            <td data-bind="text: claim.state"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>

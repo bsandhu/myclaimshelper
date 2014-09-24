@@ -1,5 +1,5 @@
 define(['Path', 'amplify', 'app/utils/events'],
-    function(Path, amplify, Events){
+function (Path, amplify, Events) {
     'use strict';
 
     /**
@@ -9,49 +9,49 @@ define(['Path', 'amplify', 'app/utils/events'],
      * The hash bang url(s) trigger Amplify events.
      * These events are picked up and handled by the appropriate ViewModels
      */
-    function Router(){
+    function Router() {
         console.log('Init Router');
     }
 
-    Router.prototype.setupRoutes = function(){
+    Router.prototype.setupRoutes = function () {
         console.log('Setup Routes');
 
         Path.root("#/home");
 
-        Path.rescue(function(){
+        Path.rescue(function () {
             console.error('Route not found');
         });
 
-        Path.map("#/home").to(function(){
+        Path.map("#/home").to(function () {
             amplify.publish(Events.SHOW_CLAIMS_GRID);
         });
 
-        Path.map("#/claim").to(function(){
+        Path.map("#/claim").to(function () {
             amplify.publish(Events.NEW_CLAIM);
         });
 
-        Path.map("#/claim/:claimId").to(function(){
+        Path.map("#/claim/:claimId").to(function () {
             amplify.publish(Events.SHOW_CLAIM, {claimId: this.params.claimId});
         });
 
-        Path.map("#/claimEntry/new/:entryType").to(function(){
+        Path.map("#/claimEntry/new/:entryType").to(function () {
             amplify.publish(Events.NEW_CLAIM_ENTRY, {entryType: this.params.entryType});
         });
 
-        Path.map("#/claimEntry/:claimEntryId").to(function(){
-            amplify.publish(Events.SHOW_CLAIM_ENTRY, {claimEntryId: this.params.claimEntryId});
+        Path.map("#/claimEntry/:claimId/:claimEntryId").to(function () {
+            amplify.publish(Events.SHOW_CLAIM_ENTRY, {claimId: this.params.claimId, claimEntryId: this.params.claimEntryId});
         });
     };
 
-    Router.prototype.routeToHome = function(){
+    Router.prototype.routeToHome = function () {
         window.location.hash = '#/home';
     };
 
-    Router.prototype.routeToNewClaim = function(){
+    Router.prototype.routeToNewClaim = function () {
         window.location.hash = '#/claim';
     };
 
-    Router.prototype.routeToClaim = function(claimId){
+    Router.prototype.routeToClaim = function (claimId) {
         console.log('Navigating to claim ' + claimId);
         if (claimId) {
             window.location.hash = '#/claim/' + claimId;
@@ -60,20 +60,24 @@ define(['Path', 'amplify', 'app/utils/events'],
         }
     };
 
-    Router.prototype.routeToNewClaimEntry = function(){
+    /*
+     * Assuming `other` as the EntryType
+     */
+    Router.prototype.routeToNewClaimEntry = function () {
+        console.log('Navigating to New claim entry');
         window.location.hash = '#/claimEntry/new/other';
     };
 
-    Router.prototype.routeToClaimEntry = function(claimEntryId){
-        console.log('Navigating to claim entry ' + claimEntryId);
+    Router.prototype.routeToClaimEntry = function (claimId, claimEntryId) {
+        console.log('Navigating to claim entry ' + claimId + ',' + claimEntryId);
         if (claimEntryId) {
-            window.location.hash = '#/claimEntry/' + claimEntryId;
+            window.location.hash = '#/claimEntry/' + claimId + '/' + claimEntryId;
         } else {
             this.routeToNewClaimEntry();
         }
     };
 
-    Router.prototype.start = function(){
+    Router.prototype.start = function () {
         console.log('Listen for Routes');
         this.setupRoutes();
         Path.listen();

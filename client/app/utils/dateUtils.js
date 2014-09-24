@@ -58,21 +58,51 @@ define([],
             // Override incoming JSON Date parsing
             var nativeJSONParse = JSON.parse;
             JSON.parse = function (data) {
-                console.log('Parsing ' + data);
-
                 return nativeJSONParse(data, function dateHandle(key, val) {
-                    return endWithDate(key) ? new Date(Number(val)) : val;
+                    return isDateAttr(key) ? new Date(Number(val)) : val;
                 });
-                function endWithDate(key) {
-                    return key.substring(key.length - 4, key.length).toLowerCase() === 'date';
+                function isDateAttr(key) {
+                    return key.toLowerCase().search('date') >= 0;
                 }
             };
         }
 
+        function niceDate(date) {
+            if (date === undefined || date === null || date === '') {
+                return 'None';
+            }
+            if (!(date instanceof Date)) {
+                return date;
+            }
+            var monthNames = [ "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" ];
+            var month = monthNames[date.getMonth()];
+            var day = date.getDate();
+            var year = date.getFullYear() === new Date().getFullYear() ? '' : date.getFullYear();
+            var time = date.getHours() + ':' + prefixZero(date.getMinutes());
+            return month + ' ' + day + ' ' + year + ' ' + time;
+        }
+
+        function isEqualIgnoringTime(date1, date2) {
+            // Empty values are equal
+            if ((date1 === null || date1 === undefined || date1 === '') &&
+                (date2 === null || date2 === undefined || date2 === '')) {
+                return true;
+            }
+            // Dates ignore time component
+            if ((date1 instanceof Date) && (date2 instanceof Date)){
+                return date1.getMonth() === date2.getMonth() &&
+                       date1.getDate() === date2.getDate() &&
+                       date1.getFullYear() === date2.getFullYear();
+            }
+            return date1 === date2;
+        }
+
         return {
+            'niceDate'                : niceDate,
             'toDatetimePickerFormat'  : toDatetimePickerFormat,
             'fromDatetimePickerFormat': fromDatetimePickerFormat,
             'enableJSONDateHandling'  : enableJSONDateHandling,
+            'isEqualIgnoringTime'    : isEqualIgnoringTime,
             'DATETIME_PICKER_FORMAT'  : 'm/d/Y H:i'
         };
     });

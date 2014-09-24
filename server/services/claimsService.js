@@ -112,7 +112,7 @@ function claimEntriesCollection(db) {
 }
 
 /********************************************************/
-/* Read API                                             */
+/* Claims - Read API                                    */
 /********************************************************/
 
 function getClaim(req, res) {
@@ -153,36 +153,6 @@ function getClaim(req, res) {
         });
 }
 
-function getClaimEntry(req, res) {
-    assert.ok(req.params.id, 'Expecting ClaimEntryId as a parameter');
-    var entityId = req.params.id;
-
-    mongoUtils.getEntityById(entityId, mongoUtils.CLAIM_ENTRIES_COL_NAME)
-        .always(function (err, results) {
-            sendResponse(res, err, results);
-        });
-}
-
-function getAllEntriesForClaim(req, res) {
-    assert.ok(req.params.id, 'Expecting ClaimId as a parameter');
-    var claimId = req.params.id;
-    console.log('Get all entries for Claim: ' + claimId);
-
-    mongoUtils.run(function (db) {
-        claimEntriesCollection(db).find({'claimId': claimId}).toArray(onResults);
-
-        function onResults(err, items) {
-            var modelObjs = _.map(items, convertToModel);
-            sendResponse(res, err, modelObjs);
-            db.close();
-        }
-
-        function convertToModel(item) {
-            return _.extend(new ClaimEntry(), item);
-        }
-    });
-}
-
 function getAllClaims(req, res) {
     console.log('Get all Claims');
 
@@ -215,9 +185,57 @@ function searchClaims(req, res) {
                 ? 'No claims match this search ' + search
                 : _.extend(new Claim(), items);
             sendResponse(res, err, resData);
+            db.close();
         }
     });
 }
+
+/********************************************************/
+/* ClaimEntry - Read API                                */
+/********************************************************/
+
+function getClaimEntry(req, res) {
+    assert.ok(req.params.id, 'Expecting ClaimEntryId as a parameter');
+    var entityId = req.params.id;
+
+    req.params.search = JSON.stringify({'_id': entityId});
+    searchClaimEntries(req, res);
+}
+
+function getAllEntriesForClaim(req, res) {
+    assert.ok(req.params.id, 'Expecting ClaimId as a parameter');
+    var claimId = req.params.id;
+    console.log('Get all entries for Claim: ' + claimId);
+
+    req.params.search = JSON.stringify({'claimId': claimId});
+    searchClaimEntries(req, res);
+}
+
+function searchClaimEntries(req, res) {
+    assert.ok(req.params.search, 'Expecting Search as a parameter');
+    var search = req.params.search;
+    var query = JSON.parse(search);
+
+    console.log('Searching for ClaimEntries with Query: ' + search );
+    mongoUtils.run(function (db) {
+        claimEntriesCollection(db)
+            .find(query)
+            .toArray(onResults);
+
+        function onResults(err, items) {
+            var modelObjs = _.map(items, convertToModel);
+            sendResponse(res, err, modelObjs);
+            db.close();
+        }
+        function convertToModel(item) {
+            return _.extend(new ClaimEntry(), item);
+        }
+    });
+}
+
+/********************************************************/
+/* Utils                                                */
+/********************************************************/
 
 function sendResponse(res, err, jsonData) {
     if (err) {
@@ -240,3 +258,4 @@ exports.getAllClaims = getAllClaims;
 exports.getAllEntriesForClaim = getAllEntriesForClaim;
 exports.deleteClaim = deleteClaim;
 exports.searchClaims = searchClaims;
+exports.searchClaimEntries = searchClaimEntries;
