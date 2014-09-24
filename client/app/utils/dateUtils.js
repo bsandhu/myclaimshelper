@@ -58,8 +58,6 @@ define([],
             // Override incoming JSON Date parsing
             var nativeJSONParse = JSON.parse;
             JSON.parse = function (data) {
-                console.log('Parsing ' + data);
-
                 return nativeJSONParse(data, function dateHandle(key, val) {
                     return endWithDate(key) ? new Date(Number(val)) : val;
                 });
@@ -70,6 +68,9 @@ define([],
         }
 
         function niceDate(date) {
+            if (date === undefined || date === null) {
+                return '';
+            }
             if (!(date instanceof Date)) {
                 return date;
             }
