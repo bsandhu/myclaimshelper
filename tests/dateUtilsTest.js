@@ -53,4 +53,9 @@ describe('DateUtils', function () {
         assert.ok(today.toLowerCase().search('today') >= 0);
     });
 
+    it('IsYesterdayOrBefore', function () {
+        assert.equal(dateUtils.isYesterdayOrBefore(new Date()), false);
+        assert.equal(dateUtils.isYesterdayOrBefore(new Date(new Date().getTime() - dateUtils.MILLIS_IN_A_DAY)), true);
+    });
+
 });

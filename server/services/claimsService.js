@@ -212,14 +212,13 @@ function getAllEntriesForClaim(req, res) {
 }
 
 function searchClaimEntries(req, res) {
-    assert.ok(req.params.search, 'Expecting Search as a parameter');
-    var search = req.params.search;
-    var query = JSON.parse(search);
+    var query = req.body.query;
+    var options = req.body.options;
 
-    console.log('Searching for ClaimEntries with Query: ' + search );
+    console.log('Searching for ClaimEntries. Req: ' + JSON.stringify(req.body));
     mongoUtils.run(function (db) {
         claimEntriesCollection(db)
-            .find(query)
+            .find(query, options)
             .toArray(onResults);
 
         function onResults(err, items) {

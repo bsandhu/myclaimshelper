@@ -54,6 +54,7 @@ div {
 
 .narrower {
     width: 50px;
+    min-width: 50px;
 }
 
 .narrow {
@@ -78,16 +79,16 @@ div {
 
 /**** Margins and borders ****/
 
-.topMargin10 {
-    margin-top: 10px;
+.topMargin {
+    margin-top: 2px;
 }
 
 .topMargin5 {
     margin-top: 5px;
 }
 
-.topMargin {
-    margin-top: 2px;
+.topMargin1pc {
+    margin-top: 10px;
 }
 
 .bottomMargin {
@@ -106,16 +107,20 @@ div {
     margin-left: 5px;
 }
 
+.leftMargin1pc {
+    margin-left: 1%;
+}
+
+.leftMargin2pc {
+    margin-left: 2%;
+}
+
 .rightMargin {
     margin-right: 2px;
 }
 
 .rightMargin5 {
     margin-right: 5px;
-}
-
-.rightMargin10 {
-    margin-right: 10px;
 }
 
 .paddingRight5 {
@@ -305,6 +310,10 @@ div {
 }
 
 /**** Claims summary panel ****/
+
+.summaryDimensionFilter {
+    background-color: whitesmoke;
+}
 
 .summaryDimensionGroupHeader {
     margin: 0;
