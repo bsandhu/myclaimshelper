@@ -2,7 +2,8 @@
     "params":{
         "subject": "the subject claim id:123",
         "body-plain": "the body\r\n#tag1\r\n#tag2",
-        "attachment-count":"1"
+        "attachment-count":"1",
+        "from": "plato@nonsense.foo"
     },
     "files":{
         "attachment-1":{
