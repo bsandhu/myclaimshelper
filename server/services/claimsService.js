@@ -198,7 +198,8 @@ function getClaimEntry(req, res) {
     assert.ok(req.params.id, 'Expecting ClaimEntryId as a parameter');
     var entityId = req.params.id;
 
-    req.params.search = JSON.stringify({'_id': entityId});
+    req.body = req.body || {};
+    req.body.query = {'_id': entityId};
     searchClaimEntries(req, res);
 }
 
@@ -207,13 +208,14 @@ function getAllEntriesForClaim(req, res) {
     var claimId = req.params.id;
     console.log('Get all entries for Claim: ' + claimId);
 
-    req.params.search = JSON.stringify({'claimId': claimId});
+    req.body = req.body || {};
+    req.body.query = {'claimId': claimId};
     searchClaimEntries(req, res);
 }
 
 function searchClaimEntries(req, res) {
     var query = req.body.query;
-    var options = req.body.options;
+    var options = req.body.options || {};
 
     console.log('Searching for ClaimEntries. Req: ' + JSON.stringify(req.body));
     mongoUtils.run(function (db) {
