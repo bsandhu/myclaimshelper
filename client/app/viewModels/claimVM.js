@@ -16,6 +16,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify',
             this.sortDir = ko.observable('desc');
 
             // View state
+            this.screenHeight = ko.observable(screen.height);
             this.inEditMode = ko.observable(false);
             this.showStatusForEntryId = ko.observable();
             this.setupEvListeners();

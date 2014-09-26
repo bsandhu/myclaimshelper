@@ -219,7 +219,9 @@
 <!--List Claim Entries -->
 <!-- ************************************************ -->
 
-<div data-bind="ifnot: inEditMode" class="rightMargin topMargin5">
+<div data-bind="ifnot: inEditMode,
+                style: {height: (screenHeight() * .5)+ 'px'}"
+     class="rightMargin topMargin5 overflowY">
 
     <table style="width: 98%" class="table table-hover table-condensed" id="claimEntriesList">
         <thead>

@@ -149,6 +149,10 @@ div {
     clear: both;
 }
 
+.overflowY {
+    overflow-y: auto;
+}
+
 /**** Form elements ****/
 
 .fileDropBox {
