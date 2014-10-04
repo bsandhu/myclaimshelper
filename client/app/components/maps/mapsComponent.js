@@ -1,5 +1,5 @@
 define(['knockout', 'text!app/components/maps/mapsComponent.tmpl.html',
-        'async!https://maps.googleapis.com/maps/api/js?key=AIzaSyBB-Qincf0sNQcsu5PzZh7znG3GiB98GRU' /*+ 'callback=initialize'*/],
+        'async!https://maps.googleapis.com/maps/api/js?key=AIzaSyBB-Qincf0sNQcsu5PzZh7znG3GiB98GRU'],
 
     function(ko, viewHtml) {
         'use strict';
