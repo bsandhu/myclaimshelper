@@ -79,13 +79,13 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
         SummaryVM.prototype.setupGrouping = function () {
             this.claimEntriesGrouped = ko.computed(function () {
                 var dimensionMetaData = this.groupBy();
-                var dimension = dimensionMetaData.group;
-                var dimensionGroupingFn = dimensionMetaData.groupingFn;
+                var group = dimensionMetaData.group;
+                var groupingFn = dimensionMetaData.groupingFn;
                 var groups = {};
 
                 $.each(this.claimEntries(), function (index, entry) {
-                    var dimensionVal = entry[dimension] ? entry[dimension]() : '';
-                    var groupName = dimensionGroupingFn(dimensionVal);
+                    var groupingAttr = entry[group] ? entry[group]() : '';
+                    var groupName = groupingFn(groupingAttr, entry);
                     if (!(groupName in groups)) {
                         groups[groupName] = [];
                     }
@@ -105,22 +105,28 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
             }, this);
         };
 
-        SummaryVM.prototype.getDueDateGroupName = function (dimension) {
-            if (dimension instanceof Date) {
-                return DateUtils.isYesterdayOrBefore(dimension) ? 'Over Due' : DateUtils.niceDate(dimension, false);
+        SummaryVM.prototype.getDueDateGroupName = function (dueDate, entry) {
+            if (!(dueDate instanceof Date)) {
+                return $.trim(String(dueDate || ''));
             }
-            return $.trim(String(dimension || ''));
+
+            if (DateUtils.isYesterdayOrBefore(dueDate) &&
+                (entry.state() === States.TODO || entry.state() === States.PENDING)){
+                return 'Over Due';
+            } else {
+                return  DateUtils.niceDate(dueDate, false);
+            }
         };
 
-        SummaryVM.prototype.getEntryDateGroupName = function (dimension) {
-            if (dimension instanceof Date) {
-                return DateUtils.niceDate(dimension, false);
+        SummaryVM.prototype.getEntryDateGroupName = function (entryDate) {
+            if (entryDate instanceof Date) {
+                return DateUtils.niceDate(entryDate, false);
             }
-            return $.trim(String(dimension || ''));
+            return $.trim(String(entryDate || ''));
         };
 
-        SummaryVM.prototype.getStatusGroupName = function (dimension) {
-            return $.trim(String(dimension || ''));
+        SummaryVM.prototype.getStatusGroupName = function (status) {
+            return $.trim(String(status || ''));
         };
 
         /************************************************************/
@@ -145,7 +151,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
                 {description: States.Complete, query: States.Complete},
                 {description: States.None, query: States.None}
             ]);
-            this.statusFilter = ko.observable();
+            this.statusFilter = ko.observable(this.statusFilters()[1]);
         };
 
         SummaryVM.prototype.setupFilterVisibility = function () {
@@ -190,10 +196,8 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
 
         SummaryVM.prototype.searchClaimEntries = function () {
             var postReq = { query: {dueDate: this.dueDateFilter().query,
-                state: this.statusFilter().query},
-                options: {sort: [
-                    [this.groupBy().group, 'asc']
-                ]}};
+                            state: this.statusFilter().query},
+                            options: {sort: [[this.groupBy().group, 'asc']]}};
             console.log('Searching for claim entries: ' + postReq);
 
             AjaxUtils.post(

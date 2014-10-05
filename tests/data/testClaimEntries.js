@@ -25,7 +25,7 @@ var data = [
         "summary": "Called Mr. Madonia",
         "description": "My name is Bill Breidenbach and I am the local adjuster for Guard \n Insurance assigned to your claim by Paul Prislupsky. I can be reached anytime at 516-524- 3982. I need to complete an initial inspection of the building damages and was wondering if Tuesday afternoon would be possible? Please advise.                        Regards,         \n\nBill 516-524-3982 ",
         "attachments": [],
-        "state": "ToDo"
+        "state": "Complete"
     },
     {
         "_id": "397",
@@ -38,7 +38,7 @@ var data = [
         "summary": "Email from Dennis Madonia",
         "description": "Dennis Madonia [dmeelectricalgoptimum.net]\n\nDear Bill: Attached please find the information you requested for the accident that occurred at my facility on 7-10-14. Video Estimates Copy of police report Insurance Information: \n\nMerve Destek-Mercury Insurance-Diane Bensinger                        \nTimothy Langion-Progressive \nInsurance-Kaitlyn Korb\n\nThis is also to confirm your initial inspection on Tuesday 7/22, be advised I will be out of the office but my assistant, Eleonora Regan (516-903-8387)wi II be able to help you. Thank you for  your help.\n\nBest regards, Dennis Madonia",
         "attachments": [],
-        "state": "ToDo"
+        "state": "Complete"
     },
     {
         "_id": "398",
@@ -64,7 +64,7 @@ var data = [
         "summary": "CALLED Mercury Ins. Adj Diane Bensinger",
         "description": "CALLED Mercury Ins. Adj Diane Bensinger 908-243-1800: x60029 INDEX POLICY \n310101100038713 CLAIM # 20140045003405-63 \nSent field appraiser, received estimates and accepting Liability. PD COVERAGE IS 50,000.\n\nBoth Veh are a Total Loss   OV 5600 + Rental. Leaving about 44k covg available.\nDiane says insured estimates were sent direct to the field adjuster who inspected and has yet to provide a report. I asked that Diane call me when she gets the report to discuss. She asked it we would be subrogating and I said Guard was put on notice by the insured and are monitoring as all ests sent to Mercury the responsible carrier.\n\nNEED: Yaphank PR, Video from Pet Shop, Follow up with Mercury Ins. Adj Diane Bensinger 908-243-1800 x60029 on Thursday to see if Field Adj Report recd.\nLady from Pet shop called saying they have a thumb drive but the computer guy wants a gift cert for dinner at a local restaurant.",
         "attachments": [],
-        "state": "ToDo"
+        "state": "Complete"
     },
     {
         "_id": "400",
@@ -103,7 +103,7 @@ var data = [
         "summary": "Watch video",
         "description": "Watch video which shows vehicle traveling through stop sign without stopping and causing this accident. COPY MADE TO DISC;",
         "attachments": [],
-        "state": "ToDo"
+        "state": "Complete"
     },
     {
         "_id": "406",
@@ -116,7 +116,7 @@ var data = [
         "summary": "Email from Diane",
         "description": "DIANE: From: Diane Bensinger [mailto:DBetiryinsu ance.cornj Sent: Tue \n7/29/2014 3:50 PM To: BBreidenbach Subject: DME electrical\nHi Bill Below is the breakdown I received from Eagle Electrical work-2100 Sign- 5214 Porch-11300 Landscaping-3203 Total= 21817\n\nI do have to have it reviewed by our property dept as we used a vendor, but it seems inline. \nPlease let me know if anything was missed If you have any questions/concerns, please do not hesitate to give me a call or reply to this email. \n\nSincerely, \nDiane Bensinger \n\nClaims Specialist II \nNew Jersey Claims Department [cid:imgge001.01CFAB44.098BB3B0] P.O. Box 5919 \nBridgewater, NJ 08807-5919 (800) 987-2032, ext. 60029 4 (877) 397-5863 (fax)",
         "attachments": [],
-        "state": "ToDo"
+        "state": "Complete"
     },
     {
         "_id": "407",
@@ -129,7 +129,7 @@ var data = [
         "summary": "CALLED Diane",
         "description": "CALLED Diane, she does not have PR but would like a copy if I get it. No word from her PD \nDept. as yet.",
         "attachments": [],
-        "state": "ToDo"
+        "state": "Complete"
     },
     {
         "_id": "412",
@@ -181,7 +181,7 @@ var data = [
         "dueDate": DateUtils.daysFromNowInMillis(-5),
         "description": "CALLED Electra and thanked her for doing the right thing. I advised that Mercury is accepting \n100%. Good.",
         "attachments": [],
-        "state": "ToDo"
+        "state": "Complete"
     },
     {
         "_id": "416",
@@ -194,7 +194,7 @@ var data = [
         "summary": "DROPPED Sun/ DVD to office for Chrissy to mail.",
         "description": "",
         "attachments": [],
-        "state": "ToDo"
+        "state": "Complete"
     },
     {
         "_id": "417",
@@ -207,7 +207,7 @@ var data = [
         "summary": "Called Diane",
         "description": "ME: Diane, Just a quick follow up to see if your property dept. approved settlement and if an offer has been extended?        Please advise.        Bill  516-524-3982",
         "attachments": [],
-        "state": "ToDo"
+        "state": "Complete"
     },
     {
         "_id": "428",
@@ -219,7 +219,7 @@ var data = [
         "dueDate": 1407888000000,
         "summary": "TRAVELED to Suff PD Head on another file and picked up this report.",
         "attachments": [],
-        "state": "ToDo"
+        "state": "Complete"
     },
     {
         "_id": "418",
@@ -232,7 +232,7 @@ var data = [
         "summary": "Called Diane",
         "description": "ME: Diane, Just a quick follow up to see if your property dept. approved settlement and if an offer has been extended?        Please advise.        Bill  516-524-3982",
         "attachments": [],
-        "state": "ToDo"
+        "state": "Complete"
     },
     {
         "_id": "421",
@@ -245,7 +245,7 @@ var data = [
         "summary": "Email from Diane",
         "description": "DIANE: Hi Bill Just got it back-amount approved is $21817.00 My understanding is the payment would be made to the realty company-correct?\nIf you have any questions/concerns, please do not hesitate to give me a call or reply to this email. \n\nSincerely, Diane Bensinger",
         "attachments": [],
-        "state": "ToDo"
+        "state": "Complete"
     },
     {
         "_id": "423",
@@ -258,7 +258,7 @@ var data = [
         "summary": "Emailed Diane",
         "description": "ME: Diane, My notes indicate that the total claim amount submitted is 23,117.          Has an offer been made to Dennis Madonia of 974 Little East Neck LLC? The office manager Eleonora Regan can be reached at 516-903-8387. Please confirm whether or not your approved amount of $21,817.00 has been accepted.          \n\nThank you         \nBill",
         "attachments": [],
-        "state": "ToDo"
+        "state": "Complete"
     },
     {
         "_id": "424",
@@ -271,7 +271,7 @@ var data = [
         "summary": "Email from Diane",
         "description": "DIANE: From: Diane Bensinger {mailto:DBensingerOt mercuryinsurance.comi Sent: Thu \n8/7/2014 3:00 PM To: Dennis Madonia Cc: BBreidenbach Subject: RE: Claim No. \n14009500340563 \n\nHello\nThe painting est was missed-initial check will be for first amount as it was already in progress, and a supplementary payment will be made for the painting est.\nIf you have any questions/concerns, please do not hesitate to give me a call or reply to this \n\nemail. Sincerely,\n",
         "attachments": [],
-        "state": "ToDo"
+        "state": "Complete"
     },
     {
         "_id": "425",
@@ -284,7 +284,7 @@ var data = [
         "summary": "Called Paul",
         "description": "ME: Paul, Mercury has compensated our insured in full. Our Initial Report was sent \n7/30/14. Unless you need a Final, I will close my file with no further reports or billing.  Let\nme know.      Bill",
         "attachments": [],
-        "state": "ToDo"
+        "state": "Complete"
     },
     {
         "_id": "429",
@@ -297,7 +297,7 @@ var data = [
         "summary": "Called Paul",
         "description": "ME: PAUL, YESTERDAY I WENT TO SUFFOLK POLICE HEADQUARTERS ON ANOTHER FILE AND PICKED UP THE ATTACHED PR FOR THIS ONE. AS MERCURY INS. HAS PAID OUR INSURED DIRECT, PLEASE CONFIRM OUR FILE CAN NOW BE \nCLOSED AND WHETHER OR NOT YOU NEED A FINAL REPORT.                 \n\nTHANKS,        \nBILL\n",
         "attachments": [],
-        "state": "ToDo"
+        "state": "Complete"
     },
     {
         "_id": "431",
