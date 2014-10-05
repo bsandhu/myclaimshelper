@@ -4,7 +4,7 @@
         <form class="form-inline" role="form">
             <div class="form-group">
                 <!-- Dimension selection -->
-                <span>Arrange by</span>
+                <span><strong>Arrange by</strong></span>
                 <select class="form-control input-sm summaryDimensionFilter"
                         data-bind="value: summaryDimension,
                                    options: summaryDimensions,
@@ -12,7 +12,7 @@
             </div>
             <!-- Due date dimension filter -->
             <div class="form-group leftMargin2pc">
-                Show tasks
+                <strong>Show tasks</strong>
             </div>
             <div class="form-group">
                 <span>due</span>
@@ -29,7 +29,7 @@
             </div>
             <!-- Status filter -->
             <div class="form-group">
-                <span class="rightMargin5">Status is</span>
+                <span class="rightMargin5"> with status</span>
                 <select class="form-control input-sm summaryDimensionFilter"
                         data-bind="value: statusFilter,
                                    options: statusFilters,
@@ -93,7 +93,13 @@
                         <span data-bind="text: $parents[1].DateUtils.niceDate($data.dueDate ? $data.dueDate() : '')"></span>
                         <span class="fa fa-pencil"></span>
                     </td>
+                    <td class="summaryDimensionCell">
+                        <status-editor-component params="'statusValue': $data.state,
+                                                         'entryId': $data._id"></status-editor-component>
+                    </td>
+<!--
                     <td data-bind="text: $data.state"></td>
+-->
                 </tr>
                 <!-- /ko -->
                 </tbody>

@@ -1,0 +1,43 @@
+<!-- Current state -->
+<a href="#" data-bind="event: { mouseover: onMouseOver, mouseout: onMouseOut},
+                       click: onClick">
+        <span class="glyphicon"
+              data-bind="css: {'glyphicon-unchecked': state() === undefined || state == States.None,
+                               'glyphicon-inbox'    : state() === States.TODO,
+                               'glyphicon-time'     : state() === States.Pending,
+                               'glyphicon-ok'       : state() === States.Complete}"></span>
+        <span class="fa fa-pencil"
+              data-bind="visible: showEditable"></span>
+</a>
+
+<!-- Pick new State -->
+<div style="z-index: 9999; width: 135px; position: fixed"
+     class="list-group"
+     data-bind="visible: inEditMode">
+
+    <a href="#" class="list-group-item active"
+       data-bind="click: onDismissEditor">
+        <span class="glyphicon glyphicon-remove alignRight"></span>
+        <span>&nbsp;</span>
+    </a>
+
+    <a data-bind="click: onUpdate.bind($data, States.TODO)"
+       class="list-group-item glyphicon glyphicon-inbox" href="#">
+        To Do
+    </a>
+
+    <a data-bind="click: onUpdate.bind($data, States.Complete)"
+       href="#" class="list-group-item glyphicon glyphicon-ok">
+        Complete
+    </a>
+
+    <a data-bind="click: onUpdate.bind($data, States.Pending)"
+       href="#" class="list-group-item glyphicon glyphicon-time">
+        Pending
+    </a>
+
+    <a data-bind="click: onUpdate.bind($data, States.None)"
+       href="#" class="list-group-item glyphicon glyphicon-unchecked">
+        Clear
+    </a>
+</div>
