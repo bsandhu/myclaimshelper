@@ -1,5 +1,5 @@
 var assert = require('assert');
-var dateUtils = require('./../client/app/utils/dateUtils.js');
+var dateUtils = require('./../server/shared/dateUtils.js');
 
 var toStr = dateUtils.toDatetimePickerFormat;
 var toDate = dateUtils.fromDatetimePickerFormat;
@@ -51,6 +51,11 @@ describe('DateUtils', function () {
 
         var today = dateUtils.niceDate(new Date());
         assert.ok(today.toLowerCase().search('today') >= 0);
+    });
+
+    it('IsYesterdayOrBefore', function () {
+        assert.equal(dateUtils.isYesterdayOrBefore(new Date()), false);
+        assert.equal(dateUtils.isYesterdayOrBefore(new Date(new Date().getTime() - dateUtils.MILLIS_IN_A_DAY)), true);
     });
 
 });

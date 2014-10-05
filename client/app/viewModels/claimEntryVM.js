@@ -1,6 +1,6 @@
 define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEntry', 'model/states',
         'app/utils/ajaxUtils', 'app/utils/events', 'app/utils/router', 'app/utils/sessionKeys',
-        'app/utils/dateUtils'],
+        'shared/dateUtils'],
     function ($, ko, KOMap, amplify, Claim, ClaimEntry, States, ajaxUtils, Events, Router, SessionKeys, DateUtils) {
         'use strict';
 

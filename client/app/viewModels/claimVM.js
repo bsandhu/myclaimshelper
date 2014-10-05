@@ -1,7 +1,7 @@
 define(['jquery', 'knockout', 'KOMap', 'amplify',
         'model/claim', 'model/claimEntry', 'model/contact', 'model/states',
         'app/utils/ajaxUtils', 'app/utils/events', 'app/utils/router', 'app/utils/sessionKeys',
-        'app/utils/dateUtils'],
+        'shared/dateUtils'],
     function ($, ko, KOMap, amplify, Claim, ClaimEntry, Contact, States,
               ajaxUtils, Events, Router, SessionKeys, DateUtils) {
 
@@ -16,6 +16,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify',
             this.sortDir = ko.observable('desc');
 
             // View state
+            this.screenHeight = ko.observable(screen.height);
             this.inEditMode = ko.observable(false);
             this.showStatusForEntryId = ko.observable();
             this.setupEvListeners();

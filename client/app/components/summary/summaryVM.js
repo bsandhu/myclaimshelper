@@ -1,5 +1,5 @@
 define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEntry', 'model/states', 'app/utils/events',
-        'app/utils/router', 'app/utils/dateUtils', 'app/utils/ajaxUtils',
+        'app/utils/router', 'shared/dateUtils', 'app/utils/ajaxUtils',
         'text!app/components/summary/summary.tmpl.html'],
     function ($, ko, KOMap, amplify, Claim, ClaimEntry, States, Events, Router, DateUtils, AjaxUtils, summaryView) {
         'use strict';
@@ -8,21 +8,46 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
             console.log('Init SummaryVM');
 
             this.DateUtils = DateUtils;
+            this.claimEntries = ko.observableArray([]);
 
-            // Summary dimensions meta data
-            this.summaryDimensions = ko.observableArray([
+            // Grouping
+            this.setupGroupingOptions();
+            this.groupBy = ko.observable(this.groupByOptions()[0]);
+
+            // Filtering
+            this.setupDueDateFilters();
+            this.setupStatusFilters();
+            this.setupFilterVisibility();
+
+            // Drag n Drop
+            // Entry which was dropped on to
+            // The drag ev carries the Entry being moved
+            this.summaryDropTargetEntryId = ko.observable();
+            this.summaryDropTargetDOMElement = undefined;
+
+            this.setupGroupByListener();
+            this.setupClaimEntryListener();
+            this.setupGrouping();
+        }
+
+        /************************************************************/
+        /* Grouping                                                 */
+        /************************************************************/
+
+        SummaryVM.prototype.setupGroupingOptions = function () {
+            this.groupByOptions = ko.observableArray([
                 {description: 'Date Due',
-                    dimension: 'dueDate',
-                    isInSameGroup: this.DateUtils.isEqualIgnoringTime,
+                    group: 'dueDate',
+                    groupingFn: this.getDueDateGroupName,
                     sortFn: function (entry1, entry2) {
                         var date1InMillis = entry1.dueDate ? entry1.dueDate().getTime() : 0;
                         var date2InMillis = entry2.dueDate ? entry2.dueDate().getTime() : 0;
                         return date1InMillis - date2InMillis;
                     }
                 },
-                {description: 'Date Entered On',
-                    dimension: 'entryDate',
-                    isInSameGroup: this.DateUtils.isEqualIgnoringTime,
+                {description: 'Date Created',
+                    group: 'entryDate',
+                    groupingFn: this.getEntryDateGroupName,
                     sortFn: function (entry1, entry2) {
                         var date1InMillis = entry1.entryDate ? entry1.entryDate().getTime() : '';
                         var date2InMillis = entry2.entryDate ? entry2.entryDate().getTime() : '';
@@ -30,8 +55,8 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
                     }
                 },
                 {description: 'Task Status',
-                    dimension: 'status',
-                    isInSameGroup: this.DateUtils.isEqualIgnoringTime,
+                    group: 'state',
+                    groupingFn: this.getStatusGroupName,
                     sortFn: function (entry1, entry2) {
                         var status1 = entry1.status ? entry1.status() : States.None;
                         var status2 = entry2.status ? entry2.status() : States.None;
@@ -49,28 +74,18 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
                     }
                 }
             ]);
-            // Selected dimension
-            this.summaryDimension = ko.observable();
-            this.setupSummaryDimensionListener();
-            this.summaryDimension(this.summaryDimensions()[0]);
+        };
 
-            // Entry which was dropped on to
-            // The drag ev carries the Entry being moved
-            this.summaryDropTargetEntryId = ko.observable();
-            this.summaryDropTargetDOMElement = undefined;
-            this.summaryDimensionCounter = ko.observable();
-
-            this.claimEntries = ko.observableArray([]);
-            this.setupDimensionGrouping();
-        }
-
-        SummaryVM.prototype.setupDimensionGrouping = function(){
-            this.claimEntriesByDimension = ko.computed(function(){
-                var dimension = this.summaryDimension().dimension;
+        SummaryVM.prototype.setupGrouping = function () {
+            this.claimEntriesGrouped = ko.computed(function () {
+                var dimensionMetaData = this.groupBy();
+                var group = dimensionMetaData.group;
+                var groupingFn = dimensionMetaData.groupingFn;
                 var groups = {};
-                $.each(this.claimEntries(), function(index, entry){
-                    var dimensionVal = entry[dimension] ? entry[dimension]() : '';
-                    var groupName = this.getGroupName(dimensionVal);
+
+                $.each(this.claimEntries(), function (index, entry) {
+                    var groupingAttr = entry[group] ? entry[group]() : '';
+                    var groupName = groupingFn(groupingAttr, entry);
                     if (!(groupName in groups)) {
                         groups[groupName] = [];
                     }
@@ -80,9 +95,9 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
                 return groups;
             }, this);
 
-            this.dimensionKeys = ko.computed(function(){
+            this.arrangeByKeys = ko.computed(function () {
                 var keys = [];
-                $.each(this.claimEntriesByDimension(), function(group){
+                $.each(this.claimEntriesGrouped(), function (group) {
                     keys.push(group);
                 });
                 console.log(keys);
@@ -90,43 +105,112 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
             }, this);
         };
 
-        SummaryVM.prototype.getGroupName = function(dimension) {
-            // Empty
-            if ((dimension === null || dimension === undefined || dimension === '')) {
-                return '';
+        SummaryVM.prototype.getDueDateGroupName = function (dueDate, entry) {
+            if (!(dueDate instanceof Date)) {
+                return $.trim(String(dueDate || ''));
             }
-            // Dates ignore time component
-            if (dimension instanceof Date){
-                return DateUtils.niceDate(dimension, false);
+
+            if (DateUtils.isYesterdayOrBefore(dueDate) &&
+                (entry.state() === States.TODO || entry.state() === States.PENDING)){
+                return 'Over Due';
+            } else {
+                return  DateUtils.niceDate(dueDate, false);
             }
-            return String(dimension);
         };
+
+        SummaryVM.prototype.getEntryDateGroupName = function (entryDate) {
+            if (entryDate instanceof Date) {
+                return DateUtils.niceDate(entryDate, false);
+            }
+            return $.trim(String(entryDate || ''));
+        };
+
+        SummaryVM.prototype.getStatusGroupName = function (status) {
+            return $.trim(String(status || ''));
+        };
+
+        /************************************************************/
+        /* Filtering                                                */
+        /************************************************************/
+
+        SummaryVM.prototype.setupDueDateFilters = function () {
+            this.dueDateDaysFilterValue = ko.observable(3);
+            this.dueDateFilters = ko.observableArray([
+                {description: 'today', query: {'$gte': DateUtils.startOfToday().getTime(), '$lte': DateUtils.endOfToday().getTime()}},
+                {description: 'this week', query: {'$gte': DateUtils.startOfWeekInMillis(), '$lte': DateUtils.endOfWeekInMillis()}},
+                {description: 'within next', query: {'$gte': DateUtils.startOfToday().getTime(), '$lte': DateUtils.daysFromNowInMillis(this.dueDateDaysFilterValue())}}
+            ]);
+            this.dueDateFilter = ko.observable(this.dueDateFilters()[0]);
+        };
+
+        SummaryVM.prototype.setupStatusFilters = function () {
+            this.statusFilters = ko.observableArray([
+                {description: 'Any', query: {$in: [States.TODO, States.Pending, States.Complete, States.None]}},
+                {description: States.TODO, query: States.TODO},
+                {description: States.Pending, query: States.Pending},
+                {description: States.Complete, query: States.Complete},
+                {description: States.None, query: States.None}
+            ]);
+            this.statusFilter = ko.observable(this.statusFilters()[1]);
+        };
+
+        SummaryVM.prototype.setupFilterVisibility = function () {
+            this.showDueDateDaysFilter = ko.computed(function () {
+                return this.groupBy().group === 'dueDate' && this.dueDateFilter().description === 'within next';
+            }, this);
+        };
+
+        /************************************************************/
+        /* Event handling                                           */
+        /************************************************************/
 
         SummaryVM.prototype.onClaimEntrySelect = function (entry) {
             Router.routeToClaimEntry(entry.claimId(), entry._id());
         };
 
-        SummaryVM.prototype.setupSummaryDimensionListener = function () {
-            this.summaryDimension.subscribe(function (val) {
-                console.log('Summary dimension changed ' + JSON.stringify(val));
+        SummaryVM.prototype.setupGroupByListener = function () {
+            this.groupBy.subscribe(function (val) {
+                console.log('Summary group changed ' + JSON.stringify(val));
+                this.searchClaimEntries();
+            }, this);
+            this.dueDateFilter.subscribe(function (val) {
+                console.log('Due date changed ' + JSON.stringify(val));
+                this.searchClaimEntries();
+            }, this);
+            this.statusFilter.subscribe(function (val) {
+                console.log('Status changed ' + JSON.stringify(val));
+                this.searchClaimEntries();
+            }, this);
+            this.dueDateDaysFilterValue.subscribe(function (val) {
+                console.log('Due date changed ' + JSON.stringify(val));
+                this.dueDateFilter().query = {'$gte': DateUtils.startOfToday().getTime(), '$lte': DateUtils.daysFromNowInMillis(val)};
                 this.searchClaimEntries();
             }, this);
         };
 
-        SummaryVM.prototype.searchClaimEntries = function (query) {
-            query = query || '{}';
-            console.log('Searching for claim entries: ' + query);
-            var _this = this;
+        SummaryVM.prototype.setupClaimEntryListener = function () {
+            amplify.subscribe(Events.NEW_CLAIM_ENTRY, this, this.searchClaimEntries);
+            amplify.subscribe(Events.SAVED_CLAIM_ENTRY, this, this.searchClaimEntries);
+            amplify.subscribe(Events.UPDATE_CLAIM_ENTRY_STATUS, this, this.searchClaimEntries);
+        };
 
-            return $.getJSON('claimEntry/search/' + query)
-                .done(function (res) {
+        SummaryVM.prototype.searchClaimEntries = function () {
+            var postReq = { query: {dueDate: this.dueDateFilter().query,
+                            state: this.statusFilter().query},
+                            options: {sort: [[this.groupBy().group, 'asc']]}};
+            console.log('Searching for claim entries: ' + postReq);
+
+            AjaxUtils.post(
+                '/claimEntry/search',
+                JSON.stringify(postReq),
+                function onSuccess(res) {
                     console.log(JSON.stringify(res.data));
 
                     var tempArray = $.map(res.data, function (claimEntry) {
                         return KOMap.fromJS(claimEntry, {}, new ClaimEntry());
                     });
-                    _this.claimEntries(tempArray);
-                });
+                    this.claimEntries(tempArray);
+                }.bind(this));
         };
 
         /************************************************************/
@@ -141,7 +225,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
             console.log('Drag end, Source: ' + JSON.stringify(KOMap.toJS(entry)));
             var rowToMove = $(ev.currentTarget).detach();
             $(this.summaryDropTargetDOMElement).after(rowToMove);
-            $('.summaryDimensionRow').removeClass('summaryRowDragOver');
+            $('.summaryRow').removeClass('summaryRowDragOver');
             this.updateSrcDimensionWithDropTargetValue(entry);
         };
 
@@ -170,10 +254,10 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
                 }.bind(this))[0];
 
             var entryIdToUpdate = sourceEntry._id();
-            var dimensionToUpdate = this.summaryDimension().dimension;
+            var dimensionToUpdate = this.groupBy().group;
             var targetDimensionVal = targetEntry[dimensionToUpdate] ? targetEntry[dimensionToUpdate]() : undefined;
 
-            var dimensionLabel = this.summaryDimension().description;
+            var dimensionLabel = this.groupBy().description;
             var successMsg = 'Updated ' + dimensionLabel + ' to ' + this.DateUtils.niceDate(targetDimensionVal);
 
             var attrsToUpdate = {};
@@ -194,4 +278,5 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
         };
 
         return {viewModel: SummaryVM, template: summaryView};
-    });
+    }
+);

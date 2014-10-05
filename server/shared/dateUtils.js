@@ -6,6 +6,10 @@ if (typeof define !== 'function') {
 
 define([],
     function () {
+        'use strict';
+
+        var millisInADay = 86400000;
+        var daysInWeek = 6;
 
         function toDatetimePickerFormat(jsDate) {
             if (!jsDate instanceof Date) {
@@ -97,14 +101,7 @@ define([],
         }
 
         function isThisWeek(date) {
-            var daysInWeek = 6;
-            var millisInADay = 86400000;
-
-            var today = new Date();
-            var endOfWeekInMillis = today.getTime() + ((daysInWeek - today.getDay()) * millisInADay);
-            var startOfWeekInMillis = today.getTime() - (today.getDay() * millisInADay);
-
-            return date.getTime() >= startOfWeekInMillis && date.getTime() <= endOfWeekInMillis;
+            return date.getTime() >= startOfWeekInMillis() && date.getTime() <= endOfWeekInMillis();
         }
 
         function isToday(date) {
@@ -112,11 +109,47 @@ define([],
             return date.getDate() === today.getDate() && date.getFullYear() === today.getFullYear() && date.getMonth() === today.getMonth();
         }
 
+        function now() {
+            return new Date();
+        }
+
+        function startOfToday() {
+            return new Date(now().getFullYear(), now().getMonth(), now().getDate(), 0, 0);
+        }
+
+        function endOfToday() {
+            return new Date(now().getFullYear(), now().getMonth(), now().getDate(), 23, 59, 59);
+        }
+
+        function startOfWeekInMillis() {
+            return startOfToday().getTime() - (startOfToday().getDay() * millisInADay);
+        }
+
+        function endOfWeekInMillis() {
+            return startOfToday().getTime() + ((daysInWeek - startOfToday().getDay()) * millisInADay);
+        }
+
+        function daysFromNowInMillis(numOfDays) {
+            return startOfToday().getTime() + (numOfDays * millisInADay);
+        }
+
+        function isYesterdayOrBefore(date) {
+            return date.getTime() < startOfToday().getTime();
+        }
+
         return {
             'niceDate': niceDate,
             'toDatetimePickerFormat': toDatetimePickerFormat,
             'fromDatetimePickerFormat': fromDatetimePickerFormat,
             'enableJSONDateHandling': enableJSONDateHandling,
-            'DATETIME_PICKER_FORMAT': 'm/d/Y H:i'
+            'DATETIME_PICKER_FORMAT': 'm/d/Y H:i',
+            'MILLIS_IN_A_DAY'       : millisInADay,
+            'isYesterdayOrBefore'   : isYesterdayOrBefore,
+            'startOfToday'          : startOfToday,
+            'endOfToday'            : endOfToday,
+            'now'                   : now,
+            'startOfWeekInMillis'   : startOfWeekInMillis,
+            'endOfWeekInMillis'     : endOfWeekInMillis,
+            'daysFromNowInMillis'   : daysFromNowInMillis
         };
     });

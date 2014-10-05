@@ -1,4 +1,4 @@
-define(['jquery', 'knockout', 'KOMap', 'app/utils/dateUtils', 'datetimepicker'],
+define(['jquery', 'knockout', 'KOMap', 'shared/dateUtils', 'datetimepicker'],
 
     function ($, ko, KOMap, DateUtils) {
         'use strict';

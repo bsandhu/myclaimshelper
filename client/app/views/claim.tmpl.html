@@ -181,7 +181,7 @@
 <!-- ************************************************ -->
 
 <div data-bind="ifnot: inEditMode">
-    <div class="btn-group topMargin10">
+    <div class="btn-group topMargin1pc">
         <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
             <span class="fa fa-plus"></span>
             Add New Entry <span class="caret"></span>
@@ -219,7 +219,9 @@
 <!--List Claim Entries -->
 <!-- ************************************************ -->
 
-<div data-bind="ifnot: inEditMode" class="rightMargin topMargin5">
+<div data-bind="ifnot: inEditMode,
+                style: {height: (screenHeight() * .5)+ 'px'}"
+     class="rightMargin topMargin5 overflowY">
 
     <table style="width: 98%" class="table table-hover table-condensed" id="claimEntriesList">
         <thead>
