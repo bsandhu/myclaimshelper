@@ -333,11 +333,11 @@ div {
 
 /**** Claims summary panel ****/
 
-.summaryDimensionFilter {
+.summaryGroupSelector {
     background-color: whitesmoke;
 }
 
-.summaryDimensionGroupHeader {
+.summaryGroupHeader {
     margin: 0;
     line-height: 31px;
     padding: 0 0 0 10px;
@@ -345,25 +345,25 @@ div {
     font-weight: 500;
 }
 
-.summaryDimensionGroupSubHeader {
+.summaryGroupSubHeader {
     color: #045FB4;
     font-weight: 300;
 }
 
-.summaryDimensionDrag {
+.summaryGroupDrag {
     cursor: move;
     opacity: 0;
     color: #999;
 }
 
-.summaryDimensionRow:hover td:first-child {
+.summaryRow:hover td:first-child {
     opacity: .9;
     transition-duration: 0.25s;
     transition-property: opacity;
     transition-timing-function: ease;
 }
 
-.summaryDimensionRow td:nth-child(2) {
+.summaryRow td:nth-child(2) {
     padding-right: 5px;
     border-right-color: rgb(255, 225, 235);
     border-right-style: double;
@@ -375,11 +375,11 @@ div {
     border-top-color: #2b669a;
 }
 
-.summaryDimensionCell span:last-child {
+.summaryGroupCell span:last-child {
     opacity: 0;
 }
 
-.summaryDimensionRow:hover .summaryDimensionCell span:last-child {
+.summaryRow:hover .summaryGroupCell span:last-child {
     opacity: .9;
 }
 
