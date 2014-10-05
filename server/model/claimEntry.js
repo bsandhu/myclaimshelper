@@ -24,6 +24,8 @@ define([], function () {
 
         // Status - one of states.js
         this.state = undefined;
+
+        this.location = undefined;
     }
 
     return ClaimEntry;

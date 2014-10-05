@@ -10,6 +10,7 @@ require.config({
         'text'      : 'lib/require.text',           // Require plugin for html templates
         'Path'      : 'lib/path',
         'bootstrap' : 'lib/bootstrap',
+        'async'     : 'lib/async',
         'datetimepicker' : 'lib/jquery.datetimepicker'
     },
     shim: {
