@@ -1,5 +1,5 @@
 var assert = require('assert');
-var dateUtils = require('./../client/app/utils/dateUtils.js');
+var dateUtils = require('./../server/shared/dateUtils.js');
 
 var toStr = dateUtils.toDatetimePickerFormat;
 var toDate = dateUtils.fromDatetimePickerFormat;

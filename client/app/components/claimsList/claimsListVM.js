@@ -1,5 +1,5 @@
 define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEntry', 'app/utils/events',
-        'app/utils/router', 'app/utils/dateUtils', 'app/utils/ajaxUtils',
+        'app/utils/router', 'shared/dateUtils', 'app/utils/ajaxUtils',
         'text!app/components/claimsList/claimsList.tmpl.html'],
     function ($, ko, KOMap, amplify, Claim, ClaimEntry, Events, Router, DateUtils, AjaxUtils, claimsListView) {
         'use strict';

@@ -54,10 +54,14 @@ function setupContactServiceRoutes() {
 }
 
 function setupStaticRoutes() {
-    // If the path contains model, look for the whole path in the 'shared' dir
+    // Server side code shared with the client
     server.get(/\/model\/.*/, restify.serveStatic({
         directory: 'server'
     }));
+    server.get(/\/shared\/.*/, restify.serveStatic({
+        directory: 'server'
+    }));
+
     server.get(/\/app\/.*/, restify.serveStatic({
         directory: 'client'
     }));
