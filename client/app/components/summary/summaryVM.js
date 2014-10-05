@@ -78,6 +78,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
 
             this.claimEntries = ko.observableArray([]);
             this.setupSummaryDimensionListener();
+            this.setupClaimEntryListener();
             this.setupDimensionGrouping();
             this.setupDimensionFilterVisibility();
         }
@@ -157,6 +158,12 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
                 this.dueDateFilter().query = {'$gte': DateUtils.startOfToday().getTime(), '$lte': DateUtils.daysFromNowInMillis(val)};
                 this.searchClaimEntries();
             }, this);
+        };
+
+        SummaryVM.prototype.setupClaimEntryListener = function () {
+            amplify.subscribe(Events.NEW_CLAIM_ENTRY, this, this.searchClaimEntries);
+            amplify.subscribe(Events.SAVED_CLAIM_ENTRY, this, this.searchClaimEntries);
+            amplify.subscribe(Events.UPDATE_CLAIM_ENTRY_STATUS, this, this.searchClaimEntries);
         };
 
         SummaryVM.prototype.searchClaimEntries = function () {
