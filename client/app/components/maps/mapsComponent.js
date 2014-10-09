@@ -15,13 +15,13 @@ define(['knockout', 'text!app/components/maps/mapsComponent.tmpl.html',
             };
             var map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
             var input = document.getElementById('pac-input');
-
             var types = document.getElementById('type-selector');
-//            map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
-//            map.controls[google.maps.ControlPosition.TOP_LEFT].push(types);
+            
+            map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+            map.controls[google.maps.ControlPosition.TOP_LEFT].push(types);
 
-            //var autocomplete = new google.maps.places.Autocomplete(input);
-            //autocomplete.bindTo('bounds', map);
+            var autocomplete = new google.maps.places.Autocomplete(input);
+            autocomplete.bindTo('bounds', map);
 
             var infowindow = new google.maps.InfoWindow();
             var marker = new google.maps.Marker({
