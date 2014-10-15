@@ -53,6 +53,6 @@ function populateDB(){
 // Uncomment the one you need and run from command line.
 //   Example: ~/src/Agent/007> node tests/data/testDataLoader.js
 
-mongoUtils.initConnPool()
-    .then(nukeDB)
-    .then(populateDB);
+//mongoUtils.initConnPool()
+//    .then(nukeDB)
+//    .then(populateDB);
