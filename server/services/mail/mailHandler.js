@@ -1,75 +1,128 @@
+var jQuery = require('jquery-deferred');
 var Mailgun = require('mailgun-js');
-var MailParser = require('./mailParser.js').MailParser;
+
 var config = require('../../config.js');
-var saveToDB = require('../uploadService.js').saveToDB;
-var ClaimEntry = require("../../model/claimEntry.js");
 var claimsService = require("../../services/claimsService.js");
+var ClaimEntry = require("../../model/claimEntry.js");
+var MailParser = require('./mailParser.js').MailParser;
+var saveToDB = require('../uploadService.js').saveToDB;
 
 
-function MailRequestHandler() {
-}
-
-MailRequestHandler.prototype.processRequest = function (req, res) {
-    res.send(200, 'Request received successfully.');
-    var parser = new MailParser();
-    var mailEntry = parser.parseRequest(req);
-    if (parser.errors.length > 0) {
-        var body = 'ERROR: could not process request.\r\n' + parser.errors;
-        sendReply(req.params.from, req.params.subject, body);
-        console.log('Errors found: ' + parser.errors);
-        return false;
-    }
-    else {
-        var entry = new ClaimEntry();
-        entry.entryDate = new Date();
-        entry.summary = mailEntry.mail.subject;
-        entry.description = mailEntry.mail['body-plain'];
-        entry.claimId = mailEntry.claimId;
-        entry.tag = mailEntry.tags || [];
-        entry.tag.push('email');
-
-        // store attachemts as such...
-        mailEntry['attachments'].forEach(function (attachment) {
-            saveToDB(attachment.name, attachment.path)
-                .done(function (seqNum) {
-                    console.log('Success storing attachment: ' + attachment.name);
-                    console.log('SeqNum: ' + seqNum);
-                })
-                .fail(function (err) {
-                    var body = 'ERROR: failed to store attachment: ';
-                    body += attachment.name;
-                    body += '\n' + err;
-                    console.error(body);
-                    sendReply(req.params.from, req.params.subject, body);
-                });
-        });
-        // store claimEntry
-        claimsService.saveOrUpdateClaimEntryObject(entry)
-            .done(function (entry) {
-                sendReply(req.params.from, req.params.subject, 'Success processing email!');
-            })
-            .fail(function (err) {
-                console.log(err);
-                sendReply(req.params.from, req.params.subject, err);
-            });
-        return true;
-    }
+var process = function(req, res) {
+  res.send(200, 'Request received successfully.');
+  var dif = jQuery.Deferred();
+  var parser = new MailParser();
+  var mailEntry = parser.parseRequest(req);
+  if (parser.errors.length > 0) {
+    notifyFailure(parser.errors);
+    dif.reject();
+    return dif.promise()
+  }
+  return saveAttachments(mailEntry)
+          .then(saveEntry)
+          .then(notifySuccess, notifyFailure);
 };
 
-
-function sendReply(recipient, subject, body) {
-    var mailgun = new Mailgun({apiKey: config.mailgun.api_key,
-        domain: config.mailgun.domain});
-    var data = {
-        from: 'Agent 007 <no-reply@007.com>',
-        to: recipient,
-        subject: subject,
-        text: body
+var saveEntry = function(mailEntry) {
+  entry = constructClaimEntry(mailEntry);
+  attachments = mailEntry.attachments;
+  for (var i=0; i < attachments.length; i++){
+    var metadata = {
+       id  : attachments[i].id,
+       name: attachments[i].name,
+       size: attachments[i].size
     };
-    mailgun.messages().send(data, function (error, body) {
-        if (error) throw error;
-        else console.log('Mail sent successfully: ' + JSON.stringify(body));
-    });
+    entry.attachments.push(metadata);
+  }
+  var d = jQuery.Deferred();
+	claimsService.saveOrUpdateClaimEntryObject(entry)
+	  .then(function(obj){
+            if (obj.status == 'Success'){
+              mailEntry._id = obj.data._id;
+              d.resolve(mailEntry);
+            }
+            // saveOrUpdateClaimEntryObject always returns 'resolved'
+            // 'error' message is transmitted via 'status' flag.
+            else{
+              mailEntry.error = obj.details;
+              d.reject(mailEntry);
+            }
+          }); 
+  return d.promise(); 
+};
+
+// @returns ids of files saved to db.
+var saveAttachment = function(attachment) {
+  return saveToDB(attachment.name, attachment.path);
+};
+
+var saveAttachments = function(mailEntry) {
+  var _success = function(){
+      for (var i=0; i < mailEntry.attachments.length; i++){
+        mailEntry.attachments[i].id = arguments[i];
+      }
+      return mailEntry;
+  }
+
+  var _failure = function(error){
+    mailEntry.error = error;
+    return mailEntry;
+  }
+
+  var x = jQuery.when.apply(null, mailEntry.attachments.map(saveAttachment));
+  return x.then(_success, _failure);
+};
+
+var notifySuccess = function(mailEntry) {
+  var body = 'Email processed successfully!';
+  body += '\n\n' + mailEntry;
+  sendEmail(mailEntry.mail.from, mailEntry.mail.subject, body);
+  return mailEntry;
+  //var r = jQuery.Deferred();
+  //r.resolve(mailEntry);
+  //return r.promise();
+};
+
+var notifyFailure = function(mailEntry) {
+  var body = 'ERROR processing email.';
+  body += '\n\n' + mailEntry.error;
+  sendEmail(mailEntry.mail.from, mailEntry.mail.subject, body);
+  return mailEntry;
+  //var r = jQuery.Deferred();
+  //r.reject(mailEntry);
+  //return r.promise();
+};
+
+// helpers 
+
+function constructClaimEntry(data){
+  var entry = new ClaimEntry();
+  entry.entryDate = new Date();
+  entry.summary = data.mail.subject;
+  entry.from = data.mail.from;
+  entry.description = data.mail['body-plain'];
+  entry.claimId = data.claimId;
+  entry.tag = data.tags || [];
+  entry.tag.push('email');
+  return entry;
 }
 
-exports.MailRequestHandler = MailRequestHandler;
+function sendEmail(recipient, subject, body) {
+  var mailgun = new Mailgun({apiKey: config.mailgun.api_key,
+    domain: config.mailgun.domain});
+  var data = {
+    from: 'Agent 007 <no-reply@007.com>',
+    to: recipient,
+    subject: subject,
+    text: body
+  };
+  mailgun.messages().send(data, function (error, body) {
+console.log(data);
+    if (error){
+	concole.log(error); 
+	throw error; }
+    else console.log('Mail sent successfully: ' + JSON.stringify(body));
+  });
+}
+
+exports.process = process;
