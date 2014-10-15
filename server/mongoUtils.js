@@ -3,14 +3,25 @@ var jQuery = require('jquery-deferred');
 var config = require('./config.js');
 var _ = require('underscore');
 
+var dbConn;
 
-function run(fn) {
+function initConnPool() {
+    var deferred = jQuery.Deferred();
     MongoClient.connect(config.db, function (err, db) {
         if (!err) {
             console.log("Connected");
-            fn(db);
+            dbConn = db;
+            deferred.resolve();
+        } else {
+            console.error("Conn error " + err);
+            deferred.reject(err);
         }
     });
+    return deferred;
+}
+
+function run(fn) {
+    fn(dbConn);
 }
 
 function initCollection(collectionName) {
@@ -40,11 +51,11 @@ function incrementAndGet(sequenceName) {
             {new: true},
             function onUpdate(err, doc) {
                 if (err) {
+                    console.error(err);
                     deferred.reject(err);
-                    db.close();
+                    return;
                 }
                 deferred.resolve(doc.seq);
-                db.close();
             });
     });
     return deferred.promise();
@@ -68,7 +79,7 @@ function saveOrUpdateEntity(entity, colName) {
                     function onInsert(err, results) {
                         console.log('Added to Mongo collection ' + colName + '. Id: ' + results[0]._id);
                         defer.resolve(err, results[0]);
-                        db.close();
+
                     });
             } else {
                 entityCol.update({'_id': entity._id},
@@ -77,7 +88,6 @@ function saveOrUpdateEntity(entity, colName) {
                     function onUpdate(err, result) {
                         console.log('Updated Mongo collection ' + colName + '. Id: ' + entity._id);
                         defer.resolve(err, entity);
-                        db.close();
                     });
             }
         });
@@ -99,7 +109,6 @@ function modifyEntityAttr(entityId, colName, attributesAsJson) {
             function onUpdate(err, result) {
                 console.log('Modified Mongo collection ' + colName + '. Id: ' + entityId);
                 defer.resolve(err, entityId);
-                db.close();
             });
     });
     return defer;
@@ -121,7 +130,6 @@ function getEntityById(entityId, colName) {
             } else {
                 defer.resolve(err, item);
             }
-            db.close();
         }
     });
     return defer;
@@ -140,7 +148,6 @@ function deleteEntity(predicate, colName) {
                 } else {
                     defer.resolve(result);
                 }
-                db.close();
             });
     });
     return defer;
@@ -155,6 +162,7 @@ function initCollections() {
 }
 
 exports.run = run;
+exports.initConnPool = initConnPool;
 exports.initCollections = initCollections;
 exports.incrementAndGet = incrementAndGet;
 exports.saveOrUpdateEntity = saveOrUpdateEntity;
@@ -162,6 +170,6 @@ exports.modifyEntityAttr = modifyEntityAttr;
 exports.getEntityById = getEntityById;
 exports.deleteEntity = deleteEntity;
 
-exports.CLAIMS_COL_NAME        = 'Claims';
+exports.CLAIMS_COL_NAME = 'Claims';
 exports.CLAIM_ENTRIES_COL_NAME = 'ClaimEntries';
-exports.CONTACTS_COL_NAME      = 'Contacts';
+exports.CONTACTS_COL_NAME = 'Contacts';

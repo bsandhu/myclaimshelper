@@ -162,7 +162,7 @@ function getAllClaims(req, res) {
         function onResults(err, items) {
             var modelObjs = _.map(items, convertToModel);
             sendResponse(res, err, modelObjs);
-            db.close();
+
         }
 
         function convertToModel(item) {
@@ -185,7 +185,6 @@ function searchClaims(req, res) {
                 ? 'No claims match this search ' + search
                 : _.extend(new Claim(), items);
             sendResponse(res, err, resData);
-            db.close();
         }
     });
 }
@@ -226,7 +225,6 @@ function searchClaimEntries(req, res) {
         function onResults(err, items) {
             var modelObjs = _.map(items, convertToModel);
             sendResponse(res, err, modelObjs);
-            db.close();
         }
         function convertToModel(item) {
             return _.extend(new ClaimEntry(), item);

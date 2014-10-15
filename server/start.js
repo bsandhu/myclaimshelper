@@ -94,6 +94,6 @@ setupMailServiceRoutes();
 setupClaimsServiceRoutes();
 setupContactServiceRoutes();
 setupStaticRoutes();
-mongoUtils.initCollections();
+mongoUtils.initConnPool().then(mongoUtils.initCollections);
 startServer();
 
