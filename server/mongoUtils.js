@@ -63,7 +63,6 @@ function incrementAndGet(sequenceName) {
 
 function saveOrUpdateEntity(entity, colName) {
     var defer = jQuery.Deferred();
-
     function getSeqNum() {
         return incrementAndGet(colName);
     }

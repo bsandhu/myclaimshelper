@@ -3,7 +3,7 @@ var config = require('./config.js');
 var claimsService = require('./services/claimsService.js');
 var contactService = require('./services/contactService.js');
 var uploadService = require('./services/uploadService.js');
-var MailRequestHandler = require('./services/mail/mailHandler.js').MailRequestHandler;
+var processMail = require('./services/mail/mailHandler.js').process;
 var mongoUtils = require('./mongoUtils.js');
 var os = require('os');
 
@@ -27,8 +27,7 @@ function init() {
 }
 
 function setupMailServiceRoutes(){
-    var mailHandler = new MailRequestHandler();
-    server.post('/mailman', mailHandler.processRequest);
+    server.post('/mailman', processMail);
 }
 
 function setupClaimsServiceRoutes() {
