@@ -11,7 +11,7 @@ function initConnPool() {
         if (!err) {
             console.log("Connected");
             dbConn = db;
-            deferred.resolve();
+            deferred.resolve(db);
         } else {
             console.error("Conn error " + err);
             deferred.reject(err);
@@ -21,7 +21,11 @@ function initConnPool() {
 }
 
 function run(fn) {
-    fn(dbConn);
+    if (!dbConn) {
+        initConnPool().then(fn);
+    } else {
+        fn(dbConn);
+    }
 }
 
 function initCollection(collectionName) {
