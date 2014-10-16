@@ -22,6 +22,7 @@ describe('Claims Service', function () {
     testEntry.entryDate = new Date(2014, 2, 1);
     testEntry.dueDate = new Date(2014, 2, 10);
     testEntry.summary = "I am test Task too";
+    testEntry.state = 'open';
 
     after(function(done) {
         assert.ok(testClaim._id);
@@ -204,18 +205,20 @@ describe('Claims Service', function () {
     });
 
     it('Search through claim entries', function(done) {
-        var req = {params: {search : '{"state":"open"}'}};
+        var req = {};
         var res = {};
+        req.body = {query: {"state":"open"},
+                    options: {"sort": ["state", "asc"]}};
 
         res.json = function (data) {
             assert(data);
             assert.equal(data.status, 'Success');
 
-            var claim = data.data[0];
-            assert.equal(claim.state, testClaim.state);
+            var entry = data.data[0];
+            assert.equal(entry.state, testClaim.state);
             done();
         };
-        claimsService.searchClaims(req, res);
+        claimsService.searchClaimEntries(req, res);
     });
 
 });

@@ -3,7 +3,7 @@ var config = require('./config.js');
 var claimsService = require('./services/claimsService.js');
 var contactService = require('./services/contactService.js');
 var uploadService = require('./services/uploadService.js');
-var MailRequestHandler = require('./services/mail/mailHandler.js').MailRequestHandler;
+var processMail = require('./services/mail/mailHandler.js').process;
 var mongoUtils = require('./mongoUtils.js');
 var os = require('os');
 
@@ -27,8 +27,7 @@ function init() {
 }
 
 function setupMailServiceRoutes(){
-    var mailHandler = new MailRequestHandler();
-    server.post('/mailman', mailHandler.processRequest);
+    server.post('/mailman', processMail);
 }
 
 function setupClaimsServiceRoutes() {
@@ -41,7 +40,7 @@ function setupClaimsServiceRoutes() {
     server.get('/claimEntry/:id', claimsService.getClaimEntry);
     server.post('/claimEntry', claimsService.saveOrUpdateClaimEntry);
     server.post('/claimEntry/modify', claimsService.modifyClaimEntry);
-    server.get('/claimEntry/search/:search', claimsService.searchClaimEntries);
+    server.post('/claimEntry/search', claimsService.searchClaimEntries);
 
     server.post('/upload', uploadService.uploadFile);
     server.get('/download', uploadService.downloadFile);
@@ -54,10 +53,14 @@ function setupContactServiceRoutes() {
 }
 
 function setupStaticRoutes() {
-    // If the path contains model, look for the whole path in the 'shared' dir
+    // Server side code shared with the client
     server.get(/\/model\/.*/, restify.serveStatic({
         directory: 'server'
     }));
+    server.get(/\/shared\/.*/, restify.serveStatic({
+        directory: 'server'
+    }));
+
     server.get(/\/app\/.*/, restify.serveStatic({
         directory: 'client'
     }));
