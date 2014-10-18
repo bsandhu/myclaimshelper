@@ -4,6 +4,7 @@ var ClaimEntry = require('./../model/claimEntry.js');
 var mongoUtils = require('./../mongoUtils.js');
 var serviceUtils = require('./../serviceUtils.js');
 var contactService = require('./contactService.js');
+var entityExtractionService = require('./entityExtractionService.js');
 
 var jQuery = require('jquery-deferred');
 var assert = require('assert');
@@ -65,18 +66,29 @@ function saveOrUpdateClaim(req, res) {
         setReferenceToContactObj('claimantsAttorneyContact'),
         setReferenceToContactObj('insuranceCoContact')
     ).then(function () {
-        mongoUtils.saveOrUpdateEntity(claim, mongoUtils.CLAIMS_COL_NAME)
-            .always(function (err, results) {
-                sendResponse(res, err, results);
-            });
-    });
+            mongoUtils.saveOrUpdateEntity(claim, mongoUtils.CLAIMS_COL_NAME)
+                .always(function (err, results) {
+                    sendResponse(res, err, results);
+                });
+        });
 }
 
 function saveOrUpdateClaimEntry(req, res) {
     var entity = req.body;
-    mongoUtils.saveOrUpdateEntity(entity, mongoUtils.CLAIM_ENTRIES_COL_NAME)
-        .always(function (err, results) {
-            sendResponse(res, err, results);
+    var description = entity.description;
+
+    entityExtractionService.extractEntities(description)
+        .then(function (people) {
+            for(var i=0; i<people.length; i++){
+                description = description.replace(people[i],'<b>$&</b>');
+            }
+            entity.description = description;
+        })
+        .then(function () {
+            mongoUtils.saveOrUpdateEntity(entity, mongoUtils.CLAIM_ENTRIES_COL_NAME)
+                .always(function (err, results) {
+                    sendResponse(res, err, results);
+                });
         });
 }
 
@@ -147,8 +159,8 @@ function getClaim(req, res) {
                     populateContactRef(claim, 'claimantsAttorneyContact'),
                     populateContactRef(claim, 'insuranceCoContact')
                 ).then(function () {
-                    sendResponse(res, err, results);
-                });
+                        sendResponse(res, err, results);
+                    });
             }
         });
 }
@@ -226,6 +238,7 @@ function searchClaimEntries(req, res) {
             var modelObjs = _.map(items, convertToModel);
             sendResponse(res, err, modelObjs);
         }
+
         function convertToModel(item) {
             return _.extend(new ClaimEntry(), item);
         }

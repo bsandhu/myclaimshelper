@@ -2,6 +2,7 @@ require.config({
     baseUrl: '/',
     paths: {
         'jquery'    : 'lib/jquery.min',
+        'hotkeys'   : 'lib/jquery.hotkeys',
         'knockout'  : 'lib/knockout',
         'KOMap'     : 'lib/knockout.mapping.min',   // Map KO <-> JSON
         'KOAmd'     : 'lib/knockout.amd.helpers',   // Load templates async
@@ -10,6 +11,7 @@ require.config({
         'text'      : 'lib/require.text',           // Require plugin for html templates
         'Path'      : 'lib/path',
         'bootstrap' : 'lib/bootstrap',
+        'wysiwyg'   : 'lib/bootstrap.wysiwyg',
         'async'     : 'lib/async',
         'datetimepicker' : 'lib/jquery.datetimepicker'
     },
@@ -22,6 +24,9 @@ require.config({
         },
         'bootstrap': {
             deps: ['jquery']
+        },
+        'wysiwyg' : {
+            deps: ['jquery', 'bootstrap', 'hotkeys']
         },
         'knockout': {
             deps: ['jquery']

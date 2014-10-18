@@ -3,6 +3,7 @@ var config = require('./config.js');
 var claimsService = require('./services/claimsService.js');
 var contactService = require('./services/contactService.js');
 var uploadService = require('./services/uploadService.js');
+var entityExtractionService = require('./services/entityExtractionService.js');
 var processMail = require('./services/mail/mailHandler.js').process;
 var mongoUtils = require('./mongoUtils.js');
 var os = require('os');
@@ -45,6 +46,7 @@ function setupClaimsServiceRoutes() {
     server.post('/upload', uploadService.uploadFile);
     server.get('/download', uploadService.downloadFile);
 
+    server.post('/extract/entity', entityExtractionService.extract);
 }
 
 function setupContactServiceRoutes() {

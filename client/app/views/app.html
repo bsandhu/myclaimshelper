@@ -181,7 +181,8 @@
      * Load libs and init Knockout - on app startup. See requireConfig.js
      */
     require(['jquery', 'knockout', 'KOAmd', 'text', 'amplify', 'app/viewModels/appVM', 'shared/dateUtils',
-             'app/utils/koDatetimePickerBinding', 'velocity', 'bootstrap'],
+             'app/utils/koDatetimePickerBinding', 'app/utils/koWYSIWYGBinding',
+                'velocity', 'bootstrap'],
             function ($, ko, KOAmd, text, amplify, AppVM, DateUtils) {
                 console.log('Init App');
 
@@ -197,9 +198,10 @@
                 ko.components.register('file-upload-component', {require: 'app/components/fileUpload/fileUploadComponent'});
                 ko.components.register('summary-component',     {require: 'app/components/summary/summaryVM'});
                 ko.components.register('claims-list-component', {require: 'app/components/claimsList/claimsListVM'});
-                ko.components.register('notifier-component',     {require: 'app/components/notifier/notifierVM'});
+                ko.components.register('notifier-component',    {require: 'app/components/notifier/notifierVM'});
                 ko.components.register('maps-component',        {require: 'app/components/maps/mapsComponent'});
                 ko.components.register('status-editor-component', {require: 'app/components/statusEditor/statusEditorComponent'});
+                ko.components.register('wysiwyg-editor-component', {require: 'app/components/statusEditor/statusEditorComponent'});
 
                 // Knockout bindings init
                 ko.applyBindings(new AppVM());
