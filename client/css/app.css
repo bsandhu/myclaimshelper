@@ -210,23 +210,26 @@ div {
 
 /**** Navigation panels ****/
 
-.header {
-    background: #2B333C;
-    border-bottom-color: #415160;
-}
-
 .headerLabel {
-    font-family: 'Open Sans', sans-serif;
-    color: rgb(190, 207, 224);
+    position: relative;
+    top: -8px;
+    left: 5px;
 }
-
 .headerLogo {
-    width: 200px;
-    font-size: 18px;
-    height: 45px;
-    line-height: 45px;
-    vertical-align: middle;
-    margin-left: 10px;
+    width: 32px;
+    background-image: url("../img/logo.png");
+    background-repeat: no-repeat;
+    margin-top: 12px;
+    margin-left: 5px;
+    transition-duration: 0.5s;
+    transition-property: all;
+    transition-timing-function: ease;
+}
+.headerLogo:hover{
+    transform: scale(1.2);
+    transition-duration: 0.5s;
+    transition-property: all;
+    transition-timing-function: ease;
 }
 
 .slidingContainer {
