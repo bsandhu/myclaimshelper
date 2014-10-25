@@ -80,7 +80,7 @@ function setupStaticRoutes() {
     }));
     server.get('/.*/ ', restify.serveStatic({
         'directory': 'client',
-        'default'  : '/app/views/app.html'
+        'default'  : '/app/views/index.html'
     }));
 }
 

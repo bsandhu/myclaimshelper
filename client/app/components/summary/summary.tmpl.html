@@ -1,108 +1,296 @@
-<div class="panel panel-default">
-    <div class="panel-heading">
+<div class="row">
+<article class="col-xs-12 col-sm-6 col-md-6 col-lg-8">
+    <!-- Widget ID (each widget will need unique ID)-->
+    <div class="jarviswidget jarviswidget-color-blueLight" id="wid-id-1"
+         data-widget-colorbutton="true"
+         data-widget-togglebutton="true"
+         data-widget-deletebutton="true"
+         data-widget-fullscreenbutton="true">
+        <header>
+            <span class="widget-icon"> <i class="fa fa-check txt-color-blueDark"></i> </span>
+            <h2 class="txt-color-blueDark">Overview</h2>
 
-        <form class="form-inline" role="form">
-            <div class="form-group">
-                <!-- Group selection -->
-                <span><strong>Arrange by</strong></span>
-                <select class="form-control input-sm summaryGroupSelector"
-                        data-bind="value: groupBy,
-                                   options: groupByOptions,
-                                   optionsText: 'description'"></select>
-            </div>
-            <!-- Due date group filter -->
-            <div class="form-group leftMargin2pc">
-                <strong>Show tasks</strong>
-            </div>
-            <div class="form-group">
-                <span>due</span>
-                <select class="form-control input-sm summaryGroupSelector"
-                        data-bind="value: dueDateFilter,
-                                   options: dueDateFilters,
-                                   optionsText: 'description'"></select>
-            </div>
-            <div class="form-group" data-bind="if: showDueDateDaysFilter">
-                <!-- Due date - day group filter -->
-                <input class="form-control input-sm summaryGroupSelector" style="width: 70px" type="number" min="0"
-                       data-bind="value: dueDateDaysFilterValue">
-                <span>days.</span>
-            </div>
-            <!-- Status filter -->
-            <div class="form-group">
-                <span class="rightMargin5"> with status</span>
-                <select class="form-control input-sm summaryGroupSelector"
-                        data-bind="value: statusFilter,
-                                   options: statusFilters,
-                                   optionsText: 'description'"></select>
-            </div>
+            <ul id="widget-tab-1" class="nav nav-tabs pull-right">
+                <li class="active">
+                    <a data-toggle="tab" href="#hr1">
+                        <i class="fa fa-check-square-o"></i>
+                        <span class="hidden-mobile hidden-tablet"> Tasks </span>
+                    </a>
+                </li>
+                <li>
+                    <a data-toggle="tab" href="#hr2">
+                        <i class="fa fa-briefcase"></i>
+                        <span class="hidden-mobile hidden-tablet"> Claims </span>
+                    </a>
+                </li>
 
-        </form>
-    </div>
+            </ul>
+        </header>
+        <!-- widget div-->
+        <div>
 
-    <div class="panel-body">
-
-        <div class="panel panel-default">
-            <table class="table table-hover table-condensed summaryTable">
-                <thead>
-                <th>&nbsp;</th>
-                <th>&nbsp;</th>
-                <th>Claim</th>
-                <th>Summary</th>
-                <th>Entry Date</th>
-                <th>Due Date</th>
-                <th>State</th>
-                </thead>
-
-                <tbody data-bind="foreach : {data: arrangeByKeys, as: 'groupKey'}">
-                <tr>
-                    <td colspan="7">
-                        <span class="fa fa-angle-double-right"></span>
-                            <span class="summaryGroupHeader"
-                                  data-bind="text: $parent.groupBy().description"></span>
-                        <span class="paddingRight5"></span>
-                            <span class="summaryGroupSubHeader"
-                                  data-bind="text: groupKey"></span>
-                            <span class="summaryGroupSubHeader"
-                                  data-bind="text: '(' + ($parent.claimEntriesGrouped()[groupKey].length) + ')'"></span>
-                    </td>
-                </tr>
-
-                <!-- ko foreach: $parent.claimEntriesGrouped()[groupKey] -->
-                <tr draggable="true" class="summaryRow"
-                    data-bind="event: {dragend  : $parents[1].onSummaryRowDragEnd.bind($parents[1]),
-                                               dragenter: $parents[1].onSummaryRowDragEnter.bind($parents[1]),
-                                               dragover:  $parents[1].onSummaryRowDragOver.bind($parents[1]),
-                                               dragleave: $parents[1].onSummaryRowDragLeave.bind($parents[1])},
-                                       attr: {'data-entryId': $data._id},
-                                       click: $parents[1].onClaimEntrySelect">
-                    <td class="summaryGroupDrag" title="Click and Drag to reorder">
-                        <span class="fa fa-ellipsis-v"></span>
-                    </td>
-                    <td>
-                        <input type="checkbox">
-                    </td>
-                    <td>
-                        <span data-bind="text: $data.claimId"><span
-                    </td>
-                    <td data-bind="text: $data.summary"></td>
-                    <td class="summaryGroupCell">
-                        <span data-bind="text: $parents[1].DateUtils.niceDate($data.entryDate())"></span>
-                        <span class="fa fa-pencil"></span>
-                    </td>
-                    <td class="summaryGroupCell">
-                        <span data-bind="text: $parents[1].DateUtils.niceDate($data.dueDate ? $data.dueDate() : '')"></span>
-                        <span class="fa fa-pencil"></span>
-                    </td>
-                    <td class="summaryGroupCell">
-                        <status-editor-component params="'statusValue': $data.state,
-                                                         'entryId': $data._id"></status-editor-component>
-                    </td>
-                </tr>
-                <!-- /ko -->
-                </tbody>
-            </table>
+        <!-- widget edit box -->
+        <div class="jarviswidget-editbox">
+            <!-- This area used as dropdown edit box -->
         </div>
+        <!-- end widget edit box -->
 
+            <!-- widget content -->
+            <div class="widget-body no-padding">
+                <div class="tab-content padding-10">
+                    <div class="tab-pane fade in active" id="hr1">
+
+                    <div class="panel">
+                        <div class="panel-heading">
+
+                            <form class="form-inline" role="form">
+                                <div class="form-group">
+                                    <!-- Group selection -->
+                                    <span><strong>Arrange by</strong></span>
+                                    <select class="form-control input-sm summaryGroupSelector"
+                                            data-bind="value: groupBy,
+                                       options: groupByOptions,
+                                       optionsText: 'description'"></select>
+                                </div>
+                                <!-- Due date group filter -->
+                                <div class="form-group leftMargin2pc">
+                                    <strong>Show tasks</strong>
+                                </div>
+                                <div class="form-group">
+                                    <span>due</span>
+                                    <select class="form-control input-sm summaryGroupSelector"
+                                            data-bind="value: dueDateFilter,
+                                       options: dueDateFilters,
+                                       optionsText: 'description'"></select>
+                                </div>
+                                <div class="form-group" data-bind="if: showDueDateDaysFilter">
+                                    <!-- Due date - day group filter -->
+                                    <input class="form-control input-sm summaryGroupSelector" style="width: 70px"
+                                           type="number" min="0"
+                                           data-bind="value: dueDateDaysFilterValue">
+                                    <span>days.</span>
+                                </div>
+                                <!-- Status filter -->
+                                <div class="form-group">
+                                    <span class="rightMargin5"> with status</span>
+                                    <select class="form-control input-sm summaryGroupSelector"
+                                            data-bind="value: statusFilter,
+                                       options: statusFilters,
+                                       optionsText: 'description'"></select>
+                                </div>
+
+                            </form>
+                        </div>
+
+                        <div class="panel-body">
+
+                            <div class="panel panel-default">
+                                <table class="table table-hover table-condensed summaryTable">
+                                    <thead>
+                                    <th>&nbsp;</th>
+                                    <th>&nbsp;</th>
+                                    <th>Claim</th>
+                                    <th>Summary</th>
+                                    <th>Entry Date</th>
+                                    <th>Due Date</th>
+                                    <th>State</th>
+                                    </thead>
+
+                                    <tbody data-bind="foreach : {data: arrangeByKeys, as: 'groupKey'}">
+                                    <tr>
+                                        <td colspan="7">
+                                            <span class="fa fa-angle-double-right"></span>
+                                <span class="summaryGroupHeader"
+                                      data-bind="text: $parent.groupBy().description"></span>
+                                            <span class="paddingRight5"></span>
+                                <span class="summaryGroupSubHeader"
+                                      data-bind="text: groupKey"></span>
+                                <span class="summaryGroupSubHeader"
+                                      data-bind="text: '(' + ($parent.claimEntriesGrouped()[groupKey].length) + ')'"></span>
+                                        </td>
+                                    </tr>
+
+                                    <!-- ko foreach: $parent.claimEntriesGrouped()[groupKey] -->
+                                    <tr draggable="true" class="summaryRow"
+                                        data-bind="event: {dragend  : $parents[1].onSummaryRowDragEnd.bind($parents[1]),
+                                                   dragenter: $parents[1].onSummaryRowDragEnter.bind($parents[1]),
+                                                   dragover:  $parents[1].onSummaryRowDragOver.bind($parents[1]),
+                                                   dragleave: $parents[1].onSummaryRowDragLeave.bind($parents[1])},
+                                           attr: {'data-entryId': $data._id},
+                                           click: $parents[1].onClaimEntrySelect">
+                                        <td class="summaryGroupDrag" title="Click and Drag to reorder">
+                                            <span class="fa fa-ellipsis-v"></span>
+                                        </td>
+                                        <td>
+                                            <input type="checkbox">
+                                        </td>
+                                        <td>
+                                            <span data-bind="text: $data.claimId"></span>
+                                        </td>
+                                        <td data-bind="text: $data.summary"></td>
+                                        <td class="summaryGroupCell">
+                                            <span data-bind="text: $parents[1].DateUtils.niceDate($data.entryDate())"></span>
+                                            <span class="fa fa-pencil"></span>
+                                        </td>
+                                        <td class="summaryGroupCell">
+                                            <span data-bind="text: $parents[1].DateUtils.niceDate($data.dueDate ? $data.dueDate() : '')"></span>
+                                            <span class="fa fa-pencil"></span>
+                                        </td>
+                                        <td class="summaryGroupCell">
+                                            <status-editor-component params="'statusValue': $data.state,
+                                                             'entryId': $data._id"></status-editor-component>
+                                        </td>
+                                    </tr>
+                                    <!-- /ko -->
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </div>
+                        <!-- End panel body -->
+                    </div>
+
+                    </div>
+                    <div class="tab-pane fade" id="hr2">
+                        <div data-bind="component: 'claims-list-component'"></div>
+                    </div>
+                </div>
+            </div>
+            <!-- end widget content -->
+        </div>
+        <!-- end widget div -->
     </div>
-    <!-- End panel body -->
-</div>
+    <!-- end widget -->
+</article>
+
+<article class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
+    <div class="jarviswidget jarviswidget-color-blueLight" id="wid-id-2"
+         data-widget-colorbutton="true"
+         data-widget-togglebutton="true"
+         data-widget-deletebutton="true"
+         data-widget-fullscreenbutton="true">
+        <header>
+            <span class="widget-icon"> <i class="glyphicon glyphicon-stats txt-color-blueDark"></i> </span>
+
+            <h2>Stats</h2>
+
+            <ul class="nav nav-tabs pull-right in" id="myTab">
+                <li class="active">
+                    <a data-toggle="tab" href="#s1"><i class="fa fa-clock-o"></i> <span
+                            class="hidden-mobile hidden-tablet">Live Stats</span></a>
+                </li>
+                <li>
+                    <a data-toggle="tab" href="#s3"><i class="fa fa-dollar"></i> <span
+                            class="hidden-mobile hidden-tablet">Revenue</span></a>
+                </li>
+            </ul>
+
+        </header>
+
+        <!-- widget div-->
+        <div>
+            <!-- widget content -->
+            <div class="widget-body">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 show-stats">
+
+                    <div class="row">
+                        <div class="col-xs-6 col-sm-6 col-md-12 col-lg-12"><span class="text"> Today's Tasks <span
+                                class="pull-right">130/200</span> </span>
+
+                            <div class="progress">
+                                <div class="progress-bar bg-color-blueDark" style="width: 80%;"></div>
+                            </div>
+                        </div>
+                        <div class="col-xs-6 col-sm-6 col-md-12 col-lg-12"><span class="text"> Overdue <span
+                                class="pull-right">8</span> </span>
+
+                            <div class="progress">
+                                <div class="progress-bar bg-color-blue" style="width: 34%;"></div>
+                            </div>
+                        </div>
+                        <div class="col-xs-6 col-sm-6 col-md-12 col-lg-12">
+                            <span class="text padding-5">Revenue</span>
+                            <span class="sparks-info txt-color-blue">$47,171</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</article>
+
+
+<article class="col-sm-12 col-md-12 col-lg-4">
+    <!-- new widget -->
+    <div class="jarviswidget jarviswidget-color-blueLight">
+        <header>
+            <h2> Quick Add Task </h2>
+        </header>
+
+        <!-- widget div-->
+        <div>
+
+            <div class="widget-body">
+                <!-- content goes here -->
+
+                <form id="add-event-form">
+                    <fieldset>
+
+                        <div class="form-group">
+                            <label>Select Task Type</label>
+
+                            <div class="btn-group btn-group-sm btn-group-justified" data-toggle="buttons">
+                                <label class="btn btn-default active">
+                                    <input type="radio" name="iconselect" id="icon-1" value="fa-info" checked>
+                                    <i class="fa fa-info text-muted"></i> </label>
+                                <label class="btn btn-default">
+                                    <input type="radio" name="iconselect" id="icon-2" value="fa-warning">
+                                    <i class="fa fa-warning text-muted"></i> </label>
+                                <label class="btn btn-default">
+                                    <input type="radio" name="iconselect" id="icon-3" value="fa-check">
+                                    <i class="fa fa-check text-muted"></i> </label>
+                                <label class="btn btn-default">
+                                    <input type="radio" name="iconselect" id="icon-4" value="fa-user">
+                                    <i class="fa fa-user text-muted"></i> </label>
+                                <label class="btn btn-default">
+                                    <input type="radio" name="iconselect" id="icon-5" value="fa-lock">
+                                    <i class="fa fa-lock text-muted"></i> </label>
+                                <label class="btn btn-default">
+                                    <input type="radio" name="iconselect" id="icon-6" value="fa-clock-o">
+                                    <i class="fa fa-clock-o text-muted"></i> </label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Claim</label>
+                            <input class="form-control" id="title" name="title" maxlength="40" type="text"
+                                   placeholder="Event Title">
+                        </div>
+                        <div class="form-group">
+                            <label>Task Description</label>
+                            <textarea class="form-control" placeholder="Please be brief" rows="3" maxlength="40"
+                                      id="description"></textarea>
+
+                            <p class="note">Maxlength is set to 40 characters</p>
+                        </div>
+                    </fieldset>
+                    <div class="form-actions">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <button class="btn btn-default" type="button" id="add-event">
+                                    Add Task
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+                <!-- end content -->
+            </div>
+
+        </div>
+        <!-- end widget div -->
+    </div>
+</article>
+<div data-bind="template: {afterRender: componentLoaded()}"></div>
