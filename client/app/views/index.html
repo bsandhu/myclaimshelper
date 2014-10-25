@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="utf-8">
+    <title> Agent 007</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <!-- #CSS Links -->
+    <link rel="stylesheet" type="text/css" href="../../css/app.css">
+
+    <!-- Basic Styles -->
+    <link rel="stylesheet" type="text/css" media="screen" href="css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="css/font-awesome.min.css">
+
+    <!-- SmartAdmin Styles : Please note (smartadmin-production.css) was created using LESS variables -->
+    <link rel="stylesheet" type="text/css" media="screen" href="css/smartadmin-production.min.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="css/smartadmin-skins.min.css">
+    <link rel="stylesheet" type="text/css" href="../../css/jquery.datetimepicker.css">
+
+    <!-- SmartAdmin RTL Support is under construction
+         This RTL CSS will be released in version 1.5
+    <link rel="stylesheet" type="text/css" media="screen" href="css/smartadmin-rtl.min.css"> -->
+
+    <!-- We recommend you use "your_style.css" to override SmartAdmin
+         specific styles this will also ensure you retrain your customization with each SmartAdmin update.
+    <link rel="stylesheet" type="text/css" media="screen" href="css/your_style.css"> -->
+
+    <!-- Demo purpose only: goes with demo.js, you can delete this css when designing your own WebApp -->
+    <link rel="stylesheet" type="text/css" media="screen" href="css/demo.min.css">
+
+    <!-- #FAVICONS -->
+    <link rel="shortcut icon" href="img/favicon/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="img/favicon/favicon.ico" type="image/x-icon">
+
+    <!-- #GOOGLE FONT -->
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,300,400,700">
+
+    <!-- #APP SCREEN / ICONS -->
+    <!-- Specifying a Webpage Icon for Web Clip
+         Ref: https://developer.apple.com/library/ios/documentation/AppleApplications/Reference/SafariWebContent/ConfiguringWebApplications/ConfiguringWebApplications.html -->
+    <link rel="apple-touch-icon" href="img/splash/sptouch-icon-iphone.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="img/splash/touch-icon-ipad.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="img/splash/touch-icon-iphone-retina.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="img/splash/touch-icon-ipad-retina.png">
+
+    <!-- iOS web-app metas : hides Safari UI Components and Changes Status Bar Appearance -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+    <!-- Startup image for web apps -->
+    <link rel="apple-touch-startup-image" href="img/splash/ipad-landscape.png"
+          media="screen and (min-device-width: 481px) and (max-device-width: 1024px) and (orientation:landscape)">
+    <link rel="apple-touch-startup-image" href="img/splash/ipad-portrait.png"
+          media="screen and (min-device-width: 481px) and (max-device-width: 1024px) and (orientation:portrait)">
+    <link rel="apple-touch-startup-image" href="img/splash/iphone.png" media="screen and (max-device-width: 320px)">
+
+    <script src="../../../lib/require.js"></script>
+    <script src="../../../lib/requireConfig.js"></script>
+</head>
+
+<!--
+
+TABLE OF CONTENTS.
+
+Use search to find needed section.
+
+===================================================================
+
+|  01. #CSS Links                |  all CSS links and file paths  |
+|  02. #FAVICONS                 |  Favicon links and file paths  |
+|  03. #GOOGLE FONT              |  Google font link              |
+|  04. #APP SCREEN / ICONS       |  app icons, screen backdrops   |
+|  05. #BODY                     |  body tag                      |
+|  06. #HEADER                   |  header tag                    |
+|  07. #PROJECTS                 |  project lists                 |
+|  08. #TOGGLE LAYOUT BUTTONS    |  layout buttons and actions    |
+|  09. #MOBILE                   |  mobile view dropdown          |
+|  10. #SEARCH                   |  search field                  |
+|  11. #NAVIGATION               |  left panel & navigation       |
+|  12. #MAIN PANEL               |  main panel                    |
+|  13. #MAIN CONTENT             |  content holder                |
+|  14. #PAGE FOOTER              |  page footer                   |
+|  15. #SHORTCUT AREA            |  dropdown shortcuts area       |
+|  16. #PLUGINS                  |  all scripts and plugins       |
+
+===================================================================
+
+-->
+
+<!-- #BODY -->
+<!-- Possible Classes
+
+    * 'smart-skin-{SKIN#}'
+    * 'smart-rtl'         - Switch theme mode to RTL (will be avilable from version SmartAdmin 1.5)
+    * 'menu-on-top'       - Switch to top navigation (no DOM change required)
+    * 'hidden-menu'       - Hides the main menu but still accessable by hovering over left edge
+    * 'fixed-header'      - Fixes the header
+    * 'fixed-navigation'  - Fixes the main menu
+    * 'fixed-ribbon'      - Fixes breadcrumb
+    * 'fixed-footer'      - Fixes footer
+    * 'container'         - boxed layout mode (non-responsive: will not work with fixed-navigation & fixed-ribbon)
+-->
+<body class="menu-on-top">
+
+<!-- #HEADER -->
+<header id="header">
+    <div id="logo-group">
+
+        <!-- PLACE YOUR LOGO HERE -->
+        <span id="logo" class="font-lg">Agent 007</span>
+        <!-- END LOGO PLACEHOLDER -->
+    </div>
+
+    <!-- #TOGGLE LAYOUT BUTTONS -->
+    <!-- pulled right: nav area -->
+    <div class="pull-right">
+
+        <!-- collapse menu button -->
+        <div id="hide-menu" class="btn-header pull-right">
+            <span> <a href="javascript:void(0);" data-action="toggleMenu" title="Collapse Menu"><i
+                    class="fa fa-reorder"></i></a> </span>
+        </div>
+        <!-- end collapse menu -->
+
+        <!-- #MOBILE -->
+        <!-- Top menu profile link : this shows only when top menu is active -->
+        <ul id="mobile-profile-img" class="header-dropdown-list hidden-xs padding-5">
+            <li class="">
+                <a href="#" class="dropdown-toggle no-margin userdropdown" data-toggle="dropdown">
+                    <img src="img/avatars/sunny.png" alt="John Doe" class="online"/>
+                </a>
+                <ul class="dropdown-menu pull-right">
+                    <li>
+                        <a href="javascript:void(0);" class="padding-10 padding-top-0 padding-bottom-0"><i
+                                class="fa fa-cog"></i> Setting</a>
+                    </li>
+                    <li class="divider"></li>
+                    <li>
+                        <a href="#ajax/profile.html" class="padding-10 padding-top-0 padding-bottom-0"> <i
+                                class="fa fa-user"></i> <u>P</u>rofile</a>
+                    </li>
+                    <li class="divider"></li>
+                    <li>
+                        <a href="javascript:void(0);" class="padding-10 padding-top-0 padding-bottom-0"
+                           data-action="toggleShortcut"><i class="fa fa-arrow-down"></i> <u>S</u>hortcut</a>
+                    </li>
+                    <li class="divider"></li>
+                    <li>
+                        <a href="javascript:void(0);" class="padding-10 padding-top-0 padding-bottom-0"
+                           data-action="launchFullscreen"><i class="fa fa-arrows-alt"></i> Full <u>S</u>creen</a>
+                    </li>
+                    <li class="divider"></li>
+                    <li>
+                        <a href="login.html" class="padding-10 padding-top-5 padding-bottom-5" data-action="userLogout"><i
+                                class="fa fa-sign-out fa-lg"></i> <strong><u>L</u>ogout</strong></a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+
+        <!-- logout button -->
+        <div id="logout" class="btn-header transparent pull-right">
+            <span> <a href="login.html" title="Sign Out" data-action="userLogout"
+                      data-logout-msg="You can improve your security further after logging out by closing this opened browser"><i
+                    class="fa fa-sign-out"></i></a> </span>
+        </div>
+        <!-- end logout button -->
+
+        <!-- fullscreen button -->
+        <div id="fullscreen" class="btn-header transparent pull-right">
+            <span> <a href="javascript:void(0);" data-action="launchFullscreen" title="Full Screen"><i
+                    class="fa fa-arrows-alt"></i></a> </span>
+        </div>
+        <!-- end fullscreen button -->
+
+    </div>
+    <!-- end pulled right: nav area -->
+
+</header>
+<!-- END HEADER -->
+
+<!-- #NAVIGATION -->
+<!-- Left panel : Navigation area -->
+<!-- Note: This width of the aside area can be adjusted through LESS variables -->
+<aside id="left-panel">
+
+    <!-- User info -->
+    <div class="login-info">
+				<span> <!-- User image size is adjusted inside CSS, it should stay as is -->
+
+					<a href="javascript:void(0);" id="show-shortcut" data-action="toggleShortcut">
+                        <img src="img/avatars/sunny.png" alt="me" class="online"/>
+						<span>
+							john.doe
+						</span>
+                        <i class="fa fa-angle-down"></i>
+                    </a>
+
+				</span>
+    </div>
+    <!-- end user info -->
+
+    <!-- NAVIGATION : This navigation is also responsive
+
+    To make this navigation dynamic please make sure to link the node
+    (the reference to the nav > ul) after page load. Or the navigation
+    will not initialize.
+    -->
+    <nav>
+        <!--
+        NOTE: Notice the gaps after each icon usage <i></i>..
+        Please note that these links work a bit different than
+        traditional href="" links. See documentation for details.
+        -->
+
+        <ul>
+            <li class="">
+                <a href="#/home" title="Dashboard">
+                    <i class="fa fa-lg fa-fw fa-home"></i>
+                    <span class="menu-item-parent">Dashboard</span>
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <i class="fa fa-lg fa-fw fa-plus-square-o"></i>
+                    <span class="menu-item-parent">Add</span>
+                </a>
+                <ul>
+                    <li>
+                        <a href="#" data-bind="click: onAddNewClaim">New Claim</a>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <a href="ajax/calendar.html"><i class="fa fa-lg fa-fw fa-credit-card"></i> <span
+                        class="menu-item-parent">Billing</span></a>
+            </li>
+            <li class="top-menu-hidden">
+                <a href="#"><i class="fa fa-lg fa-fw fa-cube txt-color-blue"></i> <span
+                        class="menu-item-parent">Misc</span></a>
+                <ul>
+                    <li>
+                        <a href="ajax/applayout.html"><i class="fa fa-cube"></i> App Settings</a>
+                    </li>
+                    <li>
+                        <a href="http://bootstraphunter.com/smartadmin/BUGTRACK/track_/documentation/index.html"
+                           target="_blank"><i class="fa fa-book"></i> Documentation</a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </nav>
+    <span class="minifyme" data-action="minifyMenu"> <i class="fa fa-arrow-circle-left hit"></i> </span>
+
+</aside>
+<!-- END NAVIGATION -->
+
+<!-- #MAIN PANEL -->
+<div id="main" role="main">
+
+    <!-- RIBBON -->
+    <div id="ribbon">
+
+				<span class="ribbon-button-alignment">
+					<span id="refresh" class="btn btn-ribbon" data-action="resetWidgets" data-title="refresh"
+                          rel="tooltip" data-placement="bottom"
+                          data-original-title="<i class='text-warning fa fa-warning'></i> Warning! This will reset all your widget settings."
+                          data-html="true"
+                          data-reset-msg="Would you like to RESET all your saved widgets and clear LocalStorage?"><i
+                            class="fa fa-refresh"></i></span>
+				</span>
+
+        <!-- breadcrumb -->
+        <ol class="breadcrumb">
+            <!-- This is auto generated -->
+        </ol>
+        <!-- end breadcrumb -->
+
+        <!-- You can also add more buttons to the
+        ribbon for further usability
+
+        Example below:
+
+        <span class="ribbon-button-alignment pull-right" style="margin-right:25px">
+            <span id="search" class="btn btn-ribbon hidden-xs" data-title="search"><i class="fa fa-grid"></i> Change Grid</span>
+            <span id="add" class="btn btn-ribbon hidden-xs" data-title="add"><i class="fa fa-plus"></i> Add</span>
+            <span id="search" class="btn btn-ribbon" data-title="search"><i class="fa fa-search"></i> <span class="hidden-mobile">Search</span></span>
+        </span> -->
+
+    </div>
+    <!-- END RIBBON -->
+
+    <!-- Notifications -->
+    <div data-bind="component: 'notifier-component'"></div>
+
+    <!-- #MAIN CONTENT -->
+    <div id="content">
+        <!-- Summary Component -->
+        <div id="gridPanel" class="slidingContainer gridPanel">
+            <div id="gridPanelContent" class="gridPanelContent">
+
+                <section id="widget-grid">
+                    <div data-bind="component: 'summary-component', visible  : showSummary"></div>
+                </section>
+            </div>
+        </div>
+        <!-- **** Claim module **** -->
+        <div id="claimPanel" class="slidingContainer claimPanel" style="width: 0%;">
+            <div id="claimPanelContent" class="claimPanelContent">
+                <div data-bind="module: {name: 'app/viewModels/claimVM',
+                                         template: 'app/views/claim',
+                                         afterRender: startRouter}"></div>
+            </div>
+        </div>
+
+        <!-- **** Claim Entry module **** -->
+        <div id="claimEntryPanel" class="slidingContainer claimEntryPanel" style="width: 0%;">
+            <div id="claimEntryPanelContent" class="claimEntryPanelContent">
+                <div data-bind="module: {name: 'app/viewModels/claimEntryVM', template: 'app/views/claimEntry'}"></div>
+            </div>
+        </div>
+    </div>
+    <!-- END #MAIN CONTENT -->
+
+</div>
+<!-- END #MAIN PANEL -->
+
+<!-- #PAGE FOOTER -->
+<div class="page-footer">
+    <div class="row">
+        <div class="col-xs-12 col-sm-6">
+            <span class="txt-color-white">Logicube © 2013-2014</span>
+        </div>
+    </div>
+</div>
+<!-- END FOOTER -->
+</body>
+
+<script type="application/javascript">
+    /**
+     * Load libs and init Knockout - on app startup. See requireConfig.js
+     */
+    require(['jquery', 'knockout', 'KOAmd', 'text', 'amplify', 'app/viewModels/appVM', 'shared/dateUtils', 'jarvis',
+                'app/utils/koDatetimePickerBinding', 'app/utils/koWYSIWYGBinding',
+                'velocity', 'bootstrap'],
+            function ($, ko, KOAmd, text, amplify, AppVM, DateUtils, jarvis, dtBinding) {
+                console.log('Init App');
+
+                DateUtils.enableJSONDateHandling();
+
+
+                // Knockout AMD supoprt setup
+                ko.amdTemplateEngine.defaultRequireTextPluginName = "text";
+                ko.amdTemplateEngine.defaultPath = "/";
+                ko.amdTemplateEngine.defaultSuffix = ".tmpl.html";
+
+                // Register components
+                ko.components.register('contact-component', {require: 'app/components/contact/contactComponent'});
+                ko.components.register('file-upload-component', {require: 'app/components/fileUpload/fileUploadComponent'});
+                ko.components.register('summary-component', {require: 'app/components/summary/summaryVM'});
+                ko.components.register('claims-list-component', {require: 'app/components/claimsList/claimsListVM'});
+                ko.components.register('notifier-component', {require: 'app/components/notifier/notifierVM'});
+                ko.components.register('maps-component', {require: 'app/components/maps/mapsComponent'});
+                ko.components.register('status-editor-component', {require: 'app/components/statusEditor/statusEditorComponent'});
+
+                // Knockout bindings init
+                ko.applyBindings(new AppVM());
+            });
+</script>
+
+
+</html>

@@ -41,7 +41,6 @@ function listAllContacts(req, res) {
         var contactsCol = db.collection(mongoUtils.CONTACTS_COL_NAME);
         contactsCol.find().toArray(function (err, items) {
             sendResponse(res, err, items);
-            db.close();
         });
     });
 }

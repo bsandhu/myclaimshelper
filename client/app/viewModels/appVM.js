@@ -178,7 +178,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
         AppVM.prototype.collapseGridPanel = function () {
             if (this.searchPanelState !== 'collapsed') {
                 $('#gridPanelCollapsedContent').velocity("fadeIn", { duration: this.gridNavDelay });
-                $("#gridPanel").velocity({ width: '3%' }, {duration: this.gridNavDelay}, this.gridNavEffect);
+                $("#gridPanel").velocity({ width: '0%' }, {duration: this.gridNavDelay}, this.gridNavEffect);
                 $("#gridPanelContent").velocity("fadeOut", { duration: this.gridNavDelay });
                 this.searchPanelState = 'collapsed';
             }
@@ -204,7 +204,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
 
         AppVM.prototype.partiallyCollapseClaimPanel = function () {
             if (this.claimPanelState !== 'partiallyCollapsed') {
-                $("#claimPanel").velocity({ width: '30%' }, {duration: this.gridNavDelay}, this.gridNavEffect);
+                $("#claimPanel").velocity({ width: '38%' }, {duration: this.gridNavDelay}, this.gridNavEffect);
                 $("#claimPanelContent").velocity("fadeIn", { duration: this.gridNavDelay });
                 this.claimPanelState = 'partiallyCollapsed';
             }
@@ -214,7 +214,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
 
         AppVM.prototype.expandClaimEntryPanel = function () {
             if (this.claimEntryPanelState !== 'expanded') {
-                $("#claimEntryPanel").velocity({ 'width': '50%' }, this.gridNavDelay);
+                $("#claimEntryPanel").velocity({ 'width': '60%' }, this.gridNavDelay);
                 $("#claimEntryPanelContent").velocity("fadeIn", { duration: this.gridNavDelay });
                 this.claimEntryPanelState = 'expanded';
             }

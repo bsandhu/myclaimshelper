@@ -47,8 +47,9 @@
                 Description
             </div>
             <div class="inline" style="display: table-cell; width: 95%; padding-left: 3px">
-                <textarea class="form-control" rows="3" id="claimEntry-textArea"
-                          data-bind="value: claimEntry().description" placeholder="Note"></textarea>
+                <div class="form-control" rows="3" id="claimEntry-textArea"
+                     data-bind="wysiwygEditor: claimEntry().description"
+                     placeholder="Note"></div>
             </div>
         </div>
 

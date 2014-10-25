@@ -88,7 +88,11 @@ div {
 }
 
 .topMargin1pc {
-    margin-top: 10px;
+    margin-top: 1%;
+}
+
+.topMargin5pc {
+    margin-top: 5%;
 }
 
 .bottomMargin {
@@ -189,7 +193,7 @@ div {
 #map-canvas {
     width: 100%;
     height: 100%;
-    min-height: 500px;
+    min-height: 200px;
 }
 
 .editable {
@@ -258,13 +262,14 @@ div {
 
 .searchPanel {
     width: 15%;
-    background-color: #4C5B6A;
+    background-color: #35404B;
     color: rgb(119, 119, 119);
-    font-size: 13px;
 
     border-right-color: rgb(65, 81, 96);
     border-right-style: solid;
     border-right-width: 1px;
+
+    font-size: 14px;
 }
 
 .searchPanelItemGroup {
