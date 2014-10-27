@@ -3,7 +3,7 @@ define(['knockout', 'text!app/components/maps/mapsComponent.tmpl.html', 'async!h
     function(ko, viewHtml) {
         'use strict';
         console.log('Maps Widget');
-        $('#map-canvas').css('z-index', '-1');
+
         function mapsComponentVM(params) {
             console.assert(params.claimEntry, 'Expecting claimEntry param');
             this.claimEntry = params.claimEntry;
