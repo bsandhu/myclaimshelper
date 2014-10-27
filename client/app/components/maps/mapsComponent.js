@@ -3,7 +3,7 @@ define(['knockout', 'text!app/components/maps/mapsComponent.tmpl.html', 'async!h
     function(ko, viewHtml) {
         'use strict';
         console.log('Maps Widget');
-
+        $('#map-canvas').css('z-index', '-1');
         function mapsComponentVM(params) {
             console.assert(params.claimEntry, 'Expecting claimEntry param');
             this.claimEntry = params.claimEntry;
@@ -16,11 +16,12 @@ define(['knockout', 'text!app/components/maps/mapsComponent.tmpl.html', 'async!h
             var markers = [];
             var input = document.getElementById('pac-input');
             input.value = 'Manhattan';
-            var types = document.getElementById('type-selector');
+            //var types = document.getElementById('type-selector');
 
-            map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
-            map.controls[google.maps.ControlPosition.TOP_LEFT].push(types);
-
+            //map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+            //map.controls[google.maps.ControlPosition.TOP_LEFT].push(types);
+            var close = document.getElementById('map-close');
+            map.controls[google.maps.ControlPosition.TOP_LEFT].push(close);
             var autocomplete = new google.maps.places.Autocomplete(input);
             autocomplete.bindTo('bounds', map);
 
@@ -65,6 +66,26 @@ define(['knockout', 'text!app/components/maps/mapsComponent.tmpl.html', 'async!h
                 }
                 createMarker(place);
             });
+
+            google.maps.event.addListenerOnce(map, 'idle', function() {
+                google.maps.event.trigger(map, 'resize');
+            });
+
+/*            $('maps').popover({selector: '[rel="map-canvas"]'});*/
+            this.showMap = function() {
+                console.log('display map');
+/*                if ($('#map-canvas').css('z-index', '-1')) {
+                    console.log('2');
+                    $('#map-canvas').css('z-index', '2');
+                }
+                else if ($('#map-canvas').css('z-index', '2')) {
+                    console.log('-1');
+                    $('#map-canvas').css('z-index', '-1');
+                }*/
+
+            }
+
+            //$('#map-canvas').css('z-index', '-1');
 
         }
 
