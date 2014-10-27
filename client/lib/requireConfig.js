@@ -2,6 +2,8 @@ require.config({
     baseUrl: '/',
     paths: {
         'jquery'    : 'lib/jquery.min',
+        'jqueryui'  : 'lib/jquery.ui.min',
+        'hotkeys'   : 'lib/jquery.hotkeys',
         'knockout'  : 'lib/knockout',
         'KOMap'     : 'lib/knockout.mapping.min',   // Map KO <-> JSON
         'KOAmd'     : 'lib/knockout.amd.helpers',   // Load templates async
@@ -9,19 +11,31 @@ require.config({
         'amplify'   : 'lib/amplify',                // Pub/sub
         'text'      : 'lib/require.text',           // Require plugin for html templates
         'Path'      : 'lib/path',
-        'bootstrap' : 'lib/bootstrap',
+        'bootstrap' : 'lib/bootstrap.min',
+        'wysiwyg'   : 'lib/bootstrap.wysiwyg',
         'async'     : 'lib/async',
-        'datetimepicker' : 'lib/jquery.datetimepicker'
+        'datetimepicker' : 'lib/jquery.datetimepicker',
+        'smartnotify' : 'lib/SmartNotification.min',
+        'jarvis'    : 'lib/jarvis.widget.min'
     },
     shim: {
+        'jqueryui': {
+            deps: ['jquery']
+        },
+        'jarvis': {
+            deps: ['jquery', 'jqueryui']
+        },
         'velocity': {
             deps: ['jquery']
         },
         'datetimepicker': {
-            deps: ['jquery']
+            deps: ['jquery', 'jqueryui']
         },
         'bootstrap': {
             deps: ['jquery']
+        },
+        'wysiwyg' : {
+            deps: ['jquery', 'bootstrap', 'hotkeys']
         },
         'knockout': {
             deps: ['jquery']

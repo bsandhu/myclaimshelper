@@ -9,12 +9,8 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
             // UI state
             this.gridNavDelay = 100;
             this.gridNavEffect = 'easeOut';
-            this.gridPanelState = undefined;
             this.claimPanelState = undefined;
             this.claimEntryPanelState = undefined;
-
-            this.showSummary = ko.observable(true);
-            this.showClaimsList = ko.observable(false);
 
             // Model
             this.stateChoice = ko.observable();
@@ -26,7 +22,6 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
             ];
 
             // View state
-            this.hideSearchPanelCollapsedLabel();
             this.setupEvListeners();
         }
 
@@ -37,29 +32,6 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
 
         AppVM.prototype.onHelpClick = function (claim) {
             window.open('/help/help.html', 'Agent help');
-        };
-
-        AppVM.prototype.onClaimsListViewClick = function () {
-            this.showClaimsList(true);
-            this.showSummary(false);
-        };
-
-        AppVM.prototype.onClaimsSummaryViewClick = function () {
-            this.showClaimsList(false);
-            this.showSummary(true);
-        };
-
-        /*************************************************/
-        /* Search                                        */
-        /*************************************************/
-
-        AppVM.prototype.onStateSelect = function () {
-            var _this = this;
-            this.stateChoice.subscribe(
-                function triggerSearch(selectedOption) {
-                    console.log(selectedOption[0].query);
-                    _this.searchClaims(selectedOption[0].query);
-                });
         };
 
         /*************************************************/
@@ -96,19 +68,19 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
         };
 
         AppVM.prototype.transitionToSearchResults = function () {
-            this.expandGridPanel();
+            this.expandDashboardPanel();
             this.collapseClaimPanel();
             this.collapseClaimEntryPanel();
         };
 
         AppVM.prototype.transitionToClaimEntry = function () {
-            this.collapseGridPanel();
+            this.collapseDashboardPanel();
             this.partiallyCollapseClaimPanel();
             this.expandClaimEntryPanel();
         };
 
         AppVM.prototype.transitionToClaim = function () {
-            this.collapseGridPanel();
+            this.collapseDashboardPanel();
             this.collapseClaimEntryPanel();
             this.expandClaimPanel();
         };
@@ -121,65 +93,34 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
         /* Panels animation                              */
         /*************************************************/
 
-        // Search (left most)
-
-        AppVM.prototype.toggleSearchPanel = function () {
-            console.log('Search panel toggle');
-            if ($('#searchPanel').width() <= 30) {
-                this.expandSearchPanel();
-            } else {
-                this.collapseSearchPanel();
-            }
-        };
-
-        AppVM.prototype.showSearchPanelCollapsedLabel = function () {
-            $('#searchPanelCollapsedContent').velocity("fadeIn", { duration: this.gridNavDelay });
-        };
-
-        AppVM.prototype.hideSearchPanelCollapsedLabel = function () {
-            $('#searchPanelCollapsedContent').hide();
-        };
-
-        AppVM.prototype.expandSearchPanel = function () {
-            this.hideSearchPanelCollapsedLabel();
-            $('#searchPanel').velocity({ width: '18%' }, 200, 'easeOut');
-            $('#searchPanelContent').velocity("fadeIn", { duration: 200 });
-        };
-
-        AppVM.prototype.collapseSearchPanel = function () {
-            this.showSearchPanelCollapsedLabel();
-            $('#searchPanel').velocity({ width: '30px' }, {duration: this.gridNavDelay, easing: this.gridNavEffect});
-            $('#searchPanelContent').velocity("fadeOut", { duration: this.gridNavDelay });
-        };
-
-        // Grid panel (summary)
+        // Dashboard panel
 
         AppVM.prototype.lessThat3PercentWide = function (elem) {
             return (elem.width() / elem.parent().width() * 100).toFixed(0) <= 3;
         };
 
-        AppVM.prototype.toggleGridPanel = function () {
-            if (this.lessThat3PercentWide($("#gridPanel"))) {
+        AppVM.prototype.toggledashboardPanel = function () {
+            if (this.lessThat3PercentWide($("#dashboardPanel"))) {
                 Router.routeToHome();
             } else {
-                this.collapseGridPanel.bind(this);
+                this.collapseDashboardPanel.bind(this);
             }
         };
 
-        AppVM.prototype.expandGridPanel = function () {
+        AppVM.prototype.expandDashboardPanel = function () {
             if (this.searchPanelState !== 'expanded') {
-                $("#gridPanel").velocity({ width: '100%' }, this.gridNavDelay);
-                $("#gridPanelContent").velocity("fadeIn", { duration: this.gridNavDelay });
-                $('#gridPanelCollapsedContent').hide();
+                $("#dashboardPanel").velocity({ width: '100%' }, this.gridNavDelay);
+                $("#dashboardPanelContent").velocity("fadeIn", { duration: this.gridNavDelay });
+                $('#dashboardPanelCollapsedContent').hide();
                 this.searchPanelState = 'expanded';
             }
         };
 
-        AppVM.prototype.collapseGridPanel = function () {
+        AppVM.prototype.collapseDashboardPanel = function () {
             if (this.searchPanelState !== 'collapsed') {
-                $('#gridPanelCollapsedContent').velocity("fadeIn", { duration: this.gridNavDelay });
-                $("#gridPanel").velocity({ width: '3%' }, {duration: this.gridNavDelay}, this.gridNavEffect);
-                $("#gridPanelContent").velocity("fadeOut", { duration: this.gridNavDelay });
+                $('#dashboardPanelCollapsedContent').velocity("fadeIn", { duration: this.gridNavDelay });
+                $("#dashboardPanel").velocity({ width: '0%' }, {duration: this.gridNavDelay}, this.gridNavEffect);
+                $("#dashboardPanelContent").velocity("fadeOut", { duration: this.gridNavDelay });
                 this.searchPanelState = 'collapsed';
             }
         };
@@ -204,7 +145,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
 
         AppVM.prototype.partiallyCollapseClaimPanel = function () {
             if (this.claimPanelState !== 'partiallyCollapsed') {
-                $("#claimPanel").velocity({ width: '30%' }, {duration: this.gridNavDelay}, this.gridNavEffect);
+                $("#claimPanel").velocity({ width: '38%' }, {duration: this.gridNavDelay}, this.gridNavEffect);
                 $("#claimPanelContent").velocity("fadeIn", { duration: this.gridNavDelay });
                 this.claimPanelState = 'partiallyCollapsed';
             }
@@ -214,7 +155,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
 
         AppVM.prototype.expandClaimEntryPanel = function () {
             if (this.claimEntryPanelState !== 'expanded') {
-                $("#claimEntryPanel").velocity({ 'width': '50%' }, this.gridNavDelay);
+                $("#claimEntryPanel").velocity({ 'width': '60%' }, this.gridNavDelay);
                 $("#claimEntryPanelContent").velocity("fadeIn", { duration: this.gridNavDelay });
                 this.claimEntryPanelState = 'expanded';
             }

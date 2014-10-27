@@ -23,6 +23,7 @@ describe('Claims Service', function () {
     testEntry.dueDate = new Date(2014, 2, 10);
     testEntry.summary = "I am test Task too";
     testEntry.state = 'open';
+    testEntry.description = 'Bill has a hat. He is going to catch up with Elnora Ragan on wed morning.';
 
     after(function(done) {
         assert.ok(testClaim._id);
@@ -69,6 +70,7 @@ describe('Claims Service', function () {
             assert(data);
             assert.equal(data.status, 'Success');
             assert.ok(data.data._id);
+            assert.equal(data.data.description, '<b>Bill</b> has a hat. He is going to catch up with <b>Elnora Ragan</b> on wed morning.');
             done();
         };
         claimsService.saveOrUpdateClaimEntry(req, res);

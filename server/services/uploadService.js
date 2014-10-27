@@ -84,7 +84,6 @@ function saveToDB(fileName, filePath) {
                 gridStore.writeFile(filePath, function (err, gridStore) {
                     if (err) {
                         saveDeferred.reject(err);
-                        db.close();
                         return;
                     }
                     // Close (Flushes the data to MongoDB)
@@ -93,7 +92,6 @@ function saveToDB(fileName, filePath) {
                             saveDeferred.reject(err);
                             return;
                         }
-                        db.close();
                         console.log('Uploaded ' + fileName + ' to GridFS');
                         saveDeferred.resolve(seqNum);
                     });
@@ -134,7 +132,6 @@ function readFromDB(_id) {
 
             stream.on("close", function () {
                 assert.ok(gotEnd);
-                db.close();
             });
             defer.resolve(stream);
         });
