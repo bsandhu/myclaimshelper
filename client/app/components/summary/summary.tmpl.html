@@ -1,33 +1,31 @@
-<div class="row">
-<article class="col-xs-12 col-sm-6 col-md-6 col-lg-8">
-    <!-- Widget ID (each widget will need unique ID)-->
-    <div class="jarviswidget jarviswidget-color-blueLight" id="wid-id-1"
-         data-widget-colorbutton="true"
-         data-widget-togglebutton="true"
-         data-widget-deletebutton="true"
-         data-widget-fullscreenbutton="true">
-        <header>
-            <span class="widget-icon"> <i class="fa fa-eye txt-color-blueDark"></i> </span>
-            <h2 class="txt-color-blueDark">Overview</h2>
+<div class="jarviswidget jarviswidget-color-blueLight" id="wid-id-1"
+     data-widget-colorbutton="true"
+     data-widget-togglebutton="true"
+     data-widget-deletebutton="true"
+     data-widget-fullscreenbutton="true">
+    <header>
+        <span class="widget-icon"> <i class="fa fa-eye txt-color-blueDark"></i> </span>
 
-            <ul id="widget-tab-1" class="nav nav-tabs pull-right">
-                <li class="active">
-                    <a data-toggle="tab" href="#hr1">
-                        <i class="fa fa-check-square-o"></i>
-                        <span class="hidden-mobile hidden-tablet"> Tasks </span>
-                    </a>
-                </li>
-                <li>
-                    <a data-toggle="tab" href="#hr2">
-                        <i class="fa fa-briefcase"></i>
-                        <span class="hidden-mobile hidden-tablet"> Claims </span>
-                    </a>
-                </li>
+        <h2 class="txt-color-blueDark">Overview</h2>
 
-            </ul>
-        </header>
-        <!-- widget div-->
-        <div>
+        <ul id="widget-tab-1" class="nav nav-tabs pull-right">
+            <li class="active">
+                <a data-toggle="tab" href="#hr1">
+                    <i class="fa fa-check-square-o"></i>
+                    <span class="hidden-mobile hidden-tablet"> Tasks </span>
+                </a>
+            </li>
+            <li>
+                <a data-toggle="tab" href="#hr2">
+                    <i class="fa fa-briefcase"></i>
+                    <span class="hidden-mobile hidden-tablet"> Claims </span>
+                </a>
+            </li>
+
+        </ul>
+    </header>
+    <!-- widget div-->
+    <div>
 
         <!-- widget edit box -->
         <div class="jarviswidget-editbox">
@@ -35,10 +33,10 @@
         </div>
         <!-- end widget edit box -->
 
-            <!-- widget content -->
-            <div class="widget-body no-padding">
-                <div class="tab-content padding-10">
-                    <div class="tab-pane fade in active" id="hr1">
+        <!-- widget content -->
+        <div class="widget-body no-padding">
+            <div class="tab-content padding-10">
+                <div class="tab-pane fade in active" id="hr1">
 
                     <div class="panel">
                         <div class="panel-heading">
@@ -150,148 +148,15 @@
                         <!-- End panel body -->
                     </div>
 
-                    </div>
-                    <div class="tab-pane fade" id="hr2">
-                        <div data-bind="component: 'claims-list-component'"></div>
-                    </div>
                 </div>
-            </div>
-            <!-- end widget content -->
-        </div>
-        <!-- end widget div -->
-    </div>
-    <!-- end widget -->
-</article>
-
-<article class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
-    <div class="jarviswidget jarviswidget-color-blueLight" id="wid-id-2"
-         data-widget-colorbutton="true"
-         data-widget-togglebutton="true"
-         data-widget-deletebutton="true"
-         data-widget-fullscreenbutton="true">
-        <header>
-            <span class="widget-icon"> <i class="glyphicon glyphicon-stats txt-color-blueDark"></i> </span>
-
-            <h2>Stats</h2>
-
-            <ul class="nav nav-tabs pull-right in" id="myTab">
-                <li class="active">
-                    <a data-toggle="tab" href="#s1"><i class="fa fa-clock-o"></i> <span
-                            class="hidden-mobile hidden-tablet">Live Stats</span></a>
-                </li>
-                <li>
-                    <a data-toggle="tab" href="#s3"><i class="fa fa-dollar"></i> <span
-                            class="hidden-mobile hidden-tablet">Revenue</span></a>
-                </li>
-            </ul>
-
-        </header>
-
-        <!-- widget div-->
-        <div>
-            <!-- widget content -->
-            <div class="widget-body">
-                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 show-stats">
-
-                    <div class="row">
-                        <div class="col-xs-6 col-sm-6 col-md-12 col-lg-12"><span class="text"> Today's Tasks <span
-                                class="pull-right">130/200</span> </span>
-
-                            <div class="progress">
-                                <div class="progress-bar bg-color-blueDark" style="width: 80%;"></div>
-                            </div>
-                        </div>
-                        <div class="col-xs-6 col-sm-6 col-md-12 col-lg-12"><span class="text"> Overdue <span
-                                class="pull-right">8</span> </span>
-
-                            <div class="progress">
-                                <div class="progress-bar bg-color-blue" style="width: 34%;"></div>
-                            </div>
-                        </div>
-                        <div class="col-xs-6 col-sm-6 col-md-12 col-lg-12">
-                            <span class="text padding-5">Revenue</span>
-                            <span class="sparks-info txt-color-blue">$47,171</span>
-                        </div>
-                    </div>
-
+                <div class="tab-pane fade" id="hr2">
+                    <div data-bind="component: 'claims-list-component'"></div>
                 </div>
             </div>
         </div>
+        <!-- end widget content -->
     </div>
-</article>
+    <!-- end widget div -->
+</div>
 
-
-<article class="col-sm-12 col-md-12 col-lg-4">
-    <!-- new widget -->
-    <div class="jarviswidget jarviswidget-color-blueLight">
-        <header>
-            <span class="widget-icon"> <i class="fa fa-plus-circle txt-color-blueDark"></i> </span>
-            <h2> Quick Add Task </h2>
-        </header>
-
-        <!-- widget div-->
-        <div>
-
-            <div class="widget-body">
-                <!-- content goes here -->
-
-                <form id="add-event-form">
-                    <fieldset>
-
-                        <div class="form-group">
-                            <label>Select Task Type</label>
-
-                            <div class="btn-group btn-group-sm btn-group-justified" data-toggle="buttons">
-                                <label class="btn btn-default active">
-                                    <input type="radio" name="iconselect" id="icon-1" value="fa-info" checked>
-                                    <i class="fa fa-info text-muted"></i> </label>
-                                <label class="btn btn-default">
-                                    <input type="radio" name="iconselect" id="icon-2" value="fa-warning">
-                                    <i class="fa fa-warning text-muted"></i> </label>
-                                <label class="btn btn-default">
-                                    <input type="radio" name="iconselect" id="icon-3" value="fa-check">
-                                    <i class="fa fa-check text-muted"></i> </label>
-                                <label class="btn btn-default">
-                                    <input type="radio" name="iconselect" id="icon-4" value="fa-user">
-                                    <i class="fa fa-user text-muted"></i> </label>
-                                <label class="btn btn-default">
-                                    <input type="radio" name="iconselect" id="icon-5" value="fa-lock">
-                                    <i class="fa fa-lock text-muted"></i> </label>
-                                <label class="btn btn-default">
-                                    <input type="radio" name="iconselect" id="icon-6" value="fa-clock-o">
-                                    <i class="fa fa-clock-o text-muted"></i> </label>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label>Claim</label>
-                            <input class="form-control" id="title" name="title" maxlength="40" type="text"
-                                   placeholder="Event Title">
-                        </div>
-                        <div class="form-group">
-                            <label>Task Description</label>
-                            <textarea class="form-control" placeholder="Please be brief" rows="3" maxlength="40"
-                                      id="description"></textarea>
-
-                            <p class="note">Maxlength is set to 40 characters</p>
-                        </div>
-                    </fieldset>
-                    <div class="form-actions">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <button class="btn btn-default" type="button" id="add-event">
-                                    Add Task
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </form>
-
-                <!-- end content -->
-            </div>
-
-        </div>
-        <!-- end widget div -->
-    </div>
-</article>
 <div data-bind="template: {afterRender: componentLoaded()}"></div>

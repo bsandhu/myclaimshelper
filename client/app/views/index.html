@@ -20,17 +20,6 @@
     <link rel="stylesheet" type="text/css" media="screen" href="css/smartadmin-skins.min.css">
     <link rel="stylesheet" type="text/css" href="../../css/jquery.datetimepicker.css">
 
-    <!-- SmartAdmin RTL Support is under construction
-         This RTL CSS will be released in version 1.5
-    <link rel="stylesheet" type="text/css" media="screen" href="css/smartadmin-rtl.min.css"> -->
-
-    <!-- We recommend you use "your_style.css" to override SmartAdmin
-         specific styles this will also ensure you retrain your customization with each SmartAdmin update.
-    <link rel="stylesheet" type="text/css" media="screen" href="css/your_style.css"> -->
-
-    <!-- Demo purpose only: goes with demo.js, you can delete this css when designing your own WebApp -->
-    <link rel="stylesheet" type="text/css" media="screen" href="css/demo.min.css">
-
     <!-- #FAVICONS -->
     <link rel="shortcut icon" href="img/favicon/favicon.ico" type="image/x-icon">
     <link rel="icon" href="img/favicon/favicon.ico" type="image/x-icon">
@@ -297,12 +286,21 @@ Use search to find needed section.
     <!-- #MAIN CONTENT -->
     <div id="content">
         <!-- Summary Component -->
-        <div id="gridPanel" class="slidingContainer gridPanel">
-            <div id="gridPanelContent" class="gridPanelContent">
-
-                <section id="widget-grid">
-                    <div data-bind="component: 'summary-component', visible  : showSummary"></div>
-                </section>
+        <div id="dashboardPanel" class="slidingContainer dashboardPanel">
+            <div id="dashboardPanelContent" class="dashboardPanelContent">
+                <div class="row">
+                    <section id="widget-grid">
+                        <article class="col-xs-12 col-sm-12 col-md-12 col-lg-8">
+                            <div data-bind="component: 'summary-component'"></div>
+                        </article>
+                        <article class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
+                            <div data-bind="component: 'stats-component'"></div>
+                        </article>
+                        <article class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
+                            <div data-bind="component: 'quick-add-component'"></div>
+                        </article>
+                    </section>
+                </div>
             </div>
         </div>
         <!-- **** Claim module **** -->
@@ -322,19 +320,22 @@ Use search to find needed section.
         </div>
     </div>
     <!-- END #MAIN CONTENT -->
-
 </div>
 <!-- END #MAIN PANEL -->
 
 <!-- #PAGE FOOTER -->
-<div class="page-footer">
-    <div class="row">
-        <div class="col-xs-12 col-sm-6">
-            <span class="txt-color-white">Logicube © 2013-2014</span>
+<footer style="position: relative; bottom: 0">
+    <div class="page-footer">
+        <div class="row">
+            <div class="col-xs-12 col-sm-6 col-lg-12 text-right">
+                <span class="txt-color-white">Logicube © 2013-2014</span>
+            </div>
         </div>
     </div>
-</div>
+</footer>
 <!-- END FOOTER -->
+
+
 </body>
 
 <script type="application/javascript">
@@ -363,6 +364,8 @@ Use search to find needed section.
                 ko.components.register('notifier-component', {require: 'app/components/notifier/notifierVM'});
                 ko.components.register('maps-component', {require: 'app/components/maps/mapsComponent'});
                 ko.components.register('status-editor-component', {require: 'app/components/statusEditor/statusEditorComponent'});
+                ko.components.register('quick-add-component', {require: 'app/components/quickAdd/quickAddVM'});
+                ko.components.register('stats-component', {require: 'app/components/stats/statsVM'});
 
                 // Knockout bindings init
                 ko.applyBindings(new AppVM());
