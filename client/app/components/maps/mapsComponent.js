@@ -47,7 +47,7 @@ define(['knockout', 'text!app/components/maps/mapsComponent.tmpl.html', 'async!h
                     }
                 }
 
-                google.maps.event.addListener(autocomplete, 'place_changed', function () {
+                google.maps.event.addListener(autocomplete, 'place_changed', function() {
                     var place = autocomplete.getPlace();
                     setAllMap(null);
                     markers = [];
@@ -63,7 +63,7 @@ define(['knockout', 'text!app/components/maps/mapsComponent.tmpl.html', 'async!h
                     createMarker(place);
                 });
 
-                google.maps.event.addListenerOnce(map, 'idle', function () {
+                google.maps.event.addListenerOnce(map, 'idle', function() {
                     google.maps.event.trigger(map, 'resize');
                 });
 
