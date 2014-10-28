@@ -74,7 +74,13 @@ define(['knockout', 'text!app/components/maps/mapsComponent.tmpl.html', 'async!h
                 initialize();
             };
 
+            // init SmartAdmin popover
             $("[rel=popover]").popover();
+            // Load maps div once so autocomplete works
+            setTimeout(function(){
+                $('#map-button').click();
+                $('#map-button').click();
+            },1000);
 
         }
 
