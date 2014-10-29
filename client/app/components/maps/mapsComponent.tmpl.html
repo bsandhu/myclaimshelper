@@ -1,4 +1,21 @@
 <div id="maps">
     <input id="pac-input" class="controls wide" type="text" value="Manhattan">
-    <button id='map-button' rel="popover" data-placement="right" data-content="<div class='popover-content' id='map-canvas'></div>" data-html="true" data-bind="click: showMap">Map</button>
+    <button id="map-button" data-bind="click: showMap">Map</button>
+    <button id="modal-button" type="button" data-toggle="modal" data-target="#mapModal" data-bind="click: mapModal">Map modal</button>
+    <div id="map-canvas"></div>
+
+    <div class="modal fade" id="mapModal" tabindex="-1" role="dialog" aria-labelledby="mapModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    Maps Modal Test
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                </div>
+                <div class="modal-body">
+                    <div id="map-modal"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
