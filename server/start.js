@@ -72,7 +72,7 @@ function setupStaticRoutes() {
     server.get(/\/css\/.*/, restify.serveStatic({
         directory: 'client'
     }));
-    server.get(/\/images\/.*/, restify.serveStatic({
+    server.get(/\/img\/.*/, restify.serveStatic({
         directory: 'client'
     }));
     server.get(/\/help\/.*/, restify.serveStatic({

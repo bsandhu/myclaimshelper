@@ -1,11 +1,14 @@
 define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEntry', 'model/states',
         'app/utils/ajaxUtils', 'app/utils/events', 'app/utils/router', 'app/utils/sessionKeys',
-        'shared/dateUtils'],
-    function ($, ko, KOMap, amplify, Claim, ClaimEntry, States, ajaxUtils, Events, Router, SessionKeys, DateUtils) {
+        'shared/dateUtils',
+        'text!app/components/taskEntry/taskEntry.tmpl.html'],
+    function ($, ko, KOMap, amplify, Claim, ClaimEntry, States, ajaxUtils, Events, Router, SessionKeys,
+              DateUtils, taskEntryView) {
         'use strict';
 
-        function ClaimEntryVM() {
-            console.log('Init ClaimEntryVM');
+        function TaskEntryVM() {
+            console.log('Init TaskEntryVM');
+            this.DateUtils = DateUtils;
 
             // Model
             this.claimEntry = ko.observable(this.newEmptyClaimEntry());
@@ -18,7 +21,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
             this.startStateTracking();
         }
 
-        ClaimEntryVM.prototype.newEmptyClaimEntry = function () {
+        TaskEntryVM.prototype.newEmptyClaimEntry = function () {
             var jsEntryObject = new ClaimEntry();
             var entryObjWithObservableAttributes = KOMap.fromJS(jsEntryObject);
             return entryObjWithObservableAttributes;
@@ -27,7 +30,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
         /**
          * Tracks changes to the Claim entry object. Used to highlight 'save' button on the UI
          */
-        ClaimEntryVM.prototype.startStateTracking = function () {
+        TaskEntryVM.prototype.startStateTracking = function () {
             this.claimEntryState = ko.computed(function(){
                 return KOMap.toJSON(this.claimEntry);
             }, this);
@@ -39,7 +42,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
             }, this);
         };
 
-        ClaimEntryVM.prototype.stopStateTracking = function () {
+        TaskEntryVM.prototype.stopStateTracking = function () {
             this.stateChangeSubsciption.dispose();
             this.stateChange(false);
         };
@@ -48,19 +51,19 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
         /* Event handlers                                          */
         /***********************************************************/
 
-        ClaimEntryVM.prototype.setupEvListeners = function () {
+        TaskEntryVM.prototype.setupEvListeners = function () {
             amplify.subscribe(Events.SHOW_CLAIM_ENTRY, this, this.onShowClaimEntry);
             amplify.subscribe(Events.NEW_CLAIM_ENTRY, this, this.onNewClaimEntry);
             amplify.subscribe(Events.UPDATE_CLAIM_ENTRY_STATUS, this, this.onStatusUpdate);
         };
 
-        ClaimEntryVM.prototype.onShowClaimEntry = function (evData) {
-            console.log('ClaimEntryVM - SHOW_CLAIM_ENTRY ev ' + JSON.stringify(evData));
+        TaskEntryVM.prototype.onShowClaimEntry = function (evData) {
+            console.log('TaskEntryVM - SHOW_CLAIM_ENTRY ev ' + JSON.stringify(evData));
             this.loadClaimEntry(evData.claimEntryId);
         };
 
-        ClaimEntryVM.prototype.onNewClaimEntry = function (evData) {
-            console.log('ClaimEntryVM - NEW_CLAIM_ENTRY ev ' + JSON.stringify(evData));
+        TaskEntryVM.prototype.onNewClaimEntry = function (evData) {
+            console.log('TaskEntryVM - NEW_CLAIM_ENTRY ev ' + JSON.stringify(evData));
             var tag = Boolean(evData.entryType) ? evData.entryType : 'other';
 
             this.claimEntry(this.newEmptyClaimEntry());
@@ -74,8 +77,8 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
         /**
          * @param evData {'claimEntryId': entry._id, 'status': status});
          */
-        ClaimEntryVM.prototype.onStatusUpdate = function(evData){
-            console.log('ClaimEntryVM - UPDATE_CLAIM_ENTRY_STATUS ev ' + JSON.stringify(evData));
+        TaskEntryVM.prototype.onStatusUpdate = function(evData){
+            console.log('TaskEntryVM - UPDATE_CLAIM_ENTRY_STATUS ev ' + JSON.stringify(evData));
 
             var claimEntryId = evData.claimEntryId;
             var claimId = this.getActiveClaimId();
@@ -94,7 +97,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
                 }.bind(this));
         };
 
-        ClaimEntryVM.prototype.niceHeader = function () {
+        TaskEntryVM.prototype.niceHeader = function () {
             return (this.claimEntry()._id === undefined)
                 ? 'New Entry'
                 : this.claimEntry().summary() || '';
@@ -104,7 +107,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
         /* Server calls                                            */
         /***********************************************************/
 
-        ClaimEntryVM.prototype.onSave = function () {
+        TaskEntryVM.prototype.onSave = function () {
             console.log('Saving ClaimEntry: ' + KOMap.toJSON(this.claimEntry));
             this.stopStateTracking();
 
@@ -124,7 +127,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
                 }.bind(this));
         };
 
-        ClaimEntryVM.prototype.loadClaimEntry = function (claimEntryId) {
+        TaskEntryVM.prototype.loadClaimEntry = function (claimEntryId) {
             this.stopStateTracking();
 
             $.getJSON('/claimEntry/' + claimEntryId)
@@ -140,7 +143,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
                     this.startStateTracking();
 
                     window.setTimeout(function setT() {
-                        var txtArea = $("#claimEntry-textArea");
+                        var txtArea = $("#claimEntry-desc");
                         txtArea.height(60);
                         var scrollHeight = txtArea[0].scrollHeight;
                         txtArea.height(scrollHeight > 500 ? 500 : scrollHeight);
@@ -152,20 +155,20 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
         /**
          * Since only once Claim can be active, its assumed to be the parent
          */
-        ClaimEntryVM.prototype.getActiveClaimId = function () {
+        TaskEntryVM.prototype.getActiveClaimId = function () {
             var activeClaimId = amplify.store.sessionStorage(SessionKeys.ACTIVE_CLAIM_ID);
             console.assert(activeClaimId, 'No claim active in session');
             return activeClaimId;
         };
 
-        ClaimEntryVM.prototype.storeInSession = function (claimEntryId) {
+        TaskEntryVM.prototype.storeInSession = function (claimEntryId) {
             amplify.store.sessionStorage(SessionKeys.ACTIVE_CLAIM_ENTRY_ID, claimEntryId);
             console.log('Stored CliamEntryId: ' + claimEntryId + ' in session storage');
         };
 
-        ClaimEntryVM.prototype.onCancel = function () {
+        TaskEntryVM.prototype.onCancel = function () {
             Router.routeToClaim(this.getActiveClaimId());
         };
 
-        return ClaimEntryVM;
+        return {viewModel: TaskEntryVM, template: taskEntryView};
     });
