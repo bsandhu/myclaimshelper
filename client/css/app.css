@@ -134,8 +134,7 @@ div {
     min-height: 50px;
     border-color: lightslategrey;
     border-width: 1px;
-    border-style: dashed;
-    border-radius: 2px;
+    border-style: dotted;
     position: relative;
     font-size: small;
 }

@@ -11,8 +11,10 @@ define(['jquery', 'knockout', 'wysiwyg'],
                 $(element).html(content());
 
                 // Listen to DOM and update observable
-                $(element).bind("DOMSubtreeModified",function(){
-                    content($(element).cleanHtml());
+                $(element).focusout(function(){
+                    var txt = $(element).cleanHtml();
+                    console.log(txt);
+                    content(txt);
                 });
             },
 

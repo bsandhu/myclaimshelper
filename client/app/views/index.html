@@ -315,7 +315,7 @@ Use search to find needed section.
         <!-- **** Claim Entry module **** -->
         <div id="claimEntryPanel" class="slidingContainer claimEntryPanel" style="width: 0%;">
             <div id="claimEntryPanelContent" class="claimEntryPanelContent">
-                <div data-bind="module: {name: 'app/viewModels/claimEntryVM', template: 'app/views/claimEntry'}"></div>
+                <div data-bind="component: 'task-entry-component'"></div>
             </div>
         </div>
     </div>
@@ -366,6 +366,7 @@ Use search to find needed section.
                 ko.components.register('status-editor-component', {require: 'app/components/statusEditor/statusEditorComponent'});
                 ko.components.register('quick-add-component', {require: 'app/components/quickAdd/quickAddVM'});
                 ko.components.register('stats-component', {require: 'app/components/stats/statsVM'});
+                ko.components.register('task-entry-component', {require: 'app/components/taskEntry/taskEntryVM'});
 
                 // Knockout bindings init
                 ko.applyBindings(new AppVM());
