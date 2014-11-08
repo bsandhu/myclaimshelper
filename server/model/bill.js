@@ -7,28 +7,9 @@ if (typeof define !== 'function') {
 
 define([], function () {
     function Bill(claimId, claimEntryIds) {
-      this.Claim = claimId;
-      this.ClaimEntryIds = claimEntryIds;
+      this.claimId = claimId;
+      this.claimEntryIds = claimEntryIds;
+      this.description = undefined;
     }
     return Bill;
 });
-
-function computeTotals(bill, billingProfile){
-  var billingItems = getBillingItems(bill);
-  var mileage = 0;
-  for (var i=0; billingItems.length; i++){
-    mileage += billingItems[i].mileage;
-  }
-
-};
-
-
-function getBillingItems(bill){
-      var result = [];
-      for (var i=0; bill.ClaimEntries.length; i++){
-        //Array.prototype.push.apply(result, bill.ClaimEntries[i].billingItems);
-        result.push(bill.ClaimEntries[i].billingItems);
-      }
-      return result;
-    };
-

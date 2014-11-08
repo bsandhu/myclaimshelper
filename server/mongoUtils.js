@@ -157,6 +157,7 @@ function deleteEntity(predicate, colName) {
 }
 
 function initCollections() {
+    initCollection('Bills');
     initCollection('Claims');
     initCollection('ClaimEntries');
     initCollection('Contacts');
@@ -176,3 +177,4 @@ exports.deleteEntity = deleteEntity;
 exports.CLAIMS_COL_NAME = 'Claims';
 exports.CLAIM_ENTRIES_COL_NAME = 'ClaimEntries';
 exports.CONTACTS_COL_NAME = 'Contacts';
+exports.BILL_COL_NAME = 'Bills';

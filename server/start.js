@@ -32,6 +32,11 @@ function setupMailServiceRoutes(){
 }
 
 function setupClaimsServiceRoutes() {
+    server.get('/bill', billingServices.getAllBills);
+    server.get('/bill/:id', billingServices.getBill);
+    //server.get('/bill/:id/entries', billingServices.getAllEntriesForBill); TODO
+    //server.get('/bill/search/:search', billingServices.searchBills); TODO
+
     server.get('/claim', claimsService.getAllClaims);
     server.get('/claim/:id', claimsService.getClaim);
     server.get('/claim/:id/entries', claimsService.getAllEntriesForClaim);

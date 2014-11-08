@@ -26,6 +26,8 @@ define([], function () {
         this.state = undefined;
 
         this.location = undefined;
+
+        this.billingItems = [];
     }
 
     return ClaimEntry;
