@@ -8,7 +8,7 @@ if (typeof define !== 'function') {
 define([], function () {
 
     function BillingItem() {
-      this.note = null;
+      this.description = null;
       this.code = null; // is specific to Bill's need. How to generalize?
       this.mileage = null;
       this.time = null;

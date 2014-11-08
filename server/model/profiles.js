@@ -8,13 +8,24 @@ if (typeof define !== 'function') {
 define([], function () {
 
     function BillingProfile() {
-      this.timeUnit = null; // e.g., .1 hour.
-      this.distanceUnit = null;
-      this.timeRate = null; // $ per unit.
-      this.distanceRate = null;
+      this.timeUnit = undefined; // e.g., .1 hour.
+      this.distanceUnit = undefined;
+      this.timeRate = undefined; // $ per unit.
+      this.distanceRate = undefined;
       this.billingTypes = {}; // billing codes or custom types
     }
 
     return BillingProfile;
 });
 
+
+define([], function () {
+
+  function UserProfile(){
+    this.userId = undefined;
+    this.userName = undefined; // TODO should this link/be in a Contact?
+    this.billingProfile = undefined;
+  }
+
+  return UserProfile;
+});

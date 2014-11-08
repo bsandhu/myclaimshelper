@@ -1,6 +1,7 @@
 var restify = require('restify');
 var config = require('./config.js');
 var claimsService = require('./services/claimsService.js');
+var billingServices = require('./services/billingServices.js');
 var contactService = require('./services/contactService.js');
 var uploadService = require('./services/uploadService.js');
 var entityExtractionService = require('./services/entityExtractionService.js');
@@ -32,11 +33,6 @@ function setupMailServiceRoutes(){
 }
 
 function setupClaimsServiceRoutes() {
-    server.get('/bill', billingServices.getAllBills);
-    server.get('/bill/:id', billingServices.getBill);
-    //server.get('/bill/:id/entries', billingServices.getAllEntriesForBill); TODO
-    //server.get('/bill/search/:search', billingServices.searchBills); TODO
-
     server.get('/claim', claimsService.getAllClaims);
     server.get('/claim/:id', claimsService.getClaim);
     server.get('/claim/:id/entries', claimsService.getAllEntriesForClaim);
@@ -58,6 +54,22 @@ function setupContactServiceRoutes() {
     server.get('/contact', contactService.listAllContacts);
     server.post('/contact', contactService.saveOrUpdateContactObject);
 }
+
+function setupBillingServiceRoutes() {
+    server.get('/bill', billingServices.getAllBills);
+    server.get('/bill/:id', billingServices.getBill);
+    // TODO
+    //server.get('/bill/:id/entries', billingServices.getAllEntriesForBill); 
+    //server.get('/bill/search/:search', billingServices.searchBills); 
+    //server.post('/bill', billingServices.saveOrUpdateBill); 
+}
+
+function setupProfileServiceRoutes() {
+    // TODO
+    //server.get('/profile', profileService.getAllProfiles);
+    //server.get('/profile/:id', profileService.getProfile);
+}
+
 
 function setupStaticRoutes() {
     // Server side code shared with the client
@@ -97,6 +109,7 @@ function startServer() {
 
 init();
 setupMailServiceRoutes();
+setupBillingServiceRoutes();
 setupClaimsServiceRoutes();
 setupContactServiceRoutes();
 setupStaticRoutes();
