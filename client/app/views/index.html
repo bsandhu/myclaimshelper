@@ -343,9 +343,9 @@ Use search to find needed section.
      * Load libs and init Knockout - on app startup. See requireConfig.js
      */
     require(['jquery', 'knockout', 'KOAmd', 'text', 'amplify', 'app/viewModels/appVM', 'shared/dateUtils', 'jarvis',
-                'app/utils/koDatetimePickerBinding', 'app/utils/koWYSIWYGBinding',
+                'app/utils/koDatetimePickerBinding', 'app/utils/koWYSIWYGBinding', 'app/utils/koTextTruncateBinding',
                 'velocity', 'bootstrap'],
-            function ($, ko, KOAmd, text, amplify, AppVM, DateUtils, jarvis, dtBinding) {
+            function ($, ko, KOAmd, text, amplify, AppVM, DateUtils) {
                 console.log('Init App');
 
                 DateUtils.enableJSONDateHandling();

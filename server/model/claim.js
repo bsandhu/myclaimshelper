@@ -10,7 +10,6 @@ define([], function () {
     function Claim() {
         this._id = undefined;
 
-        this.summary = undefined;
         this.description = undefined;
 
         this.dateReceived = undefined;
