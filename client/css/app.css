@@ -160,8 +160,15 @@ div {
 }
 
 #map-canvas {
-    min-width: 400px;
-    min-height: 400px;
+    width: 100%;
+}
+
+.modal.in .modal-dialog {
+    width: 90%;
+}
+
+#map-modal {
+    min-height: 640px;
 }
 
 .editable {
