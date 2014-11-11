@@ -1,4 +1,4 @@
-define(['knockout', 'text!app/components/maps/mapsComponent.tmpl.html', 'async!https://maps.googleapis.com/maps/api/js?key=AIzaSyBB-Qincf0sNQcsu5PzZh7znG3GiB98GRU&libraries=places'],
+define(['knockout', 'text!app/components/maps/mapsComponent.tmpl.html', 'async!https://maps.googleapis.com/maps/api/js?key=AIzaSyBB-Qincf0sNQcsu5PzZh7znG3GiB98GRU&libraries=places&signed_in=true&v=3.exp'],
 
     function(ko, viewHtml) {
         'use strict';
@@ -8,21 +8,34 @@ define(['knockout', 'text!app/components/maps/mapsComponent.tmpl.html', 'async!h
             console.assert(params.claimEntry, 'Expecting claimEntry param');
             this.claimEntry = params.claimEntry;
 
+            var mapDiv;
+            var dbPlace;
+
             var mapOptions = {
                 center: {lat: 40.800, lng: -73.900},
                 zoom: 9
             };
-            var map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
-            var map2 = new google.maps.Map(document.getElementById('map-modal'), mapOptions);
-            var markers = [];
-            var input = document.getElementById('pac-input');
-            input.value = $('#pac-input').val();
 
+            var input = document.getElementById('pac-input');
+            var modalInput = document.getElementById('modal-input');
+            var modalStatus = false;
+
+            if ($('#modal-button').css('display') === 'none') {
+                mapDiv = document.getElementById('map-canvas');
+            } else {
+                mapDiv = document.getElementById('map-modal');
+                modalStatus = true;
+            }
+
+            var map = new google.maps.Map(mapDiv, mapOptions);
+            var markers = [];
 
             var autocomplete = new google.maps.places.Autocomplete(input);
             autocomplete.bindTo('bounds', map);
+            var modalAutocomplete = new google.maps.places.Autocomplete(modalInput);
+            modalAutocomplete.bindTo('bounds', map);
 
-            function createMarker(place, map) {
+            function createMarker(place) {
                 var marker = new google.maps.Marker({
                     map: map,
                     position: place.geometry.location,
@@ -36,12 +49,24 @@ define(['knockout', 'text!app/components/maps/mapsComponent.tmpl.html', 'async!h
             service.textSearch({query: input.value}, function (results, status) {
                 if (status == google.maps.places.PlacesServiceStatus.OK) {
                     for (var i = 0; i < results.length; i++) {
-                        var place = results[i];
-                        createMarker(place, map);
-                        createMarker(place, map2);
+                        var defaultPlace = results[i];
+                        createMarker(defaultPlace);
                     }
                 }
             });
+
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function (position) {
+                    var pos = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+                    map.setCenter(pos);
+                    map.setZoom(17);
+                    var infowindow = new google.maps.InfoWindow({
+                        map: map,
+                        position: pos,
+                        content: 'You are here'
+                    });
+                });
+            }
 
             function setAllMap(map) {
                 for (var i = 0; i < markers.length; i++) {
@@ -56,20 +81,36 @@ define(['knockout', 'text!app/components/maps/mapsComponent.tmpl.html', 'async!h
                 if (!place.geometry) {
                     return;
                 }
+                if (!modalStatus) {
+                    if (place.geometry.viewport) {
+                        map.fitBounds(place.geometry.viewport);
+                    } else {
+                        map.setZoom(17);
+                    }
+                }
+                map.setCenter(place.geometry.location);
+                createMarker(place);
+                //$('#modalAutocomplete').val(place);
+            });
+
+            google.maps.event.addListener(modalAutocomplete, 'place_changed', function() {
+                var place = modalAutocomplete.getPlace();
+                setAllMap(null);
+                markers = [];
+                if (!place.geometry) {
+                    return;
+                }
                 if (place.geometry.viewport) {
                     map.fitBounds(place.geometry.viewport);
                 } else {
                     map.setCenter(place.geometry.location);
                     map.setZoom(17);
-                    map2.setCenter(place.geometry.location);
-                    map2.setZoom(17);
                 }
-                createMarker(place, map);
-                createMarker(place, map2);
+                createMarker(place);
+                //$('#autocomplete').val(place);
             });
 
             this.showMap = function() {
-                console.log('toggle map');
                 if ($('#map-canvas').css('height') == '0px') {
                     $('#map-canvas').css('height','400px');
                 }
@@ -78,10 +119,8 @@ define(['knockout', 'text!app/components/maps/mapsComponent.tmpl.html', 'async!h
             };
 
             this.mapModal = function() {
-                console.log('modal view');
-
                 setTimeout(function(){
-                    google.maps.event.trigger(map2, 'resize');
+                    google.maps.event.trigger(map, 'resize');
                 },500);
             };
         }
