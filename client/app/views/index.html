@@ -357,6 +357,7 @@ Use search to find needed section.
                 ko.amdTemplateEngine.defaultSuffix = ".tmpl.html";
 
                 // Register components
+                ko.components.register('billing-item-component',     {require: 'app/components/billingItem/billingItemComponent'});
                 ko.components.register('contact-component', {require: 'app/components/contact/contactComponent'});
                 ko.components.register('file-upload-component', {require: 'app/components/fileUpload/fileUploadComponent'});
                 ko.components.register('summary-component', {require: 'app/components/summary/summaryVM'});
