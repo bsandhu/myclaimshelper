@@ -40,11 +40,20 @@ define(['knockout', 'text!app/components/maps/mapsComponent.tmpl.html', 'async!h
             function createMarker(place) {
                 var marker = new google.maps.Marker({
                     map: map,
-                    position: place.geometry.location,
-                    title: place.name
+                    //position: place.geometry.location,
+                    title: place.name,
+                    place: {'location': place.geometry.location, query : place.name},
+                    attribution: {'source': 'Agent 007'}
                 });
                 marker.setMap(map);
                 markers.push(marker);
+
+                var infowindow = new google.maps.InfoWindow({
+                    content: 'Location'
+                });
+                marker.addListener('click', function() {
+                    infowindow.open(map, marker);
+                });
             }
 
             var service = new google.maps.places.PlacesService(map);
