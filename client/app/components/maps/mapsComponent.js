@@ -27,12 +27,14 @@ define(['knockout', 'text!app/components/maps/mapsComponent.tmpl.html', 'async!h
                 modalStatus = true;
             }
 
+            var geocoder = new google.maps.Geocoder();
             var map = new google.maps.Map(mapDiv, mapOptions);
             var markers = [];
 
-            var autocomplete = new google.maps.places.Autocomplete(input);
+            var options = {componentRestrictions: {country: 'us'}};
+            var autocomplete = new google.maps.places.Autocomplete(input, options);
             autocomplete.bindTo('bounds', map);
-            var modalAutocomplete = new google.maps.places.Autocomplete(modalInput);
+            var modalAutocomplete = new google.maps.places.Autocomplete(modalInput, options);
             modalAutocomplete.bindTo('bounds', map);
 
             function createMarker(place) {
@@ -71,6 +73,19 @@ define(['knockout', 'text!app/components/maps/mapsComponent.tmpl.html', 'async!h
             function setAllMap(map) {
                 for (var i = 0; i < markers.length; i++) {
                     markers[i].setMap(map);
+                }
+            }
+
+            function showMultiLocations(locations) {
+
+                for (var i = 0; i < locations.length; i++) {
+                    geocoder.geocode( {'address':locations[i]}, function(res, status) {
+                        if (status == google.maps.GeocoderStatus.OK) {
+                            console.log(res[0]);
+                            createMarker(res[0]);
+                        }
+                        else {console.log('geocoder error: ' + status);}
+                    });
                 }
             }
 
@@ -116,6 +131,9 @@ define(['knockout', 'text!app/components/maps/mapsComponent.tmpl.html', 'async!h
                 }
                 else {$('#map-canvas').css('height','0px');}
                 google.maps.event.trigger(map, 'resize');
+
+                // test of multiple map inputs
+                //showMultiLocations(['Syracuse, NY', 'Rome, NY', 'Carthage, NY']);
             };
 
             this.mapModal = function() {
