@@ -18,6 +18,10 @@ define(['knockout', 'KOMap', 'text!app/components/billingItem/billingItemCompone
         console.log('Added billingItem ' + JSON.stringify(billingItem));
       }
 
+      self.removeBillingItem = function (billingItem){
+        self.claimEntry().billingItems.remove(billingItem);
+      }
+
     }
     
 
