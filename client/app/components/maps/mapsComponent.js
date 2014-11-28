@@ -13,7 +13,13 @@ define(['knockout', 'text!app/components/maps/mapsComponent.tmpl.html', 'async!h
 
             var mapOptions = {
                 center: {lat: 40.800, lng: -73.900},
-                zoom: 9
+                zoom: 9,
+                panControl: true,
+                zoomControl: true,
+                mapTypeControl: true,
+                scaleControl: true,
+                streetViewControl: true,
+                overviewMapControl: true
             };
 
             var input = document.getElementById('pac-input');
@@ -49,7 +55,7 @@ define(['knockout', 'text!app/components/maps/mapsComponent.tmpl.html', 'async!h
                 markers.push(marker);
 
                 var infowindow = new google.maps.InfoWindow({
-                    content: 'Location'
+                    content: place.name
                 });
                 marker.addListener('click', function() {
                     infowindow.open(map, marker);
@@ -96,6 +102,41 @@ define(['knockout', 'text!app/components/maps/mapsComponent.tmpl.html', 'async!h
                         else {console.log('geocoder error: ' + status);}
                     });
                 }
+            }
+
+            var printDiv = document.createElement('div');
+            var printControl = new PrintControl(printDiv, map);
+            printDiv.index = 1;
+            map.controls[google.maps.ControlPosition.TOP_CENTER].push(printDiv);
+
+            function PrintControl(printDiv, map) {
+                printDiv.style.padding = '5px';
+                var controlUI = document.createElement('div');
+                controlUI.style.backgroundColor = 'white';
+                controlUI.style.borderStyle = 'solid';
+                controlUI.style.borderWidth = '2px';
+                controlUI.style.cursor = 'pointer';
+                controlUI.style.textAlign = 'center';
+                controlUI.title = 'Print';
+                printDiv.appendChild(controlUI);
+                var controlText = document.createElement('div');
+                controlText.style.fontFamily = 'Arial,sans-serif';
+                controlText.style.fontSize = '12px';
+                controlText.style.paddingLeft = '4px';
+                controlText.style.paddingRight = '4px';
+                controlText.innerHTML = '<b>Print</b>';
+                controlUI.appendChild(controlText);
+
+                google.maps.event.addDomListener(controlUI, 'click', function() {
+                    print();
+                });
+            }
+
+            function print() {
+                var content = window.document.getElementById("map-canvas");
+                var newWindow = window.open();
+                newWindow.document.write(content.innerHTML);
+                newWindow.print();
             }
 
             google.maps.event.addListener(autocomplete, 'place_changed', function() {
@@ -150,6 +191,10 @@ define(['knockout', 'text!app/components/maps/mapsComponent.tmpl.html', 'async!h
                     google.maps.event.trigger(map, 'resize');
                 },500);
             };
+
+            /*this.printBtn = function() {
+                print();
+            };*/
         }
 
         return {viewModel: mapsComponentVM, template: viewHtml};
