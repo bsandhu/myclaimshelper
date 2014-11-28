@@ -159,6 +159,20 @@ div {
     font-weight: 500;
 }
 
+#modal-button {display: none}
+.pac-container {
+    z-index: 1051 !important;
+}
+@media only screen and (max-device-width : 1024px) {
+    #map-button {display: none}
+    #modal-button {display: inline-block}
+}
+
+@media only screen and (min-device-width : 1025px) {
+    #map-button {display: inline-block}
+    #modal-button {display: none}
+}
+
 #map-canvas {
     width: 100%;
 }
