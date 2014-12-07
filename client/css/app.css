@@ -173,7 +173,7 @@ div {
     #modal-button {display: none}
 }
 
-#map-canvas {
+.maps {
     width: 100%;
 }
 
