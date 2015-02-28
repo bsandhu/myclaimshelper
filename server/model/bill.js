@@ -6,9 +6,8 @@ if (typeof define !== 'function') {
 }
 
 define([], function () {
-    function Bill(claimId, claimEntryIds) {
+    function Bill(claimId) {
       this.claimId = claimId;
-      this.claimEntryIds = claimEntryIds;
       this.description = undefined;
     }
     return Bill;
