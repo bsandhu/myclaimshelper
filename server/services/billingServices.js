@@ -7,45 +7,57 @@ var _ = require('underscore');
 
 // TODO: remove duplicate code.
 
+// :: DB -> Obj
 function _billsCollection(db) {
   return db.collection(mongoUtils.BILL_COL_NAME);
 }
 
+// :: f -> Dict -> Obj
+// convert a dict into an Object with dot-accessible attributes
 function _hydrate(type, dict){
   return _.extend(new type(), dict);
 }
 
-// :: String -> DB -> Promise
-var getBillObject = function(id, db){
-  var result = jQuery.Deferred();
-  jQuery.when(mongoUtils.findEntries('bills', {_id:id}, db),
-              mongoUtils.findEntries('billingItems', {billId:id}, db))
-        .then(function(items){result.resolve(items)});
-  return result;
-}
-
+// :: Obj -> (obj, [Obj])
 var _decomposeBill = function(obj){
   var billingItems = obj.billingObjects;
   delete obj.billingObjects;
   return [obj, billingItems]
 }
 
-var saveOrUpdateBillingItems = _.partial(mongoUtils.saveOrUpdateEntity, 
+// :: [Obj] -> Promise
+var _saveOrUpdateBillingItems = _.partial(mongoUtils.saveOrUpdateEntity, 
                                          _, 
                                          'billingItems');
-
-var saveOrUpdateBill = _.partial(mongoUtils.saveOrUpdateEntity, _, 'bill');
+// :: Obj -> Promse
+var _saveOrUpdateBill = _.partial(mongoUtils.saveOrUpdateEntity, _, 'bill');
 
 // :: Obj -> DB -> Promise
 var saveBillObject = function(obj, db){
   var result  = jQuery.Deferred();
   var parts   = _decomposeBill(obj);
-  var promises= _.map(parts[1], saveOrUpdateBillingItems);
-  promises.push(saveOrUpdateBill(parts[0]));
+  var promises= _.map(parts[1], _saveOrUpdateBillingItems);
+  promises.push(_saveOrUpdateBill(parts[0]));
   jQuery.when.apply(null, promises)
     .done(function(){
       result.resolve(arguments);
     });
+  return result;
+}
+
+// :: String -> DB -> Promise
+var getBillObject = function(id, db){
+  var result = jQuery.Deferred();
+
+  jQuery.when(mongoUtils.findEntries('bills', {_id:id}, db),
+              mongoUtils.findEntries('billingItems', {billId:id}, db))
+        .then(_constructBill);
+
+  var _constructBill = function(bills, billingItems){
+    var bill = _hydrate(Bill, bills[0]);
+    bill.billingObjects = _.map(billingItems, _.partial(_hydrate, BillingItem));
+    result.resolve(bill);
+  }
   return result;
 }
 

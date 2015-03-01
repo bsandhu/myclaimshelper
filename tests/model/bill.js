@@ -22,11 +22,14 @@ describe('Bill', function(){
     });
 
     it('saves with billingObjects', function(done){
+      // 'ret' is a duple (err, success).
+      // other functions return a promise resolved or rejected.
+      // should normalize these return values/types.
       var test = function(ret){
         console.log(ret);
         var billingItem = ret[0][1];
         var bill = ret[1][1];
-        assert.equal(billingItem.billId, 1);
+        assert.equal(billingItem.claimEntryId, 1);
         assert.equal(bill.claimId, 'abc');
         done();
       };
