@@ -5,6 +5,19 @@ var _ = require('underscore');
 
 var dbConn;
 
+// :: Promise -> a -> b -> none
+function _onResult(result, err, ok) {
+  if (err) {
+    console.log('Error');
+    result.reject(err);
+  }
+  else {
+    console.log('OK');
+    console.log(ok);
+    result.resolve(ok);
+  }
+};
+
 function initConnPool() {
     var deferred = jQuery.Deferred();
     MongoClient.connect(config.db, function (err, db) {
@@ -156,6 +169,24 @@ function deleteEntity(predicate, colName) {
     return defer;
 }
 
+// :: String -> Promise
+var connect = function(url){
+  var result = jQuery.Deferred();
+  MongoClient.connect(url, _onResult.bind(null, result));
+  return result;
+}
+
+
+// :: String -> Dict -> DB -> Promise
+var findEntities = function(collectionName, search, db){
+  var result = jQuery.Deferred();
+  var collection = db.collection(collectionName);
+  collection.find(search).toArray(_onResult.bind(null, result));
+  return result;
+}
+
+
+
 function initCollections() {
     initCollection('Bills');
     initCollection('Claims');
@@ -173,6 +204,8 @@ exports.saveOrUpdateEntity = saveOrUpdateEntity;
 exports.modifyEntityAttr = modifyEntityAttr;
 exports.getEntityById = getEntityById;
 exports.deleteEntity = deleteEntity;
+exports.findEntities = findEntities;
+exports.connect = connect;
 
 exports.CLAIMS_COL_NAME = 'Claims';
 exports.CLAIM_ENTRIES_COL_NAME = 'ClaimEntries';

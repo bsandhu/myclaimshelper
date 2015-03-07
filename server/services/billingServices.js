@@ -30,7 +30,7 @@ var _saveOrUpdateBillingItems = _.partial(mongoUtils.saveOrUpdateEntity,
                                          _, 
                                          'billingItems');
 // :: Obj -> Promse
-var _saveOrUpdateBill = _.partial(mongoUtils.saveOrUpdateEntity, _, 'bill');
+var _saveOrUpdateBill = _.partial(mongoUtils.saveOrUpdateEntity, _, 'bills');
 
 // :: Obj -> DB -> Promise
 var saveBillObject = function(obj, db){
@@ -46,14 +46,24 @@ var saveBillObject = function(obj, db){
 }
 
 // :: String -> DB -> Promise
+var _getBill = function(id, db){
+  return mongoUtils.findEntities('bills', {_id:id}, db);
+}
+
+// :: String -> DB -> Promise
+var _getBillItems = function(id, db){
+  return mongoUtils.findEntities('billingItems', {billId:id}, db);
+}
+
+// :: String -> DB -> Promise
 var getBillObject = function(id, db){
   var result = jQuery.Deferred();
 
-  jQuery.when(mongoUtils.findEntries('bills', {_id:id}, db),
-              mongoUtils.findEntries('billingItems', {billId:id}, db))
-        .then(_constructBill);
+  jQuery.when(_getBill(id, db), _getBillItems(id, db))
+        .then(_constructBill, function(err){result.reject(err); return result});
 
   var _constructBill = function(bills, billingItems){
+    console.log([bills, billingItems]);
     var bill = _hydrate(Bill, bills[0]);
     bill.billingObjects = _.map(billingItems, _.partial(_hydrate, BillingItem));
     result.resolve(bill);
@@ -119,3 +129,4 @@ exports.getAllBills = getAllBills;
 exports.saveOrUpdateBill = saveOrUpdateBill;
 
 exports.saveBillObject = saveBillObject;
+exports.getBillObject = getBillObject;
