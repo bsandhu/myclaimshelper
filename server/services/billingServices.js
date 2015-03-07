@@ -1,5 +1,6 @@
 var assert = require('assert')
 var Bill = require('../model/bill.js');
+var BillingItem = require('../model/billingItem.js');
 var sendResponse = require('./claimsService.js').sendResponse;
 var mongoUtils = require('./../mongoUtils.js');
 var jQuery = require("jquery-deferred");
@@ -59,15 +60,14 @@ var _getBillItems = function(id, db){
 var getBillObject = function(id, db){
   var result = jQuery.Deferred();
 
-  jQuery.when(_getBill(id, db), _getBillItems(id, db))
-        .then(_constructBill, function(err){result.reject(err); return result});
-
   var _constructBill = function(bills, billingItems){
-    console.log([bills, billingItems]);
     var bill = _hydrate(Bill, bills[0]);
     bill.billingObjects = _.map(billingItems, _.partial(_hydrate, BillingItem));
     result.resolve(bill);
-  }
+  };
+
+  jQuery.when(_getBill(id, db), _getBillItems(id, db))
+        .then(_constructBill);
   return result;
 }
 

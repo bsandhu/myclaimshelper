@@ -13,7 +13,7 @@ function _onResult(result, err, ok) {
   }
   else {
     console.log('OK');
-    console.log(ok);
+//    console.log(ok);
     result.resolve(ok);
   }
 };
