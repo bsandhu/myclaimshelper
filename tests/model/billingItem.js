@@ -5,8 +5,9 @@ describe('BillingItem', function(){
     var bi = new BillingItem('1');
     bi.description = "A billing item";
 
-    //it('saves', function (done) {
-      //// pass
-    //});
+    it('sets claimEntryId', function (done) {
+      assert.equal(bi.claimEntryId, '1');
+      done();
+    });
 });
 

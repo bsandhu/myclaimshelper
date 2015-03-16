@@ -1,12 +1,12 @@
 var assert = require('assert')
 var Bill = require('../model/bill.js');
 var BillingItem = require('../model/billingItem.js');
+var config = require('./../config.js');
 var sendResponse = require('./claimsService.js').sendResponse;
 var mongoUtils = require('./../mongoUtils.js');
 var jQuery = require("jquery-deferred");
 var _ = require('underscore');
 
-// TODO: remove duplicate code.
 
 // :: DB -> Obj
 function _billsCollection(db) {
@@ -73,59 +73,26 @@ var getBillObject = function(id, db){
 
 
 // REST services ----------------------
-function getAllBills(req, res) {
-    console.log('Get all Bills');
-
-    mongoUtils.run(function (db) {
-        _billsCollection(db).find().toArray(_onResults);
-        
-        function _onResults(err, items) {
-            var modelObjs = _.map(items, _.partial(_hydrate, Bill));
-            sendResponse(res, err, modelObjs);
-        }
-
-    });
-}
-
+// :: Dict -> Dict -> None
 function getBill(req, res){
     assert.ok(req.params.id, 'Expecting BillId as a parameter');
-    var query = {'_id': req.params.id};
-    var options = {};
-
-    mongoUtils.run(function (db) {
-        _billsCollection(db)
-            .find(query, options)
-            .toArray(_onResults);
-
-        function _onResults(err, items) {
-            var modelObjs = _.map(items, _hydrate.bind(null, Bill));
-            sendResponse(res, err, modelObjs);
-        }
-    });
+    var db = mongoUtils.connect(config.db);
+    db.then(_.partial(getBillObject, req.params.id))
+      .then(_.partial(sendResponse, res, null), 
+            _.partial(sendResponse, res, 'Failed to get Bill ' + req.params.id));
 }
 
+// :: Dict -> Dict -> None
 function saveOrUpdateBill(req, res) {
     var bill = req.body;
-    mongoUtils.saveOrUpdateEntity(bill, mongoUtils.BILL_COL_NAME)
-        .always(function (err, results) {
-            sendResponse(res, err, results);
-        });
+    var db = mongoUtils.connect(config.db);
+    db.then(_.partial(saveBillObject, bill))
+      .then(function () {sendResponse(res, null, 'Success saving ' + bill._id)},
+            _.partial(sendResponse, res, 'Failled to save '+ bill));
 }
-
-
-// NOTE this should probably be on the client
-//function computeTotals(bill, billingProfile){
-  //var billingItems = getBillingItems(bill);
-  //var mileage = 0;
-  //for (var i=0; billingItems.length; i++){
-    //mileage += billingItems[i].mileage;
-  //}
-
-//};
 
 
 exports.getBill = getBill;
-exports.getAllBills = getAllBills;
 exports.saveOrUpdateBill = saveOrUpdateBill;
 
 exports.saveBillObject = saveBillObject;
