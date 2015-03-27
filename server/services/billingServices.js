@@ -34,26 +34,26 @@ var _saveOrUpdateBillingItems = _.partial(mongoUtils.saveOrUpdateEntity,
 var _saveOrUpdateBill = _.partial(mongoUtils.saveOrUpdateEntity, _, 'bills');
 
 // :: Obj -> DB -> Promise
-var saveBillObject = function(obj, db){
-  var result  = jQuery.Deferred();
-  var parts   = _decomposeBill(obj);
-  var promises= _.map(parts[1], _saveOrUpdateBillingItems);
-  promises.push(_saveOrUpdateBill(parts[0]));
-  jQuery.when.apply(null, promises)
-    .done(function(){
-      result.resolve(arguments);
-    });
-  return result;
-}
+//var saveBillObject = function(obj, db){
+  //var result  = jQuery.Deferred();
+  //var parts   = _decomposeBill(obj);
+  //var promises= _.map(parts[1], _saveOrUpdateBillingItems);
+  //promises.push(_saveOrUpdateBill(parts[0]));
+  //jQuery.when.apply(null, promises)
+    //.done(function(){
+      //result.resolve(arguments);
+    //});
+  //return result;
+//}
 
 // :: String -> DB -> Promise
 var _getBill = function(id, db){
   return mongoUtils.findEntities('bills', {_id:id}, db);
 }
 
-// :: String -> DB -> Promise
-var _getBillItems = function(id, db){
-  return mongoUtils.findEntities('billingItems', {billId:id}, db);
+// :: Dict -> DB -> Promise
+var _getBillingItems = function(search, db){
+  return mongoUtils.findEntities('billingItems', search, db);
 }
 
 // :: String -> DB -> Promise
@@ -66,7 +66,7 @@ var getBillObject = function(id, db){
     result.resolve(bill);
   };
 
-  jQuery.when(_getBill(id, db), _getBillItems(id, db))
+  jQuery.when(_getBill(id, db), _getBillingItems({billId:id}, db))
         .then(_constructBill);
   return result;
 }
@@ -74,7 +74,7 @@ var getBillObject = function(id, db){
 
 // REST services ----------------------
 // :: Dict -> Dict -> None
-function getBill(req, res){
+function getBillREST(req, res){
     assert.ok(req.params.id, 'Expecting BillId as a parameter');
     var db = mongoUtils.connect(config.db);
     db.then(_.partial(getBillObject, req.params.id))
@@ -83,17 +83,32 @@ function getBill(req, res){
 }
 
 // :: Dict -> Dict -> None
-function saveOrUpdateBill(req, res) {
-    var bill = req.body;
-    var db = mongoUtils.connect(config.db);
-    db.then(_.partial(saveBillObject, bill))
-      .then(function () {sendResponse(res, null, 'Success saving ' + bill._id)},
-            _.partial(sendResponse, res, 'Failled to save '+ bill));
+function saveOrUpdateBillingItemsREST(req, res){
+  function _done(){
+    sendResponse(res, null, 'Success saving ');
+  };
+  function _fail(){
+    sendResponse(res, 'Failed to save');
+  };
+  var items = req.body;
+  var promises= _.map(items, _saveOrUpdateBillingItems);
+  jQuery.when.apply(null, promises)
+    .done(_done)
+    .fail(_fail);
 }
 
+// :: Dict -> Dict -> None
+//function saveOrUpdateBill(req, res) {
+    //var bill = req.body;
+    //var db = mongoUtils.connect(config.db);
+    //db.then(_.partial(saveBillObject, bill))
+      //.then(function () {sendResponse(res, null, 'Success saving ' + bill._id)},
+            //_.partial(sendResponse, res, 'Failled to save '+ bill));
+//}
 
-exports.getBill = getBill;
-exports.saveOrUpdateBill = saveOrUpdateBill;
 
-exports.saveBillObject = saveBillObject;
+exports.getBillREST = getBillREST;
+exports.saveOrUpdateBillingItemsREST = saveOrUpdateBillingItemsREST;
+
+
 exports.getBillObject = getBillObject;
