@@ -59,6 +59,7 @@ function incrementAndGet(sequenceName) {
                     deferred.reject(err);
                     return;
                 }
+                console.log('Generated Seq number for: ' + sequenceName + '. ' + doc.seq);
                 deferred.resolve(doc.seq);
             });
     });
@@ -66,7 +67,9 @@ function incrementAndGet(sequenceName) {
 }
 
 function saveOrUpdateEntity(entity, colName) {
+    console.log('saveOrUpdateEntity. ' + JSON.stringify(entity) + '. Collection name: ' + colName);
     var defer = jQuery.Deferred();
+
     function getSeqNum() {
         return incrementAndGet(colName);
     }
@@ -76,6 +79,7 @@ function saveOrUpdateEntity(entity, colName) {
             var entityCol = db.collection(colName);
 
             if (!entity._id) {
+                // Note: Ids are always Strings .. not numbers
                 entity._id = String(seqNum);
                 entityCol.insert(entity,
                     {w: 1},
@@ -102,6 +106,9 @@ function saveOrUpdateEntity(entity, colName) {
 
 function modifyEntityAttr(entityId, colName, attributesAsJson) {
     var defer = jQuery.Deferred();
+    if(!entityId){
+        defer.reject("EntityId not specified");
+    }
 
     run(function update(db) {
         var entityCol = db.collection(colName);

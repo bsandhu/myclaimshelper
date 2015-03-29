@@ -44,8 +44,8 @@ describe('DateUtils', function () {
     });
 
     it('Make nice date', function () {
-        assert.equal(dateUtils.niceDate(new Date(2014, 0, 2, 10, 10)), 'Jan 2  10:10');
-        assert.equal(dateUtils.niceDate(new Date(2014, 8, 20, 10, 10)), 'Sep 20  10:10');
+        assert.equal(dateUtils.niceDate(new Date(2015, 0, 2, 10, 10)), 'Jan 2  10:10');
+        assert.equal(dateUtils.niceDate(new Date(2015, 8, 20, 10, 10)), 'Sep 20  10:10');
         assert.equal(dateUtils.niceDate(undefined), 'None');
         assert.equal(dateUtils.niceDate(null), 'None');
 

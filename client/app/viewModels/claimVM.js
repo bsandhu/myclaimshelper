@@ -89,6 +89,11 @@ define(['jquery', 'knockout', 'KOMap', 'amplify',
             this.onShowClaim({claimId: evData.claimId});
         };
 
+        ClaimVM.prototype.onShowContact = function (evData) {
+            console.log('ClaimVM - SHOW_CONTACT ev ' + JSON.stringify(evData));
+            amplify.publish(Events.SHOW_CONTACT, evData);
+        };
+
         ClaimVM.prototype.onEntryStatusUpdate = function (status, entry, ev) {
             console.log('Raise Claim Entry status update Ev. ' + entry._id);
             amplify.publish(Events.UPDATE_CLAIM_ENTRY_STATUS, {'claimEntryId': entry._id, 'status': status});

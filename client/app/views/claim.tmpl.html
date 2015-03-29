@@ -1,57 +1,122 @@
 <div class="panel panel-default">
+
+<!-- Panel header -->
 <div class="panel-heading">
-    <div data-bind="text: 'Claim ' + (claim().insuranceCompanyFileNum() || '')"></div>
+    <div data-bind="text: 'Claim ' + (claim().insuranceCompanyFileNum() || '')" class="font-md"></div>
 </div>
 
 <div class="panel-body">
-<!-- ************************************************ -->
-<!-- Claim static display -->
-<!-- ************************************************ -->
+    <!-- ************************************************ -->
+    <!-- Claim top level info -->
+    <!-- ************************************************ -->
 
-<div data-bind="ifnot: inEditMode">
-    <div class="bottomMargin">
-        <div class="inline rightMargin">
-                    <span>
-                        <span><strong>Date received:</strong></span>
-                        <span data-bind="text: DateUtils.niceDate(claim().dateReceived ? claim().dateReceived() : '')"></span>
-                    </span>
+    <div data-bind="ifnot: inEditMode" class="container-fluid">
+
+        <!-- Insured/claimant/Description -->
+        <div class="row">
+            <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
+                <strong>Insured</strong>
+
+                <div data-bind="text: niceName(claim().insuredContact)"></div>
+            </div>
+            <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
+                <strong>Claimant</strong>
+
+                <div data-bind="text: niceName(claim().claimantContact)"></div>
+            </div>
+            <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
+                <strong>Description</strong>
+
+                <div data-bind="text: claim().description"></div>
+            </div>
         </div>
-        <div class="inline rightMargin">
-            <span><strong>Date due:</strong></span>
-            <span data-bind="text: DateUtils.niceDate(claim().dateDue ? claim().dateDue() : '')"></span>
+
+        <div class="margin-bottom-10 bottomBorderDashed"></div>
+
+        <!-- Dates -->
+        <div class="row">
+            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
+                <strong>Received</strong>
+
+                <div data-bind="text: DateUtils.niceDate(claim().dateReceived ? claim().dateReceived() : '')"></div>
+            </div>
+            <div class="col-lg-2 col-md-2 col-sm-4  col-xs-4">
+                <strong>Due</strong>
+
+                <div data-bind="text: DateUtils.niceDate(claim().dateReceived ? claim().dateDue() : '')"></div>
+            </div>
+
+            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
+                <strong>Date of loss</strong>
+
+                <div data-bind="text: DateUtils.niceDate(claim().dateReceived ? claim().dateOfLoss() : '')"></div>
+            </div>
+            <div class="col-lg-2 col-md-6 col-sm-12 col-xs-12">
+                <strong>Insurance co.</strong>
+
+                <div data-bind="text: claim().insuranceCompanyName ? claim().insuranceCompanyName() : ''"></div>
+            </div>
         </div>
-        <div class="inline rightMargin">
-            <span><strong>Date of loss:</strong></span>
-            <span data-bind="text: DateUtils.niceDate(claim().dateOfLoss ? claim().dateOfLoss() : '')"></span>
+
+        <div class="margin-bottom-10 bottomBorderDashed"></div>
+
+        <!-- Contacts -->
+        <div class="row">
+            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
+                <strong>Contacts</strong>
+            </div>
+            <div class="col-lg-2 col-md-2 col-lg-offset-2 col-md-offset-2 col-sm-4 col-xs-4 col-sm-offset-4 col-xs-offset-4">
+                <div data-bind="text: 'Show all (' + Number(claim().otherContacts().length) + 2 + ')'" class="font-sm"></div>
+            </div>
+        </div>
+
+        <div class="row ">
+            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
+                <span>Insured Attorney</span>
+            </div>
+            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
+                <a data-bind="click: onShowContact" class="cursor-pointer">
+                    <span data-bind="text: niceName(claim().insuredAttorneyContact)"></span>
+                </a>
+            </div>
+            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
+                <span data-bind="text: '616 112 9889'"></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
+                <span>Claimant Attorney</span>
+            </div>
+            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
+                <a data-bind="click: onShowContact">
+                    <span data-bind="text: niceName(claim().claimantsAttorneyContact)"></span>
+                </a>
+            </div>
+            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
+                <span data-bind="text: '616 112 9889'"></span>
+            </div>
+        </div>
+
+        <!-- Other contacts -->
+        <div data-bind="foreach: claim().otherContacts()">
+            <div class="row bottomBorder">
+                <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
+                    &nbsp;
+                </div>
+                <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
+                    <a><!--data-bind="click: $parent.onShowContact($data._id)">-->
+                        <!--<span data-bind="text: $parent.niceName($data)"></span>-->
+                        Foo
+                    </a>
+                </div>
+                <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
+                    <span data-bind="text: '616 112 9889'"></span>
+                </div>
+            </div>
         </div>
     </div>
 
-    <div class="bottomMargin">
-        <div class="inline rightMargin">
-            <span><strong>Insured Attorney:</strong></span>
-            <span data-bind="text: niceName(claim().insuredAttorneyContact)"></span>
-        </div>
-        <div class="inline rightMargin">
-            <span><strong>Insured contact:</strong></span>
-            <span data-bind="text: niceName(claim().insuredContact) "></span>
-        </div>
-    </div>
-
-    <div class="bottomMargin">
-        <div class="inline rightMargin">
-            <span><strong>Claimant attorney:</strong></span>
-            <span data-bind="text: niceName(claim().claimantsAttorneyContact)"></span>
-        </div>
-        <div class="inline rightMargin">
-            <span><strong>Claimant contact:</strong></span>
-            <span data-bind="text: niceName(claim().claimantContact) "></span>
-        </div>
-    </div>
-
-    <div class="alignRight rightMargin">
-        <span class="glyphicon glyphicon-pencil"></span>
-        <span class="leftMargin"><a href="#" data-bind="click: onEditModeClick.bind($data)">Edit</a></span>
-    </div>
+    <div class="margin-bottom-10 bottomBorderDashed"></div>
 </div>
 
 
@@ -166,8 +231,7 @@
     </div>
     <div class="topMargin"/>
 
-    <!-- **** Edit Button **** -->
-
+    <!-- Save/cancel buttons -->
     <div class="topMargin5 clear">
         <div class="inline alignRight topMargin5">
             <button type="button" class="btn btn-default" data-bind="click: onSave">Save</button>
@@ -180,8 +244,8 @@
 <!-- New entry button group -->
 <!-- ************************************************ -->
 
-<div data-bind="ifnot: inEditMode">
-    <div class="btn-group topMargin1pc">
+<div data-bind="ifnot: inEditMode" class="topMargin1pc">
+    <div class="btn-group inline">
         <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
             <span class="fa fa-plus"></span>
             Add New Entry <span class="caret"></span>
@@ -213,6 +277,17 @@
             </li>
         </ul>
     </div>
+
+    <!-- Edit claim button -->
+    <div class="btn btn-default inline" data-bind="click: onEditModeClick.bind($data)">
+        <i class="fa fa-pencil"></i>
+        Edit claim
+    </div>
+
+    <!-- Add contact Button -->
+    <div class="inline">
+        <add-contact-component></add-contact-component>
+    </div>
 </div>
 
 <!-- ************************************************ -->
@@ -223,7 +298,7 @@
                 style: {height: (screenHeight() * .5)+ 'px'}"
      class="rightMargin topMargin5 overflowY">
 
-    <table style="width: 98%" class="table table-hover table-condensed" id="claimEntriesList">
+    <table style="width: 98%" class="table table-hover table-responsive" id="claimEntriesList">
         <thead>
         <tr>
             <th>&nbsp;</th>

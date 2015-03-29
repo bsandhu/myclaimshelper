@@ -22,11 +22,6 @@ div {
 
 /**** Width Dimensions ****/
 
-.narrower {
-    width: 50px;
-    min-width: 50px;
-}
-
 .narrow {
     width: 100px;
     min-width: 100px;
@@ -111,6 +106,12 @@ div {
     border-top: dotted;
     border-top-width: 1px;
     border-top-color: #2d6ca2;
+}
+
+.bottomBorderDashed {
+    border-bottom-color: rgba(0, 0, 0, 0.2);
+    border-bottom-style: dashed;
+    border-bottom-width: 1px;
 }
 
 .bottomBorder {
