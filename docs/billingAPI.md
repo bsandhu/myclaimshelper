@@ -28,6 +28,10 @@ Attributes
 
 API
 ~~~
+Save a Bill
+:: post, Bill -> status
+'/bill'
+
 Get all Bills, including BillingItems.
 :: get -> [BillObj]
 '/bill'

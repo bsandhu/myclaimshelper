@@ -5,46 +5,75 @@ var BillingItem = require("../../server/model/billingItem.js");
 var jQuery = require('jquery-deferred');
 var mongoUtils = require("./../../server/mongoUtils.js");
 
-describe('Billing Web Service', function () {
+describe('billingServices', function () {
 
-    var bill = new Bill('claim_id');
-    bill._id = 'bill_id';
-    bill.description = 'Test bill';
+  var bill = new Bill('claim_id');
+  bill._id = 'bill_id';
+  bill.description = 'Test bill';
 
-    var bi_1 = new BillingItem('task_id');
-    bi_1.billId = bill._id;
-    bill.billingObjects = [bi_1];
+  var bi_1 = new BillingItem('task_id');
+  bi_1.billId = bill._id;
+  var bi_2 = new BillingItem('task_id');
+  bi_2.billId = bill._id;
 
-    it('saves bill', function (done) {
-        var req = {body: bill};
-        var res = {};
-        res.json = function (data) {
-            assert(data);
-            assert.equal(data.status, 'Success');
+  it('saveOrUpdateBillingItemsREST ok', function (done) {
+    var req = {body: [bi_1, bi_2]};
+    var res = {};
+    res.json = function (data) {
+      assert(data);
+      assert.equal(data.status, 'Success');
+      assert.ok(data.data);
+      console.log('data.data: ' + data.data);
+      done();
+    };
 
-            var res_bill = data.data;
-            assert.ok(res_bill._id);
-            bill._id = res_bill._id;
-            done();
-        };
+    billingServices.saveOrUpdateBillingItemsREST(req, res);
+  });
 
-        billingServices.saveOrUpdateBill(req, res);
-    });
+  it('saveOrUpdateBillREST ok', function (done) {
+    var req = {body: bill};
+    var res = {};
+    res.json = function (data) {
+      assert(data);
+      assert.equal(data.status, 'Success');
+      done();
+    };
 
-    //it('gets bill', function (done) {
-        //var req = {params: {id : testBill._id}};
-        //var res = {};
+    billingServices.saveOrUpdateBillREST(req, res);
+  });
 
-        //res.json = function (data) {
-            //assert(data);
-            //assert.equal(data.status, 'Success');
+  it('getBillREST ok', function (done) {
+    var req = {params: {id : bill._id}};
+    var res = {};
+    res.json = function (data){
+      //console.log('*****************');
+      //console.log(data);
+      var bill = data.data;
+      assert.equal(bill.description, 'Test bill');
+      assert.equal(bill._id, 'bill_id');
+      // billingObjects included...
+      assert.ok(bill.billingObjects);
+      assert.equal(bill.billingObjects[0].billId, bill._id);
+      done();
+    };
 
-            //var bill = data.data[0];
-            //assert.equal(bill.description, 'Test bill');
-            //assert.deepEqual(bill.claimEntryIds, [123]);
-            //done();
-        //};
-        //billingServices.getBill(req, res);
-    //});
+    billingServices.getBillREST(req, res);
+  });
+
+  if('getBillingItemsREST ok', function(done){
+    var req = {params: {search : {claimEntryId: 'task_id'}}};
+    var res = {};
+    res.json = function (data){
+      console.log('*****************');
+      console.log(data);
+      var items = data.data;
+      assert.ok(items);
+      done();
+    };
+
+    billingServices.getBillingItemsREST(req, res);
+  });
+
+
 
 });

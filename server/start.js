@@ -56,12 +56,10 @@ function setupContactServiceRoutes() {
 }
 
 function setupBillingServiceRoutes() {
-    server.get('/bill', billingServices.getAllBills);
-    server.get('/bill/:id', billingServices.getBill);
-    // TODO
-    //server.get('/bill/:id/entries', billingServices.getAllEntriesForBill); 
-    //server.get('/bill/search/:search', billingServices.searchBills); 
-    //server.post('/bill', billingServices.saveOrUpdateBill); 
+    server.get('/bill/:id', billingServices.getBillREST);
+    server.post('/bill', billingServices.saveOrUpdateBillREST);
+    server.get('/billingItem/search/:search', billingServices.getBillingItemsREST); 
+    server.post('/billingItem', billingServices.saveOrUpdateBillingItemsREST);
 }
 
 function setupProfileServiceRoutes() {

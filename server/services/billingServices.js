@@ -33,19 +33,6 @@ var _saveOrUpdateBillingItems = _.partial(mongoUtils.saveOrUpdateEntity,
 // :: Obj -> Promse
 var _saveOrUpdateBill = _.partial(mongoUtils.saveOrUpdateEntity, _, 'bills');
 
-// :: Obj -> DB -> Promise
-//var saveBillObject = function(obj, db){
-  //var result  = jQuery.Deferred();
-  //var parts   = _decomposeBill(obj);
-  //var promises= _.map(parts[1], _saveOrUpdateBillingItems);
-  //promises.push(_saveOrUpdateBill(parts[0]));
-  //jQuery.when.apply(null, promises)
-    //.done(function(){
-      //result.resolve(arguments);
-    //});
-  //return result;
-//}
-
 // :: String -> DB -> Promise
 var _getBill = function(id, db){
   return mongoUtils.findEntities('bills', {_id:id}, db);
@@ -71,8 +58,7 @@ var getBillObject = function(id, db){
   return result;
 }
 
-
-// REST services ----------------------
+// REST services --------------------------------------------------
 // :: Dict -> Dict -> None
 function getBillREST(req, res){
     assert.ok(req.params.id, 'Expecting BillId as a parameter');
@@ -80,6 +66,16 @@ function getBillREST(req, res){
     db.then(_.partial(getBillObject, req.params.id))
       .then(_.partial(sendResponse, res, null), 
             _.partial(sendResponse, res, 'Failed to get Bill ' + req.params.id));
+}
+
+// :: Dict -> Dict -> None
+function getBillingItemsREST(req, res){
+    assert.ok(req.params.search, 'Expecting BillId as a parameter');
+    //var search = {claimEntryId: req.params.id};
+    var db = mongoUtils.connect(config.db);
+    db.then(_.partial(_getBillingItems, req.params.search))
+      .then(_.partial(sendResponse, res, null), 
+            _.partial(sendResponse, res, 'Failed to get BillingItems  ' + req.params.id));
 }
 
 // :: Dict -> Dict -> None
@@ -98,17 +94,18 @@ function saveOrUpdateBillingItemsREST(req, res){
 }
 
 // :: Dict -> Dict -> None
-//function saveOrUpdateBill(req, res) {
-    //var bill = req.body;
-    //var db = mongoUtils.connect(config.db);
-    //db.then(_.partial(saveBillObject, bill))
-      //.then(function () {sendResponse(res, null, 'Success saving ' + bill._id)},
-            //_.partial(sendResponse, res, 'Failled to save '+ bill));
-//}
-
-
-exports.getBillREST = getBillREST;
-exports.saveOrUpdateBillingItemsREST = saveOrUpdateBillingItemsREST;
+function saveOrUpdateBillREST(req, res) {
+    var bill = req.body;
+    _saveOrUpdateBill(bill)
+      .then(function () {sendResponse(res, null, 'Success saving ' + bill._id)},
+            _.partial(sendResponse, res, 'Failled to save '+ bill));
+}
 
 
 exports.getBillObject = getBillObject;
+// REST
+exports.getBillREST = getBillREST;
+exports.getBillingItemsREST = getBillingItemsREST;
+exports.saveOrUpdateBillingItemsREST = saveOrUpdateBillingItemsREST;
+exports.saveOrUpdateBillREST = saveOrUpdateBillREST;
+
