@@ -254,6 +254,7 @@ function sendResponse(res, err, jsonData) {
         console.error('Error: ' + err);
         res.json(500, {'Status': 'Fail', 'Details': err});
     } else {
+      debugger;
         console.info('Success response: ' + JSON.stringify(jsonData));
         res.json({'status': 'Success', 'data': jsonData});
     }
@@ -271,3 +272,4 @@ exports.getAllEntriesForClaim = getAllEntriesForClaim;
 exports.deleteClaim = deleteClaim;
 exports.searchClaims = searchClaims;
 exports.searchClaimEntries = searchClaimEntries;
+exports.sendResponse = sendResponse;

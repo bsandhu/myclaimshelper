@@ -1,0 +1,21 @@
+<div data-bind="foreach: {data: claimEntry().billingItems, as: 'item'}"> 
+    <table>
+        <tbody>
+        <tr>
+            <td>Description </td><td><input class="form-control narrow input-sm" data-bind="value: item.description"/></td>
+            <td>Code </td><td><input class="form-control narrow input-sm" data-bind="value: item.code"></td>
+        </tr>
+        <tr>
+            <td>Time </td><td><input class="form-control narrow input-sm" data-bind="value: item.time"></td>
+            <td>Mileage </td><td><input class="form-control narrow input-sm" data-bind="value: item.mileage"></td>
+        </tr>
+        <tr>
+            <td>Expense Type </td><td><input class="form-control narrow input-sm" data-bind="value: item.expenseType"></td>
+            <td>Expense Amount </td><td><input class="form-control narrow input-sm" data-bind="value: item.expenseAmount"></td>
+            <td><a href="#" data-bind="click: $root.removeBillingItem">Remove</a></td>
+        </tr>
+        </tbody>
+    </table>
+    <hr>
+</div>
+<button data-bind="click: addBillingItem">Add Billing Item</button>    

@@ -1,6 +1,7 @@
 var restify = require('restify');
 var config = require('./config.js');
 var claimsService = require('./services/claimsService.js');
+var billingServices = require('./services/billingServices.js');
 var contactService = require('./services/contactService.js');
 var uploadService = require('./services/uploadService.js');
 var entityExtractionService = require('./services/entityExtractionService.js');
@@ -54,6 +55,20 @@ function setupContactServiceRoutes() {
     server.post('/contact', contactService.saveOrUpdateContactObject);
 }
 
+function setupBillingServiceRoutes() {
+    server.get('/bill/:id', billingServices.getBillREST);
+    server.post('/bill', billingServices.saveOrUpdateBillREST);
+    server.get('/billingItem/search/:search', billingServices.getBillingItemsREST); 
+    server.post('/billingItem', billingServices.saveOrUpdateBillingItemsREST);
+}
+
+function setupProfileServiceRoutes() {
+    // TODO
+    //server.get('/profile', profileService.getAllProfiles);
+    //server.get('/profile/:id', profileService.getProfile);
+}
+
+
 function setupStaticRoutes() {
     // Server side code shared with the client
     server.get(/\/model\/.*/, restify.serveStatic({
@@ -92,6 +107,7 @@ function startServer() {
 
 init();
 setupMailServiceRoutes();
+setupBillingServiceRoutes();
 setupClaimsServiceRoutes();
 setupContactServiceRoutes();
 setupStaticRoutes();
