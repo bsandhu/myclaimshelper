@@ -32,13 +32,12 @@ function deleteClaim(claimId) {
 
 function saveOrUpdateClaim(req, res) {
 
-    function setReferenceToContactObj(contactAttrName) {
+    function setReferenceToContactObj(contactJSON, callBack) {
         var defer = jQuery.Deferred();
-        var contactObj = _.extend(new Contact(), claim[contactAttrName]);
-        delete claim[contactAttrName];
+        var contactObj = _.extend(new Contact(), contactJSON);
 
         if (_.isEmpty(contactObj.firstName) && _.isEmpty(contactObj.lastName)) {
-            console.log('No ' + contactAttrName + 'set. Skip setting Mongo reference');
+            console.log('No ' + contactJSON + ' set. Skip setting Mongo reference');
             defer.reject();
             return;
         }
@@ -46,26 +45,57 @@ function saveOrUpdateClaim(req, res) {
             .saveOrUpdateContactObject(contactObj)
             .always(function (result) {
                 if (result.status.toLowerCase() === 'success') {
-                    claim[ contactAttrName + 'Id'] = result.data._id;
-                    defer.resolve();
+                    defer.resolve(result.data._id);
                 } else {
-                    console.log('Error saving contact ref object for ' + contactAttrName);
+                    console.log('Error saving contact ref object for ' + contactJSON);
                     defer.reject();
                 }
             });
-        return defer;
+
+        var chainedDefer = jQuery.Deferred();
+        defer.done(function (contactId) {
+            callBack(contactId);
+            chainedDefer.resolve();
+        });
+        return chainedDefer;
     }
 
     var claim = req.body;
     claim = _.extend(new Claim(), claim);
 
-    jQuery.when(
-        setReferenceToContactObj('insuredContact'),
-        setReferenceToContactObj('insuredAttorneyContact'),
-        setReferenceToContactObj('claimantContact'),
-        setReferenceToContactObj('claimantsAttorneyContact'),
-        setReferenceToContactObj('insuranceCoContact')
-    ).then(function () {
+    var requests = [];
+    requests.push(
+        setReferenceToContactObj(claim.insuredContact, function (contactId) {
+            claim.insuredContactId = contactId;
+        }),
+        setReferenceToContactObj(claim.insuredAttorneyContact, function (contactId) {
+            claim.insuredAttorneyContactId = contactId;
+        }),
+        setReferenceToContactObj(claim.claimantContact, function (contactId) {
+            claim.claimantContactId = contactId;
+        }),
+        setReferenceToContactObj(claim.claimantsAttorneyContact, function (contactId) {
+            claim.claimantsAttorneyContactId = contactId;
+        }),
+        setReferenceToContactObj(claim.insuranceCoContact, function (contactId) {
+            claim.insuranceCoContactId = contactId;
+        })
+    );
+    _.each(claim.otherContacts, function (contactJSON, index) {
+        setReferenceToContactObj(contactJSON, function (contactId) {
+            claim.otherContactIds[index] = contactId;
+        });
+    });
+
+    jQuery.when.apply(jQuery, requests)
+        .then(function () {
+            delete claim.insuredContact;
+            delete claim.insuredAttorneyContact;
+            delete claim.claimantContact;
+            delete claim.claimantsAttorneyContact;
+            delete claim.insuranceCoContact;
+            delete claim.otherContacts;
+
             mongoUtils.saveOrUpdateEntity(claim, mongoUtils.CLAIMS_COL_NAME)
                 .always(function (err, results) {
                     sendResponse(res, err, results);
@@ -79,8 +109,8 @@ function saveOrUpdateClaimEntry(req, res) {
 
     entityExtractionService.extractEntities(description)
         .then(function (people) {
-            for(var i=0; i<people.length; i++){
-                description = description.replace(people[i],'<b>$&</b>');
+            for (var i = 0; i < people.length; i++) {
+                description = description.replace(people[i], '<b>$&</b>');
             }
             entity.description = description;
         })
@@ -94,6 +124,13 @@ function saveOrUpdateClaimEntry(req, res) {
 
 function modifyClaimEntry(req, res) {
     mongoUtils.modifyEntityAttr(req.body._id, mongoUtils.CLAIM_ENTRIES_COL_NAME, req.body.attrsAsJson)
+        .always(function (err, results) {
+            sendResponse(res, err, results);
+        });
+}
+
+function modifyClaim(req, res) {
+    mongoUtils.modifyEntityAttr(req.body._id, mongoUtils.CLAIMS_COL_NAME, req.body.attrsAsJson)
         .always(function (err, results) {
             sendResponse(res, err, results);
         });
@@ -131,18 +168,20 @@ function getClaim(req, res) {
     assert.ok(req.params.id, 'Expecting ClaimId as a parameter');
     var entityId = req.params.id;
 
-    function populateContactRef(claim, contactAttrName) {
+    function populateContactRef(contactId, callback) {
         var defer = jQuery.Deferred();
-        var contactId = claim[contactAttrName + 'Id'];
-
-        contactService
-            .getContactObject(contactId)
+        contactService.getContactObject(contactId)
             .done(function (result) {
                 var contactObj = result.status.toLowerCase() === 'success' ? result.data : new Contact();
-                claim[contactAttrName] = contactObj;
-                defer.resolve();
+                defer.resolve(contactObj);
             });
-        return defer;
+
+        var chainedDefer = jQuery.Deferred();
+        defer.done(function (contactObj) {
+            callback(contactObj);
+            chainedDefer.resolve();
+        });
+        return chainedDefer;
     }
 
     mongoUtils.getEntityById(entityId, mongoUtils.CLAIMS_COL_NAME)
@@ -151,14 +190,43 @@ function getClaim(req, res) {
                 sendResponse(res, err, results);
             } else {
                 var claim = results;
-                jQuery.when(
-                    populateContactRef(claim, 'insuredContact'),
-                    populateContactRef(claim, 'insuredContact'),
-                    populateContactRef(claim, 'insuredAttorneyContact'),
-                    populateContactRef(claim, 'claimantContact'),
-                    populateContactRef(claim, 'claimantsAttorneyContact'),
-                    populateContactRef(claim, 'insuranceCoContact')
-                ).then(function () {
+                claim.otherContactIds = claim.otherContactIds || [];
+                claim.otherContacts = claim.otherContacts || [];
+
+                // Create Dynamic callbacks for saving all the contact objects
+                var requests = [];
+                requests.push(
+                    populateContactRef(claim.insuredContactId, function (contactObj) {
+                        claim.insuredContact = contactObj;
+                    }),
+                    populateContactRef(claim.insuredAttorneyContactId, function (contactObj) {
+                        claim.insuredAttorneyContact = contactObj;
+                    }),
+                    populateContactRef(claim.claimantContactId, function (contactObj) {
+                        claim.claimantContact = contactObj;
+                    }),
+                    populateContactRef(claim.claimantsAttorneyContactId, function (contactObj) {
+                        claim.claimantsAttorneyContact = contactObj;
+                    }),
+                    populateContactRef(claim.insuranceCoContactId, function (contactObj) {
+                        claim.insuranceCoContact = contactObj;
+                    })
+                );
+
+                _.each(claim.otherContactIds, function (contactId, index) {
+                    requests.push(
+                        populateContactRef(contactId, function (contactObj) {
+                            if (!Boolean(contactObj) || _.isEmpty(contactObj)) {
+                                console.warn("Could not populate Contact for Id: " + contactId);
+                            }
+                            claim.otherContacts[index] = contactObj;
+                        })
+                    );
+                });
+
+                // Call When the Deferreds array
+                jQuery.when.apply(jQuery, requests)
+                    .done(function () {
                         sendResponse(res, err, results);
                     });
             }
@@ -264,6 +332,7 @@ function sendResponse(res, err, jsonData) {
 exports.saveOrUpdateClaim = saveOrUpdateClaim;
 exports.saveOrUpdateClaimEntry = saveOrUpdateClaimEntry;
 exports.modifyClaimEntry = modifyClaimEntry;
+exports.modifyClaim = modifyClaim;
 exports.saveOrUpdateClaimEntryObject = saveOrUpdateClaimEntryObject;
 exports.getClaim = getClaim;
 exports.getClaimEntry = getClaimEntry;

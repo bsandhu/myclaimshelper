@@ -95,7 +95,7 @@ function setupStaticRoutes() {
     }));
     server.get('/.*/ ', restify.serveStatic({
         'directory': 'client',
-        'default'  : '/app/views/index.html'
+        'default'  : '/app/components/index.html'
     }));
 }
 

@@ -3,7 +3,30 @@ var Contact = require('./../model/contact.js');
 var mongoUtils = require('./../mongoUtils.js');
 var serviceUtils = require('./../serviceUtils.js');
 var jQuery = require('jquery-deferred');
+var _ = require('underscore');
 
+
+/********************************************************/
+/* Contacts - Save/update API                           */
+/********************************************************/
+
+function saveOrUpdateContact(req, res) {
+    assert.ok(req.hasOwnProperty('body'), 'Expecting instance of Request');
+
+    var contactJSON = req.body;
+    console.log('Save/update contact: ' + JSON.stringify(contactJSON));
+    var contactObj = _.extend(new Contact(), contactJSON);
+
+    // Validate
+    if (!_.isString(contactObj.firstName)) {
+        sendResponse(res, 'Please specify First name');
+    } else {
+        saveOrUpdateContactObject(contactObj)
+            .always(function(result){
+                result.status === 'Success' ? sendResponse(res, null, result.data) : sendResponse(res, result.details);
+            });
+    }
+}
 
 function saveOrUpdateContactObject(contactObj) {
     assert.ok(contactObj instanceof Contact, 'Expecting instance of Contact object');
@@ -16,6 +39,20 @@ function saveOrUpdateContactObject(contactObj) {
     return defer;
 }
 
+/********************************************************/
+/* Contacts - Read API                                  */
+/********************************************************/
+
+function getContact(req, res) {
+    assert.ok(req.params.id, 'Expecting ContactId as a parameter');
+    var contactId = req.params.id;
+
+    getContactObject(contactId)
+        .always(function(result){
+            result.status === 'Success' ? sendResponse(res, null, result.data) : sendResponse(res, result.details);
+        });
+}
+
 function getContactObject(contactId) {
     var defer = jQuery.Deferred();
 
@@ -23,15 +60,6 @@ function getContactObject(contactId) {
         .always(function (err, results) {
             defer.resolve(serviceUtils.createResponse(err, results));
         });
-    return defer;
-}
-
-function deleteContact(contactId) {
-    var defer = jQuery.Deferred();
-
-    jQuery.when(mongoUtils.deleteEntity({_id: contactId}, mongoUtils.CONTACTS_COL_NAME))
-        .then(defer.resolve())
-        .fail(defer.reject());
     return defer;
 }
 
@@ -45,6 +73,19 @@ function listAllContacts(req, res) {
     });
 }
 
+/********************************************************/
+/* Contacts - Delete API                                  */
+/********************************************************/
+
+function deleteContact(contactId) {
+    var defer = jQuery.Deferred();
+
+    jQuery.when(mongoUtils.deleteEntity({_id: contactId}, mongoUtils.CONTACTS_COL_NAME))
+        .then(defer.resolve())
+        .fail(defer.reject());
+    return defer;
+}
+
 function sendResponse(res, err, jsonData) {
     if (err) {
         console.error('Error: ' + err);
@@ -56,6 +97,8 @@ function sendResponse(res, err, jsonData) {
 }
 
 exports.saveOrUpdateContactObject = saveOrUpdateContactObject;
+exports.saveOrUpdateContact = saveOrUpdateContact;
 exports.getContactObject = getContactObject;
+exports.getContact = getContact;
 exports.listAllContacts = listAllContacts;
 exports.deleteContact = deleteContact;

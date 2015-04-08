@@ -1,0 +1,119 @@
+<!-- ************************************************ -->
+<!-- Claim entry form -->
+<!-- ************************************************ -->
+
+<div data-bind="if: inEditMode">
+    <div><h5>Insurance Company</h5></div>
+
+    <div class="inline bottomMargin">
+        <div class="inline">
+            <div class="inline narrow fieldLabel">Name</div>
+            <div class="inline wider">
+                <input type="text" class="form-control input-sm"
+                       data-bind="value: claim().insuranceCompanyName"
+                       autocomplete="on">
+            </div>
+            <div class="inline narrow fieldLabel">File num.</div>
+            <div class="inline narrow">
+                <input type="text" class="form-control input-sm"
+                       data-bind="value: claim().insuranceCompanyFileNum">
+            </div>
+        </div>
+    </div>
+
+    <div class="bottomMargin">
+        <div class="inline">
+            <div class="inline narrow fieldLabel">Date Received</div>
+            <div class="inline normal">
+                <input type="text" class="form-control input-sm"
+                       data-bind="datetimePicker: {
+                                              datepicker: true,
+                                              timepicker: true,
+                                              dateValue: claim().dateReceived}"/>
+            </div>
+        </div>
+        <div class="inline">
+            <div class="inline narrow fieldLabel">Date Due</div>
+            <div class="inline normal">
+                <input type="text" class="form-control input-sm"
+                       data-bind="datetimePicker: {
+                                              datepicker: true,
+                                              timepicker: true,
+                                              dateValue: claim().dateDue}"/>
+            </div>
+        </div>
+        <div class="inline">
+            <div class="inline narrow fieldLabel">Date of Loss</div>
+            <div class="inline normal">
+                <input type="text" class="form-control input-sm"
+                       data-bind="datetimePicker: {
+                                              datepicker: true,
+                                              timepicker: true,
+                                              dateValue: claim().dateOfLoss}"/>
+            </div>
+        </div>
+    </div>
+
+    <!-- **** Insured **** -->
+    <div class="topBorderSolid"><h5>Insured</h5></div>
+
+    <div class="bottomMargin">
+        <div class="narrow fieldLabel tableCell" style="display: table-cell">Attorney</div>
+        <div style="display: table-cell">
+            <contact-component params="contact : claim().insuredAttorneyContact,
+                                                   idSuffix: 'claim-insuredAttny',
+                                                    isBusinessOptionApplicable: true"></contact-component>
+        </div>
+    </div>
+
+    <div class="bottomMargin">
+        <div class="narrow fieldLabel tableCell" style="display: table-cell">Contact</div>
+        <div style="display: table-cell">
+            <contact-component params="contact : claim().insuredContact,
+                                                   idSuffix: 'claim-insuredContact',
+                                                   isBusinessOptionApplicable: false"></contact-component>
+        </div>
+    </div>
+
+    <!-- **** Claimant **** -->
+    <div class="topBorderSolid"><h5>Claimant</h5></div>
+
+    <div class="bottomMargin">
+        <div class="narrow fieldLabel" style="display: table-cell">Attorney</div>
+        <div style="display: table-cell">
+            <contact-component params="contact : claim().claimantsAttorneyContact,
+                                                   idSuffix: 'claim-claimantAttny',
+                                                   isBusinessOptionApplicable: true"></contact-component>
+        </div>
+    </div>
+
+    <div class="bottomMargin">
+        <div class="narrow fieldLabel" style="display: table-cell">Contact</div>
+        <div style="display: table-cell">
+            <contact-component params="contact : claim().claimantContact,
+                                                   idSuffix: 'claim-claimantContact',
+                                                   isBusinessOptionApplicable: false"></contact-component>
+        </div>
+    </div>
+
+    <div class="topBorderSolid bottomMargin"></div>
+
+    <div class="topMargin5">
+        <div class="narrow fieldLabel" style="display: table-cell">
+            Description
+        </div>
+        <div class="inline" style="display: table-cell; width: 95%; padding-left: 3px">
+            <textarea class="form-control" rows="3" id="claimEntry-textArea"
+                      data-bind="value: claim().description" placeholder="Note"></textarea>
+        </div>
+    </div>
+    <div class="topMargin"/>
+
+    <!-- Save/cancel buttons -->
+    <div class="topMargin5 clear">
+        <div class="inline alignRight topMargin5">
+            <button type="button" class="btn btn-default" data-bind="click: onSave">Save</button>
+            <button type="button" class="btn btn-default" data-bind="click: onCancel">Cancel</button>
+        </div>
+    </div>
+</div>

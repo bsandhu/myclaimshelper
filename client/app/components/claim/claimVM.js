@@ -1,9 +1,9 @@
 define(['jquery', 'knockout', 'KOMap', 'amplify',
         'model/claim', 'model/claimEntry', 'model/contact', 'model/states',
         'app/utils/ajaxUtils', 'app/utils/events', 'app/utils/router', 'app/utils/sessionKeys',
-        'shared/dateUtils'],
+        'shared/dateUtils', 'text!app/components/claim/claim.tmpl.html'],
     function ($, ko, KOMap, amplify, Claim, ClaimEntry, Contact, States,
-              ajaxUtils, Events, Router, SessionKeys, DateUtils) {
+              ajaxUtils, Events, Router, SessionKeys, DateUtils, viewHtml) {
 
         function ClaimVM() {
             console.log('Init ClaimVM');
@@ -87,6 +87,11 @@ define(['jquery', 'knockout', 'KOMap', 'amplify',
         ClaimVM.prototype.onShowClaimEntry = function (evData) {
             console.log('ClaimVM - SHOW_CLAIM_ENTRY ev ' + JSON.stringify(evData));
             this.onShowClaim({claimId: evData.claimId});
+        };
+
+        ClaimVM.prototype.onShowContact = function (evData) {
+            console.log('ClaimVM - SHOW_CONTACT ev ' + JSON.stringify(evData));
+            amplify.publish(Events.SHOW_CONTACT, evData);
         };
 
         ClaimVM.prototype.onEntryStatusUpdate = function (status, entry, ev) {

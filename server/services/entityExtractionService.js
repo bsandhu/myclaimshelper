@@ -3,7 +3,9 @@ var jQuery = require('jquery-deferred');
 var http = require('http');
 var querystring = require('querystring');
 
-
+/**
+ * Invoke Alchemy API to identify people and places in plain text
+ */
 function extractEntities(txt) {
     var defer = jQuery.Deferred();
     extract(txt)

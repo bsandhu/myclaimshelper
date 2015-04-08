@@ -12,12 +12,13 @@
     <link rel="stylesheet" type="text/css" href="../../css/app.css">
 
     <!-- Basic Styles -->
-    <link rel="stylesheet" type="text/css" media="screen" href="css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="css/bootstrap.css">
     <link rel="stylesheet" type="text/css" media="screen" href="css/font-awesome.min.css">
 
     <!-- SmartAdmin Styles : Please note (smartadmin-production.css) was created using LESS variables -->
-    <link rel="stylesheet" type="text/css" media="screen" href="css/smartadmin-production.min.css">
-    <link rel="stylesheet" type="text/css" media="screen" href="css/smartadmin-skins.min.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="css/smartadmin-production.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="css/smartadmin-skins.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="css/invoice.css">
     <link rel="stylesheet" type="text/css" href="../../css/jquery.datetimepicker.css">
 
     <!-- #FAVICONS -->
@@ -303,13 +304,13 @@ Use search to find needed section.
                 </div>
             </div>
         </div>
+
         <!-- **** Claim module **** -->
         <div id="claimPanel" class="slidingContainer claimPanel" style="width: 0%;">
-            <div id="claimPanelContent" class="claimPanelContent">
-                <div data-bind="module: {name: 'app/viewModels/claimVM',
-                                         template: 'app/views/claim',
+            <!-- Note: Still using module for the afterRender fn -->
+            <div data-bind="module: {name: 'app/components/claim/claimVM',
+                                         template: 'app/components/claim/claim',
                                          afterRender: startRouter}"></div>
-            </div>
         </div>
 
         <!-- **** Claim Entry module **** -->
@@ -342,10 +343,10 @@ Use search to find needed section.
     /**
      * Load libs and init Knockout - on app startup. See requireConfig.js
      */
-    require(['jquery', 'knockout', 'KOAmd', 'text', 'amplify', 'app/viewModels/appVM', 'shared/dateUtils', 'jarvis',
-                'app/utils/koDatetimePickerBinding', 'app/utils/koWYSIWYGBinding',
+    require(['jquery', 'knockout', 'KOAmd', 'text', 'amplify', 'app/components/appVM', 'shared/dateUtils', 'jarvis',
+                'app/utils/koDatetimePickerBinding', 'app/utils/koWYSIWYGBinding', 'app/utils/koTextTruncateBinding',
                 'velocity', 'bootstrap'],
-            function ($, ko, KOAmd, text, amplify, AppVM, DateUtils, jarvis, dtBinding) {
+            function ($, ko, KOAmd, text, amplify, AppVM, DateUtils) {
                 console.log('Init App');
 
                 DateUtils.enableJSONDateHandling();

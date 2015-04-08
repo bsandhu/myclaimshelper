@@ -10,7 +10,6 @@ define([], function () {
     function Claim() {
         this._id = undefined;
 
-        this.summary = undefined;
         this.description = undefined;
 
         this.dateReceived = undefined;
@@ -38,6 +37,11 @@ define([], function () {
 
         this.insuranceCoContactId = undefined;
         this.insuranceCoContact = undefined;
+
+        // Additional contacts added by the user
+        // Instance of Contact object(s)
+        this.otherContacts = [];
+        this.otherContactIds = [];
 
         this.insuranceCompanyFileNum = undefined;
         this.insuranceCompanyName = undefined;

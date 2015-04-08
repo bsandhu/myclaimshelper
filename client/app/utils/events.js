@@ -5,6 +5,10 @@ define([], function(){
         CLAIMS_GRID_SELCTION : 'GridSelection',
         SHOW_CLAIMS_GRID     : 'ShowClaimsGrid',
 
+        SHOW_CONTACT : 'SHOW_CONTACT',
+        ADD_CONTACT : 'ADD_CONTACT',
+        ADDED_CONTACT : 'ADDED_CONTACT',
+
         SHOW_CLAIM           : 'ShowClaim',
         NEW_CLAIM            : 'AddClaim',
 
