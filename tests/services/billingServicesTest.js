@@ -43,7 +43,7 @@ describe('billingServices', function () {
   });
 
   it('getBillREST ok', function (done) {
-    var req = {params: {id : bill._id}};
+    var req = {params: {query: {_id : bill._id}}};
     var res = {};
     res.json = function (data){
       //console.log('*****************');
