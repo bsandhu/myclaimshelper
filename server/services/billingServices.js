@@ -34,8 +34,8 @@ var _saveOrUpdateBillingItems = _.partial(mongoUtils.saveOrUpdateEntity,
 var _saveOrUpdateBill = _.partial(mongoUtils.saveOrUpdateEntity, _, 'bills');
 
 // :: String -> DB -> Promise
-var _getBill = function(id, db){
-  return mongoUtils.findEntities('bills', {_id:id}, db);
+var _getBill = function(search, db){
+  return mongoUtils.findEntities('bills', search, db);
 }
 
 // :: Dict -> DB -> Promise
@@ -44,28 +44,36 @@ var _getBillingItems = function(search, db){
 }
 
 // :: String -> DB -> Promise
-var getBillObject = function(id, db){
+var getBillObject = function(search, db){
   var result = jQuery.Deferred();
 
-  var _constructBill = function(bills, billingItems){
-    var bill = _hydrate(Bill, bills[0]);
+  var _constructBill = function(bill, billingItems){
+    var bill = _hydrate(Bill, bill);
     bill.billingObjects = _.map(billingItems, _.partial(_hydrate, BillingItem));
     result.resolve(bill);
   };
 
-  jQuery.when(_getBill(id, db), _getBillingItems({billId:id}, db))
-        .then(_constructBill);
+  jQuery.when(_getBill(search, db))
+        .then(function (bills) {
+          var bill = _.isArray(bills) ? bills[0] : bills;
+          var itemSearch = {billId: bill._id};
+          var def = _getBillingItems(itemSearch, db);
+          jQuery.when(def).then(function (items) {
+              _constructBill(bill, items);
+          });
+        });
   return result;
 }
 
 // REST services --------------------------------------------------
 // :: Dict -> Dict -> None
 function getBillREST(req, res){
-    assert.ok(req.params.id, 'Expecting BillId as a parameter');
+    assert.ok(req.params.query, 'Expecting Mongo query as a parameter');
+    var query = req.params.query;
     var db = mongoUtils.connect(config.db);
-    db.then(_.partial(getBillObject, req.params.id))
+    db.then(_.partial(getBillObject, query))
       .then(_.partial(sendResponse, res, null), 
-            _.partial(sendResponse, res, 'Failed to get Bill ' + req.params.id));
+            _.partial(sendResponse, res, 'Failed to get Bill for query ' + query));
 }
 
 // :: Dict -> Dict -> None
