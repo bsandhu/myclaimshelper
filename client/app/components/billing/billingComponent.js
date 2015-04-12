@@ -1,13 +1,14 @@
-define(['jquery', 'knockout', 'KOMap', 'amplify',
+define(['jquery', 'knockout', 'KOMap', 'amplify', 'shared/dateUtils',
         'model/Bill', 'text!app/components/billing/billing.tmpl.html'],
-    function ($, ko, KOMap, amplify, Bill, viewHtml) {
+    function ($, ko, KOMap, amplify, DateUtils, Bill, viewHtml) {
 
         function BillingVM(claimId) {
-            console.log('Init BillingVM');
+            console.log('Init BillingVM. ClaimId: ' + JSON.stringify(claimId));
             this.claimId = claimId;
+            this.DateUtils = DateUtils;
             this.bill = ko.observable(new Bill());
             this.claimEntries = ko.observableArray();
-
+            this.loadEntriesForClaim(this.claimId);
         }
 
         BillingVM.prototype.loadEntriesForClaim = function (claimId) {
@@ -15,7 +16,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify',
                 .done(function (resp) {
                     console.log('Loaded claim entries' + JSON.stringify(resp.data));
                     this.claimEntries(resp.data);
-                    this.sortEntries();
+                    //this.sortEntries();
                 }.bind(this));
         };
 
@@ -31,4 +32,6 @@ define(['jquery', 'knockout', 'KOMap', 'amplify',
         BillingVM.prototype.createBill = function () {
             this.loadEntriesForClaim(this.claimId);
         };
+
+        return {viewModel: BillingVM, template: viewHtml};
     })
