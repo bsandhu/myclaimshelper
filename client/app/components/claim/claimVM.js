@@ -1,19 +1,21 @@
 define(['jquery', 'knockout', 'KOMap', 'amplify',
         'model/claim', 'model/claimEntry', 'model/contact', 'model/states',
-        'app/utils/ajaxUtils', 'app/utils/events', 'app/utils/router', 'app/utils/sessionKeys',
+        'app/utils/ajaxUtils', 'app/utils/events', 'app/utils/consts', 'app/utils/router', 'app/utils/sessionKeys',
         'shared/dateUtils', 'text!app/components/claim/claim.tmpl.html'],
     function ($, ko, KOMap, amplify, Claim, ClaimEntry, Contact, States,
-              ajaxUtils, Events, Router, SessionKeys, DateUtils, viewHtml) {
+              ajaxUtils, Events, Consts, Router, SessionKeys, DateUtils, viewHtml) {
 
         function ClaimVM() {
             console.log('Init ClaimVM');
 
             // Model
             this.States = States;
+            this.Consts = Consts;
             this.DateUtils = DateUtils;
             this.claim = ko.observable(this.newEmptyClaim());
             this.claimEntries = ko.observableArray();
             this.sortDir = ko.observable('desc');
+            this.activeTab = ko.observable(Consts.CLAIMS_TAB);
 
             // View state
             this.screenHeight = ko.observable(screen.height);
@@ -213,6 +215,16 @@ define(['jquery', 'knockout', 'KOMap', 'amplify',
 
         ClaimVM.prototype.getActiveClaimEntryId = function () {
             return amplify.store.sessionStorage(SessionKeys.ACTIVE_CLAIM_ENTRY_ID);
+        };
+
+        ClaimVM.prototype.selectClaimTab = function () {
+            console.log("Switch to Claim tab");
+            this.activeTab(Consts.CLAIMS_TAB);
+        };
+
+        ClaimVM.prototype.selectBillingTab = function (tabName) {
+            console.log("Switch to Billing tab");
+            this.activeTab(Consts.BILLING_TAB);
         };
 
         return ClaimVM;

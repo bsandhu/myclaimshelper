@@ -1,14 +1,14 @@
 <!-- *** Tabs *** -->
 <ul id="myTab1" class="nav nav-tabs bordered">
     <li class="active">
-        <a href="#claimTab" data-toggle="tab">
+        <a href="#claimTab" data-toggle="tab" data-bind="click: selectClaimTab">
             Claim
             <span class="badge bg-color-blue txt-color-white"
                   data-bind="text: (claim().insuranceCompanyFileNum() || '')"></span>
         </a>
     </li>
     <li>
-        <a href="#bilingTab" data-toggle="tab">
+        <a href="#bilingTab" data-toggle="tab" data-bind="click: selectBillingTab">
             <i class="fa fa-fw fa-lg fa-gear"></i>Billing
         </a>
     </li>
@@ -196,8 +196,9 @@
 
     <!-- *** Biling panel *** -->
     <div class="tab-pane fade in" id="bilingTab">
-        <div id="billPanelContent">
-            <div data-bind="template: {name: 'app/components/biling/biling'}"></div>
+        <div id="billPanelContent" data-bind="if: activeTab() == Consts.BILLING_TAB">
+            <div data-bind="component: {name: 'billing-component',
+                                        params: claim()._id()}"></div>
         </div>
     </div>
     <!-- *** Biling panel - end *** -->

@@ -32,6 +32,6 @@ describe('Bill', function(){
         assert.equal(ret.billingObjects[0].billId, 'bill_id');
         done();
       };
-      db.then(_.partial(billingServices.getBillObject, 'bill_id')).then(test); 
+      db.then(_.partial(billingServices.getBillObject, {_id: 'bill_id'})).then(test);
     });
 });

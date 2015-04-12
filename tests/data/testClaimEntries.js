@@ -436,7 +436,7 @@ var data = [
         "entryDate": 1406679180000,
         "dueDate": 1406679720000,
         "summary": "Cold call",
-        "description": "clmnt bicyclist and he was home but in a hurry. Confirmed NO INJURY. Gave\ncontact memo and he is to fwd biling for bike repair.",
+        "description": "clmnt bicyclist and he was home but in a hurry. Confirmed NO INJURY. Gave\ncontact memo and he is to fwd billing for bike repair.",
         "attachments": [],
         "state": "Complete"
     },
