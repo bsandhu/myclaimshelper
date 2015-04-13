@@ -33,5 +33,8 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'shared/dateUtils',
             this.loadEntriesForClaim(this.claimId);
         };
 
+        BillingVM.prototype.onClaimEntrySelect = function (claimEntry) {
+        };
+
         return {viewModel: BillingVM, template: viewHtml};
     })
