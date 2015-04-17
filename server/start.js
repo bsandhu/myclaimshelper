@@ -56,7 +56,7 @@ function setupContactServiceRoutes() {
 }
 
 function setupBillingServiceRoutes() {
-    server.get('/bill/:id', billingServices.getBillREST);
+    server.get('/bill/:id', billingServices.getBillsREST);
     server.post('/bill', billingServices.saveOrUpdateBillREST);
     server.get('/billingItem/search/:search', billingServices.getBillingItemsREST); 
     server.post('/billingItem', billingServices.saveOrUpdateBillingItemsREST);

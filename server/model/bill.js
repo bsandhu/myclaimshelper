@@ -6,9 +6,15 @@ if (typeof define !== 'function') {
 }
 
 define([], function () {
+
     function Bill(claimId) {
+      this._id = undefined;
       this.claimId = claimId;
+      this.billingDate = undefined;
       this.description = undefined;
+
+      // Instances of BillingItem
+      this.billingItems = [];
     }
     return Bill;
 });
