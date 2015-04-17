@@ -7,6 +7,7 @@ var mongoUtils = require('./../mongoUtils.js');
 var jQuery = require("jquery-deferred");
 var _ = require('underscore');
 var BILL_COL_NAME = mongoUtils.BILL_COL_NAME;
+var BILLING_ITEMS_COL_NAME = mongoUtils.BILLING_ITEMS_COL_NAME;
 
 
 // :: DB -> Obj
@@ -35,7 +36,7 @@ var _decomposeBill = function (obj) {
 }
 
 // :: [Obj] -> Promise
-var _saveOrUpdateBillingItems = _.partial(mongoUtils.saveOrUpdateEntity, _, 'billingItems');
+var _saveOrUpdateBillingItems = _.partial(mongoUtils.saveOrUpdateEntity, _, BILLING_ITEMS_COL_NAME);
 
 // :: Obj -> Promse
 var _saveOrUpdateBill = _.partial(mongoUtils.saveOrUpdateEntity, _, BILL_COL_NAME);
@@ -55,7 +56,7 @@ var _getBills = function (search, db) {
 // :: Dict -> DB -> Promise
 var _getBillingItems = function (search, db) {
     var result = jQuery.Deferred();
-    jQuery.when(mongoUtils.findEntities('billingItems', search, db))
+    jQuery.when(mongoUtils.findEntities(BILLING_ITEMS_COL_NAME, search, db))
         .then(function (billingItems) {
             console.log('_getBillingItems: ' + JSON.stringify(billingItems));
             result.resolve(_hydrate(BillingItem, billingItems));

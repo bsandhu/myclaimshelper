@@ -197,6 +197,7 @@ var findEntities = function (collectionName, search, db) {
 
 function initCollections() {
     initCollection('Bills');
+    initCollection('BillingItems');
     initCollection('Claims');
     initCollection('ClaimEntries');
     initCollection('Contacts');
@@ -219,3 +220,4 @@ exports.CLAIMS_COL_NAME = 'Claims';
 exports.CLAIM_ENTRIES_COL_NAME = 'ClaimEntries';
 exports.CONTACTS_COL_NAME = 'Contacts';
 exports.BILL_COL_NAME = 'Bills';
+exports.BILLING_ITEMS_COL_NAME = 'BillingItems';
