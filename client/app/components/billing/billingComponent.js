@@ -1,5 +1,5 @@
 define(['jquery', 'knockout', 'KOMap', 'amplify', 'shared/dateUtils',
-        'model/Bill', 'text!app/components/billing/billing.tmpl.html'],
+        'model/bill', 'text!app/components/billing/billing.tmpl.html'],
     function ($, ko, KOMap, amplify, DateUtils, Bill, viewHtml) {
 
         function BillingVM(claimId) {

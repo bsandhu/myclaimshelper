@@ -8,14 +8,15 @@ if (typeof define !== 'function') {
 define([], function () {
 
     function BillingItem(claimEntryId) {
-      this.claimEntryId = claimEntryId;
-      this.billId = null;
-      this.description = null;
-      this.code = null; // is specific to Bill's need. How to generalize?
-      this.mileage = null;
-      this.time = null;
-      this.expenseType = null;
-      this.expenseAmount = null;
+        this._id = undefined;
+        this.claimEntryId = claimEntryId;
+        this.billId = null;
+        this.description = null;
+        this.code = null; // is specific to Bill's need. How to generalize?
+        this.mileage = null;
+        this.time = null;
+        this.expenseType = null;
+        this.expenseAmount = null;
     }
 
     return BillingItem;

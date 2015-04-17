@@ -8,12 +8,11 @@ var dbConn;
 // :: Promise -> a -> b -> none
 function _onResult(result, err, ok) {
   if (err) {
-    console.log('Error');
+    console.log('Error: ' + err.message);
     result.reject(err);
   }
   else {
     console.log('OK');
-//    console.log(ok);
     result.resolve(ok);
   }
 };
@@ -177,19 +176,21 @@ function deleteEntity(predicate, colName) {
 }
 
 // :: String -> Promise
-var connect = function(url){
-  var result = jQuery.Deferred();
-  MongoClient.connect(url, _onResult.bind(null, result));
-  return result;
+var connect = function (url) {
+    var result = jQuery.Deferred();
+    MongoClient.connect(url, _.partial(_onResult, result));
+    return result;
 }
 
-
 // :: String -> Dict -> DB -> Promise
-var findEntities = function(collectionName, search, db){
-  var result = jQuery.Deferred();
-  var collection = db.collection(collectionName);
-  collection.find(search).toArray(_onResult.bind(null, result));
-  return result;
+var findEntities = function (collectionName, search, db) {
+    console.log('Find entities: ' + collectionName + ', ' + JSON.stringify(search));
+    var result = jQuery.Deferred();
+    var collection = db.collection(collectionName);
+    collection.find(search).toArray(function (err, resp) {
+        _onResult(result, err, resp);
+    });
+    return result;
 }
 
 
