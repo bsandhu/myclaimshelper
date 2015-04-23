@@ -30,8 +30,8 @@ function _hydrate(type, objects) {
 
 // :: Obj -> (obj, [Obj])
 var _decomposeBill = function (obj) {
-    var billingItems = obj.billingObjects;
-    delete obj.billingObjects;
+    var billingItems = obj.billingItems;
+    delete obj.billingItems;
     return [obj, billingItems]
 }
 
@@ -65,7 +65,7 @@ var _getBillingItems = function (search, db) {
 }
 
 // :: String -> DB -> Promise
-var getBillObject = function (search, db) {
+var getBillObjects = function (search, db) {
     var result = jQuery.Deferred();
 
     jQuery
@@ -95,10 +95,10 @@ var getBillObject = function (search, db) {
 // REST services --------------------------------------------------
 // :: Dict -> Dict -> None
 function getBillsREST(req, res) {
-    assert.ok(req.params.query, 'Expecting Mongo query as a parameter');
-    var query = req.params.query;
+    assert.ok(req.body, 'Expecting Mongo query as a parameter');
+    var query = req.body;
     var db = mongoUtils.connect(config.db);
-    db.then(_.partial(getBillObject, query))
+    db.then(_.partial(getBillObjects, query))
         .then(_.partial(sendResponse, res, null),
         _.partial(sendResponse, res, 'Failed to get Bill for query ' + query));
 }
@@ -140,7 +140,7 @@ function saveOrUpdateBillREST(req, res) {
 
 
 // REST
-exports.getBillObject = getBillObject;
+exports.getBillObjects = getBillObjects;
 exports.getBillsREST = getBillsREST;
 exports.getBillingItemsREST = getBillingItemsREST;
 exports.saveOrUpdateBillingItemsREST = saveOrUpdateBillingItemsREST;

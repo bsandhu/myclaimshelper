@@ -41,7 +41,7 @@ describe('billingServices', function () {
     });
 
     it('getBillsREST ok', function (done) {
-        var req = {params: {query: {_id: bill._id}}};
+        var req = {body: {_id: bill._id}};
         var res = {};
         res.json = function (data) {
             console.log('getBillsREST: ' + JSON.stringify(data));
@@ -50,7 +50,7 @@ describe('billingServices', function () {
             assert.equal(bill._id, 'bill_id');
             assert.equal(bill.claimId, 'claim_id');
 
-            // billingObjects included...
+            // billingItems included...
             assert.ok(bill.billingItems);
             assert.equal(bill.billingItems[0].billId, bill._id);
             done();

@@ -15,7 +15,7 @@ describe('Bill', function(){
     bill._id = 'bill_id';
     var bi_1 = new BillingItem('task_id');
     bi_1.billId = 'bill_id';
-    bill.billingObjects = [bi_1];
+    bill.billingItems = [bi_1];
 
     it('claimId is good', function (done) {
       assert.equal(bill.claimId, 'abc');
@@ -23,15 +23,16 @@ describe('Bill', function(){
       done()
     });
 
-    it('gets with billingObjects', function(done){
+    it('gets with billingItems', function(done){
       var db = mongoUtils.connect(config.db);
       
       var test = function(ret){
         console.log(ret);
-        assert.equal(ret._id, 'bill_id');
-        assert.equal(ret.billingObjects[0].billId, 'bill_id');
+        var bill = ret[0];
+        assert.equal(bill._id, 'bill_id');
+        assert.equal(bill.billingItems[0].billId, 'bill_id');
         done();
       };
-      db.then(_.partial(billingServices.getBillObject, {_id: 'bill_id'})).then(test);
+      db.then(_.partial(billingServices.getBillObjects, {_id: 'bill_id'})).then(test);
     });
 });
