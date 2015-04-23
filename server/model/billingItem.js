@@ -7,6 +7,7 @@ if (typeof define !== 'function') {
 
 define([], function () {
 
+    function BillingItem() {
         // Id(s)
         this._id = undefined;
         this.billId = null;
