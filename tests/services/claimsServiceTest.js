@@ -3,6 +3,7 @@ var mongoUtils = require("./../../server/mongoUtils.js");
 var claimsService = require("./../../server/services/claimsService.js");
 var contactService = require('./../../server/services/contactService.js');
 var Claim = require("./../../server/model/claim.js");
+var BillingItem = require("./../../server/model/billingItem.js");
 var ClaimEntry = require("./../../server/model/claimEntry.js");
 var States= require("./../../server/model/states.js");
 var jQuery = require('jquery-deferred');
@@ -18,21 +19,27 @@ describe('Claims Service', function () {
     testClaim.state = 'open';
     testClaim.insuredContact = {firstName: 'TestFist', lastName: 'TestLast',  city: 'TestCity', zip: 11010};
 
+    var testBillingItem = new BillingItem();
+    testBillingItem.description = 'Test billing item';
+    testBillingItem.mileage = 100;
+
     var testEntry = new ClaimEntry();
     testEntry.entryDate = new Date(2014, 2, 1);
     testEntry.dueDate = new Date(2014, 2, 10);
     testEntry.summary = "I am test Task too";
     testEntry.state = 'open';
     testEntry.description = 'Bill has a hat. He is going to catch up with Elnora Ragan on wed morning.';
+    testEntry.billingItem = testBillingItem;
 
     after(function(done) {
         assert.ok(testClaim._id);
 
         jQuery.when(
             claimsService.deleteClaim(testClaim._id),
-            contactService.deleteContact(testClaim.insuredContactId)
+            contactService.deleteContact(testClaim.insuredContactId),
+            mongoUtils.deleteEntity({_id: testBillingItem._id}, mongoUtils.BILLING_ITEMS_COL_NAME))
                 .done(done)
-                .fail('Failed to cleanup test data'));
+                .fail('Failed to cleanup test data');
     });
 
     it('Save claim', function (done) {
@@ -71,6 +78,9 @@ describe('Claims Service', function () {
             assert.equal(data.status, 'Success');
             assert.ok(data.data._id);
             assert.equal(data.data.description, '<b>Bill</b> has a hat. He is going to catch up with <b>Elnora Ragan</b> on wed morning.');
+
+            assert.ok(data.data.billingItemId, 'BillingItem should be saved');
+            assert.equal(data.data.billingItem, undefined);
             done();
         };
         claimsService.saveOrUpdateClaimEntry(req, res);
@@ -154,6 +164,8 @@ describe('Claims Service', function () {
             var savedClaimEntry = data.data[0];
             assert.ok(savedClaimEntry.claimId);
             assert.equal(savedClaimEntry.summary, 'I am test Task too');
+            assert.ok(savedClaimEntry.billingItem._id);
+            assert.equal(savedClaimEntry.billingItem.mileage, 100);
             done();
         };
         claimsService.getClaimEntry(req, res);
