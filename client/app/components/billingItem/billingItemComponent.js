@@ -1,29 +1,25 @@
 define(['knockout', 'KOMap', 'text!app/components/billingItem/billingItemComponent.tmpl.html', 'model/billingItem'],
 
-  function (ko, KOMap, viewHtml, BillingItem) {
-    'use strict';
+    function (ko, KOMap, viewHtml, BillingItem) {
+        'use strict';
 
-    function BillingItemVM(params) {
-      var self = this;
-      console.log('BillingItemVM() called' + params.claimEntry);
-      console.assert(params.claimEntry, 'Expecting claimEntry param');
-      self.claimEntry = params.claimEntry;
+        function BillingItemVM(params) {
+            console.log('Init BillingItemVM');
 
-      self.addBillingItem = function (){
-        if (self.claimEntry().billingItems == null)
-          self.claimEntry().billingItems = [];
-        //var billingItem = KOMap.fromJS(new BillingItem());
-        var billingItem = new BillingItem();
-        self.claimEntry().billingItems.push(billingItem);
-        console.log('Added billingItem ' + JSON.stringify(billingItem));
-      }
+            console.assert(params.claimEntry, 'Expecting claimEntry param');
+            this.claimEntry = params.claimEntry;
+            this.initBillingItem();
+        }
 
-      self.removeBillingItem = function (billingItem){
-        self.claimEntry().billingItems.remove(billingItem);
-      }
+        BillingItemVM.prototype.initBillingItem = function () {
+            var billingItem = this.claimEntry().billingItem() || new BillingItem();
+            this.claimEntry().billingItem(billingItem);
+            this.billingItem = billingItem;
+        }
 
-    }
-    
+        BillingItemVM.prototype.removeBillingItem = function (billingItem) {
+            this.claimEntry.billingItems.remove(billingItem);
+        }
 
-    return {viewModel: BillingItemVM, template: viewHtml};
-  });
+        return {viewModel: BillingItemVM, template: viewHtml};
+    });
