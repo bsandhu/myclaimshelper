@@ -1,14 +1,26 @@
-define(['jquery', 'knockout', 'KOMap', 'amplify', 'shared/dateUtils',
+define(['jquery', 'knockout', 'KOMap', 'amplify', 'shared/dateUtils', 'app/utils/ajaxUtils', 'app/utils/events',
         'model/bill', 'text!app/components/billing/billing.tmpl.html'],
-    function ($, ko, KOMap, amplify, DateUtils, Bill, viewHtml) {
+    function ($, ko, KOMap, amplify, DateUtils, ajaxUtils, Events, Bill, viewHtml) {
 
         function BillingVM(claimId) {
             console.log('Init BillingVM. ClaimId: ' + JSON.stringify(claimId));
-            this.claimId = claimId;
+            //this.claimId = claimId;
+            this.claimId = 'claim_id';
             this.DateUtils = DateUtils;
-            this.bill = ko.observable(new Bill());
             this.claimEntries = ko.observableArray();
+            this.createMode = ko.observable(false);
+
+            // Active Bill
+            this.bill = ko.observable(new Bill());
+            // All bills associated with this Claim
+            this.bills = ko.observableArray([]);
+
+            this.getBillForClaim();
+        }
+
+        BillingVM.prototype.createNewBill = function (claimId) {
             this.loadEntriesForClaim(this.claimId);
+            this.createMode(true);
         }
 
         BillingVM.prototype.loadEntriesForClaim = function (claimId) {
@@ -20,7 +32,14 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'shared/dateUtils',
                 }.bind(this));
         };
 
-        BillingVM.prototype.loadBill = function (claimId) {
+        BillingVM.prototype.addClaimEntryToBill = function (claimEntry) {
+            var billingItem = new BillingItem();
+            billingItem.claimEntryId
+            this.bill().billingItems.push()
+        }
+
+        BillingVM.prototype.loadBill = function (bill) {
+            console.log('Load bill: ' + JSON.stringify(bill));
             $.getJSON('/claim/' + claimId)
                 .done(function (resp) {
                     console.log('Loaded bill ' + JSON.stringify(resp.data));
@@ -29,8 +48,40 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'shared/dateUtils',
                 }.bind(this));
         };
 
+        BillingVM.prototype.getBillForClaim = function () {
+            ajaxUtils.post(
+                '/bill/search',
+                JSON.stringify({claimId: this.claimId}),
+                function onSuccess(response) {
+                    console.log('getBillForClaim: ' + JSON.stringify(response));
+                    this.bills(response.data);
+                }.bind(this)
+            );
+        };
+
         BillingVM.prototype.createBill = function () {
-            this.loadEntriesForClaim(this.claimId);
+            console.log('Saving Bill');
+            this.bill = KOMap.fromJS(new Bill())
+            this.bill.claimId(this.claimId);
+
+            ajaxUtils.post(
+                '/bill',
+                KOMap.toJSON(this.bill),
+                function onSuccess(response) {
+                    console.log('Saved Bill: ' + JSON.stringify(response));
+
+                    // Update Ids gen. by the server
+                    this.bill._id(response.data._id);
+                    amplify.publish(Events.SUCCESS_NOTIFICATION, {msg: 'Saved Bill'});
+                }.bind(this));
+
+            function createBillingItems() {
+                var claimEntries = this.loadEntriesForClaim(this.claimId);
+                var billingItems = [];
+                $.each(claimEntries, function (index, entry) {
+                    var billingItem = new BillingItem();
+                });
+            };
         };
 
         BillingVM.prototype.onClaimEntrySelect = function (claimEntry) {
