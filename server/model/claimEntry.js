@@ -27,9 +27,10 @@ define([], function () {
 
         this.location = undefined;
 
-        this.billingItems = [];
+        // Instance of BillingItem
+        this.billingItem = undefined;
+        this.billingItemId = undefined;
     }
 
     return ClaimEntry;
 });
-//Foo
