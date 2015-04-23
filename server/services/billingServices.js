@@ -7,6 +7,7 @@ var mongoUtils = require('./../mongoUtils.js');
 var jQuery = require("jquery-deferred");
 var _ = require('underscore');
 var BILL_COL_NAME = mongoUtils.BILL_COL_NAME;
+var BILLING_ITEMS_COL_NAME = mongoUtils.BILLING_ITEMS_COL_NAME;
 
 
 // :: DB -> Obj
@@ -29,13 +30,13 @@ function _hydrate(type, objects) {
 
 // :: Obj -> (obj, [Obj])
 var _decomposeBill = function (obj) {
-    var billingItems = obj.billingObjects;
-    delete obj.billingObjects;
+    var billingItems = obj.billingItems;
+    delete obj.billingItems;
     return [obj, billingItems]
 }
 
 // :: [Obj] -> Promise
-var _saveOrUpdateBillingItems = _.partial(mongoUtils.saveOrUpdateEntity, _, 'billingItems');
+var _saveOrUpdateBillingItems = _.partial(mongoUtils.saveOrUpdateEntity, _, BILLING_ITEMS_COL_NAME);
 
 // :: Obj -> Promse
 var _saveOrUpdateBill = _.partial(mongoUtils.saveOrUpdateEntity, _, BILL_COL_NAME);
@@ -55,7 +56,7 @@ var _getBills = function (search, db) {
 // :: Dict -> DB -> Promise
 var _getBillingItems = function (search, db) {
     var result = jQuery.Deferred();
-    jQuery.when(mongoUtils.findEntities('billingItems', search, db))
+    jQuery.when(mongoUtils.findEntities(BILLING_ITEMS_COL_NAME, search, db))
         .then(function (billingItems) {
             console.log('_getBillingItems: ' + JSON.stringify(billingItems));
             result.resolve(_hydrate(BillingItem, billingItems));
@@ -64,7 +65,7 @@ var _getBillingItems = function (search, db) {
 }
 
 // :: String -> DB -> Promise
-var getBillObject = function (search, db) {
+var getBillObjects = function (search, db) {
     var result = jQuery.Deferred();
 
     jQuery
@@ -94,10 +95,10 @@ var getBillObject = function (search, db) {
 // REST services --------------------------------------------------
 // :: Dict -> Dict -> None
 function getBillsREST(req, res) {
-    assert.ok(req.params.query, 'Expecting Mongo query as a parameter');
-    var query = req.params.query;
+    assert.ok(req.body, 'Expecting Mongo query as a parameter');
+    var query = req.body;
     var db = mongoUtils.connect(config.db);
-    db.then(_.partial(getBillObject, query))
+    db.then(_.partial(getBillObjects, query))
         .then(_.partial(sendResponse, res, null),
         _.partial(sendResponse, res, 'Failed to get Bill for query ' + query));
 }
@@ -139,7 +140,7 @@ function saveOrUpdateBillREST(req, res) {
 
 
 // REST
-exports.getBillObject = getBillObject;
+exports.getBillObjects = getBillObjects;
 exports.getBillsREST = getBillsREST;
 exports.getBillingItemsREST = getBillingItemsREST;
 exports.saveOrUpdateBillingItemsREST = saveOrUpdateBillingItemsREST;

@@ -17,6 +17,19 @@ function _onResult(result, err, ok) {
   }
 };
 
+// :: f -> Dict -> [Obj]
+// convert a dict into an Object with dot-accessible attributes
+function hydrate(type, objects) {
+    console.info('Hydrating ' + type.name);
+    var objs = _.isArray(objects) ? objects : [objects];
+    var fn = function (obj) {
+        return _.extend(new type(), obj)
+    };
+    var hydrated = _.map(objs, fn);
+    console.info('Hydrated: ' + JSON.stringify(hydrated));
+    return hydrated;
+}
+
 function initConnPool() {
     var deferred = jQuery.Deferred();
     MongoClient.connect(config.db, function (err, db) {
@@ -157,6 +170,7 @@ function getEntityById(entityId, colName) {
     return defer;
 }
 
+// :: Object -> String -> Promise
 function deleteEntity(predicate, colName) {
     var defer = jQuery.Deferred();
 
@@ -197,6 +211,7 @@ var findEntities = function (collectionName, search, db) {
 
 function initCollections() {
     initCollection('Bills');
+    initCollection('BillingItems');
     initCollection('Claims');
     initCollection('ClaimEntries');
     initCollection('Contacts');
@@ -205,6 +220,7 @@ function initCollections() {
 }
 
 exports.run = run;
+exports.hydrate = hydrate;
 exports.initConnPool = initConnPool;
 exports.initCollections = initCollections;
 exports.incrementAndGet = incrementAndGet;
@@ -219,3 +235,4 @@ exports.CLAIMS_COL_NAME = 'Claims';
 exports.CLAIM_ENTRIES_COL_NAME = 'ClaimEntries';
 exports.CONTACTS_COL_NAME = 'Contacts';
 exports.BILL_COL_NAME = 'Bills';
+exports.BILLING_ITEMS_COL_NAME = 'BillingItems';

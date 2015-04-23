@@ -115,6 +115,18 @@ function saveOrUpdateClaimEntry(req, res) {
             entity.description = description;
         })
         .then(function () {
+            if (entity.billingItem) {
+                mongoUtils.saveOrUpdateEntity(entity.billingItem, mongoUtils.BILLING_ITEMS_COL_NAME)
+                    .always(function (err, results) {
+                        assert.ok(results._id);
+                        entity.billingItem = results;
+
+                        entity.billingItemId = results._id;
+                        delete entity.billingItem;
+                    });
+            }
+        })
+        .then(function () {
             mongoUtils.saveOrUpdateEntity(entity, mongoUtils.CLAIM_ENTRIES_COL_NAME)
                 .always(function (err, results) {
                     sendResponse(res, err, results);
@@ -303,6 +315,16 @@ function searchClaimEntries(req, res) {
             .toArray(onResults);
 
         function onResults(err, items) {
+            _.each(items, function (item) {
+                mongoUtils.findEntities(mongoUtils.BILLING_ITEMS_COL_NAME, {claimEntryId: item._id}, db)
+                    .then(function (billingItems){
+                        // ClaimEntry has only one BilingItem
+                        var billingItem = _.first(billingItem);
+                        if (billingItem) {
+                            item.billingItem = mongoUtils.hydrate(BillingItem, billingItem);
+                        }
+                    })
+            })
             var modelObjs = _.map(items, convertToModel);
             sendResponse(res, err, modelObjs);
         }

@@ -48,12 +48,14 @@ data-widget-sortable="false"
 
                 <div class="col-sm-8 text-align-right">
                     <div class="btn-group">
-                        <a href="javascript:void(0)" class="btn btn-sm btn-primary"> <i class="fa fa-edit"></i> Edit
+                        <a href="javascript:void(0)" class="btn btn-sm btn-primary">
+                            <i class="fa fa-edit"></i> Edit
                         </a>
                     </div>
                     <div class="btn-group">
-                        <a href="javascript:void(0)" class="btn btn-sm btn-success"> <i class="fa fa-plus"></i>
-                            Create New </a>
+                        <a class="btn btn-sm btn-success" data-bind="click: createNewBill">
+                            <i class="fa fa-plus"></i> Create New
+                        </a>
                     </div>
                 </div>
             </div>
@@ -144,10 +146,30 @@ data-widget-sortable="false"
             </div>
 
         </div>
+
+        <!-- ************************************************************ -->
+        <!-- Bills listing -->
+        <!-- ************************************************************ -->
+        <div class="col-sm-6 col-lg-4" data-bind="if: createMode() === false">
+            <h6>Bills</h6>
+
+            <div class="dd" id="nestable2">
+                <ol class="dd-list">
+                    <li class="dd-item" data-bind="foreach: { data: bills, as: 'bill' }" style="cursor: pointer">
+                        <div class="dd-handle" data-bind="text: bill._id, click: $parent.loadBill">
+                            <em class="pull-right badge bg-color-orange padding-5" rel="tooltip" title=""
+                                data-placement="left">
+                            <i class="fa fa-flash fa-lg txt-color-white"></i></em>
+                        </div>
+                    </li>
+                </ol>
+            </div>
+        </div>
+
         <!-- ************************************************************ -->
         <!-- Claim entries listing -->
         <!-- ************************************************************ -->
-        <table class="table table-hover smart-form has-tickbox">
+        <table class="table table-hover smart-form has-tickbox" data-bind="if: createMode">
             <thead>
             <tr>
                 <th>&nbsp;</th>
@@ -206,7 +228,8 @@ data-widget-sortable="false"
             <div class="row">
                 <div class="col-sm-12">
                     <div class="pull-right">
-                        <a href="javascript:void(0)" class="btn btn-sm btn-primary"> <i class="fa fa-save"></i> Finalize bill
+                        <a href="javascript:void(0)" class="btn btn-sm btn-primary" data-bind="click: createBill">
+                            <i class="fa fa-save"></i> Finalize bill
                         </a>
                     </div>
                 </div>

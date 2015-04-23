@@ -7,16 +7,16 @@ if (typeof define !== 'function') {
 
 define([], function () {
 
-    function BillingItem(claimEntryId) {
+    function BillingItem() {
+        // Id(s)
         this._id = undefined;
-        this.claimEntryId = claimEntryId;
         this.billId = null;
+
         this.description = null;
         this.code = null; // is specific to Bill's need. How to generalize?
-        this.mileage = null;
-        this.time = null;
-        this.expenseType = null;
-        this.expenseAmount = null;
+        this.mileage = 0;
+        this.time = 0;
+        this.expenseAmount = 0;
     }
 
     return BillingItem;

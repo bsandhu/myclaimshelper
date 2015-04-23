@@ -1,21 +1,65 @@
-@<div data-bind="foreach: {data: claimEntry().billingItems, as: 'item'}">
-    <table>
-        <tbody>
-        <tr>
-            <td>Description </td><td><input class="form-control narrow input-sm" data-bind="value: item.description"/></td>
-            <td>Code </td><td><input class="form-control narrow input-sm" data-bind="value: item.code"></td>
-        </tr>
-        <tr>
-            <td>Time </td><td><input class="form-control narrow input-sm" data-bind="value: item.time"></td>
-            <td>Mileage </td><td><input class="form-control narrow input-sm" data-bind="value: item.mileage"></td>
-        </tr>
-        <tr>
-            <td>Expense Type </td><td><input class="form-control narrow input-sm" data-bind="value: item.expenseType"></td>
-            <td>Expense Amount </td><td><input class="form-control narrow input-sm" data-bind="value: item.expenseAmount"></td>
-            <td><a href="#" data-bind="click: $root.removeBillingItem">Remove</a></td>
-        </tr>
-        </tbody>
-    </table>
-    <hr>
+<div class="form-group">
+    <label class="col-md-2 control-label">Description</label>
+
+    <div class="col-md-10">
+        <div class="col-md-10 no-padding">
+            <input class="form-control input-sm" type="text">
+        </div>
+        <!--At the moment we are allowing a single BillingItem per ClaimEntry-->
+        <!-- **** Remove **** -->
+        <!--<div class="col-md-2 pull-right">
+            <a class="btn btn-default btn-xs btn-circle" data-bind="click: $parent.removeBillingItem">
+                <i class="glyphicon glyphicon-remove"></i>
+            </a>
+        </div>-->
+    </div>
 </div>
-<button data-bind="click: addBillingItem">Add Billing Item</button>    
+<div class="form-group">
+    <label class="col-md-2 control-label">Type</label>
+
+    <div class="col-md-8">
+        <row>
+            <label class="col-md-3 control-label">Mileage</label>
+
+            <div class="input-group bottomMargin col-md-4">
+                <input class="form-control input-sm" id="appendprepend" type="text" data-bind="value: billingItem.mileage">
+                <span class="input-group-addon">Miles</span>
+            </div>
+        </row>
+        <row>
+            <label class="col-md-3 control-label">Time</label>
+
+            <div class="input-group bottomMargin col-md-4">
+                <input class="form-control input-sm" id="appendprepend" type="text" data-bind="value: billingItem.time">
+                <span class="input-group-addon">Hours</span>
+            </div>
+        </row>
+        <row>
+            <label class="col-md-3 control-label">Expense</label>
+
+            <div class="input-group col-md-4">
+                <span class="input-group-addon">$</span>
+                <input class="form-control input-sm" id="appendprepend" type="text"
+                       data-bind="value: billingItem.expenseAmount">
+            </div>
+        </row>
+    </div>
+</div>
+
+<div class="form-group">
+    <label class="control-label col-md-2" for="appendprepend">Code</label>
+
+    <div class="col-md-10">
+        <div class="row">
+            <div class="col-sm-4">
+                <input class="form-control input-sm" type="text">
+            </div>
+        </div>
+    </div>
+</div>
+<!--At the moment we are allowing a single BillingItem per ClaimEntry-->
+<!--
+<a class="btn btn-info btn-sm" data-bind="click: initBillingItem">
+    <i class="fa fa-gear"></i> Add Billing Item
+</a>
+-->
