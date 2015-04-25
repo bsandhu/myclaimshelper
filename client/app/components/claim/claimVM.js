@@ -15,7 +15,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify',
             this.claim = ko.observable(this.newEmptyClaim());
             this.claimEntries = ko.observableArray();
             this.sortDir = ko.observable('desc');
-            this.activeTab = ko.observable(Consts.BILLING_TAB);
+            this.activeTab = ko.observable(Consts.CLAIMS_TAB);
 
             // View state
             this.screenHeight = ko.observable(screen.height);

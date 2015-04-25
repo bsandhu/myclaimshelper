@@ -54,6 +54,9 @@ require.config({
         },
         'Path' : {
             exports: 'Path'
+        },
+        'smartnotify' : {
+            deps: ['jquery', 'bootstrap']
         }
     }
 });
