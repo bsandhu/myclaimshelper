@@ -116,6 +116,11 @@ define(['jquery', 'knockout', 'KOMap', 'amplify',
             Router.routeToHome();
         };
 
+        ClaimVM.prototype.onCreateNewBill = function (entry, ev) {
+            this.selectBillingTab();
+            amplify.publish(Events.CREATE_NEW_BILL, {claimId: this.claim()._id()});
+        }
+
         ClaimVM.prototype.onClaimEntryClick = function (entry, ev) {
             // Toggle row highlight
             $('#claimEntriesList tr').removeClass('info');

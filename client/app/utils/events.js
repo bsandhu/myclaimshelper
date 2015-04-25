@@ -18,6 +18,8 @@ define([], function(){
         UPDATE_CLAIM_ENTRY_STATUS : 'UpdateClaimEntryStatus',
 
         SUCCESS_NOTIFICATION : 'SuccessNotification',
-        FAILURE_NOTIFICATION : 'FailureNotification'
+        FAILURE_NOTIFICATION : 'FailureNotification',
+
+        CREATE_NEW_BILL : 'CREATE_NEW_BILL'
     };
 });

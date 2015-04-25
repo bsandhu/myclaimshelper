@@ -1,22 +1,24 @@
 <!-- *** Tabs *** -->
 <ul id="myTab1" class="nav nav-tabs bordered">
-    <li class="active">
-        <a href="#claimTab" data-toggle="tab" data-bind="click: selectClaimTab">
+    <li data-bind="attr: {class: activeTab() == Consts.CLAIMS_TAB ? 'active' : ''}">
+        <a href="#" data-toggle="tab" data-bind="click: selectClaimTab">
             Claim
             <span class="badge bg-color-blue txt-color-white"
                   data-bind="text: (claim().insuranceCompanyFileNum() || '')"></span>
         </a>
     </li>
-    <li>
-        <a href="#bilingTab" data-toggle="tab" data-bind="click: selectBillingTab">
-            <i class="fa fa-fw fa-lg fa-gear"></i>Billing
+    <li data-bind="attr: {class: activeTab() == Consts.BILLING_TAB ? 'active' : ''}">
+        <a href="#" data-toggle="tab" data-bind="click: selectBillingTab">
+            <i class="fa fa-fw fa-lg fa-credit-card"></i>Billing
         </a>
     </li>
 </ul>
 
 <!-- *** Tabs content *** -->
 <div id="myTabContent1" class="tab-content padding-5">
-    <div class="tab-pane fade in active" id="claimTab">
+
+    <div class="tab-pane fade in" id="claimTab"
+         data-bind="css: {active: activeTab() == Consts.CLAIMS_TAB}">
 
         <!-- *** Claim Panel -->
         <div class="panel panel-default">
@@ -143,7 +145,7 @@
 
             <div data-bind="ifnot: inEditMode" class="topMargin1pc">
                 <div class="btn-group inline">
-                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                    <button type="button" class="btn btn-default dropdown-toggle btn-info" data-toggle="dropdown">
                         <span class="fa fa-plus"></span>
                         Add New Entry <span class="caret"></span>
                     </button>
@@ -176,7 +178,7 @@
                 </div>
 
                 <!-- Edit claim button -->
-                <div class="btn btn-default inline" data-bind="click: onEditModeClick.bind($data)">
+                <div class="btn btn-default inline btn-info" data-bind="click: onEditModeClick.bind($data)">
                     <i class="fa fa-pencil"></i>
                     Edit claim
                 </div>
@@ -184,6 +186,15 @@
                 <!-- Add contact Button -->
                 <div class="inline">
                     <add-contact-component></add-contact-component>
+                </div>
+
+                <!-- Create Bill Button -->
+                <div class="inline">
+                    <div class="btn-group">
+                        <a class="btn btn-sm btn-info" data-bind="click: onCreateNewBill">
+                            <i class="fa fa-file-text-o"></i> Create New Bill
+                        </a>
+                    </div>
                 </div>
             </div>
 
@@ -195,8 +206,9 @@
     </div>
 
     <!-- *** Biling panel *** -->
-    <div class="tab-pane fade in" id="bilingTab">
-        <div id="billPanelContent" data-bind="if: activeTab() == Consts.BILLING_TAB">
+    <div class="tab-pane fade in" id="bilingTab"
+         data-bind="css: {active: activeTab() == Consts.BILLING_TAB}">
+        <div id="billPanelContent">
             <div data-bind="component: {name: 'billing-component',
                                         params: claim()._id()}"></div>
         </div>
