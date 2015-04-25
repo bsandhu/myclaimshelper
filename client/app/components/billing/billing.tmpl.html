@@ -29,106 +29,83 @@ data-widget-sortable="false"
 
 <!-- widget div-->
 <div>
-    <!-- widget content -->
-    <div class="widget-body no-padding">
+<!-- widget content -->
+<div class="widget-body no-padding">
 
-        <div class="widget-body-toolbar">
-            <div class="row">
-                <div class="col-sm-4">
-                    <div class="input-group">
-                        <input class="form-control" type="text" placeholder="Type invoice number or date...">
+    <div class="widget-body-toolbar">
+        <div class="row">
+            Some help text here on what to do?
+        </div>
+    </div>
 
-                        <div class="input-group-btn">
-                            <button class="btn btn-default" type="button">
-                                <i class="fa fa-search"></i> Search
-                            </button>
-                        </div>
+    <div class="padding-10">
+        <br>
+        <div class="pull-left">
+            <img src="img/logo-blacknwhite.png" width="150" height="32" alt="invoice icon">
+
+            <address>
+                <br>
+                <strong>SmartAdmin, Inc.</strong>
+                <br>
+                231 Ajax Rd,
+                <br>
+                Detroit MI - 48212, USA
+                <br>
+                <abbr title="Phone">P:</abbr> (123) 456-7890
+            </address>
+        </div>
+        <div class="pull-right">
+            <h1 class="font-400">invoice</h1>
+        </div>
+        <div class="clearfix"></div>
+        <br>
+        <br>
+
+        <div class="row">
+            <div class="col-sm-9">
+                <h4 class="semi-bold">Rogers, Inc.</h4>
+                <address>
+                    <strong>Mr. Simon Hedger</strong>
+                    <br>
+                    342 Mirlington Road,
+                    <br>
+                    Calfornia, CA 431464
+                    <br>
+                    <abbr title="Phone">P:</abbr> (467) 143-4317
+                </address>
+            </div>
+            <div class="col-sm-3">
+                <div>
+                    <div>
+                        <strong>INVOICE NO :</strong>
+                        <span class="pull-right"> #AA-454-4113-00 </span>
                     </div>
+
                 </div>
+                <div>
+                    <div class="font-md">
+                        <strong>INVOICE DATE :</strong>
+                        <span class="pull-right"> <i class="fa fa-calendar"></i> 15/02/13 </span>
+                    </div>
 
-                <div class="col-sm-8 text-align-right">
-                    <div class="btn-group">
-                        <a href="javascript:void(0)" class="btn btn-sm btn-primary">
-                            <i class="fa fa-edit"></i> Edit
-                        </a>
-                    </div>
-                    <div class="btn-group">
-                        <a class="btn btn-sm btn-success" data-bind="click: createNewBill">
-                            <i class="fa fa-plus"></i> Create New
-                        </a>
-                    </div>
                 </div>
+                <br>
+
+                <div class="well well-sm  bg-color-darken txt-color-white no-border">
+                    <div class="fa-lg">
+                        Total Due :
+                        <span class="pull-right"> 4,972 USD** </span>
+                    </div>
+
+                </div>
+                <br>
+                <br>
             </div>
         </div>
 
-        <div class="padding-10">
-            <br>
-            <div class="pull-left">
-                <img src="img/logo-blacknwhite.png" width="150" height="32" alt="invoice icon">
-
-                <address>
-                    <br>
-                    <strong>SmartAdmin, Inc.</strong>
-                    <br>
-                    231 Ajax Rd,
-                    <br>
-                    Detroit MI - 48212, USA
-                    <br>
-                    <abbr title="Phone">P:</abbr> (123) 456-7890
-                </address>
-            </div>
-            <div class="pull-right">
-                <h1 class="font-400">invoice</h1>
-            </div>
-            <div class="clearfix"></div>
-            <br>
-            <br>
-
-            <div class="row">
-                <div class="col-sm-9">
-                    <h4 class="semi-bold">Rogers, Inc.</h4>
-                    <address>
-                        <strong>Mr. Simon Hedger</strong>
-                        <br>
-                        342 Mirlington Road,
-                        <br>
-                        Calfornia, CA 431464
-                        <br>
-                        <abbr title="Phone">P:</abbr> (467) 143-4317
-                    </address>
-                </div>
-                <div class="col-sm-3">
-                    <div>
-                        <div>
-                            <strong>INVOICE NO :</strong>
-                            <span class="pull-right"> #AA-454-4113-00 </span>
-                        </div>
-
-                    </div>
-                    <div>
-                        <div class="font-md">
-                            <strong>INVOICE DATE :</strong>
-                            <span class="pull-right"> <i class="fa fa-calendar"></i> 15/02/13 </span>
-                        </div>
-
-                    </div>
-                    <br>
-
-                    <div class="well well-sm  bg-color-darken txt-color-white no-border">
-                        <div class="fa-lg">
-                            Total Due :
-                            <span class="pull-right"> 4,972 USD** </span>
-                        </div>
-
-                    </div>
-                    <br>
-                    <br>
-                </div>
-            </div>
-
-            <!-- **** View toggle **** -->
-            <div class="row">
-                <div class="col-sm-9">
+        <!-- **** View toggle **** -->
+        <div class="row">
+            <div class="col-sm-9">
                     <span>
                         <span class="onoffswitch-title">Show breakdown</span>
                         <span class="onoffswitch">
@@ -142,106 +119,118 @@ data-widget-sortable="false"
                             </label>
                         </span>
                     </span>
-                </div>
             </div>
-
         </div>
 
-        <!-- ************************************************************ -->
-        <!-- Bills listing -->
-        <!-- ************************************************************ -->
-        <div class="col-sm-6 col-lg-4" data-bind="if: createMode() === false">
-            <h6>Bills</h6>
+    </div>
 
-            <div class="dd" id="nestable2">
-                <ol class="dd-list">
-                    <li class="dd-item" data-bind="foreach: { data: bills, as: 'bill' }" style="cursor: pointer">
-                        <div class="dd-handle" data-bind="text: bill._id, click: $parent.loadBill">
-                            <em class="pull-right badge bg-color-orange padding-5" rel="tooltip" title=""
-                                data-placement="left">
+    <!-- ************************************************************ -->
+    <!-- Bills listing -->
+    <!-- ************************************************************ -->
+    <div class="col-sm-6 col-lg-4" data-bind="if: createMode() === false">
+        <h6>Bills</h6>
+
+        <div class="dd" id="nestable2">
+            <ol class="dd-list">
+                <li class="dd-item" data-bind="foreach: { data: bills, as: 'bill' }" style="cursor: pointer">
+                    <div class="dd-handle" data-bind="text: bill._id, click: $parent.loadBill">
+                        <em class="pull-right badge bg-color-orange padding-5" rel="tooltip" title=""
+                            data-placement="left">
                             <i class="fa fa-flash fa-lg txt-color-white"></i></em>
-                        </div>
-                    </li>
-                </ol>
+                    </div>
+                </li>
+            </ol>
+        </div>
+    </div>
+
+    <!-- ************************************************************ -->
+    <!-- Claim entries listing -->
+    <!-- ************************************************************ -->
+    <table class="table table-hover smart-form has-tickbox" data-bind="if: createMode">
+        <thead>
+        <tr>
+            <th>&nbsp;</th>
+            <th>DATE</th>
+            <th>TASK</th>
+            <th>DESCRIPTION</th>
+            <th>TIME</th>
+            <th>MILEAGE</th>
+            <th>EXPENSE</th>
+            <th>AMOUNT</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- ko foreach: { data: claimEntries, as: 'entry' } -->
+        <tr>
+            <td>
+                <label class="checkbox">
+                    <input type="checkbox" name="checkbox-inline">
+                    <i></i>
+                </label>
+            </td>
+            <td data-bind="text: $parent.DateUtils.niceDate(entry.entryDate, false)"></td>
+            <td><a href="javascript:void(0);" data-bind="text: entry.tag"></a></td>
+            <td data-bind="text: entry.summary"></td>
+            <!-- ko if: entry.billingItem -->
+            <td data-bind="text: entry.billingItem.time"></td>
+            <td data-bind="text: entry.billingItem.mileage"></td>
+            <td data-bind="text: entry.billingItem.expenseAmount"></td>
+            <td>$1,300.00</td>
+            <!-- /ko -->
+            <!-- ko ifnot: entry.billingItem -->
+            <td colspan="3">&nbsp;</td>
+            <td class="txt-color-blueLight"><i>Not billed</i></td>
+            <!-- /ko -->
+        </tr>
+        <!-- /ko -->
+
+        <tr>
+            <td colspan="4">Total</td>
+            <td><strong>$4,400.00</strong></td>
+        </tr>
+        <tr>
+            <td colspan="4">HST/GST</td>
+            <td><strong>13%</strong></td>
+        </tr>
+        </tbody>
+    </table>
+    <!-- **** End entries listing **** -->
+
+    <div class="invoice-footer padding-10">
+        <div class="row">
+            <div class="col-sm-9">
+                <!-- <div class="payment-methods">
+                     <h5>Payment Methods</h5>
+                     <img src="img/invoice/paypal.png" width="64" height="64" alt="paypal">
+                     <img src="img/invoice/americanexpress.png" width="64" height="64"
+                          alt="american express">
+                     <img src="img/invoice/mastercard.png" width="64" height="64" alt="mastercard">
+                     <img src="img/invoice/visa.png" width="64" height="64" alt="visa">
+                 </div>-->
+            </div>
+            <div class="col-sm-3">
+                <div>
+                    <h3><strong>Total: <span class="text-success">$4,972 USD</span></strong></h3>
+                </div>
             </div>
         </div>
-
-        <!-- ************************************************************ -->
-        <!-- Claim entries listing -->
-        <!-- ************************************************************ -->
-        <table class="table table-hover smart-form has-tickbox" data-bind="if: createMode">
-            <thead>
-            <tr>
-                <th>&nbsp;</th>
-                <th>DATE</th>
-                <th>TASK</th>
-                <th>DESCRIPTION</th>
-                <th>AMOUNT</th>
-            </tr>
-            </thead>
-            <tbody>
-            <!-- ko foreach: { data: claimEntries, as: 'entry' } -->
-            <tr>
-                <td>
-                    <label class="checkbox">
-                        <input type="checkbox" name="checkbox-inline">
-                        <i></i>
-                    </label>
-                </td>
-                <td data-bind="text: $parent.DateUtils.niceDate(entry.entryDate, false)"></td>
-                <td><a href="javascript:void(0);" data-bind="text: entry.tag"></a></td>
-                <td data-bind="text: entry.summary"></td>
-                <td>$1,300.00</td>
-            </tr>
-            <!-- /ko -->
-
-            <tr>
-                <td colspan="4">Total</td>
-                <td><strong>$4,400.00</strong></td>
-            </tr>
-            <tr>
-                <td colspan="4">HST/GST</td>
-                <td><strong>13%</strong></td>
-            </tr>
-            </tbody>
-        </table>
-        <!-- **** End entries listing **** -->
-
-        <div class="invoice-footer padding-10">
-            <div class="row">
-                <div class="col-sm-9">
-                   <!-- <div class="payment-methods">
-                        <h5>Payment Methods</h5>
-                        <img src="img/invoice/paypal.png" width="64" height="64" alt="paypal">
-                        <img src="img/invoice/americanexpress.png" width="64" height="64"
-                             alt="american express">
-                        <img src="img/invoice/mastercard.png" width="64" height="64" alt="mastercard">
-                        <img src="img/invoice/visa.png" width="64" height="64" alt="visa">
-                    </div>-->
-                </div>
-                <div class="col-sm-3">
-                    <div>
-                        <h3><strong>Total: <span class="text-success">$4,972 USD</span></strong></h3>
-                    </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="pull-right">
+                    <a href="javascript:void(0)" class="btn btn-sm btn-primary" data-bind="click: createBill">
+                        <i class="fa fa-save"></i> Submit bill
+                    </a>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-sm-12">
-                    <div class="pull-right">
-                        <a href="javascript:void(0)" class="btn btn-sm btn-primary" data-bind="click: createBill">
-                            <i class="fa fa-save"></i> Finalize bill
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-12">
-                    <p class="note">**To avoid any excess penalty charges, please make payments within 30 days
-                        of the due date. There will be a 2% interest charge per month on all late invoices.</p>
-                </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <p class="note">**To avoid any excess penalty charges, please make payments within 30 days
+                    of the due date. There will be a 2% interest charge per month on all late invoices.</p>
             </div>
         </div>
     </div>
+</div>
 
 </div>
 <!-- end widget content -->

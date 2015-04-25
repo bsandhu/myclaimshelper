@@ -15,7 +15,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify',
             this.claim = ko.observable(this.newEmptyClaim());
             this.claimEntries = ko.observableArray();
             this.sortDir = ko.observable('desc');
-            this.activeTab = ko.observable(Consts.CLAIMS_TAB);
+            this.activeTab = ko.observable(Consts.BILLING_TAB);
 
             // View state
             this.screenHeight = ko.observable(screen.height);
@@ -115,6 +115,11 @@ define(['jquery', 'knockout', 'KOMap', 'amplify',
         ClaimVM.prototype.onCancel = function () {
             Router.routeToHome();
         };
+
+        ClaimVM.prototype.onCreateNewBill = function (entry, ev) {
+            this.selectBillingTab();
+            amplify.publish(Events.CREATE_NEW_BILL, {claimId: this.claim()._id()});
+        }
 
         ClaimVM.prototype.onClaimEntryClick = function (entry, ev) {
             // Toggle row highlight

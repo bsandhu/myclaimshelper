@@ -4,10 +4,10 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'shared/dateUtils', 'app/utils
 
         function BillingVM(claimId) {
             console.log('Init BillingVM. ClaimId: ' + JSON.stringify(claimId));
-            //this.claimId = claimId;
-            this.claimId = 'claim_id';
+            this.claimId = claimId;
+            //this.claimId = 'claim_id';
             this.DateUtils = DateUtils;
-            this.claimEntries = ko.observableArray();
+            this.claimEntries = ko.observableArray([]);
             this.createMode = ko.observable(false);
 
             // Active Bill
@@ -15,10 +15,21 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'shared/dateUtils', 'app/utils
             // All bills associated with this Claim
             this.bills = ko.observableArray([]);
 
-            this.getBillForClaim();
+            this.setupEvListeners();
+            this.getBillsForClaim();
         }
 
-        BillingVM.prototype.createNewBill = function (claimId) {
+        /***********************************************************/
+        /* Event handlers                                          */
+        /***********************************************************/
+
+        BillingVM.prototype.setupEvListeners = function () {
+            amplify.subscribe(Events.CREATE_NEW_BILL, this, this.onCreateNewBill);
+        }
+
+        BillingVM.prototype.onCreateNewBill = function (evData) {
+            this.claimId = evData.claimId;
+            console.assert(this.claimId, 'Expecting ev to carry claimId');
             this.loadEntriesForClaim(this.claimId);
             this.createMode(true);
         }
@@ -48,12 +59,12 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'shared/dateUtils', 'app/utils
                 }.bind(this));
         };
 
-        BillingVM.prototype.getBillForClaim = function () {
+        BillingVM.prototype.getBillsForClaim = function () {
             ajaxUtils.post(
                 '/bill/search',
                 JSON.stringify({claimId: this.claimId}),
                 function onSuccess(response) {
-                    console.log('getBillForClaim: ' + JSON.stringify(response));
+                    console.log('getBillsForClaim: ' + JSON.stringify(response));
                     this.bills(response.data);
                 }.bind(this)
             );
