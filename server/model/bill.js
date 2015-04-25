@@ -12,9 +12,6 @@ define([], function () {
       this.claimId = claimId;
       this.billingDate = undefined;
       this.description = undefined;
-
-      // Instances of BillingItem
-      this.billingItems = [];
     }
     return Bill;
 });
