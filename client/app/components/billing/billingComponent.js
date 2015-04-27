@@ -19,6 +19,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'shared/dateUtils', 'app/utils
             this.setupEvListeners();
             this.setupModeListener();
 
+            this.mode.extend({ notify: 'always' });
             this.mode(Consts.BILLING_TAB_LIST_MODE);
         }
 
@@ -50,6 +51,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'shared/dateUtils', 'app/utils
             this.claimId = evData.claimId;
             console.assert(this.claimId, 'Expecting ev to carry claimId');
             this.mode(Consts.BILLING_TAB_CREATE_MODE);
+
         }
 
         BillingVM.prototype.loadEntriesForClaim = function (claimId) {
