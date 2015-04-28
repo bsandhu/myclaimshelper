@@ -93,7 +93,9 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'shared/dateUtils',
                 JSON.stringify({_id: billId}),
                 function onSuccess(response) {
                     console.log('getBillsForClaim: ' + JSON.stringify(response));
-                    this.bill(KOMap.fromJS(response));
+                    response.data[0]
+                        ? this.bill(KOMap.fromJS(response.data[0]))
+                        : console.warn('No bill found for Id: ' + billId);
                 }.bind(this)
             );
         };
