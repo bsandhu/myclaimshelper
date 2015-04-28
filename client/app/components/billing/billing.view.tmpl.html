@@ -84,40 +84,38 @@
                 <th>MILEAGE</th>
                 <th>EXPENSE</th>
                 <th>AMOUNT</th>
-                <th>&nbsp;</th>
             </tr>
             </thead>
             <tbody>
-            <!-- ko foreach: { data: bill, as: 'entry' } -->
+            <!-- ko foreach: { data: bill().billingItems, as: 'billingItem' } -->
             <tr>
-                <td data-bind="text: $parent.DateUtils.niceDate(entry.entryDate, false)"></td>
-                <td><a href="javascript:void(0);" data-bind="text: entry.tag"></a></td>
-                <td data-bind="text: entry.summary"></td>
-                <!-- ko if: entry.billingItem -->
-                <td data-bind="text: entry.billingItem.time"></td>
-                <td data-bind="text: entry.billingItem.mileage"></td>
-                <td data-bind="text: entry.billingItem.expenseAmount"></td>
+                <td></td>
+                <td></td>
+                <td></td>
+
+                <td data-bind="text: billingItem.time"></td>
+                <td data-bind="text: billingItem.mileage"></td>
+                <td data-bind="text: billingItem.expenseAmount"></td>
                 <td>$1,300.00</td>
-                <!-- /ko -->
-                <!-- ko ifnot: entry.billingItem -->
-                <td colspan="3">&nbsp;</td>
-                <td class="txt-color-blueLight"><i>Not billed</i></td>
-                <!-- /ko -->
-                <td>
-                    <a class="fa fa-times"
-                       data-toggle="tooltip" data-placement="top" title="Exclude item from this Bill"
-                       data-bind="click: $parent.removeBillingItem">
-                    </a>
-                </td>
             </tr>
             <!-- /ko -->
 
             <tr>
-                <td colspan="4">Total</td>
+                <td colspan="3">Sub-total</td>
+                <td><strong>15.00 Hrs</strong></td>
+                <td><strong>44.05 Miles</strong></td>
                 <td><strong>$4,400.00</strong></td>
             </tr>
             <tr>
-                <td colspan="4">HST/GST</td>
+                <td colspan="6">
+                    <div class="pull-right">Pre-tax</div>
+                </td>
+                <td><strong>$4,200.50</strong></td>
+            </tr>
+            <tr>
+                <td colspan="6">
+                    <div class="pull-right">Tax</div>
+                </td>
                 <td><strong>13%</strong></td>
             </tr>
             </tbody>
