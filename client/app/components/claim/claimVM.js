@@ -46,6 +46,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify',
             amplify.subscribe(Events.NEW_CLAIM_ENTRY, this, this.onNewClaimEntry);
             amplify.subscribe(Events.SHOW_CLAIM_ENTRY, this, this.onShowClaimEntry);
             amplify.subscribe(Events.SAVED_CLAIM_ENTRY, this, this.refreshClaimEntriesListing);
+            amplify.subscribe(Events.CREATE_NEW_BILL, this, this.onCreateNewBill);
             window.onclick = this.onDismissStatus.bind(this);
         };
 
@@ -116,9 +117,13 @@ define(['jquery', 'knockout', 'KOMap', 'amplify',
             Router.routeToHome();
         };
 
-        ClaimVM.prototype.onCreateNewBill = function (entry, ev) {
+        ClaimVM.prototype.onCreateNewBill = function () {
             this.selectBillingTab();
-            amplify.publish(Events.CREATE_NEW_BILL, {claimId: this.claim()._id()});
+        }
+
+        ClaimVM.prototype.onShowBill = function (entry, ev) {
+            this.selectBillingTab();
+            amplify.publish(Events.SHOW_BILL, ev);
         }
 
         ClaimVM.prototype.onClaimEntryClick = function (entry, ev) {

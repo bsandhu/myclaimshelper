@@ -15,8 +15,9 @@ require.config({
         'wysiwyg'   : 'lib/bootstrap.wysiwyg',
         'async'     : 'lib/async',
         'datetimepicker' : 'lib/jquery.datetimepicker',
-        'smartnotify' : 'lib/SmartNotification.min',
-        'jarvis'    : 'lib/jarvis.widget.min'
+        'smartnotify'    : 'lib/SmartNotification.min',
+        'jarvis'         : 'lib/jarvis.widget.min',
+        'sortable'       : 'lib/sortable.min'
     },
     shim: {
         'jqueryui': {
@@ -32,6 +33,9 @@ require.config({
             deps: ['jquery', 'jqueryui']
         },
         'bootstrap': {
+            deps: ['jquery']
+        },
+        'sortable': {
             deps: ['jquery']
         },
         'wysiwyg' : {

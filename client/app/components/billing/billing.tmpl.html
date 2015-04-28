@@ -1,10 +1,15 @@
-<!-- **** Bills listing **** -->
-<div data-bind="if: mode() === Consts.BILLING_TAB_LIST_MODE">
-    <div data-bind="template: {name: 'app/components/billing/billing.list'}"></div>
+<!-- **** Billing history **** -->
+<div data-bind="">
+    <div data-bind="template: {name: 'app/components/billing/billing.list',
+                               if: mode() === Consts.BILLING_TAB_HISTORY_MODE}"></div>
 </div>
 
 <!-- **** Create Bill **** -->
-<div data-bind="if: mode() === Consts.BILLING_TAB_CREATE_MODE">
-    <div data-bind="template: {name: 'app/components/billing/billing.create',
-                               afterRender: initTooltipComponent}"></div>
-</div>
+<div data-bind="template: {name: 'app/components/billing/billing.create',
+                           if: mode() === Consts.BILLING_TAB_CREATE_MODE,
+                           afterRender: initTooltipComponent}"></div>
+
+<!-- **** View Bill **** -->
+<div data-bind="template: {name: 'app/components/billing/billing.view',
+                          if: mode() === Consts.BILLING_TAB_VIEW_MODE,
+                          afterRender: initTooltipComponent}"></div>

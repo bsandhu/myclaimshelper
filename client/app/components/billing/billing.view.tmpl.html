@@ -3,8 +3,8 @@
     <div class="panel-heading">
         <a href="javascript:void(0);" class="btn-xs btn-labeled btn-link"
            data-bind="click: routeToBillingHistory">
-            <span class="btn-label">
-                <i class="glyphicon glyphicon-chevron-left"></i></span>Billing history
+                <span class="btn-label">
+                    <i class="glyphicon glyphicon-chevron-left"></i></span>Billing history
         </a>
     </div>
 
@@ -73,25 +73,7 @@
             </div>
         </div>
 
-        <!-- **** View toggle **** -->
-        <div class="row">
-            <div class="col-sm-9">
-                    <span>
-                        <span class="onoffswitch-title">Show breakdown</span>
-                        <span class="onoffswitch">
-                            <input type="checkbox" name="start_interval" class="onoffswitch-checkbox"
-                                   id="start_interval">
-                            <label class="onoffswitch-label" for="start_interval">
-                                <span class="onoffswitch-inner"
-                                      data-swchon-text="Yes"
-                                      data-swchoff-text="No"></span>
-                                <span class="onoffswitch-switch"></span>
-                            </label>
-                        </span>
-                    </span>
-            </div>
-        </div>
-
+        <!-- **** Billing items **** -->
         <table class="table table-hover smart-form">
             <thead>
             <tr>
@@ -106,7 +88,7 @@
             </tr>
             </thead>
             <tbody>
-            <!-- ko foreach: { data: claimEntries, as: 'entry' } -->
+            <!-- ko foreach: { data: bill, as: 'entry' } -->
             <tr>
                 <td data-bind="text: $parent.DateUtils.niceDate(entry.entryDate, false)"></td>
                 <td><a href="javascript:void(0);" data-bind="text: entry.tag"></a></td>
@@ -153,14 +135,8 @@
             </div>
             <div class="row">
                 <div class="col-sm-12">
-                    <div class="pull-right">
-                        <a href="javascript:void(0);" class="btn btn-labeled btn-success" data-bind="click: saveBill">
-                            <span class="btn-label"><i class="glyphicon glyphicon-ok"></i></span>Submit Bill
-                        </a>
-                        <a href="javascript:void(0);" class="btn btn-labeled btn-danger"
-                           data-bind="click: cancelBillCreation">
-                            <span class="btn-label"><i class="glyphicon glyphicon-remove"></i></span>Cancel
-                        </a>
+                    <div class="well well-sm bg-color-greenLighter txt-color-green text-center">
+                        Bill has been submitted .. blah blah
                     </div>
                 </div>
             </div>

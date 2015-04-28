@@ -4,22 +4,30 @@
 <div class="panel panel-default">
 
     <div class="panel-heading">
-        <h3 class="panel-title">Bills submitted for the Claim</h3>
+        <h3 class="panel-title">Billing history</h3>
     </div>
 
     <div class=" panel-body" data-bind="if: bills().length > 0">
-        <div class="col-sm-6 col-lg-4">
-            <div class="dd" id="nestable2">
-                <ol class="dd-list">
-                    <li class="dd-item" data-bind="foreach: { data: bills, as: 'bill' }" style="cursor: pointer">
-                        <div class="dd-handle" data-bind="text: bill._id, click: $parent.loadBill">
-                            <em class="pull-right badge bg-color-orange padding-5" rel="tooltip" title=""
-                                data-placement="left">
-                                <i class="fa fa-flash fa-lg txt-color-white"></i></em>
-                        </div>
-                    </li>
-                </ol>
-            </div>
+        <div class="col-sm-8 col-lg-6">
+            <table id="billingListTable" data-sortable
+                   data-bind="sortable" class="table table-hover table-condensed">
+                <thead>
+                <tr>
+                    <th>Bill Status</th>
+                    <th data-field="id" data-sortable="true">Bill ID</th>
+                    <th data-field="billingDate" data-sortable="true">Billing Date</th>
+                </tr>
+                </thead>
+                <tbody data-bind="foreach: { data: bills, as: 'bill' }">
+                <tr>
+                    <td class="col-sm-1"><span class="fa fa-sign-out"></span></td>
+                    <td data-bind="attr: {'data-value': bill._id}">
+                        <a data-bind="text: bill._id, attr: {href: '#/claim/' + $parent.claimId + '/bill/' + bill._id}"></a>
+                    </td>
+                    <td>Date</td>
+                </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 

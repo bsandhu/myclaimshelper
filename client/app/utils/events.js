@@ -20,6 +20,8 @@ define([], function(){
         SUCCESS_NOTIFICATION : 'SuccessNotification',
         FAILURE_NOTIFICATION : 'FailureNotification',
 
-        CREATE_NEW_BILL : 'CREATE_NEW_BILL'
+        CREATE_NEW_BILL      : 'CREATE_NEW_BILL',
+        SHOW_BILL            : 'SHOW_BILL',
+        SHOW_BILLING_HISTORY : 'SHOW_BILLING_HISTORY'
     };
 });
