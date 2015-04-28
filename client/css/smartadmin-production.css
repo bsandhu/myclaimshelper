@@ -22189,7 +22189,7 @@ label:hover input[type="checkbox"][disabled].checkbox:checked + span:before {
   background-color: #356e35 !important;
 }
 .bg-color-greenLight {
-  background-color: #71843f !important;
+  /* background-color: #71843f !important; */
 }
 .bg-color-greenDark {
   background-color: #496949 !important;

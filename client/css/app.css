@@ -1,4 +1,6 @@
+/**********************************************************/
 /**** Alignment ****/
+/**********************************************************/
 
 div {
     white-space: normal;
@@ -42,7 +44,9 @@ div {
     min-width: 250px;
 }
 
+/**********************************************************/
 /**** Margins and borders ****/
+/**********************************************************/
 
 .topMargin {
     margin-top: 2px;
@@ -128,7 +132,9 @@ div {
     overflow-y: auto;
 }
 
+/**********************************************************/
 /**** Form elements ****/
+/**********************************************************/
 
 .fileDropBox {
     width: 100%;
@@ -160,18 +166,36 @@ div {
     font-weight: 500;
 }
 
-#modal-button {display: none}
+#modal-button {
+    display: none
+}
+
+/**********************************************************/
+/**** Map ****/
+/**********************************************************/
+
 .pac-container {
     z-index: 1051 !important;
 }
-@media only screen and (max-device-width : 1024px) {
-    #map-button {display: none}
-    #modal-button {display: inline-block}
+
+@media only screen and (max-device-width: 1024px) {
+    #map-button {
+        display: none
+    }
+
+    #modal-button {
+        display: inline-block
+    }
 }
 
-@media only screen and (min-device-width : 1025px) {
-    #map-button {display: inline-block}
-    #modal-button {display: none}
+@media only screen and (min-device-width: 1025px) {
+    #map-button {
+        display: inline-block
+    }
+
+    #modal-button {
+        display: none
+    }
 }
 
 #map-canvas {
@@ -198,13 +222,16 @@ div {
     border-color: darkgray;
 }
 
+/**********************************************************/
 /**** Navigation panels ****/
+/**********************************************************/
 
 .headerLabel {
     position: relative;
     top: -8px;
     left: 5px;
 }
+
 .headerLogo {
     width: 32px;
     background-image: url("../img/logo.png");
@@ -215,7 +242,8 @@ div {
     transition-property: all;
     transition-timing-function: ease;
 }
-.headerLogo:hover{
+
+.headerLogo:hover {
     transform: scale(1.2);
     transition-duration: 0.5s;
     transition-property: all;
@@ -229,7 +257,9 @@ div {
     margin-left: 3px;
 }
 
+/**********************************************************/
 /**** Search panel ****/
+/**********************************************************/
 
 .table > tbody > tr:hover {
     cursor: pointer;
@@ -243,8 +273,9 @@ div {
     color: white;
 }
 
-
+/**********************************************************/
 /**** Dashboard panel ****/
+/**********************************************************/
 
 .dashboardPanelCollapsedContent {
     background-color: #4C6887;
@@ -301,4 +332,8 @@ div {
 
 .summaryRow:hover .summaryGroupCell span:last-child {
     opacity: .9;
+}
+
+.bg-color-greenLighter {
+    background: #cde0c4;
 }

@@ -144,7 +144,7 @@
             <!-- ************************************************ -->
 
             <div data-bind="ifnot: inEditMode" class="topMargin1pc">
-                <div class="btn-group inline">
+                <div class="btn-group inline leftMargin5">
                     <button type="button" class="btn btn-default dropdown-toggle btn-info" data-toggle="dropdown">
                         <span class="fa fa-plus"></span>
                         Add New Entry <span class="caret"></span>
@@ -189,10 +189,10 @@
                 </div>
 
                 <!-- Create Bill Button -->
-                <div class="inline">
+                <div class="inline pull-right rightMargin5">
                     <div class="btn-group">
-                        <a class="btn btn-sm btn-info" data-bind="click: onCreateNewBill">
-                            <i class="fa fa-file-text-o"></i> Create New Bill
+                        <a class="btn btn-sm btn-info" data-bind="attr: {href: '#/claim/' + claim()._id() + '/newbill'}">
+                            <i class="fa fa-plus"></i> New Invoice
                         </a>
                     </div>
                 </div>

@@ -8,9 +8,6 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-    <!-- #CSS Links -->
-    <link rel="stylesheet" type="text/css" href="../../css/app.css">
-
     <!-- Basic Styles -->
     <link rel="stylesheet" type="text/css" media="screen" href="css/bootstrap.css">
     <link rel="stylesheet" type="text/css" media="screen" href="css/font-awesome.min.css">
@@ -20,6 +17,8 @@
     <link rel="stylesheet" type="text/css" media="screen" href="css/smartadmin-skins.css">
     <link rel="stylesheet" type="text/css" media="screen" href="css/invoice.css">
     <link rel="stylesheet" type="text/css" href="../../css/jquery.datetimepicker.css">
+    <link rel="stylesheet" type="text/css" href="../../css/sortable.css">
+    <link rel="stylesheet" type="text/css" href="../../css/app.css">
 
     <!-- #FAVICONS -->
     <link rel="shortcut icon" href="img/favicon/favicon.ico" type="image/x-icon">
@@ -344,8 +343,9 @@ Use search to find needed section.
      * Load libs and init Knockout - on app startup. See requireConfig.js
      */
     require(['jquery', 'knockout', 'KOAmd', 'text', 'amplify', 'app/components/appVM', 'shared/dateUtils', 'jarvis',
-                'app/utils/koDatetimePickerBinding', 'app/utils/koWYSIWYGBinding', 'app/utils/koTextTruncateBinding',
-                'velocity', 'bootstrap'],
+                'app/utils/koDatetimePickerBinding', 'app/utils/koWYSIWYGBinding',
+                'app/utils/koTextTruncateBinding', 'app/utils/koSortableBinding',
+                'velocity', 'bootstrap', 'sortable'],
             function ($, ko, KOAmd, text, amplify, AppVM, DateUtils) {
                 console.log('Init App');
 
