@@ -41,7 +41,7 @@ var _saveOrUpdateBillingItems = _.partial(mongoUtils.saveOrUpdateEntity, _, BILL
 // :: Obj -> Promse
 var _saveOrUpdateBill = _.partial(mongoUtils.saveOrUpdateEntity, _, BILL_COL_NAME);
 
-// :: String -> DB -> Promise
+// :: Dict -> DB -> Promise
 var _getBills = function (search, db) {
     var result = jQuery.Deferred();
     jQuery
@@ -64,7 +64,7 @@ var _getBillingItems = function (search, db) {
     return result;
 }
 
-// :: String -> DB -> Promise
+// :: Dict -> DB -> Promise
 var getBillObjects = function (search, db) {
     var result = jQuery.Deferred();
 
@@ -106,11 +106,10 @@ function getBillsREST(req, res) {
 // :: Dict -> Dict -> None
 function getBillingItemsREST(req, res) {
     assert.ok(req.params.search, 'Expecting BillId as a parameter');
-    //var search = {claimEntryId: req.params.id};
     var db = mongoUtils.connect(config.db);
     db.then(_.partial(_getBillingItems, req.params.search))
         .then(_.partial(sendResponse, res, null),
-        _.partial(sendResponse, res, 'Failed to get BillingItems  ' + req.params.id));
+        _.partial(sendResponse, res, 'Failed to get BillingItems  ' + req.params.search));
 }
 
 // :: Dict -> Dict -> None

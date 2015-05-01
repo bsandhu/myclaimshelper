@@ -236,3 +236,4 @@ exports.CLAIM_ENTRIES_COL_NAME = 'ClaimEntries';
 exports.CONTACTS_COL_NAME = 'Contacts';
 exports.BILL_COL_NAME = 'Bills';
 exports.BILLING_ITEMS_COL_NAME = 'BillingItems';
+exports.USERPROFILE_COL_NAME = 'UserProfiles';
