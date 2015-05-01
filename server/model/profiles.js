@@ -5,26 +5,19 @@ if (typeof define !== 'function') {
     var define = require('amdefine')(module)
 }
 
-define([], function () {
-
-    function BillingProfile() {
-      this.timeUnit = undefined; // e.g., .1 hour.
-      this.distanceUnit = undefined;
-      this.timeRate = undefined; // $ per unit.
-      this.distanceRate = undefined;
-      this.billingTypes = {}; // billing codes or custom types
-    }
-
-    return BillingProfile;
-});
-
+function BillingProfile() {
+  this.timeUnit = undefined; // e.g., .1 hour.
+  this.distanceUnit = undefined;
+  this.timeRate = undefined; // $ per unit.
+  this.distanceRate = undefined;
+  this.billingTypes = {}; // billing codes or custom types
+}
 
 define([], function () {
 
   function UserProfile(){
-    this.userId = undefined;
-    this.userName = undefined; // TODO should this link/be in a Contact?
-    this.billingProfile = undefined;
+    this.userName = undefined; 
+    this.billingProfile = new BillingProfile();
   }
 
   return UserProfile;
