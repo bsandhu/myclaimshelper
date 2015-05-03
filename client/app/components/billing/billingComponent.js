@@ -104,8 +104,8 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'shared/dateUtils',
 
         };
 
-        BillingVM.prototype.routeToBillingHistory = function(){
-            router.routeToBillingHistory(this.claimId);
+        BillingVM.prototype.routeToBillingOverview = function(){
+            router.routeToBillingOverview(this.claimId);
         };
 
         BillingVM.prototype.initTooltipComponent = function(){
