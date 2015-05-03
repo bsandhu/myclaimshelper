@@ -1,9 +1,7 @@
 define(['jquery', 'knockout', 'KOMap', 'amplify', 'shared/dateUtils',
         'app/utils/ajaxUtils', 'app/utils/events', 'app/utils/consts', 'app/utils/router',
-        'model/bill', 'text!app/components/billing/billing.tmpl.html'],
-    function ($, ko, KOMap, amplify, DateUtils,
-              ajaxUtils, Events, Consts, router,
-              Bill, viewHtml) {
+        'model/bill', 'model/billingStatus', 'text!app/components/billing/billing.tmpl.html'],
+    function ($, ko, KOMap, amplify, DateUtils, ajaxUtils, Events, Consts, router, Bill, BillingStatus, viewHtml) {
 
         function BillingVM(claimId) {
             console.log('Init BillingVM. ClaimId: ' + JSON.stringify(claimId));
@@ -45,10 +43,11 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'shared/dateUtils',
         BillingVM.prototype.setupModeListener = function () {
             this.mode.subscribe(function (mode) {
                 if (mode === Consts.BILLING_TAB_CREATE_MODE) {
+                    this.clearBill();
                     this.loadEntriesForClaim(this.claimId);
                 } else if (mode === Consts.BILLING_TAB_HISTORY_MODE) {
                     this.getBillsForClaim();
-                } else if (mode === Consts.BILLING_TAB_VIEW_MODE ) {
+                } else if (mode === Consts.BILLING_TAB_VIEW_MODE) {
                     console.log('View Bill');
                 }
             }, this);
@@ -75,7 +74,6 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'shared/dateUtils',
             console.assert(evData.claimId, 'Expecting ev to carry claimId');
             this.claimId = evData.claimId;
             this.mode(Consts.BILLING_TAB_HISTORY_MODE);
-            //this.initBootstrapTable();
         }
 
         BillingVM.prototype.loadEntriesForClaim = function (claimId) {
@@ -83,8 +81,11 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'shared/dateUtils',
                 .done(function (resp) {
                     console.log('Loaded claim entries' + JSON.stringify(resp.data));
                     this.claimEntries(resp.data);
-                    //this.sortEntries();
                 }.bind(this));
+        };
+
+        BillingVM.prototype.clearBill = function () {
+            this.bill = ko.observable(this.newEmptyBill());
         };
 
         BillingVM.prototype.loadBill = function (billId) {
@@ -100,20 +101,16 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'shared/dateUtils',
             );
         };
 
-        BillingVM.prototype.removeBillingItem = function(){
+        BillingVM.prototype.removeBillingItem = function () {
 
         };
 
-        BillingVM.prototype.routeToBillingOverview = function(){
+        BillingVM.prototype.routeToBillingOverview = function () {
             router.routeToBillingOverview(this.claimId);
         };
 
-        BillingVM.prototype.initTooltipComponent = function(){
+        BillingVM.prototype.initTooltipComponent = function () {
             $('[data-toggle="tooltip"]').tooltip();
-        };
-
-        BillingVM.prototype.initBootstrapTable = function(){
-            $('#billingListTable').bootstrapTable();
         };
 
         BillingVM.prototype.getBillsForClaim = function () {
@@ -131,9 +128,10 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'shared/dateUtils',
             this.mode(Consts.BILLING_TAB_HISTORY_MODE);
         };
 
-        BillingVM.prototype.saveBill = function () {
+        BillingVM.prototype.submitBill = function () {
             console.log('Saving Bill');
             this.bill().claimId(this.claimId);
+            this.bill().billingDate(this.claimId);
 
             ajaxUtils.post(
                 '/bill',
@@ -143,35 +141,36 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'shared/dateUtils',
 
                     // Update Ids gen. by the server
                     this.bill()._id(response.data._id);
-                    this.saveBillingItems();
-                    amplify.publish(Events.SUCCESS_NOTIFICATION, {msg: 'Saved Bill'});
+                    this.submitBillingItems(
+                        function () {
+                            amplify.publish(Events.SUCCESS_NOTIFICATION, {msg: 'Saved Bill'})
+                        });
                 }.bind(this));
         };
 
-        /**
-         * Associate the BillingItems to Bill
-         */
-        BillingVM.prototype.saveBillingItems = function () {
+        // Associate the BillingItems to Bill
+
+        BillingVM.prototype.submitBillingItems = function (onDone) {
             var billingItems = $.map(this.claimEntries(),
                 function (entry) {
                     var billingItem = entry.billingItem;
                     if (billingItem && !$.isEmptyObject(billingItem)) {
                         billingItem.billId = this.bill()._id();
-                        billingItem.status = entry.billingItem.STATUS_BILLED;
+                        billingItem.status = BillingStatus.BILLED;
                         return billingItem;
                     } else {
                         return undefined;
                     }
                 }.bind(this));
             console.log('Saving BillingItems: ' + JSON.stringify(billingItems));
-            ajaxUtils.post(
+            return ajaxUtils.post(
                 '/billingItem',
                 KOMap.toJSON(billingItems),
                 function onSuccess(response) {
                     console.log('Saved Billing Items: ' + JSON.stringify(response));
-                    amplify.publish(Events.SUCCESS_NOTIFICATION, {msg: 'Saved Billing Items'});
-                }.bind(this));
-        };
-
+                    onDone();
+                }
+            );
+        }
         return {viewModel: BillingVM, template: viewHtml};
     })

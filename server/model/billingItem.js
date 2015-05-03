@@ -5,7 +5,7 @@ if (typeof define !== 'function') {
     var define = require('amdefine')(module)
 }
 
-define([], function () {
+define(['./billingStatus'], function (BillingStatus) {
 
     function BillingItem() {
         // Id(s)
@@ -18,11 +18,7 @@ define([], function () {
         this.time = 0;
         this.expenseAmount = 0;
 
-        this.STATUS_NOT_BILLABLE = 'NOT_BILLABLE';
-        this.STATUS_NOT_BILLED = 'NOT_BILLED';
-        this.STATUS_BILLED = 'BILLED';
-        this.STATUS_PAID = 'PAID';
-        this.status = this.STATUS_NOT_BILLED;
+            this.status = BillingStatus.NOT_BILLED;
     }
 
     return BillingItem;

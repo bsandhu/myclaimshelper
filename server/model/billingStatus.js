@@ -8,10 +8,10 @@ if (typeof define !== 'function') {
 define([], function () {
 
     return {
-        this.NOT_BILLABLE = 'NOT_BILLABLE';
-        this.NOT_BILLED = 'NOT_BILLED';
-        this.BILLED = 'BILLED';
-        this.PAID = 'PAID';
+        NOT_BILLABLE : 'NOT_BILLABLE',
+        NOT_BILLED   : 'NOT_BILLED',
+        BILLED       : 'BILLED',
+        PAID         : 'PAID'
     };
 
 });
