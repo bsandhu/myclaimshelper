@@ -157,6 +157,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'shared/dateUtils',
                     var billingItem = entry.billingItem;
                     if (billingItem && !$.isEmptyObject(billingItem)) {
                         billingItem.billId = this.bill()._id();
+                        billingItem.status = entry.billingItem.STATUS_BILLED;
                         return billingItem;
                     } else {
                         return undefined;

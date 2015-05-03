@@ -100,7 +100,7 @@
             </div>
         </div>
 
-        <table class="table table-hover smart-form">
+        <table class="table table-hover">
             <thead>
             <tr>
                 <th>DATE</th>
@@ -115,14 +115,14 @@
             </thead>
             <tbody>
             <!-- ko foreach: { data: claimEntries, as: 'entry' } -->
-            <tr>
+            <tr data-bind="ifnot: entry.billingItem && entry.billingItem.status === entry.billingItem.STATUS_BILLED">
                 <td data-bind="text: $parent.DateUtils.niceDate(entry.entryDate, false)"></td>
                 <td><a href="javascript:void(0);" data-bind="text: entry.tag"></a></td>
                 <td data-bind="text: entry.summary"></td>
                 <!-- ko if: entry.billingItem -->
-                <td data-bind="text: entry.billingItem.time"></td>
-                <td data-bind="text: entry.billingItem.mileage"></td>
-                <td data-bind="text: entry.billingItem.expenseAmount"></td>
+                <td><span data-bind="editable: entry.billingItem.time, editableOptions: {mode: 'popup', title: 'Edit time'}"></span></td>
+                <td><span data-bind="editable: entry.billingItem.mileage, editableOptions: {mode: 'popup', title: 'Edit Mileage'}"></span></td>
+                <td><span data-bind="editable: entry.billingItem.expenseAmount, editableOptions: {mode: 'popup', title: 'Edit Amount'}"></span></td>
                 <td>$1,300.00</td>
                 <!-- /ko -->
                 <!-- ko ifnot: entry.billingItem -->
