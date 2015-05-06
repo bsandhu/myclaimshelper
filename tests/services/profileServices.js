@@ -8,9 +8,12 @@ var jQuery = require('jquery-deferred');
 describe('profileService', function () {
 
     var up = new UserProfile('up1');
-    up._id = 'bill_id';
+    up._id = 'up1';
     up.userName = 'Emiliano';
-
+    up.billingProfile.timeUnit = 'hour';
+    up.billingProfile.distanceUnit = 'mile';
+    up.billingProfile.timeRate = 1.2;
+    up.billingProfile.distanceRate = 0.3;
 
     it('saveOrUpdateUserProfileREST ok', function (done) {
         var req = {body: up};
@@ -32,8 +35,14 @@ describe('profileService', function () {
             console.log('getUserProfileREST: ' + JSON.stringify(data));
             var up = data.data;
             console.log(data);
-            assert.equal(up.userName, 'Emiliano');
+            //UserProfile
             assert.equal(up._id, 'up1');
+            assert.equal(up.userName, 'Emiliano');
+            //BillingProfile
+            assert.equal(up.billingProfile.timeUnit, 'hour');
+            assert.equal(up.billingProfile.distanceUnit, 'mile');
+            assert.equal(up.billingProfile.timeRate, 1.2);
+            assert.equal(up.billingProfile.distanceRate, 0.3);
             done();
         };
         profileService.getUserProfileREST(req, res);
