@@ -217,6 +217,7 @@ function initCollections() {
     initCollection('Contacts');
     initCollection('Files');
     initCollection('Sequences');
+    initCollection('UserProfiles');
 }
 
 exports.run = run;

@@ -12,7 +12,19 @@ var jQuery = require("jquery-deferred");
 var _saveOrUpdateUserProfile = _.partial(mongoUtils.saveOrUpdateEntity, _, USERPROFILE_COL_NAME);
 
 // :: Id -> Promise
-var _getUserProfile = _.partial(mongoUtils.getEntityById, _, USERPROFILE_COL_NAME);
+//var _getUserProfile = _.partial(mongoUtils.getEntityById, _, USERPROFILE_COL_NAME);
+function _getUserProfile(id, db){
+  var result = jQuery.Deferred();
+  var search = {'_id':id};
+  //return mongoUtils.findEntities(USERPROFILE_COL_NAME, search, db);
+  mongoUtils.findEntities(USERPROFILE_COL_NAME, search, db)
+  .then(function (profiles) {
+    var profile = profiles[0];
+    console.log('_getUserProfile: ' + JSON.stringify(profile));
+    result.resolve(profile);
+    });
+  return result;
+}
 
 
 // REST ------------------------------
@@ -21,7 +33,8 @@ var _getUserProfile = _.partial(mongoUtils.getEntityById, _, USERPROFILE_COL_NAM
 function getUserProfileREST(req, res) {
     console.log(req);
     assert.ok(req.params.id, 'Expecting UserProfile Id as a parameter');
-    _getUserProfile(req.params.id)
+    var db = mongoUtils.connect(config.db);
+    db.then(_.partial(_getUserProfile, req.params.id))
       .then(_.partial(sendResponse, res, null),
             _.partial(sendResponse, res, 'Failed to get UserProfile  ' + req.params.id));
 }
