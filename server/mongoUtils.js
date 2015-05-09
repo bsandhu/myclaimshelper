@@ -102,7 +102,6 @@ function saveOrUpdateEntity(entity, colName) {
     function dbCall(seqNum) {
         run(function update(db) {
             var entityCol = db.collection(colName);
-
             if (!entity._id) {
                 // Note: Ids are always Strings .. not numbers
                 entity._id = String(seqNum);

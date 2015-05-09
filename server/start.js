@@ -3,6 +3,7 @@ var config = require('./config.js');
 var claimsService = require('./services/claimsService.js');
 var billingServices = require('./services/billingServices.js');
 var contactService = require('./services/contactService.js');
+var profileService = require('./services/profileService.js');
 var uploadService = require('./services/uploadService.js');
 var entityExtractionService = require('./services/entityExtractionService.js');
 var processMail = require('./services/mail/mailHandler.js').process;
@@ -63,8 +64,9 @@ function setupBillingServiceRoutes() {
 }
 
 function setupProfileServiceRoutes() {
-    server.post('/userProfile', profileService.saveUserProfileREST);
+    server.post('/userProfile', profileService.saveOrUpdateUserProfileREST);
     server.get('/userProfile/:id', profileService.getUserProfileREST);
+    console.log('setingup profile');
 }
 
 
@@ -109,8 +111,8 @@ setupMailServiceRoutes();
 setupBillingServiceRoutes();
 setupClaimsServiceRoutes();
 setupContactServiceRoutes();
-setupStaticRoutes();
 setupProfileServiceRoutes();
+setupStaticRoutes();
 mongoUtils.initConnPool().then(mongoUtils.initCollections);
 startServer();
 

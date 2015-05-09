@@ -47,5 +47,5 @@ function saveOrUpdateUserProfileREST(req, res) {
               _.partial(sendResponse, res, 'Failled to save ' + userProfile));
 }
 
-exports.saveOrUpdateUserProfileREST = saveOrUpdateUserProfileREST
-exports.getUserProfileREST = getUserProfileREST
+exports.saveOrUpdateUserProfileREST = saveOrUpdateUserProfileREST;
+exports.getUserProfileREST = getUserProfileREST;

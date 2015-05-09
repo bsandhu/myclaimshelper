@@ -15,7 +15,7 @@
 `~/007> node server/start.js`
 
 3 You should see a msg like this<br/>
-`restify listening at http://0.0.0.0:8080`
+`restify listening at http://127.0.0.1:8080`
 
 4 Try hitting these URLs
 
