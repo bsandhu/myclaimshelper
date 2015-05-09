@@ -63,9 +63,8 @@ function setupBillingServiceRoutes() {
 }
 
 function setupProfileServiceRoutes() {
-    // TODO
-    //server.get('/profile', profileService.getAllProfiles);
-    //server.get('/profile/:id', profileService.getProfile);
+    server.post('/userProfile', profileService.saveUserProfileREST);
+    server.get('/userProfile/:id', profileService.getUserProfileREST);
 }
 
 
@@ -111,6 +110,7 @@ setupBillingServiceRoutes();
 setupClaimsServiceRoutes();
 setupContactServiceRoutes();
 setupStaticRoutes();
+setupProfileServiceRoutes();
 mongoUtils.initConnPool().then(mongoUtils.initCollections);
 startServer();
 
