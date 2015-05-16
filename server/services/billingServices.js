@@ -79,7 +79,7 @@ var getBillObjects = function (search, db) {
                 });
         });
 
-    function _populateBillingItems(bill){
+    function _populateBillingItems(bill) {
         var done = jQuery.Deferred();
         var itemSearch = {billId: bill._id};
         jQuery.when(_getBillingItems(itemSearch, db))
@@ -89,6 +89,7 @@ var getBillObjects = function (search, db) {
             });
         return done;
     }
+
     return result;
 }
 
@@ -114,22 +115,34 @@ function getBillingItemsREST(req, res) {
 
 // :: Dict -> Dict -> None
 function saveOrUpdateBillingItemsREST(req, res) {
-    function _done() {
-        sendResponse(res, null, 'Success saving ');
+    function _done(msg) {
+        sendResponse(res, null, msg);
     };
     function _fail() {
         sendResponse(res, 'Failed to save');
     };
     var items = req.body;
-    var promises = _.map(items, _saveOrUpdateBillingItems);
-    jQuery.when.apply(null, promises)
-        .done(_done)
-        .fail(_fail);
+    assert.ok(_.isArray(items), 'Expecting BillingItems in an Array');
+
+    if (items.length > 1) {
+        var promises = _.map(items, _saveOrUpdateBillingItems);
+        jQuery.when.apply(null, promises)
+            .done(_done)
+            .fail(_fail);
+    } else {
+        // If one item is being saved - return Generated id
+        mongoUtils.saveOrUpdateEntity(items[0], mongoUtils.BILLING_ITEMS_COL_NAME)
+            .always(function (err, results) {
+                sendResponse(res, err, results);
+            });
+    }
 }
 
 // :: Dict -> Dict -> None
 function saveOrUpdateBillREST(req, res) {
     var bill = req.body;
+    delete bill.billingItems;
+
     _saveOrUpdateBill(bill)
         .then(function () {
             sendResponse(res, null, bill)

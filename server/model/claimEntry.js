@@ -27,9 +27,8 @@ define([], function () {
 
         this.location = undefined;
 
-        // Instance of BillingItem
+        // Instance of BillingItem - dynamically populated by service
         this.billingItem = undefined;
-        this.billingItemId = undefined;
     }
 
     return ClaimEntry;

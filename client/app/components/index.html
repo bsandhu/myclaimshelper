@@ -345,7 +345,7 @@ Use search to find needed section.
     require(['jquery', 'knockout', 'KOAmd', 'text', 'amplify', 'app/components/appVM', 'shared/dateUtils', 'jarvis',
                 'app/utils/koDatetimePickerBinding', 'app/utils/koWYSIWYGBinding',
                 'app/utils/koTextTruncateBinding', 'app/utils/koSortableBinding',
-                'velocity', 'bootstrap', 'sortable', 'KOXeditable'],
+                'velocity', 'bootstrap', 'KOXeditable'],
             function ($, ko, KOAmd, text, amplify, AppVM, DateUtils) {
                 console.log('Init App');
 
@@ -374,6 +374,11 @@ Use search to find needed section.
 
                 // Knockout bindings init
                 ko.applyBindings(new AppVM());
+
+                JSON.prettyPrint = function(str) {
+                    var maxLength = 80;
+                    return JSON.stringify(str).substring(0, maxLength);
+                };
             });
 </script>
 

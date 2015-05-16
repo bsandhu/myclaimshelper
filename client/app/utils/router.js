@@ -63,8 +63,8 @@ define(['Path', 'amplify', 'app/utils/events'],
             window.location.hash = '#/claim';
         };
 
-        Router.prototype.routeToBillingHistory = function (claimId) {
-            console.log('Navigating to Billing history ' + claimId);
+        Router.prototype.routeToBillingOverview = function (claimId) {
+            console.log('Navigating to Billing overview ' + claimId);
             window.location.hash = '#/claim/' + claimId + '/billhistory';
         };
 

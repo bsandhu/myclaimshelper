@@ -6,19 +6,12 @@ define(['knockout', 'KOMap', 'text!app/components/billingItem/billingItemCompone
         function BillingItemVM(params) {
             console.log('Init BillingItemVM');
 
-            console.assert(params.claimEntry, 'Expecting claimEntry param');
-            this.claimEntry = params.claimEntry;
-            this.initBillingItem();
-        }
-
-        BillingItemVM.prototype.initBillingItem = function () {
-            var billingItem = this.claimEntry().billingItem() || new BillingItem();
-            this.claimEntry().billingItem(billingItem);
-            this.billingItem = billingItem;
+            console.assert(params.billingItem, 'Expecting billingItem param');
+            this.billingItem = params.billingItem;
         }
 
         BillingItemVM.prototype.removeBillingItem = function (billingItem) {
-            this.claimEntry.billingItems.remove(billingItem);
+            // No-op
         }
 
         return {viewModel: BillingItemVM, template: viewHtml};

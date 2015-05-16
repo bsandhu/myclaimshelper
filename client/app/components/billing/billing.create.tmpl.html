@@ -2,9 +2,9 @@
 
     <div class="panel-heading">
         <a href="javascript:void(0);" class="btn-xs btn-labeled btn-link"
-           data-bind="click: routeToBillingHistory">
+           data-bind="click: routeToBillingOverview">
             <span class="btn-label">
-                <i class="glyphicon glyphicon-chevron-left"></i></span>Billing history
+                <i class="glyphicon glyphicon-chevron-left"></i></span>Billing Overview
         </a>
     </div>
 
@@ -48,7 +48,7 @@
                 <div>
                     <div>
                         <strong>INVOICE NO :</strong>
-                        <span class="pull-right"> #AA-454-4113-00 </span>
+                        <span class="pull-right" data-bind="text: bill()._id"></span>
                     </div>
 
                 </div>
@@ -100,69 +100,88 @@
             </div>
         </div>
 
-        <table class="table table-hover">
-            <thead>
-            <tr>
-                <th>DATE</th>
-                <th>TASK</th>
-                <th>DESCRIPTION</th>
-                <th>TIME</th>
-                <th>MILEAGE</th>
-                <th>EXPENSE</th>
-                <th>AMOUNT</th>
-                <th>&nbsp;</th>
-            </tr>
-            </thead>
-            <tbody>
-            <!-- ko foreach: { data: claimEntries, as: 'entry' } -->
-            <tr data-bind="ifnot: entry.billingItem && entry.billingItem.status === entry.billingItem.STATUS_BILLED">
-                <td data-bind="text: $parent.DateUtils.niceDate(entry.entryDate, false)"></td>
-                <td><a href="javascript:void(0);" data-bind="text: entry.tag"></a></td>
-                <td data-bind="text: entry.summary"></td>
-                <!-- ko if: entry.billingItem -->
-                <td><span data-bind="editable: entry.billingItem.time, editableOptions: {mode: 'popup', title: 'Edit time'}"></span></td>
-                <td><span data-bind="editable: entry.billingItem.mileage, editableOptions: {mode: 'popup', title: 'Edit Mileage'}"></span></td>
-                <td><span data-bind="editable: entry.billingItem.expenseAmount, editableOptions: {mode: 'popup', title: 'Edit Amount'}"></span></td>
-                <td>$1,300.00</td>
-                <!-- /ko -->
-                <!-- ko ifnot: entry.billingItem -->
-                <td colspan="3">&nbsp;</td>
-                <td class="txt-color-blueLight"><i>Not billed</i></td>
-                <!-- /ko -->
-                <td>
-                    <a class="fa fa-times"
-                       data-toggle="tooltip" data-placement="top" title="Exclude item from this Bill"
-                       data-bind="click: $parent.removeBillingItem">
-                    </a>
-                </td>
-            </tr>
-            <!-- /ko -->
+        <div class="row">
+            <table class="table table-hover" data-bind="sortable" id="billingCreateTable" data-sortable>
+                <thead>
+                <tr>
+                    <th data-sortable="true" data-sorted="true" data-sorted-direction="ascending">DATE</th>
+                    <th>TASK</th>
+                    <th>DESCRIPTION</th>
+                    <th>TIME</th>
+                    <th>MILEAGE</th>
+                    <th>EXPENSE</th>
+                    <th>AMOUNT</th>
+                    <th>&nbsp;</th>
+                </tr>
+                </thead>
+                <tbody>
+                <!-- ko foreach: { data: bill().billingItems(), as: 'billingItem' } -->
+                <tr>
+                    <td data-bind="text: $parent.DateUtils.niceDate(billingItem.entryDate(), false)"></td>
+                    <td><a href="javascript:void(0);" data-bind="text: billingItem.tag()" ></a></td>
+                    <td data-bind="text: billingItem.summary()"></td>
 
-            <tr>
-                <td colspan="4">Total</td>
-                <td><strong>$4,400.00</strong></td>
-            </tr>
-            <tr>
-                <td colspan="4">HST/GST</td>
-                <td><strong>13%</strong></td>
-            </tr>
-            </tbody>
-        </table>
+                    <td><span
+                            data-bind="editable: billingItem.time,
+                                       editableOptions: {mode: 'popup',
+                                                         title: 'Edit time',
+                                                         success: $parent.onTimeUpdate.bind($parent, billingItem)}"></span>
+                    </td>
+                    <td><span
+                            data-bind="editable: billingItem.mileage,
+                                       editableOptions: {mode: 'popup',
+                                                         title: 'Edit Mileage',
+                                                         success: $parent.onMileageUpdate.bind($parent, billingItem)}"></span>
+                    </td>
+                    <td><span
+                            data-bind="editable: billingItem.expenseAmount,
+                                       editableOptions: {mode: 'popup',
+                                                         title: 'Edit Amount',
+                                                         success: $parent.onExpenseAmountUpdate.bind($parent, billingItem)}"></span>
+                    </td>
+                    <td>$1,300.00</td>
+                    <!--<td colspan="3">&nbsp;</td>
+                    <td class="txt-color-blueLight"><i>Not billed</i></td>-->
+                    <td>
+                        <a class="fa fa-times"
+                           data-toggle="tooltip" data-placement="top" title="Exclude item from this Bill"
+                           data-bind="click: $parent.removeBillingItem">
+                        </a>
+                    </td>
+                </tr>
+                <!-- /ko -->
+                </tbody>
+            </table>
+        </div>
+
+
         <!-- **** End entries listing **** -->
 
         <!-- **** Start footer **** -->
         <div class="invoice-footer padding-10">
+            <div class="row margin-bottom-5">
+                <div>
+                    <div class="col-sm-offset-8 col-sm-2 text-right">Pre-tax Total</div>
+                    <div class="col-sm-2"><strong>$4,400.00</strong></div>
+                </div>
+            </div>
             <div class="row">
-                <div class="col-sm-3 pull-right">
-                    <div>
-                        <h3><strong>Total: <span class="text-success">$4,972 USD</span></strong></h3>
-                    </div>
+                <div>
+                    <div class="col-sm-offset-8 col-sm-2 text-right">Tax (13%)</div>
+                    <div class="col-sm-2"><strong>$100.95</strong></div>
+                </div>
+            </div>
+            <div class="row">
+                <div>
+                    <div class="col-sm-offset-8 col-sm-2 text-right"><h3><strong>Total</strong></h3></div>
+                    <div class="col-sm-2"><strong><h3><strong><span class="text-success">$4,972 USD</span></strong></h3>
+                    </strong></div>
                 </div>
             </div>
             <div class="row">
                 <div class="col-sm-12">
                     <div class="pull-right">
-                        <a href="javascript:void(0);" class="btn btn-labeled btn-success" data-bind="click: saveBill">
+                        <a href="javascript:void(0);" class="btn btn-labeled btn-success" data-bind="click: submitBill">
                             <span class="btn-label"><i class="glyphicon glyphicon-ok"></i></span>Submit Bill
                         </a>
                         <a href="javascript:void(0);" class="btn btn-labeled btn-danger"
