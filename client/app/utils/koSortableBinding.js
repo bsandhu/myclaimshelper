@@ -1,4 +1,4 @@
-define(['jquery', 'knockout', 'KOMap', 'shared/dateUtils', 'datetimepicker'],
+define(['jquery', 'knockout', 'KOMap', 'shared/dateUtils', 'datetimepicker', 'sortable'],
 
     function ($, ko, KOMap, DateUtils) {
         'use strict';
@@ -6,7 +6,7 @@ define(['jquery', 'knockout', 'KOMap', 'shared/dateUtils', 'datetimepicker'],
         ko.bindingHandlers.sortable = {
 
             init: function (element, valueAccessor, allBindings, viewModel, bindingContext) {
-                Sortable.initTable(document.querySelector('#billingListTable'));
+                Sortable.initTable(element);
             },
 
             update: function (element, valueAccessor, allBindings, viewModel, bindingContext) {

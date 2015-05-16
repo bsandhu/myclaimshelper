@@ -101,10 +101,10 @@
         </div>
 
         <div class="row">
-            <table class="table table-hover" data-bind="sortable" id="billingListTable">
+            <table class="table table-hover" data-bind="sortable" id="billingCreateTable" data-sortable>
                 <thead>
                 <tr>
-                    <th>DATE</th>
+                    <th data-sortable="true" data-sorted="true" data-sorted-direction="ascending">DATE</th>
                     <th>TASK</th>
                     <th>DESCRIPTION</th>
                     <th>TIME</th>
@@ -115,27 +115,33 @@
                 </tr>
                 </thead>
                 <tbody>
-                <!-- ko foreach: { data: claimEntries, as: 'entry' } -->
-                <tr data-bind="ifnot: entry.billingItem && entry.billingItem.status === entry.billingItem.STATUS_BILLED">
-                    <td data-bind="text: $parent.DateUtils.niceDate(entry.entryDate, false)"></td>
-                    <td><a href="javascript:void(0);" data-bind="text: entry.tag"></a></td>
-                    <td data-bind="text: entry.summary"></td>
-                    <!-- ko if: entry.billingItem -->
+                <!-- ko foreach: { data: bill().billingItems(), as: 'billingItem' } -->
+                <tr>
+                    <td data-bind="text: $parent.DateUtils.niceDate(billingItem.entryDate(), false)"></td>
+                    <td><a href="javascript:void(0);" data-bind="text: billingItem.tag()" ></a></td>
+                    <td data-bind="text: billingItem.summary()"></td>
+
                     <td><span
-                            data-bind="editable: entry.billingItem.time, editableOptions: {mode: 'popup', title: 'Edit time'}"></span>
+                            data-bind="editable: billingItem.time,
+                                       editableOptions: {mode: 'popup',
+                                                         title: 'Edit time',
+                                                         success: $parent.onTimeUpdate.bind($parent, billingItem)}"></span>
                     </td>
                     <td><span
-                            data-bind="editable: entry.billingItem.mileage, editableOptions: {mode: 'popup', title: 'Edit Mileage'}"></span>
+                            data-bind="editable: billingItem.mileage,
+                                       editableOptions: {mode: 'popup',
+                                                         title: 'Edit Mileage',
+                                                         success: $parent.onMileageUpdate.bind($parent, billingItem)}"></span>
                     </td>
                     <td><span
-                            data-bind="editable: entry.billingItem.expenseAmount, editableOptions: {mode: 'popup', title: 'Edit Amount'}"></span>
+                            data-bind="editable: billingItem.expenseAmount,
+                                       editableOptions: {mode: 'popup',
+                                                         title: 'Edit Amount',
+                                                         success: $parent.onExpenseAmountUpdate.bind($parent, billingItem)}"></span>
                     </td>
                     <td>$1,300.00</td>
-                    <!-- /ko -->
-                    <!-- ko ifnot: entry.billingItem -->
-                    <td colspan="3">&nbsp;</td>
-                    <td class="txt-color-blueLight"><i>Not billed</i></td>
-                    <!-- /ko -->
+                    <!--<td colspan="3">&nbsp;</td>
+                    <td class="txt-color-blueLight"><i>Not billed</i></td>-->
                     <td>
                         <a class="fa fa-times"
                            data-toggle="tooltip" data-placement="top" title="Exclude item from this Bill"

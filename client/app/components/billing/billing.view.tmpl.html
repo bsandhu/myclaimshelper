@@ -89,9 +89,9 @@
             <tbody>
             <!-- ko foreach: { data: bill().billingItems, as: 'billingItem' } -->
             <tr>
-                <td></td>
-                <td></td>
-                <td></td>
+                <td data-bind="text: billingItem.entryDate"></td>
+                <td data-bind="text: billingItem.tag"></td>
+                <td data-bind="text: billingItem.summary"></td>
 
                 <td data-bind="text: billingItem.time"></td>
                 <td data-bind="text: billingItem.mileage"></td>

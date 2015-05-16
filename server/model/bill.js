@@ -12,6 +12,10 @@ define([], function () {
       this.claimId = claimId;
       this.billingDate = undefined;
       this.description = undefined;
+
+      // Note:
+      // BillingItems has a -> to Bill
+      // BillingService dynamically adds the BillingItems under the 'billingItems' attribute during GET Bill calls
     }
     return Bill;
 });

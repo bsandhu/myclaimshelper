@@ -11,14 +11,19 @@ define(['./billingStatus'], function (BillingStatus) {
         // Id(s)
         this._id = undefined;
         this.billId = null;
-        this.description = null;
+        this.claimEntryId = null;
+
+        // Overlap with ClaimEntry - so we can reproduce bill accurately
+        this.entryDate = null;
+        this.tag = null;
+        this.summary = null;
 
         this.code = null; // is specific to Bill's need. How to generalize?
         this.mileage = 0;
         this.time = 0;
         this.expenseAmount = 0;
 
-            this.status = BillingStatus.NOT_BILLED;
+        this.status = BillingStatus.NOT_BILLED;
     }
 
     return BillingItem;
