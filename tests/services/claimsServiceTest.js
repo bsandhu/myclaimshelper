@@ -79,8 +79,8 @@ describe('Claims Service', function () {
             assert.ok(data.data._id);
             assert.equal(data.data.description, '<b>Bill</b> has a hat. He is going to catch up with <b>Elnora Ragan</b> on wed morning.');
 
-            assert.ok(data.data.billingItemId, 'BillingItem should be saved');
-            assert.equal(data.data.billingItem, undefined);
+            assert.ok(data.data.billingItem._id, 'BillingItem should be saved and returned');
+            assert.ok(data.data.billingItem.claimEntryId, 'BillingItem should hold ref to ClaimEntry');
             done();
         };
         claimsService.saveOrUpdateClaimEntry(req, res);
@@ -164,6 +164,7 @@ describe('Claims Service', function () {
             var savedClaimEntry = data.data[0];
             assert.ok(savedClaimEntry.claimId);
             assert.equal(savedClaimEntry.summary, 'I am test Task too');
+            assert.ok(savedClaimEntry.billingItem);
             assert.ok(savedClaimEntry.billingItem._id);
             assert.equal(savedClaimEntry.billingItem.mileage, 100);
             done();
