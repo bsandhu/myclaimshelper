@@ -126,7 +126,7 @@ function saveOrUpdateBillingItemsREST(req, res) {
 
     if (items.length > 1) {
         var promises = _.map(items, _saveOrUpdateBillingItems);
-        jQuery.when.apply(null, promises)
+        jQuery.when.apply(jQuery, promises)
             .done(_done)
             .fail(_fail);
     } else {
@@ -141,6 +141,7 @@ function saveOrUpdateBillingItemsREST(req, res) {
 // :: Dict -> Dict -> None
 function saveOrUpdateBillREST(req, res) {
     var bill = req.body;
+
     delete bill.billingItems;
 
     _saveOrUpdateBill(bill)

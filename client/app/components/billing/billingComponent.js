@@ -83,15 +83,15 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'shared/dateUtils',
         }
 
         BillingVM.prototype.onTimeUpdate = function (billingItemObservable, resp, newValue) {
-           this._onBillingItemAttrUpdate(billingItemObservable, 'time', newValue);
+            this._onBillingItemAttrUpdate(billingItemObservable, 'time', newValue);
         }
 
         BillingVM.prototype.onMileageUpdate = function (billingItemObservable, resp, newValue) {
-           this._onBillingItemAttrUpdate(billingItemObservable, 'mileage', newValue);
+            this._onBillingItemAttrUpdate(billingItemObservable, 'mileage', newValue);
         }
 
         BillingVM.prototype.onExpenseAmountUpdate = function (billingItemObservable, resp, newValue) {
-           this._onBillingItemAttrUpdate(billingItemObservable, 'expenseAmount', newValue);
+            this._onBillingItemAttrUpdate(billingItemObservable, 'expenseAmount', newValue);
         }
 
         BillingVM.prototype._onBillingItemAttrUpdate = function (billingItemObservable, attrName, newValue) {
@@ -118,15 +118,17 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'shared/dateUtils',
                     var claimEntries = resp.data;
                     var billingItems = [];
                     $.each(claimEntries, function (index, entry) {
-                        entry.billingItem = entry.billingItem || new BillingItem();
-                        entry.billingItem.claimEntryId = entry._id;
-                        entry.billingItem.entryDate = entry.entryDate;
-                        entry.billingItem.tag = entry.tag;
-                        entry.billingItem.summary = entry.summary;
+                        if (entry.billingItem && entry.billingItem.status === BillingStatus.BILLED) {
+                            console.log('Item already billed: ' + JSON.stringify(entry.billingItem));
+                        } else {
+                            entry.billingItem = entry.billingItem || new BillingItem();
+                            entry.billingItem.claimEntryId = entry._id;
+                            entry.billingItem.entryDate = entry.entryDate;
+                            entry.billingItem.tag = entry.tag;
+                            entry.billingItem.summary = entry.summary;
 
-                        if (entry.billingItem.status === BillingStatus.NOT_BILLED) {
-                            console.log('Eligible BillingItems: ' + JSON.stringify(entry.billingItem));
                             billingItems.push(KOMap.fromJS(entry.billingItem));
+                            console.log('Eligible BillingItem: ' + JSON.stringify(entry.billingItem));
                         }
                     });
                     this.bill().billingItems(billingItems);
