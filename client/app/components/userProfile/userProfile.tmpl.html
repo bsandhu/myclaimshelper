@@ -1,0 +1,47 @@
+<div id="userProfileModal"
+     class="modal" role="dialog" aria-labelledby="userProfileModalLabel" aria-hidden="true"
+     style="width: 50%; right: 25%; left: 25%; top:25%">
+
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <!-- Header -->
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="userProfileModalLabel">User Profile</h4>
+            </div>
+
+            <!-- Body -->
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-4">Name</div>
+                        <div class="col-md-4" data-bind="text: userProfile.userName"></div>
+                    </div>
+
+                    <!--<div class="row">
+                        <div class="col-sm-9">
+                            Level 1: .col-sm-9
+                            <div class="row">
+                                <div class="col-xs-8 col-sm-6">
+                                    Level 2: .col-xs-8 .col-sm-6
+                                </div>
+                                <div class="col-xs-4 col-sm-6">
+                                    Level 2: .col-xs-4 .col-sm-6
+                                </div>
+                            </div>
+                        </div>
+                    </div>-->
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+
+        </div><!-- modal-content -->
+    </div><!-- modal-dialog -->
+</div>
