@@ -1,4 +1,4 @@
-define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEntry', 'model/BillingItem', 'model/states',
+define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEntry', 'model/billingItem', 'model/states',
         'app/utils/ajaxUtils', 'app/utils/events', 'app/utils/router', 'app/utils/sessionKeys',
         'shared/dateUtils',
         'text!app/components/taskEntry/taskEntry.tmpl.html'],

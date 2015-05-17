@@ -66,7 +66,7 @@ function setupBillingServiceRoutes() {
 function setupProfileServiceRoutes() {
     server.post('/userProfile', profileService.saveOrUpdateUserProfileREST);
     server.get('/userProfile/:id', profileService.getUserProfileREST);
-    console.log('setingup profile');
+    console.log('setingup userProfile');
 }
 
 

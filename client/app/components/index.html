@@ -113,33 +113,13 @@ Use search to find needed section.
         <!-- end collapse menu -->
 
         <!-- #MOBILE -->
-        <!-- Top menu profile link : this shows only when top menu is active -->
+        <!-- Top menu userProfile link : this shows only when top menu is active -->
         <ul id="mobile-profile-img" class="header-dropdown-list hidden-xs padding-5">
             <li class="">
                 <a href="#" class="dropdown-toggle no-margin userdropdown" data-toggle="dropdown">
                     <img src="img/avatars/sunny.png" alt="John Doe" class="online"/>
                 </a>
                 <ul class="dropdown-menu pull-right">
-                    <li>
-                        <a href="javascript:void(0);" class="padding-10 padding-top-0 padding-bottom-0"><i
-                                class="fa fa-cog"></i> Setting</a>
-                    </li>
-                    <li class="divider"></li>
-                    <li>
-                        <a href="#ajax/profile.html" class="padding-10 padding-top-0 padding-bottom-0"> <i
-                                class="fa fa-user"></i> <u>P</u>rofile</a>
-                    </li>
-                    <li class="divider"></li>
-                    <li>
-                        <a href="javascript:void(0);" class="padding-10 padding-top-0 padding-bottom-0"
-                           data-action="toggleShortcut"><i class="fa fa-arrow-down"></i> <u>S</u>hortcut</a>
-                    </li>
-                    <li class="divider"></li>
-                    <li>
-                        <a href="javascript:void(0);" class="padding-10 padding-top-0 padding-bottom-0"
-                           data-action="launchFullscreen"><i class="fa fa-arrows-alt"></i> Full <u>S</u>creen</a>
-                    </li>
-                    <li class="divider"></li>
                     <li>
                         <a href="login.html" class="padding-10 padding-top-5 padding-bottom-5" data-action="userLogout"><i
                                 class="fa fa-sign-out fa-lg"></i> <strong><u>L</u>ogout</strong></a>
@@ -226,12 +206,22 @@ Use search to find needed section.
                         class="menu-item-parent">Billing</span></a>
             </li>
             <li class="top-menu-hidden">
-                <a href="#"><i class="fa fa-lg fa-fw fa-cube txt-color-blue"></i> <span
-                        class="menu-item-parent">Misc</span></a>
+                <a href="#">
+                    <i class="fa fa-lg fa-fw fa-cube txt-color-blue"></i>
+                    <span class="menu-item-parent">Misc</span></a>
                 <ul>
                     <li>
-                        <a href="ajax/applayout.html"><i class="fa fa-cube"></i> App Settings</a>
+                        <a href="ajax/applayout.html">
+                            <i class="fa fa-cube"></i> App Settings
+                        </a>
                     </li>
+                    <li class="divider"></li>
+                    <li>
+                        <a href="#" data-bind="click: onUserProfileClick">
+                            <i class="fa fa-user"></i> User Profile
+                        </a>
+                    </li>
+                    <li class="divider"></li>
                     <li>
                         <a href="http://bootstraphunter.com/smartadmin/BUGTRACK/track_/documentation/index.html"
                            target="_blank"><i class="fa fa-book"></i> Documentation</a>
@@ -283,6 +273,9 @@ Use search to find needed section.
     <!-- Notifications -->
     <div data-bind="component: 'notifier-component'"></div>
 
+    <!-- User profile -->
+    <div data-bind="component: 'user-profile-component'"></div>
+
     <!-- #MAIN CONTENT -->
     <div id="content">
         <!-- Summary Component -->
@@ -328,7 +321,7 @@ Use search to find needed section.
     <div class="page-footer">
         <div class="row">
             <div class="col-xs-12 col-sm-6 col-lg-12 text-right">
-                <span class="txt-color-white">Logicube © 2013-2014</span>
+                <span class="txt-color-white">Logicube © 2013-2015</span>
             </div>
         </div>
     </div>
@@ -371,11 +364,12 @@ Use search to find needed section.
                 ko.components.register('quick-add-component', {require: 'app/components/quickAdd/quickAddVM'});
                 ko.components.register('stats-component', {require: 'app/components/stats/statsVM'});
                 ko.components.register('task-entry-component', {require: 'app/components/taskEntry/taskEntryVM'});
+                ko.components.register('user-profile-component', {require: 'app/components/userProfile/userProfileComponent'});
 
                 // Knockout bindings init
                 ko.applyBindings(new AppVM());
 
-                JSON.prettyPrint = function(str) {
+                JSON.prettyPrint = function (str) {
                     var maxLength = 80;
                     return JSON.stringify(str).substring(0, maxLength);
                 };

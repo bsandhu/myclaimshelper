@@ -22,6 +22,8 @@ define([], function(){
 
         CREATE_NEW_BILL      : 'CREATE_NEW_BILL',
         SHOW_BILL            : 'SHOW_BILL',
-        SHOW_BILLING_HISTORY : 'SHOW_BILLING_HISTORY'
+        SHOW_BILLING_HISTORY : 'SHOW_BILLING_HISTORY',
+
+        SHOW_USER_PROFILE    : 'SHOW_USER_PROFILE'
     };
 });
