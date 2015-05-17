@@ -1,5 +1,5 @@
 define(['jquery', 'knockout', 'KOMap', 'amplify', 'app/utils/events',
-        'text!app/components/userProfile/userProfile.tmpl.html', 'model/Profiles'],
+        'text!app/components/userProfile/userProfile.tmpl.html', 'model/profiles'],
 
     function ($, ko, KOMap, amplify, Events, viewHtml, UserProfile) {
         'use strict';
@@ -19,9 +19,8 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'app/utils/events',
             this.loadUserProfile(this.getCurrentUserId());
         };
 
-        // TODO User Auth
         UserProfileComponent.prototype.getCurrentUserId = function(){
-            return "TestUser";
+            return amplify.store.sessionStorage(SessionKeys.ACTIVE_USER_ID);
         };
 
         UserProfileComponent.prototype.loadUserProfile = function(userProfileId){
