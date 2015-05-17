@@ -5,9 +5,10 @@ var jQuery = require('jquery-deferred');
 var testContacts = require('./testContacts.js');
 var testClaimEntries = require('./testClaimEntries.js');
 var testClaims = require('./testClaims.js');
+var testUserProfile = require('./testUserProfile.js');
 
 
-function nukeDB(){
+function nukeDB() {
     console.log('NUKING DB');
     var defer = jQuery.Deferred();
     jQuery.when(
@@ -15,18 +16,18 @@ function nukeDB(){
         mongoUtils.deleteEntity({}, mongoUtils.CLAIM_ENTRIES_COL_NAME),
         mongoUtils.deleteEntity({}, mongoUtils.CLAIMS_COL_NAME),
         mongoUtils.deleteEntity({}, mongoUtils.BILL_COL_NAME),
-        mongoUtils.deleteEntity({}, mongoUtils.BILLING_ITEMS_COL_NAME))
-        .then(function(){
+        mongoUtils.deleteEntity({}, mongoUtils.BILLING_ITEMS_COL_NAME),
+        mongoUtils.deleteEntity({}, mongoUtils.USERPROFILE_COL_NAME))
+        .then(function () {
             defer.resolve();
             console.log('FINISHED NUKING DB');
         });
     return defer;
 }
 
-function populateDB(){
+function populateDB() {
 
-    // Contacts
-    _.each(testContacts.data, function(contact){
+    _.each(testContacts.data, function (contact) {
         mongoUtils.saveOrUpdateEntity(contact, mongoUtils.CONTACTS_COL_NAME)
             .always(function (err) {
                 console.info(!err ? 'Saved contact' : err);
@@ -34,7 +35,7 @@ function populateDB(){
     });
 
     // ClaimEntries
-    _.each(testClaimEntries.data, function(entry){
+    _.each(testClaimEntries.data, function (entry) {
         mongoUtils.saveOrUpdateEntity(entry, mongoUtils.CLAIM_ENTRIES_COL_NAME)
             .always(function (err) {
                 console.info(!err ? 'Saved ClaimEntry' : err);
@@ -42,10 +43,18 @@ function populateDB(){
     });
 
     // Claims
-    _.each(testClaims.data, function(claim){
+    _.each(testClaims.data, function (claim) {
         mongoUtils.saveOrUpdateEntity(claim, mongoUtils.CLAIMS_COL_NAME)
             .always(function (err) {
                 console.info(!err ? 'Saved Claim' : err);
+            });
+    });
+
+    // Billing profile
+    _.each(testUserProfile.data, function (claim) {
+        mongoUtils.saveOrUpdateEntity(claim, mongoUtils.USERPROFILE_COL_NAME)
+            .always(function (err) {
+                console.info(!err ? 'Saved UserProfile' : err);
             });
     });
 
@@ -57,4 +66,4 @@ function populateDB(){
 //   Example: ~/src/Agent/007> node tests/data/testDataLoader.js
 
 //nukeDB();
-//populateDB();
+///populateDB();
