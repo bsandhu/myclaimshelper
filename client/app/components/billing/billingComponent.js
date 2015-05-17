@@ -1,7 +1,7 @@
 define(['jquery', 'knockout', 'KOMap', 'amplify', 'shared/dateUtils',
-        'app/utils/ajaxUtils', 'app/utils/events', 'app/utils/consts', 'app/utils/router',
+        'app/utils/ajaxUtils', 'app/utils/events', 'app/utils/consts', 'app/utils/router', 'app/utils/session',
         'model/bill', 'model/billingItem', 'model/billingStatus', 'text!app/components/billing/billing.tmpl.html'],
-    function ($, ko, KOMap, amplify, DateUtils, ajaxUtils, Events, Consts, router, Bill, BillingItem, BillingStatus, viewHtml) {
+    function ($, ko, KOMap, amplify, DateUtils, ajaxUtils, Events, Consts, router, Session, Bill, BillingItem, BillingStatus, viewHtml) {
 
         function BillingVM(claimId) {
             console.log('Init BillingVM. ClaimId: ' + JSON.stringify(claimId));
@@ -51,6 +51,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'shared/dateUtils',
                 if (mode === Consts.BILLING_TAB_CREATE_MODE) {
                     this.clearBill();
                     this.loadEligibleBillingItemsForClaim(this.claimId);
+                    this.loadBillingProfileFromSession();
                 } else if (mode === Consts.BILLING_TAB_HISTORY_MODE) {
                     this.getBillsForClaim();
                 } else if (mode === Consts.BILLING_TAB_VIEW_MODE) {
@@ -58,6 +59,13 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'shared/dateUtils',
                 }
             }, this);
         }
+
+        BillingVM.prototype.loadBillingProfileFromSession = function (evData) {
+            this.billingProfile = Session.getCurrentUserProfile().billingProfile;
+            if(!this.billingProfile){
+                console.error('Could not retrieve bililng profile from session');
+            }
+        };
 
         BillingVM.prototype.onCreateNewBill = function (evData) {
             console.log('BillingVM > onCreateNewBill');
@@ -100,6 +108,8 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'shared/dateUtils',
             console.log('New value: ' + newValue);
 
             billingItemObservable[attrName](newValue);
+            this.calcBillingItemTotal(billingItemObservable);
+            s
             return ajaxUtils.post(
                 '/billingItem',
                 KOMap.toJSON([billingItemObservable]),
@@ -117,6 +127,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'shared/dateUtils',
                     console.log('Loaded claim entries' + JSON.prettyPrint(resp.data));
                     var claimEntries = resp.data;
                     var billingItems = [];
+
                     $.each(claimEntries, function (index, entry) {
                         if (entry.billingItem && entry.billingItem.status === BillingStatus.BILLED) {
                             console.log('Item already billed: ' + JSON.stringify(entry.billingItem));
@@ -126,13 +137,29 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'shared/dateUtils',
                             entry.billingItem.entryDate = entry.entryDate;
                             entry.billingItem.tag = entry.tag;
                             entry.billingItem.summary = entry.summary;
+                            entry.billingItem.timeRate = this.billingProfile.timeRate;
+                            entry.billingItem.distanceRate = this.billingProfile.distanceRate;
 
-                            billingItems.push(KOMap.fromJS(entry.billingItem));
+                            var observableItem = KOMap.fromJS(entry.billingItem);
+                            this.calcBillingItemTotal(observableItem);
+                            billingItems.push(observableItem);
                             console.log('Eligible BillingItem: ' + JSON.stringify(entry.billingItem));
                         }
-                    });
+                    }.bind(this));
                     this.bill().billingItems(billingItems);
                 }.bind(this));
+        };
+
+        BillingVM.prototype.calcBillingItemTotal = function (billingItem) {
+            if (billingItem.timeRate() === null || billingItem.distanceRate() === null) {
+                console.error('Did not find billing rates in billing item');
+                billingItem.totalAmount(0);
+                return;
+            }
+            billingItem.totalAmount(
+                (billingItem.time() * billingItem.timeRate()) +
+                (billingItem.mileage() * billingItem.distanceRate()) +
+                (billingItem.expenseAmount()));
         };
 
         BillingVM.prototype.clearBill = function () {
@@ -216,6 +243,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'shared/dateUtils',
                     onDone();
                 }
             );
-        }
+        };
+
         return {viewModel: BillingVM, template: viewHtml};
     })

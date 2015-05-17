@@ -335,15 +335,15 @@ Use search to find needed section.
     /**
      * Load libs and init Knockout - on app startup. See requireConfig.js
      */
-    require(['jquery', 'knockout', 'KOAmd', 'text', 'amplify', 'app/components/appVM', 'shared/dateUtils', 'jarvis',
-                'app/utils/koDatetimePickerBinding', 'app/utils/koWYSIWYGBinding',
+    require(['jquery', 'knockout', 'KOAmd', 'text', 'amplify', 'app/components/appVM', 'shared/dateUtils', 'app/utils/session',
+                'jarvis', 'app/utils/koDatetimePickerBinding', 'app/utils/koWYSIWYGBinding',
                 'app/utils/koTextTruncateBinding', 'app/utils/koSortableBinding',
                 'velocity', 'bootstrap', 'KOXeditable'],
-            function ($, ko, KOAmd, text, amplify, AppVM, DateUtils) {
+            function ($, ko, KOAmd, text, amplify, AppVM, DateUtils, Session) {
                 console.log('Init App');
 
                 DateUtils.enableJSONDateHandling();
-
+                Session.setCurrentUserId("TestUser");
 
                 // Knockout AMD supoprt setup
                 ko.amdTemplateEngine.defaultRequireTextPluginName = "text";

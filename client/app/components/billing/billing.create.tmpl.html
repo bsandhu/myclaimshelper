@@ -139,7 +139,7 @@
                                                          title: 'Edit Amount',
                                                          success: $parent.onExpenseAmountUpdate.bind($parent, billingItem)}"></span>
                     </td>
-                    <td>$1,300.00</td>
+                    <td data-bind="text: billingItem.totalAmount"></td>
                     <!--<td colspan="3">&nbsp;</td>
                     <td class="txt-color-blueLight"><i>Not billed</i></td>-->
                     <td>

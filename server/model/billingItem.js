@@ -18,10 +18,15 @@ define(['./billingStatus'], function (BillingStatus) {
         this.tag = null;
         this.summary = null;
 
+        // Overlap with BillingProfile - so we can reproduce bill accurately
+        this.timeRate = null;
+        this.distanceRate = null;
+
         this.code = null; // is specific to Bill's need. How to generalize?
         this.mileage = 0;
         this.time = 0;
         this.expenseAmount = 0;
+        this.totalAmount = 0;
 
         this.status = BillingStatus.NOT_BILLED;
     }
