@@ -26,6 +26,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'shared/dateUtils',
             self.removeBillingItem = function () {
                 console.log('Remove BillingItem: ' + KOMap.toJSON(this));
                 self.bill().billingItems.remove(this);
+                self.calcTax();
             };
         }
 
@@ -50,8 +51,8 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'shared/dateUtils',
             this.mode.subscribe(function (mode) {
                 if (mode === Consts.BILLING_TAB_CREATE_MODE) {
                     this.clearBill();
-                    this.loadEligibleBillingItemsForClaim(this.claimId);
                     this.loadBillingProfileFromSession();
+                    this.loadEligibleBillingItemsForClaim(this.claimId).done(this.calcTax.bind(this));
                 } else if (mode === Consts.BILLING_TAB_HISTORY_MODE) {
                     this.getBillsForClaim();
                 } else if (mode === Consts.BILLING_TAB_VIEW_MODE) {
@@ -109,7 +110,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'shared/dateUtils',
 
             billingItemObservable[attrName](newValue);
             this.calcBillingItemTotal(billingItemObservable);
-            s
+            this.calcTax();
             return ajaxUtils.post(
                 '/billingItem',
                 KOMap.toJSON([billingItemObservable]),
@@ -122,6 +123,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'shared/dateUtils',
         };
 
         BillingVM.prototype.loadEligibleBillingItemsForClaim = function (claimId) {
+            var defer = $.Deferred();
             $.getJSON('/claim/' + claimId + '/entries')
                 .done(function (resp) {
                     console.log('Loaded claim entries' + JSON.prettyPrint(resp.data));
@@ -147,7 +149,27 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'shared/dateUtils',
                         }
                     }.bind(this));
                     this.bill().billingItems(billingItems);
+                    defer.resolve();
                 }.bind(this));
+            return defer;
+        };
+
+        /***********************************************************/
+        /* Calculations                                            */
+        /***********************************************************/
+
+        BillingVM.prototype.calcTax = function () {
+            var bill = this.bill();
+            var N = Number;
+
+            bill.preTaxTotal(
+                bill.billingItems().reduce(function(previousVal, billingItem){
+                    return N(previousVal.totalAmount()) + N(billingItem.totalAmount());
+                }.bind(this)).toFixed(2)
+            );
+            bill.taxRate(N(this.billingProfile.taxRate));
+            bill.tax(N((bill.taxRate()/100 * bill.preTaxTotal()).toFixed(2)));
+            bill.total(N(N(bill.preTaxTotal()) + N(bill.tax())).toFixed(2));
         };
 
         BillingVM.prototype.calcBillingItemTotal = function (billingItem) {
@@ -156,10 +178,10 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'shared/dateUtils',
                 billingItem.totalAmount(0);
                 return;
             }
-            billingItem.totalAmount(
+            billingItem.totalAmount(Number(
                 (billingItem.time() * billingItem.timeRate()) +
                 (billingItem.mileage() * billingItem.distanceRate()) +
-                (billingItem.expenseAmount()));
+                (billingItem.expenseAmount())).toFixed(2));
         };
 
         BillingVM.prototype.clearBill = function () {
@@ -172,9 +194,11 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'shared/dateUtils',
                 JSON.stringify({_id: billId}),
                 function onSuccess(response) {
                     console.log('getBillsForClaim: ' + JSON.stringify(response));
-                    response.data[0]
-                        ? this.bill(KOMap.fromJS(response.data[0]))
-                        : console.warn('No bill found for Id: ' + billId);
+                    if (response.data[0]){
+                        this.bill(KOMap.fromJS(response.data[0]))
+                    } else {
+                        console.warn('No bill found for Id: ' + billId);
+                    }
                 }.bind(this)
             );
         };
@@ -202,10 +226,19 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'shared/dateUtils',
             this.mode(Consts.BILLING_TAB_HISTORY_MODE);
         };
 
+        BillingVM.prototype.updateBill = function () {
+            this._persistBill(BillingStatus.NOT_BILLED);
+        };
+
         BillingVM.prototype.submitBill = function () {
+            this._persistBill(BillingStatus.BILLED);
+        }
+
+        BillingVM.prototype._persistBill = function (billingStatus) {
             console.log('Saving Bill');
             this.bill().claimId(this.claimId);
-            this.bill().billingDate(this.claimId);
+            this.bill().billingDate(new Date());
+            this.bill().status(billingStatus);
 
             ajaxUtils.post(
                 '/bill',
@@ -216,6 +249,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'shared/dateUtils',
                     // Update Ids gen. by the server
                     this.bill()._id(response.data._id);
                     this.submitBillingItems(
+                        billingStatus,
                         function () {
                             amplify.publish(Events.SUCCESS_NOTIFICATION, {msg: 'Saved Bill'})
                             // TODO reload
@@ -226,12 +260,12 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'shared/dateUtils',
         /*
          * Associate the BillingItems to Bill
          */
-        BillingVM.prototype.submitBillingItems = function (onDone) {
+        BillingVM.prototype.submitBillingItems = function (status, onDone) {
             var billingItems = $.map(this.bill().billingItems(),
                 function (entry) {
                     var billingItem = entry;
                     billingItem.billId(this.bill()._id());
-                    billingItem.status(BillingStatus.BILLED);
+                    billingItem.status(status);
                     return billingItem;
                 }.bind(this));
             console.log('Saving BillingItems: ' + KOMap.toJSON(billingItems));
