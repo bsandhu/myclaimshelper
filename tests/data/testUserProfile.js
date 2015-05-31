@@ -7,6 +7,7 @@ var data = [
             "distanceUnit" : "mile",
             "timeRate" : 1.2,
             "distanceRate" : 0.3,
+            "taxRate" : 8.25,
             "billingTypes" : {}
         }
     }
