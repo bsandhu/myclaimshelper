@@ -22,7 +22,7 @@
             <label class="col-md-3 control-label">Mileage</label>
 
             <div class="input-group bottomMargin col-md-4">
-                <input class="form-control input-sm" id="appendprepend" type="text" data-bind="value: billingItem.mileage">
+                <input class="form-control input-sm" id="appendprepend" type="text" data-bind="value: billingItem().mileage">
                 <span class="input-group-addon">Miles</span>
             </div>
         </row>
@@ -30,7 +30,7 @@
             <label class="col-md-3 control-label">Time</label>
 
             <div class="input-group bottomMargin col-md-4">
-                <input class="form-control input-sm" id="appendprepend" type="text" data-bind="value: billingItem.time">
+                <input class="form-control input-sm" id="appendprepend" type="text" data-bind="value: billingItem().time">
                 <span class="input-group-addon">Hours</span>
             </div>
         </row>
@@ -40,7 +40,7 @@
             <div class="input-group col-md-4">
                 <span class="input-group-addon">$</span>
                 <input class="form-control input-sm" id="appendprepend" type="text"
-                       data-bind="value: billingItem.expenseAmount">
+                       data-bind="value: billingItem().expenseAmount">
             </div>
         </row>
     </div>
@@ -59,7 +59,7 @@
 </div>
 <!--At the moment we are allowing a single BillingItem per ClaimEntry-->
 <!--
-<a class="btn btn-info btn-sm" data-bind="click: initBillingItem">
+<a class="btn btn-info btn-sm" data-bind="click: initbillingItem()">
     <i class="fa fa-gear"></i> Add Billing Item
 </a>
 -->

@@ -1,6 +1,7 @@
 var Claim = require('./../model/claim.js');
 var Contact = require('./../model/contact.js');
 var ClaimEntry = require('./../model/claimEntry.js');
+var BillingItem = require('./../model/billingItem.js');
 var mongoUtils = require('./../mongoUtils.js');
 var serviceUtils = require('./../serviceUtils.js');
 var contactService = require('./contactService.js');
@@ -106,6 +107,8 @@ function saveOrUpdateClaim(req, res) {
 function saveOrUpdateClaimEntry(req, res) {
     var entity = req.body;
     var description = entity.description;
+    var billingItem = entity.billingItem;
+    delete entity.billingItem;
 
     entityExtractionService.extractEntities(description)
         .then(function (people) {
@@ -115,23 +118,24 @@ function saveOrUpdateClaimEntry(req, res) {
             entity.description = description;
         })
         .then(function () {
-            if (entity.billingItem) {
-                mongoUtils.saveOrUpdateEntity(entity.billingItem, mongoUtils.BILLING_ITEMS_COL_NAME)
-                    .always(function (err, results) {
-                        assert.ok(results._id);
-                        entity.billingItem = results;
-
-                        entity.billingItemId = results._id;
-                        delete entity.billingItem;
-                    });
-            }
-        })
-        .then(function () {
+            // Save Claim Entry
             mongoUtils.saveOrUpdateEntity(entity, mongoUtils.CLAIM_ENTRIES_COL_NAME)
-                .always(function (err, results) {
-                    sendResponse(res, err, results);
+                .then(function (err, results) {
+
+                    // Save BillingItem
+                    if (billingItem && !err) {
+                        billingItem.claimEntryId = results._id;
+                        mongoUtils.saveOrUpdateEntity(billingItem, mongoUtils.BILLING_ITEMS_COL_NAME)
+                            .always(function (itemErr, itemResults) {
+                                assert.ok(itemResults._id);
+                                results.billingItem = itemResults;
+                                sendResponse(res, itemErr, results);
+                            });
+                    } else {
+                        sendResponse(res, err, results);
+                    }
                 });
-        });
+        })
 }
 
 function modifyClaimEntry(req, res) {
@@ -314,19 +318,31 @@ function searchClaimEntries(req, res) {
             .find(query, options)
             .toArray(onResults);
 
+        function populateBillingItem(item) {
+            var defer = jQuery.Deferred();
+            mongoUtils
+                .findEntities(mongoUtils.BILLING_ITEMS_COL_NAME, {claimEntryId: item._id}, db)
+                .then(function (billingItems) {
+                    // ClaimEntry has only one BilingItem
+                    var billingItem = _.first(billingItems);
+                    if (billingItem) {
+                        item.billingItem = mongoUtils.hydrate(BillingItem, billingItem)[0];
+                    }
+                    defer.resolve(item);
+                })
+            return defer;
+        }
+
         function onResults(err, items) {
+            var defereds = [];
             _.each(items, function (item) {
-                mongoUtils.findEntities(mongoUtils.BILLING_ITEMS_COL_NAME, {claimEntryId: item._id}, db)
-                    .then(function (billingItems){
-                        // ClaimEntry has only one BilingItem
-                        var billingItem = _.first(billingItem);
-                        if (billingItem) {
-                            item.billingItem = mongoUtils.hydrate(BillingItem, billingItem);
-                        }
-                    })
-            })
-            var modelObjs = _.map(items, convertToModel);
-            sendResponse(res, err, modelObjs);
+                defereds.push(populateBillingItem(item));
+            });
+            jQuery.when.apply(jQuery, defereds)
+                .then(function (populatedItems) {
+                    var modelObjs = _.map(arguments, convertToModel);
+                    sendResponse(res, err, modelObjs);
+                })
         }
 
         function convertToModel(item) {

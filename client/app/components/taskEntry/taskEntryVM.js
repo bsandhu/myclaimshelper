@@ -1,9 +1,8 @@
-define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEntry', 'model/states',
+define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEntry', 'model/billingItem', 'model/states',
         'app/utils/ajaxUtils', 'app/utils/events', 'app/utils/router', 'app/utils/sessionKeys',
         'shared/dateUtils',
         'text!app/components/taskEntry/taskEntry.tmpl.html'],
-    function ($, ko, KOMap, amplify, Claim, ClaimEntry, States, ajaxUtils, Events, Router, SessionKeys,
-              DateUtils, taskEntryView) {
+    function ($, ko, KOMap, amplify, Claim, ClaimEntry, BillingItem, States, ajaxUtils, Events, Router, SessionKeys, DateUtils, taskEntryView) {
         'use strict';
 
         function TaskEntryVM() {
@@ -21,22 +20,30 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
             this.startStateTracking();
         }
 
-        TaskEntryVM.prototype.newEmptyClaimEntry = function () {
+        TaskEntryVM.prototype.newEmptyClaimEntry = function (tag) {
             var jsEntryObject = new ClaimEntry();
-            var entryObjWithObservableAttributes = KOMap.fromJS(jsEntryObject);
-            return entryObjWithObservableAttributes;
+            var entryObjWithObserAttrs = KOMap.fromJS(jsEntryObject);
+            if (entryObjWithObserAttrs.billingItem && ko.isObservable(entryObjWithObserAttrs.billingItem)) {
+                entryObjWithObserAttrs.billingItem(KOMap.fromJS(new BillingItem()));
+            } else {
+                entryObjWithObserAttrs.billingItem = ko.observable(KOMap.fromJS(new BillingItem()));
+            }
+            entryObjWithObserAttrs.tag([tag || 'other']);
+            entryObjWithObserAttrs.entryDate(new Date());
+            entryObjWithObserAttrs.state(States.TODO);
+            return entryObjWithObserAttrs;
         };
 
         /**
          * Tracks changes to the Claim entry object. Used to highlight 'save' button on the UI
          */
         TaskEntryVM.prototype.startStateTracking = function () {
-            this.claimEntryState = ko.computed(function(){
+            this.claimEntryState = ko.computed(function () {
                 return KOMap.toJSON(this.claimEntry);
             }, this);
             this.claimEntryState.extend({ rateLimit: { timeout: 100, method: "notifyWhenChangesStop" } });
 
-            this.stateChangeSubsciption = this.claimEntryState.subscribe(function(val){
+            this.stateChangeSubsciption = this.claimEntryState.subscribe(function (val) {
                 this.stateChange(true);
                 console.log('ClaimEntry state change');
             }, this);
@@ -59,25 +66,21 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
 
         TaskEntryVM.prototype.onShowClaimEntry = function (evData) {
             console.log('TaskEntryVM - SHOW_CLAIM_ENTRY ev ' + JSON.stringify(evData));
+            this.claimEntry(this.newEmptyClaimEntry());
             this.loadClaimEntry(evData.claimEntryId);
         };
 
         TaskEntryVM.prototype.onNewClaimEntry = function (evData) {
             console.log('TaskEntryVM - NEW_CLAIM_ENTRY ev ' + JSON.stringify(evData));
             var tag = Boolean(evData.entryType) ? evData.entryType : 'other';
-
-            this.claimEntry(this.newEmptyClaimEntry());
-            this.claimEntry().tag([tag]);
-            this.claimEntry().entryDate(new Date());
-            this.claimEntry().state(States.TODO);
-
+            this.claimEntry(this.newEmptyClaimEntry(tag));
             console.log('Adding new claim entry. Tag:' + tag);
         };
 
         /**
          * @param evData {'claimEntryId': entry._id, 'status': status});
          */
-        TaskEntryVM.prototype.onStatusUpdate = function(evData){
+        TaskEntryVM.prototype.onStatusUpdate = function (evData) {
             console.log('TaskEntryVM - UPDATE_CLAIM_ENTRY_STATUS ev ' + JSON.stringify(evData));
 
             var claimEntryId = evData.claimEntryId;

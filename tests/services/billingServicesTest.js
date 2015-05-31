@@ -29,6 +29,22 @@ describe('billingServices', function () {
         billingServices.saveOrUpdateBillingItemsREST(req, res);
     });
 
+    it('saveOrUpdateBillingItemsREST single ok', function (done) {
+        var req = {body: [bi_1]};
+        var res = {};
+        res.json = function (data) {
+            assert(data);
+            assert.equal(data.status, 'Success');
+            assert.ok(data.data);
+            assert.ok(data.data._id);
+            assert.ok(data.data.status);
+            assert.ok(data.data.billId);
+            console.log('data.data: ' + data.data);
+            done();
+        };
+        billingServices.saveOrUpdateBillingItemsREST(req, res);
+    });
+
     it('saveOrUpdateBillREST ok', function (done) {
         var req = {body: bill};
         var res = {};
