@@ -25,39 +25,40 @@ function nukeDB() {
     return defer;
 }
 
-function populateDB() {
-
+function populateContacts() {
     _.each(testContacts.data, function (contact) {
         mongoUtils.saveOrUpdateEntity(contact, mongoUtils.CONTACTS_COL_NAME)
             .always(function (err) {
                 console.info(!err ? 'Saved contact' : err);
             });
     });
+}
 
-    // ClaimEntries
+function populateClaimEntries() {
     _.each(testClaimEntries.data, function (entry) {
         mongoUtils.saveOrUpdateEntity(entry, mongoUtils.CLAIM_ENTRIES_COL_NAME)
             .always(function (err) {
                 console.info(!err ? 'Saved ClaimEntry' : err);
             });
     });
+}
 
-    // Claims
+function populateClaims() {
     _.each(testClaims.data, function (claim) {
         mongoUtils.saveOrUpdateEntity(claim, mongoUtils.CLAIMS_COL_NAME)
             .always(function (err) {
                 console.info(!err ? 'Saved Claim' : err);
             });
     });
+}
 
-    // Billing profile
+function populateUserProfiles() {
     _.each(testUserProfile.data, function (claim) {
         mongoUtils.saveOrUpdateEntity(claim, mongoUtils.USERPROFILE_COL_NAME)
             .always(function (err) {
                 console.info(!err ? 'Saved UserProfile' : err);
             });
     });
-
 }
 
 
@@ -66,4 +67,7 @@ function populateDB() {
 //   Example: ~/src/Agent/007> node tests/data/testDataLoader.js
 
 //nukeDB();
-///populateDB();
+populateUserProfiles();
+//populateContacts()
+//populateClaimEntries();
+//populateClaims()

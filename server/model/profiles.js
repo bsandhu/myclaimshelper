@@ -10,13 +10,16 @@ function BillingProfile() {
   this.distanceUnit = undefined;
   this.timeRate = undefined; // $ per unit.
   this.distanceRate = undefined;
+  this.taxRate = undefined;
   this.billingTypes = {}; // billing codes or custom types
 }
 
-define([], function () {
+define(['./contact'], function (Contact) {
 
   function UserProfile(){
     this.userName = undefined; 
+
+    this.contactInfo = new Contact();
     this.billingProfile = new BillingProfile();
   }
 

@@ -1,13 +1,16 @@
-define(['jquery', 'knockout', 'KOMap', 'amplify', 'app/utils/events',
+define(['jquery', 'knockout', 'KOMap', 'amplify', 'app/utils/events', 'app/utils/session',
         'text!app/components/userProfile/userProfile.tmpl.html', 'model/profiles'],
 
-    function ($, ko, KOMap, amplify, Events, viewHtml, UserProfile) {
+    function ($, ko, KOMap, amplify, Events, Session, viewHtml, UserProfile) {
         'use strict';
 
         function UserProfileComponent(params) {
             console.log('Init UserProfile');
             this.userProfile = KOMap.fromJS(new UserProfile());
             this.setupEvListeners();
+
+            // Load and set in SessionStorage
+            this.loadUserProfile(Session.getCurrentUserId());
         }
 
         UserProfileComponent.prototype.setupEvListeners = function () {
@@ -16,7 +19,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'app/utils/events',
 
         UserProfileComponent.prototype.onShowUserProfile = function (evData) {
             console.log('UserProfileComponent - SHOW_USER_PROFILE ev ' + JSON.stringify(evData));
-            this.loadUserProfile(this.getCurrentUserId());
+            $('#userProfileModal').modal();
         };
 
         UserProfileComponent.prototype.getCurrentUserId = function(){
@@ -24,13 +27,11 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'app/utils/events',
         };
 
         UserProfileComponent.prototype.loadUserProfile = function(userProfileId){
-            $.getJSON('/userProfile/' + userProfileId)
+            return $.getJSON('/userProfile/' + userProfileId)
                 .done(function (resp) {
                     console.log('Loaded UserProfile ' + JSON.stringify(resp.data));
-
-                    // Populate with JSON data
                     KOMap.fromJS(resp.data, {}, this.userProfile);
-                    $('#userProfileModal').modal();
+                    Session.setCurrentUserProfile(resp.data);
                 }.bind(this))
                 .fail(function(resp){
                     console.error('Failed to load UserProfile ' + JSON.stringify(resp));
