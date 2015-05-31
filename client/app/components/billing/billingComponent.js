@@ -23,10 +23,33 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'shared/dateUtils',
             this.mode(Consts.BILLING_TAB_HISTORY_MODE);
 
             var self = this;
-            self.removeBillingItem = function () {
-                console.log('Remove BillingItem: ' + KOMap.toJSON(this));
-                self.bill().billingItems.remove(this);
-                self.calcTax();
+            self.removeBillingItem = function (ev) {
+                console.log('Toggle remove BillingItem timer');
+                var itemClicked = this;
+                var ev = arguments[1];
+                var rowNode = $(ev.target).parent().parent();
+                var itemClickedJSON =  KOMap.toJSON(itemClicked);
+                var undoTimer = 8000;
+
+                if (itemClicked.removeOrUndoLabel() === 'Undo'){
+                    console.log('Cancelled remove BillingItem: ' + itemClickedJSON);
+                    clearTimeout(itemClicked.timeoutId);
+                    itemClicked.timeoutId = undefined;
+                    itemClicked.removeOrUndoLabel('Remove');
+                    rowNode.fadeTo('slow', 1);
+                } else {
+                    rowNode.fadeTo('slow', .5);
+                    itemClicked.removeOrUndoLabel('Undo');
+                    itemClicked.timeoutId = setTimeout(
+                        function () {
+                            console.log('Remove BillingItem: ' + itemClickedJSON);
+                            rowNode.fadeTo('slow', .1, function(){
+                                self.bill().billingItems.remove(itemClicked);
+                                self.calcTax();
+                            });
+                        }.bind(self),
+                        undoTimer);
+                }
             };
         }
 
@@ -141,6 +164,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'shared/dateUtils',
                             entry.billingItem.summary = entry.summary;
                             entry.billingItem.timeRate = this.billingProfile.timeRate;
                             entry.billingItem.distanceRate = this.billingProfile.distanceRate;
+                            entry.billingItem.removeOrUndoLabel = 'Remove';
 
                             var observableItem = KOMap.fromJS(entry.billingItem);
                             this.calcBillingItemTotal(observableItem);
@@ -162,11 +186,11 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'shared/dateUtils',
             var bill = this.bill();
             var N = Number;
 
-            bill.preTaxTotal(
-                bill.billingItems().reduce(function(previousVal, billingItem){
-                    return N(previousVal.totalAmount()) + N(billingItem.totalAmount());
-                }.bind(this)).toFixed(2)
-            );
+            var preTax = 0;
+            $.each(bill.billingItems(), function(index, item){
+                preTax = preTax +  N(item.totalAmount());
+            });
+            bill.preTaxTotal(N(preTax).toFixed(2));
             bill.taxRate(N(this.billingProfile.taxRate));
             bill.tax(N((bill.taxRate()/100 * bill.preTaxTotal()).toFixed(2)));
             bill.total(N(N(bill.preTaxTotal()) + N(bill.tax())).toFixed(2));
@@ -266,6 +290,8 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'shared/dateUtils',
                     var billingItem = entry;
                     billingItem.billId(this.bill()._id());
                     billingItem.status(status);
+                    delete billingItem.removeOrUndoLabel;
+                    delete billingItem.timeoutId;
                     return billingItem;
                 }.bind(this));
             console.log('Saving BillingItems: ' + KOMap.toJSON(billingItems));
