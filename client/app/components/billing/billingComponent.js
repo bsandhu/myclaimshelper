@@ -157,6 +157,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'shared/dateUtils',
                         if (entry.billingItem && entry.billingItem.status === BillingStatus.BILLED) {
                             console.log('Item already billed: ' + JSON.stringify(entry.billingItem));
                         } else {
+                            // TODO Item not billable?
                             entry.billingItem = entry.billingItem || new BillingItem();
                             entry.billingItem.claimEntryId = entry._id;
                             entry.billingItem.entryDate = entry.entryDate;
