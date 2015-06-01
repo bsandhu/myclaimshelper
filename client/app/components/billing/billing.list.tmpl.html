@@ -10,21 +10,25 @@
     <div class=" panel-body" data-bind="if: bills().length > 0">
         <div class="col-sm-8 col-lg-6">
             <table id="billingListTable" data-sortable
-                   data-bind="sortable" class="table table-hover table-condensed">
+                   data-bind="sortable" class="table table-hover table-responsive">
                 <thead>
                 <tr>
-                    <th>Bill Status</th>
                     <th data-field="id" data-sortable="true">Bill ID</th>
                     <th data-field="billingDate" data-sortable="true">Billing Date</th>
+                    <th>Status</th>
+                    <th data-field="total" data-sortable="true">Total</th>
                 </tr>
                 </thead>
                 <tbody data-bind="foreach: { data: bills, as: 'bill' }">
                 <tr>
-                    <td class="col-sm-1"><span class="fa fa-sign-out"></span></td>
                     <td data-bind="attr: {'data-value': bill._id}">
                         <a data-bind="text: bill._id, attr: {href: '#/claim/' + $parent.claimId + '/bill/' + bill._id}"></a>
                     </td>
-                    <td>Date</td>
+                    <td data-bind="text: bill.billingDate ? bill.billingDate.toLocaleString() : 'None'"></td>
+                    <td class="col-sm-1">
+                        <span class="fa fa-sign-out" data-bind="text: bill.status"></span>
+                    </td>
+                    <td data-bind="text: bill.total ? '$' + bill.total : ''"></td>
                 </tr>
                 </tbody>
             </table>

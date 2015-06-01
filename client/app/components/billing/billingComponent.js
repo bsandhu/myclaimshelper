@@ -252,17 +252,18 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'shared/dateUtils',
         };
 
         BillingVM.prototype.updateBill = function () {
+            this.bill().billingDate(null);
             this._persistBill(BillingStatus.NOT_BILLED);
         };
 
         BillingVM.prototype.submitBill = function () {
+            this.bill().billingDate(new Date());
             this._persistBill(BillingStatus.BILLED);
         }
 
         BillingVM.prototype._persistBill = function (billingStatus) {
             console.log('Saving Bill');
             this.bill().claimId(this.claimId);
-            this.bill().billingDate(new Date());
             this.bill().status(billingStatus);
 
             ajaxUtils.post(
