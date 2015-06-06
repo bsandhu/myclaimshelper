@@ -27,9 +27,10 @@
                     <td data-bind="text: bill.billingDate ? bill.billingDate.toLocaleString() : 'None'"></td>
                     <td>
                         <div class="btn-group">
-                            <button class="btn btn-primary btn-sm dropdown-toggle"
+                            <button class="btn btn-sm dropdown-toggle"
                                     data-toggle="dropdown"
-                                    data-bind="html: bill.status + ' <span class=\'caret\'></span>'">
+                                    data-bind="html: bill.status + ' <span class=\'caret\'></span>',
+                                               css: bill.status === $parent.billingStatus.PAID() ? 'btn-success' : 'btn-info'">
                             </button>
                             <ul class="dropdown-menu">
                                 <li>

@@ -92,9 +92,15 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'shared/dateUtils',
             }
         };
 
-        BillingVM.prototype.onUpdateBillStatus = function (status, bill) {
-            console.log('BillingVM > onUpdateBillStatus: ' + status);
-
+        BillingVM.prototype.onUpdateBillStatus = function (newStatus, bill) {
+            console.log('BillingVM > onUpdateBillStatus: ' + newStatus);
+            bill.status = newStatus;
+            this.bill(this.newEmptyBill());
+            this.bill(KOMap.fromJS(bill));
+            this._persistBill(newStatus);
+            var bills = this.bills();
+            this.bills([]);
+            this.bills(bills);
         }
 
         BillingVM.prototype.onCreateNewBill = function (evData) {
