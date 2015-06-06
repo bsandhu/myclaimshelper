@@ -9,6 +9,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'shared/dateUtils',
             this.Consts = Consts;
             this.claimId = claimId;
             this.DateUtils = DateUtils;
+            this.billingStatus = KOMap.fromJS(BillingStatus);
             this.mode = ko.observable();
 
             // Active Bill
@@ -91,6 +92,17 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'shared/dateUtils',
             }
         };
 
+        BillingVM.prototype.onUpdateBillStatus = function (newStatus, bill) {
+            console.log('BillingVM > onUpdateBillStatus: ' + newStatus);
+            bill.status = newStatus;
+            this.bill(this.newEmptyBill());
+            this.bill(KOMap.fromJS(bill));
+            this._persistBill(newStatus);
+            var bills = this.bills();
+            this.bills([]);
+            this.bills(bills);
+        }
+
         BillingVM.prototype.onCreateNewBill = function (evData) {
             console.log('BillingVM > onCreateNewBill');
             console.assert(evData.claimId, 'Expecting ev to carry claimId');
@@ -157,6 +169,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'shared/dateUtils',
                         if (entry.billingItem && entry.billingItem.status === BillingStatus.BILLED) {
                             console.log('Item already billed: ' + JSON.stringify(entry.billingItem));
                         } else {
+                            // TODO Item not billable?
                             entry.billingItem = entry.billingItem || new BillingItem();
                             entry.billingItem.claimEntryId = entry._id;
                             entry.billingItem.entryDate = entry.entryDate;
@@ -251,17 +264,18 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'shared/dateUtils',
         };
 
         BillingVM.prototype.updateBill = function () {
+            this.bill().billingDate(null);
             this._persistBill(BillingStatus.NOT_BILLED);
         };
 
         BillingVM.prototype.submitBill = function () {
+            this.bill().billingDate(new Date());
             this._persistBill(BillingStatus.BILLED);
         }
 
         BillingVM.prototype._persistBill = function (billingStatus) {
             console.log('Saving Bill');
             this.bill().claimId(this.claimId);
-            this.bill().billingDate(new Date());
             this.bill().status(billingStatus);
 
             ajaxUtils.post(
