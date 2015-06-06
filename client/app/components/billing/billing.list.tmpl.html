@@ -25,8 +25,31 @@
                         <a data-bind="text: bill._id, attr: {href: '#/claim/' + $parent.claimId + '/bill/' + bill._id}"></a>
                     </td>
                     <td data-bind="text: bill.billingDate ? bill.billingDate.toLocaleString() : 'None'"></td>
-                    <td class="col-sm-1">
-                        <span class="fa fa-sign-out" data-bind="text: bill.status"></span>
+                    <td>
+                        <div class="btn-group">
+                            <button class="btn btn-primary btn-sm dropdown-toggle"
+                                    data-toggle="dropdown"
+                                    data-bind="html: bill.status + ' <span class=\'caret\'></span>'">
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a data-bind="html: '<i class=&quot;fa fa-ban&quot;>&nbsp;</i>' + $parent.billingStatus.NOT_BILLABLE(),
+                                                  click: $parent.onUpdateBillStatus.bind($parent, $parent.billingStatus.NOT_BILLABLE(), bill)"></a>
+                                </li>
+                                <li>
+                                    <a data-bind="html: '<i class=&quot;fa fa-circle-o&quot;>&nbsp;</i>' + $parent.billingStatus.NOT_BILLED(),
+                                                  click: $parent.onUpdateBillStatus.bind($parent, $parent.billingStatus.NOT_BILLED(), bill)"></a>
+                                </li>
+                                <li>
+                                    <a data-bind="html: '<i class=&quot;fa fa-circle&quot;>&nbsp;</i>' + $parent.billingStatus.BILLED(),
+                                                  click: $parent.onUpdateBillStatus.bind($parent, $parent.billingStatus.BILLED(), bill)"></a>
+                                </li>
+                                <li>
+                                    <a data-bind="html: '<i class=&quot;fa fa-check&quot;>&nbsp;</i>' + $parent.billingStatus.PAID(),
+                                                  click: $parent.onUpdateBillStatus.bind($parent, $parent.billingStatus.PAID(), bill)"></a>
+                                </li>
+                            </ul>
+                        </div>
                     </td>
                     <td data-bind="text: bill.total ? '$' + bill.total : ''"></td>
                 </tr>

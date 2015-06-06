@@ -9,6 +9,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'shared/dateUtils',
             this.Consts = Consts;
             this.claimId = claimId;
             this.DateUtils = DateUtils;
+            this.billingStatus = KOMap.fromJS(BillingStatus);
             this.mode = ko.observable();
 
             // Active Bill
@@ -90,6 +91,11 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'shared/dateUtils',
                 console.error('Could not retrieve bililng profile from session');
             }
         };
+
+        BillingVM.prototype.onUpdateBillStatus = function (status, bill) {
+            console.log('BillingVM > onUpdateBillStatus: ' + status);
+
+        }
 
         BillingVM.prototype.onCreateNewBill = function (evData) {
             console.log('BillingVM > onCreateNewBill');
