@@ -171,7 +171,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'shared/dateUtils',
                     var billingItems = [];
 
                     $.each(claimEntries, function (index, entry) {
-                        if (entry.billingItem && entry.billingItem.status === BillingStatus.BILLED) {
+                        if (entry.billingItem && entry.billingItem.status === BillingStatus.SUBMITTED) {
                             console.log('Item already billed: ' + JSON.stringify(entry.billingItem));
                         } else {
                             // TODO Item not billable?
@@ -299,12 +299,12 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'shared/dateUtils',
 
         BillingVM.prototype.updateBill = function (onDone) {
             this.bill().billingDate(null);
-            this._persistBill(BillingStatus.NOT_BILLED, onDone);
+            this._persistBill(BillingStatus.NOT_SUBMITTED, onDone);
         };
 
         BillingVM.prototype.submitBill = function () {
             this.bill().billingDate(new Date());
-            this._persistBill(BillingStatus.BILLED);
+            this._persistBill(BillingStatus.SUBMITTED);
         }
 
         BillingVM.prototype._persistBill = function (billingStatus, onDone) {

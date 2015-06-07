@@ -19,7 +19,7 @@ define(['./billingStatus'], function (BillingStatus) {
       this.tax = undefined;
       this.total = undefined;
 
-      this.status = BillingStatus.NOT_BILLED;
+      this.status = BillingStatus.NOT_SUBMITTED;
 
       // Note:
       // BillingItems has a -> to Bill
