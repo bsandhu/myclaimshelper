@@ -85,12 +85,17 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'shared/dateUtils',
             }, this);
         }
 
+        BillingVM.prototype.afterBillingCreateRender = function (evData, vm) {
+            vm.initTooltipComponent();
+            $('#bililngCreateMsg').fadeOut(8000);
+        }
+
         BillingVM.prototype.loadBillingProfileFromSession = function (evData) {
             this.billingProfile = Session.getCurrentUserProfile().billingProfile;
             if(!this.billingProfile){
                 console.error('Could not retrieve bililng profile from session');
             }
-        };
+        }
 
         BillingVM.prototype.onUpdateBillStatus = function (newStatus, bill) {
             console.log('BillingVM > onUpdateBillStatus: ' + newStatus);
@@ -191,6 +196,39 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'shared/dateUtils',
             return defer;
         };
 
+        BillingVM.prototype.routeToBillingOverview = function () {
+            if (this.isNewBill()) {
+                this.onNavigateAwayFromUnsavedBill();
+            } else {
+                router.routeToBillingOverview(this.claimId);
+            }
+        };
+
+        /***********************************************************/
+        /* Unsaved notofication                                    */
+        /***********************************************************/
+
+        BillingVM.prototype.isNewBill = function(){
+            return this.bill() && !$.isNumeric(this.bill()._id());
+        }
+
+        BillingVM.prototype.onNavigateAwayFromUnsavedBill = function () {
+            var self = this;
+            $.SmartMessageBox({
+                title: "Unsaved Bill!",
+                content: "Save a draft copy of the Invoice? ",
+                buttons: '[No][Yes]'
+            }, function (ButtonPressed) {
+                if (ButtonPressed === "Yes") {
+                    self.updateBill(function onDone(){
+                        router.routeToBillingOverview(self.claimId);
+                    });
+                } else {
+                    router.routeToBillingOverview(self.claimId);
+                }
+            });
+        }
+
         /***********************************************************/
         /* Calculations                                            */
         /***********************************************************/
@@ -240,10 +278,6 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'shared/dateUtils',
             );
         };
 
-        BillingVM.prototype.routeToBillingOverview = function () {
-            router.routeToBillingOverview(this.claimId);
-        };
-
         BillingVM.prototype.initTooltipComponent = function () {
             $('[data-toggle="tooltip"]').tooltip();
         };
@@ -263,9 +297,9 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'shared/dateUtils',
             this.mode(Consts.BILLING_TAB_HISTORY_MODE);
         };
 
-        BillingVM.prototype.updateBill = function () {
+        BillingVM.prototype.updateBill = function (onDone) {
             this.bill().billingDate(null);
-            this._persistBill(BillingStatus.NOT_BILLED);
+            this._persistBill(BillingStatus.NOT_BILLED, onDone);
         };
 
         BillingVM.prototype.submitBill = function () {
@@ -273,8 +307,9 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'shared/dateUtils',
             this._persistBill(BillingStatus.BILLED);
         }
 
-        BillingVM.prototype._persistBill = function (billingStatus) {
+        BillingVM.prototype._persistBill = function (billingStatus, onDone) {
             console.log('Saving Bill');
+            onDone = onDone || $.noop;
             this.bill().claimId(this.claimId);
             this.bill().status(billingStatus);
 
@@ -290,7 +325,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'shared/dateUtils',
                         billingStatus,
                         function () {
                             amplify.publish(Events.SUCCESS_NOTIFICATION, {msg: 'Saved Bill'})
-                            // TODO reload
+                            onDone();
                         });
                 }.bind(this));
         };

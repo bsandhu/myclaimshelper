@@ -61,6 +61,6 @@
 
     <div class="panel-body" data-bind="if: bills().length <= 0">
         No Bills submitted for this claim yet.
-        <a href="#">Create New?</a>
+        <a data-bind="attr: {href: '#/claim/' + claimId + '/newbill'}">Create New?</a>
     </div>
 </div>

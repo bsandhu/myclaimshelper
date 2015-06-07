@@ -9,6 +9,14 @@
     </div>
 
     <div class="panel-body">
+        <div class="row" id="bililngCreateMsg">
+            <div class="col-sm-12">
+                <div class="well well-sm bg-color-greenLighter txt-color-green text-center">
+                    Some help text here?
+                </div>
+            </div>
+        </div>
+
         <div class="pull-left">
             <img src="img/logo-blacknwhite.png" width="150" height="32" alt="invoice icon">
 
@@ -94,15 +102,6 @@
                     </span>
             </div>
         </div>-->
-
-        <div class="row">
-            <div class="col-sm-12">
-                <div class="well well-sm bg-color-greenLighter txt-color-green text-center">
-                    Below are the <i>completed</i> tasks - ready for billing
-                </div>
-            </div>
-        </div>
-
         <div class="row">
             <table class="table table-hover" data-bind="sortable" id="billingCreateTable" data-sortable>
                 <thead>
@@ -186,7 +185,7 @@
                     <div class="pull-right">
                         <a href="javascript:void(0);" class="btn btn-labeled btn-info"
                            data-bind="click: updateBill">
-                            <span class="btn-label"><i class="glyphicon glyphicon-ok"></i></span>Save for later
+                            <span class="btn-label"><i class="glyphicon glyphicon-ok"></i></span>Save draft
                         </a>
                         <a href="javascript:void(0);" class="btn btn-labeled btn-success" data-bind="click: submitBill">
                             <span class="btn-label"><i class="glyphicon glyphicon-arrow-right"></i></span>Submit Bill

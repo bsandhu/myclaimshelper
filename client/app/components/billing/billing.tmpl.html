@@ -7,7 +7,7 @@
 <!-- **** Create Bill **** -->
 <div data-bind="template: {name: 'app/components/billing/billing.create',
                            if: mode() === Consts.BILLING_TAB_CREATE_MODE,
-                           afterRender: initTooltipComponent}"></div>
+                           afterRender: afterBillingCreateRender}"></div>
 
 <!-- **** View Bill **** -->
 <div data-bind="template: {name: 'app/components/billing/billing.view',
