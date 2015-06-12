@@ -7,9 +7,9 @@ if (typeof define !== 'function') {
 
 define(['./billingStatus'], function (BillingStatus) {
 
-    function Bill(claimId) {
+    function Bill() {
       this._id = undefined;
-      this.claimId = claimId;
+      this.claimId = undefined;
       this.billingDate = undefined;
       this.description = undefined;
 
@@ -18,6 +18,11 @@ define(['./billingStatus'], function (BillingStatus) {
       this.taxRate = undefined;
       this.tax = undefined;
       this.total = undefined;
+
+      // Category totals
+      this.totalTime = 0;
+      this.totalMileage = 0;
+      this.totalExpenseAmount = 0;
 
       this.status = BillingStatus.NOT_SUBMITTED;
 
