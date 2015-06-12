@@ -11,7 +11,8 @@ var db = mongoUtils.dbConn;
 
 
 describe('Bill', function(){
-    var bill = new Bill('abc');
+    var bill = new Bill();
+    bill.claimId = 'abc';
     bill._id = 'bill_id';
     var bi_1 = new BillingItem('task_id');
     bi_1.billId = 'bill_id';
