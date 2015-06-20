@@ -25,6 +25,10 @@ define(['jquery', 'knockout', 'KOMap', 'app/utils/session'],
                 }
 
                 function setupWidget() {
+                    // Get the Contact that we're bound to
+                    var accessor = valueAccessor();
+                    var contactObservable = ko.unwrap(accessor);
+
                     var foo = $.map(Session.getContacts(), function (item) {
                         item.value = item.name;
                         item.label = item.name;
@@ -36,7 +40,9 @@ define(['jquery', 'knockout', 'KOMap', 'app/utils/session'],
                         source: foo,
                         select: function (event, ui) {
                             console.log("Selected: " + JSON.stringify(ui.item));
-                            // TODOD update observable
+                            // Update Contact observable
+                            var selectedContact = ui.item;
+                            KOMap.fromJS(selectedContact, {}, contactObservable);
                             return true;
                         }
                     });

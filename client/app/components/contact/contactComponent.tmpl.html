@@ -29,7 +29,7 @@
         <div class="inline bottomMargin" data-bind="if: contact().isBusiness() != 'true'">
             <div class="inline">
                 <input type="text" class="form-control wide input-sm" placeholder="Name"
-                       data-bind="autoComplete,
+                       data-bind="autoComplete: contact,
                                   value: contact().name"/>
             </div>
         </div>
