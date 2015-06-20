@@ -1,4 +1,4 @@
-<div>
+<div class="ui-front">
 
     <!--Is a Business?-->
     <div class="inline wide bottomMargin" data-bind="visible: isBusinessOptionApplicable">
@@ -28,12 +28,9 @@
         <!--Individual-->
         <div class="inline bottomMargin" data-bind="if: contact().isBusiness() != 'true'">
             <div class="inline">
-                <input type="text" class="form-control normal input-sm" placeholder="First name"
-                       data-bind="value: contact().firstName"/>
-            </div>
-            <div class="inline">
-                <input type="text" class="form-control normal input-sm" placeholder="Last name"
-                       data-bind="value: contact().lastName"/>
+                <input type="text" class="form-control wide input-sm" placeholder="Name"
+                       data-bind="autoComplete,
+                                  value: contact().name"/>
             </div>
         </div>
 

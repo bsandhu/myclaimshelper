@@ -338,13 +338,14 @@ Use search to find needed section.
      */
     require(['jquery', 'knockout', 'KOAmd', 'text', 'amplify', 'app/components/appVM', 'shared/dateUtils', 'app/utils/session',
                 'jarvis', 'smartnotify', 'app/utils/koDatetimePickerBinding', 'app/utils/koWYSIWYGBinding',
-                'app/utils/koTextTruncateBinding', 'app/utils/koSortableBinding',
+                'app/utils/koTextTruncateBinding', 'app/utils/koSortableBinding', 'app/utils/koAutoComplete',
                 'velocity', 'bootstrap', 'KOXeditable'],
             function ($, ko, KOAmd, text, amplify, AppVM, DateUtils, Session) {
                 console.log('Init App');
 
                 DateUtils.enableJSONDateHandling();
                 Session.setCurrentUserId("TestUser");
+                Session.clearContacts();
 
                 // Knockout AMD supoprt setup
                 ko.amdTemplateEngine.defaultRequireTextPluginName = "text";

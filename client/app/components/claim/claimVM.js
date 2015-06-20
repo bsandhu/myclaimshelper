@@ -168,7 +168,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify',
         };
 
         ClaimVM.prototype.niceName = function (contact) {
-            var nice = (contact.firstName() || '') + (contact.lastName() || '');
+            var nice = contact.name() || '';
             return nice.length > 0 ? nice : 'None';
 
         };
