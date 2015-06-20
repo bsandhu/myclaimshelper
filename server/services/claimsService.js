@@ -37,7 +37,7 @@ function saveOrUpdateClaim(req, res) {
         var defer = jQuery.Deferred();
         var contactObj = _.extend(new Contact(), contactJSON);
 
-        if (_.isEmpty(contactObj.firstName) && _.isEmpty(contactObj.lastName)) {
+        if (_.isEmpty(contactObj.name)) {
             console.log('No ' + contactJSON + ' set. Skip setting Mongo reference');
             defer.reject();
             return;
