@@ -7,7 +7,8 @@ var mongoUtils = require("./../../server/mongoUtils.js");
 
 describe('billingServices', function () {
 
-    var bill = new Bill('claim_id');
+    var bill = new Bill();
+    bill.claimId = 'claim_id';
     bill._id = 'bill_id';
     bill.description = 'Test bill';
 

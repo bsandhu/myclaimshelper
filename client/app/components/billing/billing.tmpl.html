@@ -4,12 +4,8 @@
                                if: mode() === Consts.BILLING_TAB_HISTORY_MODE}"></div>
 </div>
 
-<!-- **** Create Bill **** -->
+<!-- **** Create/View Bill **** -->
 <div data-bind="template: {name: 'app/components/billing/billing.create',
-                           if: mode() === Consts.BILLING_TAB_CREATE_MODE,
-                           afterRender: initTooltipComponent}"></div>
+                           ifnot: mode() === Consts.BILLING_TAB_HISTORY_MODE,
+                           afterRender: afterBillingCreateRender}"></div>
 
-<!-- **** View Bill **** -->
-<div data-bind="template: {name: 'app/components/billing/billing.view',
-                          if: mode() === Consts.BILLING_TAB_VIEW_MODE,
-                          afterRender: initTooltipComponent}"></div>

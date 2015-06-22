@@ -3,8 +3,8 @@
 <head>
     <meta charset="utf-8">
     <title> Agent 007</title>
-    <meta name="description" content="">
-    <meta name="author" content="">
+    <meta name="description" content="Insurance inspections management app">
+    <meta name="author" content="LogiCube">
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
@@ -337,14 +337,15 @@ Use search to find needed section.
      * Load libs and init Knockout - on app startup. See requireConfig.js
      */
     require(['jquery', 'knockout', 'KOAmd', 'text', 'amplify', 'app/components/appVM', 'shared/dateUtils', 'app/utils/session',
-                'jarvis', 'app/utils/koDatetimePickerBinding', 'app/utils/koWYSIWYGBinding',
-                'app/utils/koTextTruncateBinding', 'app/utils/koSortableBinding',
+                'jarvis', 'smartnotify', 'app/utils/koDatetimePickerBinding', 'app/utils/koWYSIWYGBinding',
+                'app/utils/koTextTruncateBinding', 'app/utils/koSortableBinding', 'app/utils/koAutoComplete',
                 'velocity', 'bootstrap', 'KOXeditable'],
             function ($, ko, KOAmd, text, amplify, AppVM, DateUtils, Session) {
                 console.log('Init App');
 
                 DateUtils.enableJSONDateHandling();
                 Session.setCurrentUserId("TestUser");
+                Session.clearContacts();
 
                 // Knockout AMD supoprt setup
                 ko.amdTemplateEngine.defaultRequireTextPluginName = "text";

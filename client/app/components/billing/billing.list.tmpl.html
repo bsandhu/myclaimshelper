@@ -34,16 +34,12 @@
                             </button>
                             <ul class="dropdown-menu">
                                 <li>
-                                    <a data-bind="html: '<i class=&quot;fa fa-ban&quot;>&nbsp;</i>' + $parent.billingStatus.NOT_BILLABLE(),
-                                                  click: $parent.onUpdateBillStatus.bind($parent, $parent.billingStatus.NOT_BILLABLE(), bill)"></a>
+                                    <a data-bind="html: '<i class=&quot;fa fa-circle-o&quot;>&nbsp;</i>' + $parent.billingStatus.NOT_SUBMITTED(),
+                                                  click: $parent.onUpdateBillStatus.bind($parent, $parent.billingStatus.NOT_SUBMITTED(), bill)"></a>
                                 </li>
                                 <li>
-                                    <a data-bind="html: '<i class=&quot;fa fa-circle-o&quot;>&nbsp;</i>' + $parent.billingStatus.NOT_BILLED(),
-                                                  click: $parent.onUpdateBillStatus.bind($parent, $parent.billingStatus.NOT_BILLED(), bill)"></a>
-                                </li>
-                                <li>
-                                    <a data-bind="html: '<i class=&quot;fa fa-circle&quot;>&nbsp;</i>' + $parent.billingStatus.BILLED(),
-                                                  click: $parent.onUpdateBillStatus.bind($parent, $parent.billingStatus.BILLED(), bill)"></a>
+                                    <a data-bind="html: '<i class=&quot;fa fa-circle&quot;>&nbsp;</i>' + $parent.billingStatus.SUBMITTED(),
+                                                  click: $parent.onUpdateBillStatus.bind($parent, $parent.billingStatus.SUBMITTED(), bill)"></a>
                                 </li>
                                 <li>
                                     <a data-bind="html: '<i class=&quot;fa fa-check&quot;>&nbsp;</i>' + $parent.billingStatus.PAID(),
@@ -61,6 +57,6 @@
 
     <div class="panel-body" data-bind="if: bills().length <= 0">
         No Bills submitted for this claim yet.
-        <a href="#">Create New?</a>
+        <a data-bind="attr: {href: '#/claim/' + claimId + '/newbill'}">Create New?</a>
     </div>
 </div>

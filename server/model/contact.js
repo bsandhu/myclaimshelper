@@ -13,8 +13,7 @@ define([], function () {
         this.isBusiness = undefined;
         this.role = undefined;
 
-        this.firstName = undefined;
-        this.lastName = undefined;
+        this.name = undefined;
         this.businessName = undefined;
 
         this.streetAddress = undefined;

@@ -28,7 +28,7 @@ define(['./billingStatus'], function (BillingStatus) {
         this.expenseAmount = 0;
         this.totalAmount = 0;
 
-        this.status = BillingStatus.NOT_BILLED;
+        this.status = BillingStatus.NOT_SUBMITTED;
     }
 
     return BillingItem;

@@ -18,8 +18,8 @@ function saveOrUpdateContact(req, res) {
     var contactObj = _.extend(new Contact(), contactJSON);
 
     // Validate
-    if (!_.isString(contactObj.firstName)) {
-        sendResponse(res, 'Please specify First name');
+    if (!_.isString(contactObj.name)) {
+        sendResponse(res, 'Please specify a name');
     } else {
         saveOrUpdateContactObject(contactObj)
             .always(function(result){

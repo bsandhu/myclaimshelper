@@ -17,7 +17,7 @@ describe('Claims Service', function () {
     testClaim.dueDate = new Date(2014, 1, 10);
     testClaim.summary = "I am test entry";
     testClaim.state = 'open';
-    testClaim.insuredContact = {firstName: 'TestFist', lastName: 'TestLast',  city: 'TestCity', zip: 11010};
+    testClaim.insuredContact = {name: 'TestFist', city: 'TestCity', zip: 11010};
 
     var testBillingItem = new BillingItem();
     testBillingItem.description = 'Test billing item';
@@ -145,8 +145,7 @@ describe('Claims Service', function () {
 
             var savedContact = savedClaim.insuredContact;
             assert.ok(savedContact._id);
-            assert.equal(savedContact.firstName, 'TestFist');
-            assert.equal(savedContact.lastName, 'TestLast');
+            assert.equal(savedContact.name, 'TestFist');
             assert.equal(savedContact.zip, 11010);
             done();
         };
