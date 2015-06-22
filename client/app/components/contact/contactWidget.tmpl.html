@@ -7,6 +7,10 @@
         <span class="widget-icon"> <i class="fa fa-users txt-color-blueDark"></i> </span>
 
         <h2>Contacts</h2>
+
+        <div class="widget-toolbar">
+            <div class="badge bg-color-teal font-xs" data-bind="text: contacts().length"></div>
+        </div>
     </header>
 
     <!-- widget div-->
@@ -22,6 +26,12 @@
                                    data-bind="textInput: filterText">
                         </div>
                     </div>
+                    <div class="col-xs-2 col-sm-2 col-md-4 col-lg-4">
+                        <div class="btn btn-default btn-info pull-right" data-bind="click: onAddContact">
+                            <i class="fa fa-user fa-lg"></i>
+                            <i class="fa fa-plus"></i>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -34,9 +44,9 @@
                     </thead>
 
                     <tbody data-bind="foreach: { data: filteredContacts , as: 'contact' }">
-                        <tr>
-                            <td data-bind="text: contact.name"></td>
-                        </tr>
+                    <tr>
+                        <td><a data-bind="text: contact.name, click: $parent.onShowContact"></a></td>
+                    </tr>
                     </tbody>
                 </table>
             </div>

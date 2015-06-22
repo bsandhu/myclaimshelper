@@ -1,6 +1,6 @@
 define(['knockout', 'text!app/components/contact/contactWidget.tmpl.html',
-        'app/utils/session', 'app/components/contact/contactClient'],
-    function (ko, view, Session, ContactClient) {
+        'app/utils/session', 'app/components/contact/contactClient', 'amplify', 'app/utils/events'],
+    function (ko, view, Session, ContactClient, amplify, Events) {
 
         function ContactWidgetVM() {
             console.log('Init Contacts Widget');
@@ -22,6 +22,14 @@ define(['knockout', 'text!app/components/contact/contactWidget.tmpl.html',
                     return contact.name.toUpperCase().indexOf(newVal.toUpperCase()) >= 0;
                 }));
             }, this);
+        }
+
+        ContactWidgetVM.prototype.onShowContact = function (contact) {
+            amplify.publish(Events.SHOW_CONTACT, {contactId: contact._id});
+        }
+
+        ContactWidgetVM.prototype.onAddContact = function (contact) {
+            amplify.publish(Events.ADD_CONTACT);
         }
 
         ContactWidgetVM.prototype.initContacts = function () {
