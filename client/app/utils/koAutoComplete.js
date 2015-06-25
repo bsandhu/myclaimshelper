@@ -1,25 +1,13 @@
-define(['jquery', 'knockout', 'KOMap', 'app/utils/session'],
+define(['jquery', 'knockout', 'KOMap', 'app/utils/session', 'app/components/contact/contactClient'],
 
-    function ($, ko, KOMap, Session) {
+    function ($, ko, KOMap, Session, ContactClient) {
         'use strict';
-
-        function loadContactsAndStoreInSession() {
-            return $.getJSON('/contact')
-                .done(function (resp) {
-                    if (resp.status !== 'Success') {
-                        console.error('Failed to load contacts');
-                    } else {
-                        console.log('Loaded contacts' + JSON.stringify(resp.data));
-                        Session.setContacts(resp.data)
-                    }
-                })
-        }
 
         ko.bindingHandlers.autoComplete = {
 
             init: function (element, valueAccessor, allBindings, viewModel, bindingContext) {
                 if (Session.getContacts().length === 0) {
-                    loadContactsAndStoreInSession().done(setupWidget);
+                    ContactClient.loadContactsAndStoreInSession().done(setupWidget);
                 } else {
                     setupWidget();
                 }

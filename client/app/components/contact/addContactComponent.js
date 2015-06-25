@@ -1,7 +1,7 @@
 define(['knockout', 'KOMap', 'text!app/components/contact/addContactComponent.tmpl.html', 'model/contact',
-        'app/utils/ajaxUtils', 'amplify', 'app/utils/events'],
+        'app/utils/ajaxUtils', 'amplify', 'app/utils/events', 'app/components/contact/contactClient'],
 
-    function (ko, KOMap, viewHtml, Contact, AjaxUtils, amplify, Events) {
+    function (ko, KOMap, viewHtml, Contact, AjaxUtils, amplify, Events, ContactClient) {
         'use strict';
 
         function AddContactComponentVM(params) {
@@ -37,6 +37,7 @@ define(['knockout', 'KOMap', 'text!app/components/contact/addContactComponent.tm
                     this.contact()[attr](null);
                 }
             }
+            $('#addContactModal').modal('show');
         };
 
         AddContactComponentVM.prototype.onSave = function(){
@@ -46,8 +47,11 @@ define(['knockout', 'KOMap', 'text!app/components/contact/addContactComponent.tm
                 function onSuccess(response) {
                     console.log('Saved Contact: ' + JSON.stringify(response));
                     this.contact()._id(response.data._id);
-                    amplify.publish(Events.SUCCESS_NOTIFICATION, {msg: response.message});
-                    amplify.publish(Events.ADDED_CONTACT, KOMap.toJS(this.contact()));
+                    amplify.publish(Events.SUCCESS_NOTIFICATION, {msg: 'Contact saved'});
+
+                    var contactJS = KOMap.toJS(this.contact());
+                    amplify.publish(Events.ADDED_CONTACT, contactJS);
+                    ContactClient.updateInSession(contactJS);
                 }.bind(this),
                 function onFail(response) {
                     console.log('Failure: ' + JSON.stringify(response));
@@ -62,11 +66,12 @@ define(['knockout', 'KOMap', 'text!app/components/contact/addContactComponent.tm
                     console.log('Loaded contact ' + JSON.stringify(resp.data));
 
                     // Populate with JSON data
-                    KOMap.fromJS(resp.data[0], {}, this.contact());
+                    this.contact(KOMap.fromJS(resp.data, {}, new Contact()));
                     $('#addContactModal').modal('show');
                 }.bind(this))
                 .fail(function(resp){
                     console.error('Failed to load contact ' + JSON.stringify(resp));
+                    amplify.publish(Events.FAILURE_NOTIFICATION, {msg: 'Problem while accessing contact info from server'});
                 });
         };
 

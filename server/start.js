@@ -53,7 +53,8 @@ function setupClaimsServiceRoutes() {
 
 function setupContactServiceRoutes() {
     server.get('/contact', contactService.listAllContacts);
-    server.post('/contact', contactService.saveOrUpdateContactObject);
+    server.get('/contact/:id', contactService.getContact);
+    server.post('/contact', contactService.saveOrUpdateContact);
 }
 
 function setupBillingServiceRoutes() {
