@@ -1,9 +1,10 @@
 define(['jquery', 'knockout', 'KOMap', 'amplify',
         'model/claim', 'model/claimEntry', 'model/contact', 'model/states',
-        'app/utils/ajaxUtils', 'app/utils/events', 'app/utils/consts', 'app/utils/router', 'app/utils/sessionKeys',
+        'app/utils/ajaxUtils', 'app/utils/events', 'app/utils/consts', 'app/utils/router',
+        'app/utils/sessionKeys', 'app/utils/session',
         'shared/dateUtils', 'text!app/components/claim/claim.tmpl.html'],
     function ($, ko, KOMap, amplify, Claim, ClaimEntry, Contact, States,
-              ajaxUtils, Events, Consts, Router, SessionKeys, DateUtils, viewHtml) {
+              ajaxUtils, Events, Consts, Router, SessionKeys, Session, DateUtils, viewHtml) {
 
         function ClaimVM() {
             console.log('Init ClaimVM');
@@ -12,13 +13,16 @@ define(['jquery', 'knockout', 'KOMap', 'amplify',
             this.States = States;
             this.Consts = Consts;
             this.DateUtils = DateUtils;
+            this.Router = Router;
+            this.Session = Session;
             this.claim = ko.observable(this.newEmptyClaim());
             this.claimEntries = ko.observableArray();
             this.sortDir = ko.observable('desc');
             this.activeTab = ko.observable(Consts.CLAIMS_TAB);
+            this.isPartiallyCollapsed = ko.observable(false);
 
             // View state
-            this.screenHeight = ko.observable(screen.height);
+            this.screenHeight = ko.observable($(window).height() - 215);
             this.inEditMode = ko.observable(false);
             this.showStatusForEntryId = ko.observable();
             this.setupEvListeners();
@@ -47,6 +51,11 @@ define(['jquery', 'knockout', 'KOMap', 'amplify',
             amplify.subscribe(Events.SHOW_CLAIM_ENTRY, this, this.onShowClaimEntry);
             amplify.subscribe(Events.SAVED_CLAIM_ENTRY, this, this.refreshClaimEntriesListing);
             amplify.subscribe(Events.CREATE_NEW_BILL, this, this.onCreateNewBill);
+
+            amplify.subscribe(Events.EXPAND_CLAIM_PANEL, this, function(){this.isPartiallyCollapsed(false)});
+            amplify.subscribe(Events.COLLAPSE_CLAIM_PANEL, this, function(){this.isPartiallyCollapsed(false)});
+            amplify.subscribe(Events.PARTIALLY_COLlAPSE_CLAIM_PANEL, this, function(){this.isPartiallyCollapsed(true)});
+
             window.onclick = this.onDismissStatus.bind(this);
         };
 

@@ -7,7 +7,8 @@
                   data-bind="text: (claim().insuranceCompanyFileNum() || '')"></span>
         </a>
     </li>
-    <li data-bind="attr: {class: activeTab() == Consts.BILLING_TAB ? 'active' : ''}">
+    <li data-bind="attr: {class: activeTab() == Consts.BILLING_TAB ? 'active' : ''},
+                   ifnot: inEditMode && isPartiallyCollapsed">
         <a href="#" data-toggle="tab" data-bind="click: selectBillingTab">
             <i class="fa fa-fw fa-lg fa-credit-card"></i>Billing
         </a>
@@ -22,12 +23,12 @@
 
         <!-- *** Claim Panel -->
         <div class="panel panel-default">
-            <div class="panel-body">
+            <div data-bind="css: { 'panel-body' : !isPartiallyCollapsed()}">
                 <!-- ************************************************ -->
                 <!-- Claim top level info -->
                 <!-- ************************************************ -->
 
-                <div data-bind="ifnot: inEditMode" class="container-fluid">
+                <div data-bind="ifnot: inEditMode && isPartiallyCollapsed" class="container-fluid">
 
                     <!-- Insured/claimant/Description -->
                     <div class="row">
@@ -144,10 +145,22 @@
             <!-- ************************************************ -->
 
             <div data-bind="ifnot: inEditMode" class="topMargin1pc">
-                <div class="btn-group inline leftMargin5">
+                <!-- Back btn -->
+                <div class="inline leftMargin5">
+                    <a href="javascript:void(0);"
+                       class="btn-xs btn-labeled btn-link leftMargin5"
+                       data-bind="if: isPartiallyCollapsed,
+                                  click: function(){Router.routeToClaim(Session.getActiveClaimId());}">
+                        <span class="btn-label">
+                        <i class="glyphicon glyphicon-chevron-left"></i></span>Back
+                    </a>
+                </div>
+
+                <!-- New task btn -->
+                <div class="btn-group inline pull-right rightMargin5">
                     <button type="button" class="btn btn-default dropdown-toggle btn-info" data-toggle="dropdown">
                         <span class="fa fa-plus"></span>
-                        Add New Task <span class="caret"></span>
+                        New Task <span class="caret"></span>
                     </button>
                     <ul class="dropdown-menu" role="menu">
                         <li>
@@ -178,18 +191,21 @@
                 </div>
 
                 <!-- Edit claim button -->
-                <div class="btn btn-default inline btn-info" data-bind="click: onEditModeClick.bind($data)">
-                    <i class="fa fa-pencil"></i>
-                    Edit claim
+                <div data-bind="ifnot: inEditMode && isPartiallyCollapsed" class="inline">
+                    <div class="btn btn-default inline btn-info"
+                         data-bind="click: onEditModeClick.bind($data)">
+                        <i class="fa fa-pencil"></i>
+                        Edit claim
+                    </div>
                 </div>
 
                 <!-- Add contact Button -->
-                <div class="inline">
+                <div class="inline" data-bind="ifnot: inEditMode && isPartiallyCollapsed">
                     <add-contact-component></add-contact-component>
                 </div>
 
                 <!-- Create Bill Button -->
-                <div class="inline pull-right rightMargin5">
+                <div class="inline pull-right rightMargin5" data-bind="ifnot: inEditMode && isPartiallyCollapsed">
                     <div class="btn-group">
                         <a class="btn btn-sm btn-info" data-bind="attr: {href: '#/claim/' + claim()._id() + '/newbill'}">
                             <i class="fa fa-plus"></i> New Invoice

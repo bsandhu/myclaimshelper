@@ -1,8 +1,10 @@
 define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEntry', 'model/billingItem', 'model/states',
-        'app/utils/ajaxUtils', 'app/utils/events', 'app/utils/router', 'app/utils/sessionKeys',
+        'app/utils/ajaxUtils', 'app/utils/events', 'app/utils/router',
+        'app/utils/sessionKeys', 'app/utils/session',
         'shared/dateUtils',
         'text!app/components/taskEntry/taskEntry.tmpl.html'],
-    function ($, ko, KOMap, amplify, Claim, ClaimEntry, BillingItem, States, ajaxUtils, Events, Router, SessionKeys, DateUtils, taskEntryView) {
+    function ($, ko, KOMap, amplify, Claim, ClaimEntry, BillingItem, States, ajaxUtils, Events, Router,
+              SessionKeys, Session, DateUtils, taskEntryView) {
         'use strict';
 
         function TaskEntryVM() {
@@ -84,7 +86,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
             console.log('TaskEntryVM - UPDATE_CLAIM_ENTRY_STATUS ev ' + JSON.stringify(evData));
 
             var claimEntryId = evData.claimEntryId;
-            var claimId = this.getActiveClaimId();
+            var claimId = Session.getActiveClaimId();
 
             this.stopStateTracking();
 
@@ -113,8 +115,10 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
         TaskEntryVM.prototype.onSave = function () {
             console.log('Saving ClaimEntry: ' + KOMap.toJSON(this.claimEntry));
             this.stopStateTracking();
-
-            var activeClaimId = this.getActiveClaimId();
+            /**
+             * Since only once Claim can be active, its assumed to be the parent
+             */
+            var activeClaimId = Session.getActiveClaimId();
             this.claimEntry().claimId(activeClaimId);
             this.claimEntry().entryDate();
 
@@ -155,22 +159,13 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
                 }.bind(this));
         };
 
-        /**
-         * Since only once Claim can be active, its assumed to be the parent
-         */
-        TaskEntryVM.prototype.getActiveClaimId = function () {
-            var activeClaimId = amplify.store.sessionStorage(SessionKeys.ACTIVE_CLAIM_ID);
-            console.assert(activeClaimId, 'No claim active in session');
-            return activeClaimId;
-        };
-
         TaskEntryVM.prototype.storeInSession = function (claimEntryId) {
             amplify.store.sessionStorage(SessionKeys.ACTIVE_CLAIM_ENTRY_ID, claimEntryId);
             console.log('Stored CliamEntryId: ' + claimEntryId + ' in session storage');
         };
 
         TaskEntryVM.prototype.onCancel = function () {
-            Router.routeToClaim(this.getActiveClaimId());
+            Router.routeToClaim(Session.getActiveClaimId());
         };
 
         return {viewModel: TaskEntryVM, template: taskEntryView};

@@ -337,3 +337,20 @@ div {
 .bg-color-greenLighter {
     background: #cde0c4;
 }
+
+.menu-on-top .page-footer{
+    padding: 0px;
+    padding-top: 5px;
+}
+
+.page-footer {
+    height: 35px;
+    padding: 15px 13px 0;
+    padding-left: 233px;
+    border-top: 1px solid #CECECE;
+    background: #2a2725;
+    width: 100%;
+    position: absolute;
+    display: block;
+    bottom: 0px;
+}

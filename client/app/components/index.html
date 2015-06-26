@@ -157,17 +157,17 @@ Use search to find needed section.
 
     <!-- User info -->
     <div class="login-info">
-				<span> <!-- User image size is adjusted inside CSS, it should stay as is -->
+        <span> <!-- User image size is adjusted inside CSS, it should stay as is -->
 
-					<a href="javascript:void(0);" id="show-shortcut" data-action="toggleShortcut">
-                        <img src="img/avatars/sunny.png" alt="me" class="online"/>
-						<span>
-							john.doe
-						</span>
-                        <i class="fa fa-angle-down"></i>
-                    </a>
+            <a href="javascript:void(0);" id="show-shortcut" data-action="toggleShortcut">
+                <img src="img/avatars/sunny.png" alt="me" class="online"/>
+                <span>
+                    john.doe
+                </span>
+                <i class="fa fa-angle-down"></i>
+            </a>
 
-				</span>
+        </span>
     </div>
     <!-- end user info -->
 
@@ -239,38 +239,6 @@ Use search to find needed section.
 <!-- #MAIN PANEL -->
 <div id="main" role="main">
 
-    <!-- RIBBON -->
-    <div id="ribbon">
-
-				<span class="ribbon-button-alignment">
-					<span id="refresh" class="btn btn-ribbon" data-action="resetWidgets" data-title="refresh"
-                          rel="tooltip" data-placement="bottom"
-                          data-original-title="<i class='text-warning fa fa-warning'></i> Warning! This will reset all your widget settings."
-                          data-html="true"
-                          data-reset-msg="Would you like to RESET all your saved widgets and clear LocalStorage?"><i
-                            class="fa fa-refresh"></i></span>
-				</span>
-
-        <!-- breadcrumb -->
-        <ol class="breadcrumb">
-            <!-- This is auto generated -->
-        </ol>
-        <!-- end breadcrumb -->
-
-        <!-- You can also add more buttons to the
-        ribbon for further usability
-
-        Example below:
-
-        <span class="ribbon-button-alignment pull-right" style="margin-right:25px">
-            <span id="search" class="btn btn-ribbon hidden-xs" data-title="search"><i class="fa fa-grid"></i> Change Grid</span>
-            <span id="add" class="btn btn-ribbon hidden-xs" data-title="add"><i class="fa fa-plus"></i> Add</span>
-            <span id="search" class="btn btn-ribbon" data-title="search"><i class="fa fa-search"></i> <span class="hidden-mobile">Search</span></span>
-        </span> -->
-
-    </div>
-    <!-- END RIBBON -->
-
     <!-- Notifications -->
     <div data-bind="component: 'notifier-component'"></div>
 
@@ -323,17 +291,12 @@ Use search to find needed section.
 <!-- END #MAIN PANEL -->
 
 <!-- #PAGE FOOTER -->
-<footer style="position: relative; bottom: 0">
+<footer>
     <div class="page-footer">
-        <div class="row">
-            <div class="col-xs-12 col-sm-6 col-lg-12 text-right">
-                <span class="txt-color-white">Logicube © 2013-2015</span>
-            </div>
-        </div>
+        <p class="txt-color-white text-right paddingRight5">Logicube © 2013-2015</p>
     </div>
 </footer>
 <!-- END FOOTER -->
-
 
 </body>
 

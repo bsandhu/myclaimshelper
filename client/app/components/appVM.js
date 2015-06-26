@@ -136,6 +136,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
                 $("#claimPanel").velocity({ width: '96%' }, this.gridNavDelay);
                 $("#claimPanelContent").velocity("fadeIn", { duration: this.gridNavDelay });
                 this.claimPanelState = 'expanded';
+                amplify.publish(Events.EXPAND_CLAIM_PANEL);
             }
         };
 
@@ -144,14 +145,16 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
                 $("#claimPanel").velocity({ width: '0%' }, {duration: this.gridNavDelay}, this.gridNavEffect);
                 $("#claimPanelContent").velocity("fadeOut", { duration: this.gridNavDelay });
                 this.claimPanelState = 'collapsed';
+                amplify.publish(Events.COLlAPSE_CLAIM_PANEL);
             }
         };
 
         AppVM.prototype.partiallyCollapseClaimPanel = function () {
             if (this.claimPanelState !== 'partiallyCollapsed') {
-                $("#claimPanel").velocity({ width: '38%' }, {duration: this.gridNavDelay}, this.gridNavEffect);
+                $("#claimPanel").velocity({ width: '28%' }, {duration: this.gridNavDelay}, this.gridNavEffect);
                 $("#claimPanelContent").velocity("fadeIn", { duration: this.gridNavDelay });
                 this.claimPanelState = 'partiallyCollapsed';
+                amplify.publish(Events.PARTIALLY_COLlAPSE_CLAIM_PANEL);
             }
         };
 
@@ -159,7 +162,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
 
         AppVM.prototype.expandClaimEntryPanel = function () {
             if (this.claimEntryPanelState !== 'expanded') {
-                $("#claimEntryPanel").velocity({ 'width': '60%' }, this.gridNavDelay);
+                $("#claimEntryPanel").velocity({ 'width': '70%' }, this.gridNavDelay);
                 $("#claimEntryPanelContent").velocity("fadeIn", { duration: this.gridNavDelay });
                 this.claimEntryPanelState = 'expanded';
             }
