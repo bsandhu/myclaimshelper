@@ -9,6 +9,10 @@ define([], function(){
         ADD_CONTACT : 'ADD_CONTACT',
         ADDED_CONTACT : 'ADDED_CONTACT',
 
+        EXPAND_CLAIM_PANEL   : 'ExpandClaimPanel',
+        COLLAPSE_CLAIM_PANEL : 'CollapseClaimPanel',
+        PARTIALLY_COLlAPSE_CLAIM_PANEL   : 'PartiallyCollapseClaimPanel',
+
         SHOW_CLAIM           : 'ShowClaim',
         NEW_CLAIM            : 'AddClaim',
 
