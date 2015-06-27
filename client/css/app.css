@@ -338,6 +338,15 @@ div {
     background: #cde0c4;
 }
 
+/**********************************************************/
+/**** Smart admin theme overrid ****/
+/**********************************************************/
+
+.row {
+    margin-left: -5px;
+    margin-right: -5px;
+}
+
 .menu-on-top .page-footer{
     padding: 0px;
     padding-top: 5px;
