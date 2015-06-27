@@ -103,7 +103,12 @@ define(['jquery', 'knockout', 'KOMap', 'amplify',
 
         ClaimVM.prototype.onShowContact = function (contactObservable) {
             console.log('ClaimVM - SHOW_CONTACT ev ' + JSON.stringify(KOMap.toJS(contactObservable)));
-            amplify.publish(Events.SHOW_CONTACT, {contactId: contactObservable._id()});
+            if (!Boolean(contactObservable._id())){
+                this.inEditMode(true);
+                amplify.publish(Events.INFO_NOTIFICATION, {msg: 'Please add contact information'})
+            } else {
+                amplify.publish(Events.SHOW_CONTACT, {contactId: contactObservable._id()});
+            }
         };
 
         ClaimVM.prototype.onEntryStatusUpdate = function (status, entry, ev) {

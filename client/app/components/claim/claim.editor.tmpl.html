@@ -2,8 +2,20 @@
 <!-- Claim entry form -->
 <!-- ************************************************ -->
 
-<div class="fadeIn" data-bind="if: inEditMode,
+<div class="fadeIn"
+     data-bind="if: inEditMode,
                 css: { 'panel-body' : inEditMode()}">
+
+    <!-- Back btn -->
+    <div class="bottomMargin5">
+        <a href="javascript:void(0);"
+           class="btn-xs btn-labeled btn-link leftMargin5"
+           data-bind="click: onCancel">
+                <span class="btn-label">
+                <i class="glyphicon glyphicon-chevron-left"></i></span>Back
+        </a>
+    </div>
+    <div class="bottomBorderDashed"></div>
 
     <div><h5>Description</h5></div>
     <div class="inline bottomMargin" style="width: 80%;">
@@ -118,7 +130,7 @@
     <!-- Save/cancel buttons -->
     <div class="topMargin5 clear">
         <div class="inline alignRight topMargin5">
-            <button type="button" class="btn btn-default" data-bind="click: onSave">Save</button>
+            <button type="button" class="btn btn-info" data-bind="click: onSave">Save</button>
             <button type="button" class="btn btn-default" data-bind="click: onCancel">Cancel</button>
         </div>
     </div>

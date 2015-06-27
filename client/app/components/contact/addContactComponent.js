@@ -9,8 +9,8 @@ define(['knockout', 'KOMap', 'text!app/components/contact/addContactComponent.tm
 
             var contact = new Contact();
             contact.isBusiness = false;
-            this.contact     = ko.observable(KOMap.fromJS(contact));
-
+            this.contact = ko.observable(KOMap.fromJS(contact));
+            this.popupTitle = ko.observable('');
             this.setupEvListeners();
         }
 
@@ -21,18 +21,20 @@ define(['knockout', 'KOMap', 'text!app/components/contact/addContactComponent.tm
 
         AddContactComponentVM.prototype.onShowContact = function (evData) {
             console.log('AddContactComponentVM - SHOW_CONTACT ev ' + JSON.stringify(evData));
+            this.popupTitle('Contact details');
             this.loadContact(evData.contactId);
         };
 
         AddContactComponentVM.prototype.onAddContact = function () {
             console.log('AddContactComponentVM - ADD_CONTACT ev ');
+            this.popupTitle('Add new contact');
             this.addContact();
         };
 
-        AddContactComponentVM.prototype.addContact = function(){
+        AddContactComponentVM.prototype.addContact = function () {
             console.log("Adding contact");
-            for(var attr in this.contact()){
-                if (ko.isObservable(this.contact()[attr])){
+            for (var attr in this.contact()) {
+                if (ko.isObservable(this.contact()[attr])) {
                     console.log('Clearing contact attr: ' + attr);
                     this.contact()[attr](null);
                 }
@@ -40,7 +42,7 @@ define(['knockout', 'KOMap', 'text!app/components/contact/addContactComponent.tm
             $('#addContactModal').modal('show');
         };
 
-        AddContactComponentVM.prototype.onSave = function(){
+        AddContactComponentVM.prototype.onSave = function () {
             AjaxUtils.post(
                 '/contact',
                 KOMap.toJSON(this.contact()),
@@ -60,7 +62,7 @@ define(['knockout', 'KOMap', 'text!app/components/contact/addContactComponent.tm
             );
         };
 
-        AddContactComponentVM.prototype.loadContact = function(contactId){
+        AddContactComponentVM.prototype.loadContact = function (contactId) {
             $.getJSON('/contact/' + contactId)
                 .done(function (resp) {
                     console.log('Loaded contact ' + JSON.stringify(resp.data));
@@ -69,7 +71,7 @@ define(['knockout', 'KOMap', 'text!app/components/contact/addContactComponent.tm
                     this.contact(KOMap.fromJS(resp.data, {}, new Contact()));
                     $('#addContactModal').modal('show');
                 }.bind(this))
-                .fail(function(resp){
+                .fail(function (resp) {
                     console.error('Failed to load contact ' + JSON.stringify(resp));
                     amplify.publish(Events.FAILURE_NOTIFICATION, {msg: 'Problem while accessing contact info from server'});
                 });
