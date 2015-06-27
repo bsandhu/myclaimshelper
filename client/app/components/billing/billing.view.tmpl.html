@@ -6,23 +6,7 @@
                     <i class="glyphicon glyphicon-chevron-left"></i></span>Billing overview
         </a>
     </div>
-    <div align="right">
-        <a href="no-javascript.html" 
-            onclick="var b = document.getElementById('invoice-body');
-                     var i = document.createElement('iframe');
-                     document.body.appendChild(i);
-                     var p = i.contentWindow;
-                     p.document.open();
-                     p.document.write(b.innerHTML);
-                     p.document.close();
-                     p.focus();
-                     p.print();
-                     document.body.removeChild(i);
-                     return false;"
-                     ><span class="btn-label">[Print]</span></a>
-
-    </div>
-    <div id="invoice-body" class="yes-print panel-body">
+    <div id="invoice-body" class="panel-body">
         <div class="pull-left">
             <img src="img/logo-blacknwhite.png" width="150" height="32" alt="invoice icon">
 
