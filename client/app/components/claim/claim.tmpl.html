@@ -93,12 +93,12 @@
                             <span>Insured Attorney</span>
                         </div>
                         <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                            <a data-bind="click: onShowContact" class="cursor-pointer">
+                            <a data-bind="click: function(){onShowContact(claim().insuredAttorneyContact)}" class="cursor-pointer">
                                 <span data-bind="text: niceName(claim().insuredAttorneyContact)"></span>
                             </a>
                         </div>
                         <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                            <span data-bind="text: '616 112 9889'"></span>
+                            <span data-bind="text: claim().insuredAttorneyContact.phone"></span>
                         </div>
                     </div>
                     <div class="row">
@@ -106,12 +106,12 @@
                             <span>Claimant Attorney</span>
                         </div>
                         <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                            <a data-bind="click: onShowContact">
+                            <a data-bind="click: function(){onShowContact(claim().claimantsAttorneyContact)}" class="cursor-pointer">
                                 <span data-bind="text: niceName(claim().claimantsAttorneyContact)"></span>
                             </a>
                         </div>
                         <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                            <span data-bind="text: '616 112 9889'"></span>
+                            <span data-bind="text: claim().claimantsAttorneyContact.phone"></span>
                         </div>
                     </div>
 
@@ -146,11 +146,10 @@
 
             <div data-bind="ifnot: inEditMode" class="topMargin1pc">
                 <!-- Back btn -->
-                <div class="inline leftMargin5">
+                <div data-bind="if: isPartiallyCollapsed" class="inline leftMargin5">
                     <a href="javascript:void(0);"
                        class="btn-xs btn-labeled btn-link leftMargin5"
-                       data-bind="if: isPartiallyCollapsed,
-                                  click: function(){Router.routeToClaim(Session.getActiveClaimId());}">
+                       data-bind="click: function(){Router.routeToClaim(Session.getActiveClaimId());}">
                         <span class="btn-label">
                         <i class="glyphicon glyphicon-chevron-left"></i></span>Back
                     </a>
@@ -199,7 +198,7 @@
                     </div>
                 </div>
 
-                <!-- Add contact Button -->
+                <!-- Add contact Button
                 <div class="inline" data-bind="ifnot: inEditMode && isPartiallyCollapsed">
                     <div class="btn btn-default inline btn-info"
                          data-bind="click: onAddContact">
@@ -207,7 +206,7 @@
                         <i class="fa fa-plus"></i> New Contact
                     </div>
                 </div>
-
+                -->
                 <!-- Create Bill Button -->
                 <div class="inline pull-right rightMargin5" data-bind="ifnot: inEditMode && isPartiallyCollapsed">
                     <div class="btn-group">
