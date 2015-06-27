@@ -72,9 +72,9 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
         };
 
         AppVM.prototype.transitionToSearchResults = function () {
-            this.expandDashboardPanel();
             this.collapseClaimPanel();
             this.collapseClaimEntryPanel();
+            this.expandDashboardPanel();
         };
 
         AppVM.prototype.transitionToClaimEntry = function () {
@@ -113,8 +113,10 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
 
         AppVM.prototype.expandDashboardPanel = function () {
             if (this.searchPanelState !== 'expanded') {
-                $("#dashboardPanel").velocity({ width: '100%' }, this.gridNavDelay);
-                $("#dashboardPanelContent").velocity("fadeIn", { duration: this.gridNavDelay });
+                $("#dashboardPanel").velocity(
+                    { width: '100%'},
+                    {begin: function () { $("#dashboardPanel").show(); }},
+                    this.gridNavDelay);
                 $('#dashboardPanelCollapsedContent').hide();
                 this.searchPanelState = 'expanded';
             }
@@ -122,9 +124,11 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
 
         AppVM.prototype.collapseDashboardPanel = function () {
             if (this.searchPanelState !== 'collapsed') {
-                $('#dashboardPanelCollapsedContent').velocity("fadeIn", { duration: this.gridNavDelay });
-                $("#dashboardPanel").velocity({ width: '0%' }, {duration: this.gridNavDelay}, this.gridNavEffect);
-                $("#dashboardPanelContent").velocity("fadeOut", { duration: this.gridNavDelay });
+                $("#dashboardPanel").velocity(
+                    { width: '0%'},
+                    {duration: this.gridNavDelay/100,
+                    complete: function () {$("#dashboardPanel").hide(); }},
+                    this.gridNavEffect);
                 this.searchPanelState = 'collapsed';
             }
         };
@@ -133,8 +137,10 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
 
         AppVM.prototype.expandClaimPanel = function () {
             if (this.claimPanelState !== 'expanded') {
-                $("#claimPanel").velocity({ width: '96%' }, this.gridNavDelay);
-                $("#claimPanelContent").velocity("fadeIn", { duration: this.gridNavDelay });
+                $("#claimPanel").velocity(
+                    { width: '96%'},
+                    {begin: function () { $("#claimPanel").show(); }},
+                    this.gridNavDelay);
                 this.claimPanelState = 'expanded';
                 amplify.publish(Events.EXPAND_CLAIM_PANEL);
             }
@@ -142,10 +148,13 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
 
         AppVM.prototype.collapseClaimPanel = function () {
             if (this.claimPanelState !== 'collapsed') {
-                $("#claimPanel").velocity({ width: '0%' }, {duration: this.gridNavDelay}, this.gridNavEffect);
-                $("#claimPanelContent").velocity("fadeOut", { duration: this.gridNavDelay });
+                $("#claimPanel").velocity(
+                    { width: '0%'},
+                    {duration: this.gridNavDelay/100,
+                     complete: function () { $("#claimPanel").hide(); }},
+                    this.gridNavEffect);
                 this.claimPanelState = 'collapsed';
-                amplify.publish(Events.COLlAPSE_CLAIM_PANEL);
+                amplify.publish(Events.COLLAPSE_CLAIM_PANEL);
             }
         };
 

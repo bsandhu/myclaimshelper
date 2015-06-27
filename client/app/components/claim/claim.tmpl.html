@@ -201,7 +201,11 @@
 
                 <!-- Add contact Button -->
                 <div class="inline" data-bind="ifnot: inEditMode && isPartiallyCollapsed">
-                    <add-contact-component></add-contact-component>
+                    <div class="btn btn-default inline btn-info"
+                         data-bind="click: onAddContact">
+                        <i class="fa fa-user fa-lg"></i>
+                        <i class="fa fa-plus"></i> New Contact
+                    </div>
                 </div>
 
                 <!-- Create Bill Button -->
