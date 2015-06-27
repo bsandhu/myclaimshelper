@@ -143,6 +143,10 @@ define(['jquery', 'knockout', 'KOMap', 'amplify',
             Router.routeToClaimEntry(this.claim()._id(), entry._id);
         };
 
+        ClaimVM.prototype.onAddContact = function (contact) {
+            amplify.publish(Events.ADD_CONTACT);
+        }
+
         /***********************************************************/
         /* View state                                              */
         /***********************************************************/
