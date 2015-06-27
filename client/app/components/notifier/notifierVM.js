@@ -20,6 +20,7 @@ define(['knockout', 'amplify', 'app/utils/events', 'text!app/components/notifier
         NotifierVM.prototype.setupEventListeners = function () {
             amplify.subscribe(Events.SUCCESS_NOTIFICATION, this, onSuccess);
             amplify.subscribe(Events.FAILURE_NOTIFICATION, this, onFailure);
+            amplify.subscribe(Events.INFO_NOTIFICATION, this, onInfo);
 
             function onSuccess(evData) {
                 this.bootstrapCSS('alert alert-success alert-dismissible');
@@ -28,6 +29,11 @@ define(['knockout', 'amplify', 'app/utils/events', 'text!app/components/notifier
 
             function onFailure(evData) {
                 this.bootstrapCSS('alert alert-danger alert-dismissible');
+                this.display(evData.msg);
+            }
+
+            function onInfo(evData) {
+                this.bootstrapCSS('alert alert-info alert-dismissible');
                 this.display(evData.msg);
             }
         };

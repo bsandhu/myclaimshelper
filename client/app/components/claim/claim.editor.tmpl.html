@@ -2,9 +2,35 @@
 <!-- Claim entry form -->
 <!-- ************************************************ -->
 
-<div data-bind="if: inEditMode">
-    <div><h5>Insurance Company</h5></div>
+<div class="fadeIn"
+     data-bind="if: inEditMode,
+                css: { 'panel-body' : inEditMode()}">
 
+    <!-- Back btn -->
+    <div class="bottomMargin5">
+        <a href="javascript:void(0);"
+           class="btn-xs btn-labeled btn-link leftMargin5"
+           data-bind="click: onCancel">
+                <span class="btn-label">
+                <i class="glyphicon glyphicon-chevron-left"></i></span>Back
+        </a>
+    </div>
+    <div class="bottomBorderDashed"></div>
+
+    <div><h5>Description</h5></div>
+    <div class="inline bottomMargin" style="width: 80%;">
+        <div class="inline">
+            <div class="inline narrow fieldLabel">.</div>
+            <div class="inline" data-bind="style: {'min-width': $(window).width() * .5 + 'px'}">
+                <textarea style="display: table-cell;"
+                          class="form-control" rows="7" id="claimEntry-textArea"
+                          data-bind="value: claim().description"
+                          placeholder="Note"></textarea>
+            </div>
+        </div>
+    </div>
+
+    <div class="topBorderSolid"><h5>Insurance Company</h5></div>
     <div class="inline bottomMargin">
         <div class="inline">
             <div class="inline narrow fieldLabel">Name</div>
@@ -21,6 +47,7 @@
         </div>
     </div>
 
+    <div class="topBorderSolid"><h5>Important dates</h5></div>
     <div class="bottomMargin">
         <div class="inline">
             <div class="inline narrow fieldLabel">Date Received</div>
@@ -98,21 +125,12 @@
 
     <div class="topBorderSolid bottomMargin"></div>
 
-    <div class="topMargin5">
-        <div class="narrow fieldLabel" style="display: table-cell">
-            Description
-        </div>
-        <div class="inline" style="display: table-cell; width: 95%; padding-left: 3px">
-            <textarea class="form-control" rows="3" id="claimEntry-textArea"
-                      data-bind="value: claim().description" placeholder="Note"></textarea>
-        </div>
-    </div>
     <div class="topMargin"/>
 
     <!-- Save/cancel buttons -->
     <div class="topMargin5 clear">
         <div class="inline alignRight topMargin5">
-            <button type="button" class="btn btn-default" data-bind="click: onSave">Save</button>
+            <button type="button" class="btn btn-info" data-bind="click: onSave">Save</button>
             <button type="button" class="btn btn-default" data-bind="click: onCancel">Cancel</button>
         </div>
     </div>

@@ -23,6 +23,7 @@ define([], function(){
 
         SUCCESS_NOTIFICATION : 'SuccessNotification',
         FAILURE_NOTIFICATION : 'FailureNotification',
+        INFO_NOTIFICATION    : 'InfoNotification',
 
         CREATE_NEW_BILL      : 'CREATE_NEW_BILL',
         SHOW_BILL            : 'SHOW_BILL',

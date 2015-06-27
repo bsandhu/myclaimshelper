@@ -23,117 +23,134 @@
 
         <!-- *** Claim Panel -->
         <div class="panel panel-default">
-            <div data-bind="css: { 'panel-body' : !isPartiallyCollapsed()}">
+            <div data-bind="css: { 'panel-body' : !isPartiallyCollapsed() && !inEditMode()}">
                 <!-- ************************************************ -->
                 <!-- Claim top level info -->
                 <!-- ************************************************ -->
 
-                <div data-bind="ifnot: inEditMode && isPartiallyCollapsed" class="container-fluid">
+                <div data-bind="ifnot: inEditMode" class="container-fluid">
+                    <div data-bind="ifnot: isPartiallyCollapsed">
 
-                    <!-- Insured/claimant/Description -->
-                    <div class="row">
-                        <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
-                            <strong>Insured</strong>
-
-                            <div data-bind="text: niceName(claim().insuredContact)"></div>
-                        </div>
-                        <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
-                            <strong>Claimant</strong>
-
-                            <div data-bind="text: niceName(claim().claimantContact)"></div>
-                        </div>
-                        <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
-                            <strong>Description</strong>
-
-                            <div data-bind="text: claim().description"></div>
-                        </div>
-                    </div>
-
-                    <div class="margin-bottom-10 bottomBorderDashed"></div>
-
-                    <!-- Dates -->
-                    <div class="row">
-                        <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                            <strong>Received</strong>
-
-                            <div data-bind="text: DateUtils.niceDate(claim().dateReceived ? claim().dateReceived() : '')"></div>
-                        </div>
-                        <div class="col-lg-2 col-md-2 col-sm-4  col-xs-4">
-                            <strong>Due</strong>
-
-                            <div data-bind="text: DateUtils.niceDate(claim().dateReceived ? claim().dateDue() : '')"></div>
+                        <!-- Insured/claimant/Description -->
+                        <div class="row">
+                            <div class="col-lg-10 col-md-10 col-sm-12 col-xs-12">
+                                <strong>Description</strong>
+                                <div data-bind="text: claim().description"></div>
+                            </div>
                         </div>
 
-                        <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                            <strong>Date of loss</strong>
+                        <div class="margin-bottom-10 bottomBorderDashed"></div>
 
-                            <div data-bind="text: DateUtils.niceDate(claim().dateReceived ? claim().dateOfLoss() : '')"></div>
-                        </div>
-                        <div class="col-lg-2 col-md-6 col-sm-12 col-xs-12">
-                            <strong>Insurance co.</strong>
-
-                            <div data-bind="text: claim().insuranceCompanyName ? claim().insuranceCompanyName() : ''"></div>
-                        </div>
-                    </div>
-
-                    <div class="margin-bottom-10 bottomBorderDashed"></div>
-
-                    <!-- Contacts -->
-                    <div class="row">
-                        <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                            <strong>Contacts</strong>
-                        </div>
-                        <div class="col-lg-2 col-md-2 col-lg-offset-2 col-md-offset-2 col-sm-4 col-xs-4 col-sm-offset-4 col-xs-offset-4">
-                            <div data-bind="text: 'Show all (' + Number(claim().otherContacts().length) + 2 + ')'" class="font-sm"></div>
-                        </div>
-                    </div>
-
-                    <div class="row ">
-                        <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                            <span>Insured Attorney</span>
-                        </div>
-                        <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                            <a data-bind="click: onShowContact" class="cursor-pointer">
-                                <span data-bind="text: niceName(claim().insuredAttorneyContact)"></span>
-                            </a>
-                        </div>
-                        <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                            <span data-bind="text: '616 112 9889'"></span>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                            <span>Claimant Attorney</span>
-                        </div>
-                        <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                            <a data-bind="click: onShowContact">
-                                <span data-bind="text: niceName(claim().claimantsAttorneyContact)"></span>
-                            </a>
-                        </div>
-                        <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                            <span data-bind="text: '616 112 9889'"></span>
-                        </div>
-                    </div>
-
-                    <!-- Other contacts -->
-                    <div data-bind="foreach: claim().otherContacts()">
-                        <div class="row bottomBorder">
+                        <!-- Dates -->
+                        <div class="row">
                             <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                                &nbsp;
+                                <strong>Received</strong>
+
+                                <div data-bind="text: DateUtils.niceDate(claim().dateReceived ? claim().dateReceived() : '')"></div>
+                            </div>
+                            <div class="col-lg-2 col-md-2 col-sm-4  col-xs-4">
+                                <strong>Due</strong>
+
+                                <div data-bind="text: DateUtils.niceDate(claim().dateReceived ? claim().dateDue() : '')"></div>
+                            </div>
+
+                            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
+                                <strong>Date of loss</strong>
+
+                                <div data-bind="text: DateUtils.niceDate(claim().dateReceived ? claim().dateOfLoss() : '')"></div>
+                            </div>
+                            <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                                <strong>Insurance co.</strong>
+
+                                <div data-bind="text: claim().insuranceCompanyName ? claim().insuranceCompanyName() : ''"></div>
+                            </div>
+                        </div>
+
+                        <div class="margin-bottom-10 bottomBorderDashed"></div>
+
+                        <!-- Contacts -->
+                        <div class="row">
+                            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
+                                <strong>Contacts</strong>
+                            </div>
+                            <!--
+                            <div class="col-lg-2 col-md-2 col-lg-offset-2 col-md-offset-2 col-sm-4 col-xs-4 col-sm-offset-4 col-xs-offset-4">
+                                <div data-bind="text: 'Show all (' + Number(claim().otherContacts().length) + 2 + ')'" class="font-sm"></div>
+                            </div>
+                            -->
+                        </div>
+
+                        <div class="row ">
+                            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
+                                <span>Insured</span>
                             </div>
                             <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                                <a><!--data-bind="click: $parent.onShowContact($data._id)">-->
-                                    <!--<span data-bind="text: $parent.niceName($data)"></span>-->
-                                    Foo
+                                <a data-bind="click: function(){onShowContact(claim().insuredContact)}"
+                                   class="cursor-pointer">
+                                    <span data-bind="text: niceName(claim().insuredContact)"></span>
                                 </a>
                             </div>
                             <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                                <span data-bind="text: '616 112 9889'"></span>
+                                <span data-bind="text: claim().insuredContact.phone"></span>
+                            </div>
+                            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
+                                <span>Insured Attorney</span>
+                            </div>
+                            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
+                                <a data-bind="click: function(){onShowContact(claim().insuredAttorneyContact)}"
+                                   class="cursor-pointer">
+                                    <span data-bind="text: niceName(claim().insuredAttorneyContact)"></span>
+                                </a>
+                            </div>
+                            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
+                                <span data-bind="text: claim().insuredAttorneyContact.phone"></span>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
+                                <span>Claimant</span>
+                            </div>
+                            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
+                                <a data-bind="click: function(){onShowContact(claim().claimantContact)}" class="cursor-pointer">
+                                    <span data-bind="text: niceName(claim().claimantContact)"></span>
+                                </a>
+                            </div>
+                            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
+                                <span data-bind="text: claim().claimantContact.phone"></span>
+                            </div>
+                            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
+                                <span>Claimant Attorney</span>
+                            </div>
+                            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
+                                <a data-bind="click: function(){onShowContact(claim().claimantsAttorneyContact)}" class="cursor-pointer">
+                                    <span data-bind="text: niceName(claim().claimantsAttorneyContact)"></span>
+                                </a>
+                            </div>
+                            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
+                                <span data-bind="text: claim().claimantsAttorneyContact.phone"></span>
+                            </div>
+                        </div>
+
+                        <!-- Other contacts -->
+                        <div data-bind="foreach: claim().otherContacts()">
+                            <div class="row bottomBorder">
+                                <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
+                                    &nbsp;
+                                </div>
+                                <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
+                                    <a><!--data-bind="click: $parent.onShowContact($data._id)">-->
+                                        <!--<span data-bind="text: $parent.niceName($data)"></span>-->
+                                        Foo
+                                    </a>
+                                </div>
+                                <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
+                                    <span data-bind="text: '616 112 9889'"></span>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-
                 <div class="margin-bottom-10 bottomBorderDashed"></div>
             </div>
 
@@ -146,11 +163,10 @@
 
             <div data-bind="ifnot: inEditMode" class="topMargin1pc">
                 <!-- Back btn -->
-                <div class="inline leftMargin5">
+                <div data-bind="if: isPartiallyCollapsed" class="inline leftMargin5">
                     <a href="javascript:void(0);"
                        class="btn-xs btn-labeled btn-link leftMargin5"
-                       data-bind="if: isPartiallyCollapsed,
-                                  click: function(){Router.routeToClaim(Session.getActiveClaimId());}">
+                       data-bind="click: function(){Router.routeToClaim(Session.getActiveClaimId());}">
                         <span class="btn-label">
                         <i class="glyphicon glyphicon-chevron-left"></i></span>Back
                     </a>
@@ -199,7 +215,7 @@
                     </div>
                 </div>
 
-                <!-- Add contact Button -->
+                <!-- Add contact Button
                 <div class="inline" data-bind="ifnot: inEditMode && isPartiallyCollapsed">
                     <div class="btn btn-default inline btn-info"
                          data-bind="click: onAddContact">
@@ -207,7 +223,7 @@
                         <i class="fa fa-plus"></i> New Contact
                     </div>
                 </div>
-
+                -->
                 <!-- Create Bill Button -->
                 <div class="inline pull-right rightMargin5" data-bind="ifnot: inEditMode && isPartiallyCollapsed">
                     <div class="btn-group">

@@ -101,9 +101,14 @@ define(['jquery', 'knockout', 'KOMap', 'amplify',
             this.onShowClaim({claimId: evData.claimId});
         };
 
-        ClaimVM.prototype.onShowContact = function (evData) {
-            console.log('ClaimVM - SHOW_CONTACT ev ' + JSON.stringify(evData));
-            amplify.publish(Events.SHOW_CONTACT, evData);
+        ClaimVM.prototype.onShowContact = function (contactObservable) {
+            console.log('ClaimVM - SHOW_CONTACT ev ' + JSON.stringify(KOMap.toJS(contactObservable)));
+            if (!Boolean(contactObservable._id())){
+                this.inEditMode(true);
+                amplify.publish(Events.INFO_NOTIFICATION, {msg: 'Please add contact information'})
+            } else {
+                amplify.publish(Events.SHOW_CONTACT, {contactId: contactObservable._id()});
+            }
         };
 
         ClaimVM.prototype.onEntryStatusUpdate = function (status, entry, ev) {
@@ -118,12 +123,15 @@ define(['jquery', 'knockout', 'KOMap', 'amplify',
             ev.stopPropagation();
         };
 
-        ClaimVM.prototype.onDismissStatus = function () {
+        ClaimVM.prototype.onDismissStatus = function (evData, ev) {
             this.showStatusForEntryId(null);
+            if (ev) {
+                ev.stopPropagation();
+            }
         };
 
         ClaimVM.prototype.onCancel = function () {
-            Router.routeToHome();
+            this.inEditMode(false);
         };
 
         ClaimVM.prototype.onCreateNewBill = function () {
