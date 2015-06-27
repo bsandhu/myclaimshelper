@@ -14,9 +14,9 @@
             <th>
                 <a href="#" data-bind="click: onSortEntries.bind($data)">
                     Entered on
-                                <span data-bind="css: {'glyphicon-sort-by-attributes': sortDir() == 'asc',
-                                                       'glyphicon-sort-by-attributes-alt': sortDir() == 'desc'}"
-                                      class="glyphicon"></span>
+                    <span data-bind="css: {'glyphicon-sort-by-attributes': sortDir() == 'asc',
+                                           'glyphicon-sort-by-attributes-alt': sortDir() == 'desc'}"
+                          class="glyphicon"></span>
                 </a>
             </th>
             <th>Status</th>
@@ -26,9 +26,10 @@
 
         <!-- Claim entry row -->
         <tbody data-bind="foreach: {data: claimEntries, as: 'entry' }">
-            <tr data-bind="click: $parent.onClaimEntryClick.bind($parent),
-                           event: {mouseover: function(){$('#claimEntryArrowCell' + $index()).addClass('fa-lg');},
-                                   mouseout : function(){$('#claimEntryArrowCell' + $index()).removeClass('fa-lg');}}">
+            <tr
+                data-bind="click: $parent.onClaimEntryClick.bind($parent),
+                           event: {mouseover: function(){$('#claimEntryArrowCell' + $index()).css('font-weight', 'bold');},
+                                   mouseout : function(){$('#claimEntryArrowCell' + $index()).css('font-weight', 'inherit');}}">
                 <td style="min-width: 15px">
                     <!-- Tag -->
                                 <span class="glyphicon leftMargin"
@@ -56,8 +57,18 @@
                     </a>
 
                     <!-- Pick new State -->
-                    <div style="z-index: 9999; width: 135px; position: fixed" class="list-group"
+                    <div style="z-index: 9999; width: 160px; position: absolute " class="list-group"
                          data-bind="visible: $parent.showStatusForEntryId() == entry._id">
+                        <li class="list-group-item bg-color-blueLight" style="cursor: default">
+                            <span>
+                                Update status to
+                                <span class="pull-right">
+                                    <span class="glyphicon glyphicon-remove"
+                                          style="cursor: pointer"
+                                          data-bind="click: $parent.onDismissStatus.bind($parent)"></span>
+                                </span>
+                            </span>
+                        </li>
                         <a data-bind="click: $parent.onEntryStatusUpdate.bind($parent, $parent.States.TODO)"
                            class="list-group-item" href="#">
                             <span class="glyphicon glyphicon-inbox"></span>

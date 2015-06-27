@@ -118,12 +118,15 @@ define(['jquery', 'knockout', 'KOMap', 'amplify',
             ev.stopPropagation();
         };
 
-        ClaimVM.prototype.onDismissStatus = function () {
+        ClaimVM.prototype.onDismissStatus = function (evData, ev) {
             this.showStatusForEntryId(null);
+            if (ev) {
+                ev.stopPropagation();
+            }
         };
 
         ClaimVM.prototype.onCancel = function () {
-            Router.routeToHome();
+            this.inEditMode(false);
         };
 
         ClaimVM.prototype.onCreateNewBill = function () {
