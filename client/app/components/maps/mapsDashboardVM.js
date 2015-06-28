@@ -1,4 +1,5 @@
-define(['knockout', 'text!app/components/maps/mapsDashboard.tmpl.html', 'async!https://maps.googleapis.com/maps/api/js?key=AIzaSyBB-Qincf0sNQcsu5PzZh7znG3GiB98GRU&libraries=places&signed_in=true&v=3.exp'],
+define(['knockout', 'text!app/components/maps/mapsDashboard.tmpl.html',
+        'async!https://maps.googleapis.com/maps/api/js?key=AIzaSyBB-Qincf0sNQcsu5PzZh7znG3GiB98GRU&libraries=places&signed_in=true&v=3.exp'],
 
     function(ko, viewHtml) {
         'use strict';
