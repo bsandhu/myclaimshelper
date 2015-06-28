@@ -1,9 +1,14 @@
 <div id="maps">
-    <input id="pac-input" class="controls wider bottomMargin" type="text" placeholder="Start typing name or address">
-    <a id="map-button"
-       data-bind="click: onShowMap,
-                  text: showHideLinkText"
-       style="cursor:pointer;">Show map</a>
-    <div id="map-canvas" class="maps" style="display: none; width: 100%"
-         data-bind="style: {height: $('#map-canvas').width()/1.6 + 'px'}"></div>
+    <input id="pac-input" class="form-control bottomMargin" type="text" placeholder="Start typing business name or address">
+
+    <a id="map-new-tab"
+       style="cursor:pointer;"
+       class="leftMargin5"
+       data-bind="click: onShowMap">
+        <i class="fa fa-external-link-square"></i> Show map</a>
+
+    <div id="dialog-message" title="Map">
+        <div class="hr hr-12 hr-double"></div>
+        <div id="map-canvas" class="maps" style="width: 100%; height: 100%"></div>
+    </div>
 </div>
