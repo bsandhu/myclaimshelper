@@ -269,6 +269,9 @@ Use search to find needed section.
                         <article class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
                             <div data-bind="component: 'contact-widget-component'"></div>
                         </article>
+                        <article class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
+                            <div data-bind="component: 'maps-dash'"></div>
+                        </article>
                     </section>
                 </div>
             </div>
@@ -318,6 +321,7 @@ Use search to find needed section.
                 Session.setCurrentUserId("TestUser");
                 Session.clearContacts();
 
+
                 // Knockout AMD supoprt setup
                 ko.amdTemplateEngine.defaultRequireTextPluginName = "text";
                 ko.amdTemplateEngine.defaultPath = "/";
@@ -334,6 +338,7 @@ Use search to find needed section.
                 ko.components.register('claims-list-component', {require: 'app/components/claimsList/claimsListVM'});
                 ko.components.register('notifier-component', {require: 'app/components/notifier/notifierVM'});
                 ko.components.register('maps-component', {require: 'app/components/maps/mapsComponent'});
+                ko.components.register('maps-dash', {require: 'app/components/maps/mapsDashboardVM'});
                 ko.components.register('status-editor-component', {require: 'app/components/statusEditor/statusEditorComponent'});
                 ko.components.register('quick-add-component', {require: 'app/components/quickAdd/quickAddVM'});
                 ko.components.register('stats-component', {require: 'app/components/stats/statsVM'});
