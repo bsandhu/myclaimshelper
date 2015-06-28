@@ -127,6 +127,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
                 KOMap.toJSON(this.claimEntry),
                 function onSuccess(response) {
                     console.log('Saved ClaimEntry: ' + JSON.stringify(response));
+                    this.claimEntry()._id(response.data._id)
                     amplify.publish(Events.SUCCESS_NOTIFICATION, {msg: 'Saved entry'});
                     amplify.publish(Events.SAVED_CLAIM_ENTRY, {claimId: activeClaimId, claimEntryId: response.data._id});
 
