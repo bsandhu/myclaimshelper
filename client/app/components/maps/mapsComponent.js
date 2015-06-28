@@ -14,7 +14,7 @@ define(['knockout', 'text!app/components/maps/mapsComponent.tmpl.html', 'async!h
             this.claimEntry = params.claimEntry;
             var entryLocation = this.claimEntry.location || '';
 
-            var mapOptions = {
+            this.mapOptions = {
                 center: entryLocation.location,
                 zoom: 9,
                 panControl: true,
@@ -26,8 +26,6 @@ define(['knockout', 'text!app/components/maps/mapsComponent.tmpl.html', 'async!h
             };
 
             // Maps display
-            this.mapDiv = document.getElementById('map-canvas');
-            this.map = new google.maps.Map(this.mapDiv, mapOptions);
             this.markers = [];
 
             // Autocomplete
@@ -35,37 +33,44 @@ define(['knockout', 'text!app/components/maps/mapsComponent.tmpl.html', 'async!h
             input.value = entryLocation.address;
             var options = {componentRestrictions: {country: 'us'}};
             this.autocomplete = new google.maps.places.Autocomplete(input, options);
-            // Bias the results to the map's viewport
-            this.autocomplete.bindTo('bounds', this.map);
-
             this.setupAutocompleteChangeListener();
             this.geolocate();
+            var self = this;
+
+            $("#dialog-message").dialog({
+                autoOpen : false,
+                modal : true,
+                title : "",
+                width : $(window).width() *.8,
+                height : $(window).height() *.8,
+                buttons : [{
+                    html : "Close",
+                    "class" : "btn btn-default",
+                    click : function() {
+                        $(this).dialog("close");
+                    }
+                }]
+            });
         }
 
-        MapsComponentVM.prototype.geolocate = function () {
-            var self = this;
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(function (position) {
-                    var geolocation = new google.maps.LatLng(
-                                            position.coords.latitude,
-                                            position.coords.longitude);
-                    var circle = new google.maps.Circle({
-                                        center: geolocation,
-                                        radius: position.coords.accuracy
-                    });
-                    self.autocomplete.setBounds(circle.getBounds());
-                });
-            }
-        }
+        MapsComponentVM.prototype.onShowMap = function (vm, ev) {
+            $('#dialog-message').dialog('open');
+            vm.dropMarkeAndRepositionMap();
+            return false;
+        };
 
         MapsComponentVM.prototype.setupAutocompleteChangeListener = function () {
             var self = this;
-            google.maps.event.addListener(this.autocomplete, 'place_changed', self.dropMarkeAndRepositionMap.bind(self));
-        }
+            // TODO Update model
+        };
 
         MapsComponentVM.prototype.dropMarkeAndRepositionMap = function () {
             console.log('Mas autocomplete > Place changed ev');
             var self = this;
+
+            self.mapDiv = document.getElementById('map-canvas');
+            self.map = new google.maps.Map(self.mapDiv, self.mapOptions);
+
             var place = self.autocomplete.getPlace();
             if (!place || !place.geometry) {
                 return;
@@ -77,21 +82,6 @@ define(['knockout', 'text!app/components/maps/mapsComponent.tmpl.html', 'async!h
             }
             self.map.setCenter(place.geometry.location);
             self.markers.push(self.createMarker(place));
-        };
-
-        MapsComponentVM.prototype.onShowMap = function (vm, ev) {
-            var mapsCanvas = $('#map-canvas');
-            if(!mapsCanvas.is(':visible')) {
-                mapsCanvas.slideDown('slow', redrawMap);
-                this.showHideLinkText('Hide map');
-            } else {
-                mapsCanvas.slideUp('slow', redrawMap);
-                this.showHideLinkText('Show map');
-            }
-            function redrawMap(){
-                vm.dropMarkeAndRepositionMap();
-                google.maps.event.trigger(vm.map, 'resize');
-            }
         };
 
         MapsComponentVM.prototype.createMarker = function (place) {
@@ -118,6 +108,22 @@ define(['knockout', 'text!app/components/maps/mapsComponent.tmpl.html', 'async!h
             $.each(this.markers, function (index, marker) {
                 marker.setMap(self.map);
             })
+        };
+
+        MapsComponentVM.prototype.geolocate = function () {
+            var self = this;
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function (position) {
+                    var geolocation = new google.maps.LatLng(
+                        position.coords.latitude,
+                        position.coords.longitude);
+                    var circle = new google.maps.Circle({
+                        center: geolocation,
+                        radius: position.coords.accuracy
+                    });
+                    self.autocomplete.setBounds(circle.getBounds());
+                });
+            }
         };
 
         MapsComponentVM.prototype.showMultiLocations = function (locations, geocoder, map, markers) {
