@@ -7,13 +7,11 @@ define(['knockout', 'text!app/components/maps/mapsComponent.tmpl.html', 'async!h
         function MapsComponentVM(params) {
             console.assert(params.claimEntry, 'Expecting claimEntry param');
 
-            //$('#map-canvas').hide();
-            this.showHideLinkText = ko.observable();
-            this.showHideLinkText('Show map');
-
             this.claimEntry = params.claimEntry;
-            var entryLocation = this.claimEntry.location || '';
+            var entryLocation = this.claimEntry.location || {address: ''};
 
+            // Maps display
+            // Map is intitalized when the dialog is shown
             this.mapOptions = {
                 center: entryLocation.location,
                 zoom: 9,
@@ -24,8 +22,6 @@ define(['knockout', 'text!app/components/maps/mapsComponent.tmpl.html', 'async!h
                 streetViewControl: true,
                 overviewMapControl: true
             };
-
-            // Maps display
             this.markers = [];
 
             // Autocomplete
