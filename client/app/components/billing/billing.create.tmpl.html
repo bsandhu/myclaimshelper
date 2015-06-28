@@ -10,16 +10,20 @@
     <div class="pull-right">
         <i class="fa fa-print" style="cursor: pointer"
            onclick="var b = document.getElementById('invoice-body');
-                     var i = document.createElement('iframe');
-                     document.body.appendChild(i);
-                     var p = i.contentWindow;
-                     p.document.open();
-                     p.document.write(b.innerHTML);
-                     p.document.close();
-                     p.focus();
-                     p.print();
-                     document.body.removeChild(i);
-                     return false;"> Print</i>
+                    var i = document.createElement('iframe');
+                    document.body.appendChild(i);
+                    var p = i.contentWindow;
+                    p.document.open();
+                    p.document.write('<html><head>');
+                    p.document.write('<link rel=stylesheet href=../../css/bootstrap.css type=text/css media=print />');
+                    p.document.write('</head><body >');
+                    p.document.write(b.innerHTML);
+                    p.document.write('</body></html>');
+                    p.document.close();
+                    p.focus();
+                    p.print();
+                    document.body.removeChild(i);
+                    return false;"> Print</i>
     </div>
 </div>
 

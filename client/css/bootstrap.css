@@ -198,6 +198,7 @@ td,
 th {
   padding: 0;
 }
+
 @media print {
   * {
     text-shadow: none !important;
