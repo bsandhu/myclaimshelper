@@ -13,6 +13,9 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
 
             // Model
             this.claimEntry = ko.observable(this.newEmptyClaimEntry());
+            // Used to pass date back n forth the Due date picker binding.
+            // Does not seem to work properly with nested observable (claimEntry().dueDate)
+            this.myDueDate = ko.observable();
 
             // View state
             this.inEditMode = ko.observable(true);
@@ -31,7 +34,9 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
                 entryObjWithObserAttrs.billingItem = ko.observable(KOMap.fromJS(new BillingItem()));
             }
             entryObjWithObserAttrs.tag([tag || 'other']);
+            entryObjWithObserAttrs.dueDate(new Date());
             entryObjWithObserAttrs.entryDate(new Date());
+            entryObjWithObserAttrs.updateDate(new Date());
             entryObjWithObserAttrs.state(States.TODO);
             return entryObjWithObserAttrs;
         };
@@ -113,13 +118,16 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
         /***********************************************************/
 
         TaskEntryVM.prototype.onSave = function () {
+            console.log('>>>>> ' + this.claimEntry().dueDate());
+            //return;
             this.stopStateTracking();
             /**
              * Since only once Claim can be active, its assumed to be the parent
              */
             var activeClaimId = Session.getActiveClaimId();
             this.claimEntry().claimId(activeClaimId);
-            this.claimEntry().entryDate(new Date());
+            this.claimEntry().updateDate(new Date());
+            this.claimEntry().dueDate(this.myDueDate());
             // TODO binding not updating. Not sure why.
             this.claimEntry().description($('#claimEntry-desc').cleanHtml());
             console.log('Saving ClaimEntry: ' + KOMap.toJSON(this.claimEntry));
@@ -148,10 +156,10 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
 
                     // Populate with JSON data
                     KOMap.fromJS(resp.data[0], {}, this.claimEntry);
+                    this.myDueDate(this.claimEntry().dueDate());
 
                     // Put in session
                     this.storeInSession(this.claimEntry()._id());
-
                     this.startStateTracking();
 
                     window.setTimeout(function setT() {
