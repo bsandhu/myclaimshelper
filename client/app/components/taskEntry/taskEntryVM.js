@@ -113,14 +113,16 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
         /***********************************************************/
 
         TaskEntryVM.prototype.onSave = function () {
-            console.log('Saving ClaimEntry: ' + KOMap.toJSON(this.claimEntry));
             this.stopStateTracking();
             /**
              * Since only once Claim can be active, its assumed to be the parent
              */
             var activeClaimId = Session.getActiveClaimId();
             this.claimEntry().claimId(activeClaimId);
-            this.claimEntry().entryDate();
+            this.claimEntry().entryDate(new Date());
+            // TODO binding not updating. Not sure why.
+            this.claimEntry().description($('#claimEntry-desc').cleanHtml());
+            console.log('Saving ClaimEntry: ' + KOMap.toJSON(this.claimEntry));
 
             ajaxUtils.post(
                 '/claimEntry',
@@ -128,6 +130,8 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
                 function onSuccess(response) {
                     console.log('Saved ClaimEntry: ' + JSON.stringify(response));
                     this.claimEntry()._id(response.data._id)
+                    // Update description with Entity enriched version
+                    this.claimEntry().description(response.data.description);
                     amplify.publish(Events.SUCCESS_NOTIFICATION, {msg: 'Saved entry'});
                     amplify.publish(Events.SAVED_CLAIM_ENTRY, {claimId: activeClaimId, claimEntryId: response.data._id});
 

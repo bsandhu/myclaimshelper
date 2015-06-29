@@ -1,19 +1,18 @@
-define(['knockout', 'text!app/components/maps/mapsComponent.tmpl.html', 'async!https://maps.googleapis.com/maps/api/js?key=AIzaSyBB-Qincf0sNQcsu5PzZh7znG3GiB98GRU&libraries=places&signed_in=true&v=3.exp'],
+define(['knockout', 'KOMap', 'text!app/components/maps/mapsComponent.tmpl.html',
+        'async!https://maps.googleapis.com/maps/api/js?key=AIzaSyBB-Qincf0sNQcsu5PzZh7znG3GiB98GRU&libraries=places&signed_in=true&v=3.exp'],
 
-    function (ko, viewHtml) {
+    function (ko, KOMap, viewHtml) {
         'use strict';
         console.log('Maps Widget');
 
         function MapsComponentVM(params) {
             console.assert(params.claimEntry, 'Expecting claimEntry param');
-
-            this.claimEntry = params.claimEntry;
-            var entryLocation = this.claimEntry.location || {address: ''};
+            this.claimEntryObserv = params.claimEntry;
+            this.displayLocation = ko.observable();
 
             // Maps display
             // Map is intitalized when the dialog is shown
             this.mapOptions = {
-                center: entryLocation.location,
                 zoom: 9,
                 panControl: true,
                 zoomControl: true,
@@ -26,7 +25,6 @@ define(['knockout', 'text!app/components/maps/mapsComponent.tmpl.html', 'async!h
 
             // Autocomplete
             var input = document.getElementById('pac-input');
-            input.value = entryLocation.address;
             var options = {componentRestrictions: {country: 'us'}};
             this.autocomplete = new google.maps.places.Autocomplete(input, options);
             this.setupAutocompleteChangeListener();
@@ -34,18 +32,20 @@ define(['knockout', 'text!app/components/maps/mapsComponent.tmpl.html', 'async!h
             var self = this;
 
             $("#dialog-message").dialog({
-                autoOpen : false,
-                modal : true,
-                title : "",
-                width : $(window).width() *.8,
-                height : $(window).height() *.8,
-                buttons : [{
-                    html : "Close",
-                    "class" : "btn btn-default",
-                    click : function() {
-                        $(this).dialog("close");
+                autoOpen: false,
+                modal: true,
+                title: "",
+                width: $(window).width() * .8,
+                height: $(window).height() * .8,
+                buttons: [
+                    {
+                        html: "Close",
+                        "class": "btn btn-default",
+                        click: function () {
+                            $(this).dialog("close");
+                        }
                     }
-                }]
+                ]
             });
         }
 
@@ -57,17 +57,41 @@ define(['knockout', 'text!app/components/maps/mapsComponent.tmpl.html', 'async!h
 
         MapsComponentVM.prototype.setupAutocompleteChangeListener = function () {
             var self = this;
-            // TODO Update model
+            /**
+             * This is called when the Google widget gets location data.
+             * Save the data in the same schema as Google. This allows for easy recreation later.
+             * Note: Populating the autocomplete <input> programatically does not cause this info to be populated.
+             */
+            google.maps.event.addListener(this.autocomplete, 'place_changed', function () {
+                self.autocompletePlacePopulated = true;
+                self.claimEntryObserv().location(
+                    {'formatted_address': self.autocomplete.getPlace().formatted_address,
+                     'name': self.autocomplete.getPlace().name,
+                     'geometry':
+                         {'location':
+                            {'lat': self.autocomplete.getPlace().geometry.location.lat(),
+                             'lng': self.autocomplete.getPlace().geometry.location.lng()}
+                         }
+                    });
+            });
+            self.claimEntryObserv.subscribe(function(){
+                self.autocompletePlacePopulated = false;
+            })
         };
 
         MapsComponentVM.prototype.dropMarkeAndRepositionMap = function () {
             console.log('Mas autocomplete > Place changed ev');
             var self = this;
-
             self.mapDiv = document.getElementById('map-canvas');
             self.map = new google.maps.Map(self.mapDiv, self.mapOptions);
 
-            var place = self.autocomplete.getPlace();
+            // If the Autocomplete hasn't populated during this view, use saved data.
+            if (self.autocompletePlacePopulated) {
+                var place = self.autocomplete.getPlace()
+            } else {
+                var place = KOMap.toJS(self.claimEntryObserv().location);
+            }
+
             if (!place || !place.geometry) {
                 return;
             }
