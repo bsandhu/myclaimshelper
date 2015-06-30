@@ -233,7 +233,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify',
         ClaimVM.prototype.loadEntriesForClaim = function (claimId) {
             $.getJSON('/claim/' + claimId + '/entries')
                 .done(function (resp) {
-                    console.log('Loaded claim entries' + JSON.stringify(resp.data));
+                    console.log('Loaded claim entries' + JSON.stringify(resp.data.length));
                     this.claimEntries(resp.data);
                     this.sortEntries();
                 }.bind(this));

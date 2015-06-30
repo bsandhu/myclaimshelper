@@ -1,5 +1,9 @@
 <div id="maps">
-    <input id="pac-input" class="form-control bottomMargin" type="text" placeholder="Start typing business name or address">
+    <input id="pac-input" class="form-control bottomMargin" type="text"
+           placeholder="Start typing business name or address"
+           data-bind="value: claimEntryObserv().location() && claimEntryObserv().location().formatted_address
+                                ? claimEntryObserv().location().formatted_address
+                                : ''">
 
     <a id="map-new-tab"
        style="cursor:pointer;"

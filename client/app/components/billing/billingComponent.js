@@ -30,7 +30,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'shared/dateUtils',
                 var ev = arguments[1];
                 var rowNode = $(ev.target).parent().parent();
                 var itemClickedJSON =  KOMap.toJSON(itemClicked);
-                var undoTimer = 8000;
+                var undoTimer = 4000;
 
                 if (itemClicked.removeOrUndoLabel() === 'Undo'){
                     console.log('Cancelled remove BillingItem: ' + itemClickedJSON);
