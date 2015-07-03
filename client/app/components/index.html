@@ -212,8 +212,8 @@ Use search to find needed section.
                     <span class="menu-item-parent">Misc</span></a>
                 <ul>
                     <li>
-                        <a href="ajax/applayout.html">
-                            <i class="fa fa-cube"></i> App Settings
+                        <a href="">
+                            <i class="fa fa-cube" id="deletepositionkey-options"></i> Reset Layout
                         </a>
                     </li>
                     <li class="divider"></li>
@@ -253,25 +253,32 @@ Use search to find needed section.
         <!-- Summary Component -->
         <div id="dashboardPanel" class="slidingContainer dashboardPanel">
             <div id="dashboardPanelContent" class="dashboardPanelContent">
-                <div class="row">
+
+                    <!-- Widget container -->
                     <section id="widget-grid">
-                        <article class="col-xs-12 col-sm-12 col-md-12 col-lg-8">
-                            <div data-bind="component: 'summary-component'"></div>
-                        </article>
-                        <article class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
-                            <div data-bind="component: 'stats-component'"></div>
-                        </article>
-<!--
-                        <article class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
-                            <div data-bind="component: 'quick-add-component'"></div>
+                        <div class="row">
+                            <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12 sortable-grid ui-sortable">
+                                <div data-bind="component: 'summary-component'"></div>
+                            </article>
+                        </div>
+                        <div class="row">
+                            <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12 sortable-grid ui-sortable">
+                                <article class="col-xs-12 col-sm-12 col-md-8 col-lg-8 sortable-grid ui-sortable">
+                                    <div data-bind="component: 'stats-component'"></div>
+                                </article>
+                                <article class="col-xs-12 col-sm-12 col-md-4 col-lg-4 sortable-grid ui-sortable">
+                                    <div data-bind="component: 'contact-widget-component'"></div>
+                                </article>
+                            </article>
+                        </div>
+                        <!--
+                                                    <article class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
+                                                        <div data-bind="component: 'quick-add-component'"></div>
+                                                    </article>
+                                                <article class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
+                                                    <div data-bind="component: 'maps-dash'"></div>&ndash;&gt;
                         </article>
 -->
-                        <article class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
-                            <div data-bind="component: 'contact-widget-component'"></div>
-                        </article>
-                        <article class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
-                            <!--<div data-bind="component: 'maps-dash'"></div>-->
-                        </article>
                     </section>
                 </div>
             </div>
@@ -352,7 +359,84 @@ Use search to find needed section.
                     var maxLength = 80;
                     return JSON.stringify(str).substring(0, maxLength);
                 };
-            });
+
+                setTimeout(function(){
+                       $('#widget-grid').jarvisWidgets({
+                            grid : 'article',
+                            widgets : '.jarviswidget',
+                            localStorage : true,
+                            deleteSettingsKey : '#deletesettingskey-options',
+                            settingsKeyLabel : 'Reset settings?',
+                            deletePositionKey : '#deletepositionkey-options',
+                            positionKeyLabel : 'Reset position?',
+                            sortable : true,
+                            buttonsHidden : false,
+                            // toggle button
+                            toggleButton : true,
+                            toggleClass : 'fa fa-minus | fa fa-plus',
+                            toggleSpeed : 200,
+                            onToggle : function() {
+                            },
+                            // delete btn
+                            deleteButton : false,
+                            deleteClass : 'fa fa-times',
+                            deleteSpeed : 200,
+                            onDelete : function() {
+                            },
+                            // edit btn
+                            editButton : false,
+                            editPlaceholder : '.jarviswidget-editbox',
+                            editClass : 'fa fa-cog | fa fa-save',
+                            editSpeed : 200,
+                            onEdit : function() {
+                            },
+                            // color button
+                            colorButton : true,
+                            // full screen
+                            fullscreenButton : true,
+                            fullscreenClass : 'fa fa-expand | fa fa-compress',
+                            fullscreenDiff : 3,
+                            onFullscreen : function() {
+                            },
+                            // custom btn
+                            customButton : false,
+                            customClass : 'folder-10 | next-10',
+                            customStart : function() {
+                                alert('Hello you, this is a custom button...');
+                            },
+                            customEnd : function() {
+                                alert('bye, till next time...');
+                            },
+                            // order
+                            buttonOrder : '%refresh% %custom% %edit% %toggle% %fullscreen% %delete%',
+                            opacity : 1.0,
+                            dragHandle : '> header',
+                            placeholderClass : 'jarviswidget-placeholder',
+                            indicator : true,
+                            indicatorTime : 600,
+                            ajax : true,
+                            timestampPlaceholder : '.jarviswidget-timestamp',
+                            timestampFormat : 'Last update: %m%/%d%/%y% %h%:%i%:%s%',
+                            refreshButton : true,
+                            refreshButtonClass : 'fa fa-refresh',
+                            labelError : 'Sorry but there was a error:',
+                            labelUpdated : 'Last Update:',
+                            labelRefresh : 'Refresh',
+                            labelDelete : 'Delete widget:',
+                            afterLoad : function() {
+                            },
+                            rtl : false, // best not to toggle this!
+                            onChange : function() {
+
+                            },
+                            onSave : function() {
+
+                            },
+                            ajaxnav : $.navAsAjax // declears how the localstorage should be saved (HTML or AJAX page)
+
+                        })}, 1000);
+           });
+
 </script>
 
 
