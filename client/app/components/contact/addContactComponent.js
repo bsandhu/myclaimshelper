@@ -73,7 +73,7 @@ define(['knockout', 'KOMap', 'text!app/components/contact/addContactComponent.tm
                 }.bind(this))
                 .fail(function (resp) {
                     console.error('Failed to load contact ' + JSON.stringify(resp));
-                    amplify.publish(Events.FAILURE_NOTIFICATION, {msg: 'Problem while accessing contact info from server'});
+                    amplify.publish(Events.FAILURE_NOTIFICATION, {msg: '<strong>Server Error</strong> Problem while accessing contact information. Please retry.'});
                 });
         };
 

@@ -1,10 +1,12 @@
-define(['jquery'],
-    function ($) {
+define(['jquery', 'amplify', 'app/utils/events'],
+    function ($, amplify, Events) {
 
         function post(url, json, onDone, onFail) {
             if (!onFail) {
                 onFail = function (jqXHR, textStatus, errorThrown) {
-                    alert('Fail: ' + jqXHR);
+                    amplify.publish(Events.FAILURE_NOTIFICATION,
+                        {msg: "<strong>Server error</strong> while processing your request. Please retry." +
+                              "<br>Techinal details: " + textStatus});
                 };
             }
             $.ajax({
