@@ -7,6 +7,7 @@ define(['knockout', 'text!app/components/maps/mapsDashboard.tmpl.html',
 
         function TripPlannerVM(params) {
             this.showDirections = ko.observable(false);
+            this.travelDate = ko.observable(new Date());
             var entryLocation = {address: "Manhattan, NY", location: {lat: 40.99, lng: -73.9}};
 
             var mapOptions = {

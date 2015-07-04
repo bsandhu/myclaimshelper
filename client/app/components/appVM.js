@@ -185,6 +185,20 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
             }
         };
 
+        AppVM.prototype.resetWidgets = function () {
+            $.SmartMessageBox({
+                title: "<i class='fa fa-refresh' style='color:green'></i> Clear Local Storage",
+                content: $.widresetMSG || "Would you like to RESET all your saved widgets and clear LocalStorage?",
+                buttons: '[No][Yes]'
+            }, function (ButtonPressed) {
+                if (ButtonPressed == "Yes" && localStorage) {
+                    localStorage.clear();
+                    location.reload();
+                }
+
+            });
+        }
+
         return AppVM;
     }
 );

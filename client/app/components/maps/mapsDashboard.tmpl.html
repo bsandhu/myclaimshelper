@@ -3,7 +3,22 @@
         <span class="widget-icon">
             <i class="fa fa-map-marker txt-color-white"></i>
         </span>
-        <h2>Today's travel</h2>
+
+        <h2>Travel</h2>
+
+        <div class="widget-toolbar smart-form" role="menu">
+            <label class="input"> <i class="icon-append fa fa-question-circle"></i>
+                <input type="text" class="form-control input-sm"
+                       data-bind="datetimePicker: {
+                                              datepicker: true,
+                                              timepicker: false,
+                                              dateValue: travelDate}"/>
+                <b class="tooltip tooltip-top-right">
+                    <i class="fa fa-warning txt-color-teal"></i>
+                    Select the date to show travel for</b>
+            </label>
+
+        </div>
     </header>
 
     <div>
