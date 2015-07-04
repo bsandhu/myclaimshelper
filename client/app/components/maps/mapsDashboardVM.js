@@ -6,6 +6,7 @@ define(['knockout', 'text!app/components/maps/mapsDashboard.tmpl.html',
         console.log('Maps Dash');
 
         function TripPlannerVM(params) {
+            this.showDirections = ko.observable(false);
             var entryLocation = {address: "Manhattan, NY", location: {lat: 40.99, lng: -73.9}};
 
             var mapOptions = {
@@ -47,6 +48,11 @@ define(['knockout', 'text!app/components/maps/mapsDashboard.tmpl.html',
                 .fail(function(){
                     console.error('Falied to find currenrt location');
                 })
+
+            // Controls
+            this.setupPrinting();
+            this.setupDirectionsListing();
+            this.setupOptimization();
         }
 
         TripPlannerVM.prototype.createMarker = function (place) {
@@ -112,6 +118,7 @@ define(['knockout', 'text!app/components/maps/mapsDashboard.tmpl.html',
             var dirService = new google.maps.DirectionsService();
             var dirDisplay = new google.maps.DirectionsRenderer();
             dirDisplay.setMap(this.map);
+            dirDisplay.setPanel(document.getElementById("directionsPanel"));
             via = via || [];
             dirService.route({
                 origin: start,
@@ -131,27 +138,26 @@ define(['knockout', 'text!app/components/maps/mapsDashboard.tmpl.html',
         }
 
         TripPlannerVM.prototype.setupPrinting = function () {
+            var self = this;
             var printDiv = document.createElement('div');
-            var printControl = new PrintControl(printDiv, map);
+            var printControl = new PrintControl(printDiv, this.map);
             printDiv.index = 1;
-            map.controls[google.maps.ControlPosition.TOP_CENTER].push(printDiv);
+            this.map.controls[google.maps.ControlPosition.TOP_CENTER].push(printDiv);
 
             function PrintControl(printDiv, map) {
                 printDiv.style.padding = '5px';
                 var controlUI = document.createElement('div');
                 controlUI.style.backgroundColor = 'white';
                 controlUI.style.borderStyle = 'solid';
-                controlUI.style.borderWidth = '2px';
+                controlUI.style.borderWidth = '1px';
                 controlUI.style.cursor = 'pointer';
-                controlUI.style.textAlign = 'center';
-                controlUI.title = 'Print';
+                controlUI.style.opacity = '.8';
                 printDiv.appendChild(controlUI);
-                var controlText = document.createElement('div');
-                controlText.style.fontFamily = 'Arial,sans-serif';
-                controlText.style.fontSize = '12px';
-                controlText.style.paddingLeft = '4px';
-                controlText.style.paddingRight = '4px';
-                controlText.innerHTML = '<b>Print</b>';
+
+                var controlText = document.createElement('i');
+                controlText.className = 'fa fa-print';
+                controlText.innerHTML = '  Print ';
+                controlText.style.padding = '5px';
                 controlUI.appendChild(controlText);
 
                 google.maps.event.addDomListener(controlUI, 'click', function () {
@@ -160,11 +166,91 @@ define(['knockout', 'text!app/components/maps/mapsDashboard.tmpl.html',
             }
 
             function print() {
-                $('body').css('visibility', 'hidden');
-                $('.maps').css('visibility', 'visible', 'position', 'absolute', 'top', '0px', 'left', '0px');
-                window.print();
-                $('body').css('visibility', 'visible');
-                $('.maps').css('position', '');
+                var directionsVisible = self.showDirections();
+                if (!directionsVisible) {
+                    self.showDirections(true);
+                }
+                var b = document.getElementById('map-container');
+                var i = document.createElement('iframe');
+                document.body.appendChild(i);
+                var p = i.contentWindow;
+                p.document.open();
+                p.document.write('<html><head>');
+                p.document.write('</head><body >');
+                p.document.write(b.innerHTML);
+                p.document.write('</body></html>');
+                p.document.close();
+                p.focus();
+                p.print();
+                document.body.removeChild(i);
+                if (!directionsVisible) {
+                    self.showDirections(false);
+                }
+                return false;
+            }
+        }
+
+        TripPlannerVM.prototype.setupDirectionsListing = function () {
+            var self = this;
+            var dirDiv = document.createElement('div');
+            var printControl = new DirectionsControl(dirDiv, this.map);
+            dirDiv.index = 1;
+            this.map.controls[google.maps.ControlPosition.TOP_CENTER].push(dirDiv);
+
+            function DirectionsControl(printDiv, map) {
+                dirDiv.style.padding = '5px';
+                var controlUI = document.createElement('div');
+                controlUI.style.backgroundColor = 'white';
+                controlUI.style.borderStyle = 'solid';
+                controlUI.style.borderWidth = '1px';
+                controlUI.style.cursor = 'pointer';
+                controlUI.style.opacity = '.8';
+                printDiv.appendChild(controlUI);
+
+                var controlText = document.createElement('i');
+                controlText.className = 'fa fa-car';
+                controlText.innerHTML = ' Show directions';
+                controlText.style.padding = '5px';
+                controlUI.appendChild(controlText);
+
+                google.maps.event.addDomListener(controlUI, 'click', function () {
+                    self.showDirections(!self.showDirections());
+                    controlText.innerHTML = self.showDirections() ? ' Hide directions' : ' Show directions';
+                });
+            }
+        }
+
+        TripPlannerVM.prototype.setupOptimization = function () {
+            var self = this;
+            var dirDiv = document.createElement('div');
+            var optimizationControl = new OptimizationControl(dirDiv, this.map);
+            dirDiv.index = 1;
+            this.map.controls[google.maps.ControlPosition.TOP_CENTER].push(dirDiv);
+
+            function OptimizationControl(printDiv, map) {
+                dirDiv.style.padding = '5px';
+                var controlUI = document.createElement('div');
+                controlUI.style.padding = '0px 5px 2px 5px';
+                controlUI.style.backgroundColor = 'white';
+                controlUI.style.borderStyle = 'solid';
+                controlUI.style.borderWidth = '1px';
+                controlUI.style.cursor = 'pointer';
+                controlUI.style.opacity = '.8';
+                printDiv.appendChild(controlUI);
+
+                var checkBox = document.createElement('input');
+                checkBox.setAttribute("type", "checkbox");
+                checkBox.checked = false;
+
+                var controlText = document.createElement('span');
+                controlText.innerHTML = ' Shortest route';
+
+                controlUI.appendChild(checkBox);
+                controlUI.appendChild(controlText);
+
+                google.maps.event.addDomListener(controlUI, 'click', function () {
+                    self.showDirections(!self.showDirections());
+                });
             }
         }
 
