@@ -190,6 +190,19 @@ Use search to find needed section.
                     <i class="fa fa-lg fa-fw fa-home"></i>
                     <span class="menu-item-parent">Dashboard</span>
                 </a>
+                <ul>
+                    <li>
+                        <a href="">
+                            <i class="fa fa-cube" id="deletepositionkey-options"></i> Reset layout
+                        </a>
+                    </li>
+                    <li>
+                        <a data-bind="click: resetWidgets">
+                            <i class="fa fa-cube"></i> Reset widgets
+                        </a>
+                    </li>
+
+                </ul>
             </li>
             <li>
                 <a href="#">
@@ -211,11 +224,6 @@ Use search to find needed section.
                     <i class="fa fa-lg fa-fw fa-cube txt-color-blue"></i>
                     <span class="menu-item-parent">Misc</span></a>
                 <ul>
-                    <li>
-                        <a href="">
-                            <i class="fa fa-cube" id="deletepositionkey-options"></i> Reset Layout
-                        </a>
-                    </li>
                     <li class="divider"></li>
                     <li>
                         <a href="#" data-bind="click: onUserProfileClick">
