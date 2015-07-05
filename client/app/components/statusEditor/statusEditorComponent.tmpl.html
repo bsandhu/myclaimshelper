@@ -1,5 +1,8 @@
 <!-- Current state -->
-<a href="#" data-bind="event: { mouseover: onMouseOver, mouseout: onMouseOut},
+<a href="#"
+   title="Click to edit"
+   data-bind="event: { mouseover: onMouseOver,
+                       mouseout: onMouseOut},
                        click: onClick">
         <span class="glyphicon"
               data-bind="css: {'glyphicon-unchecked': state() === undefined || state == States.None,

@@ -1,6 +1,6 @@
-define(['knockout', 'KOMap', 'amplify', 'text!app/components/statusEditor/statusEditorComponent.tmpl.html',
+define(['jquery', 'knockout', 'KOMap', 'amplify', 'text!app/components/statusEditor/statusEditorComponent.tmpl.html',
         'model/states', 'app/utils/events'],
-    function (ko, KOMap, amplify, viewHtml, States, Events) {
+    function ($, ko, KOMap, amplify, viewHtml, States, Events) {
         'use strict';
 
         function StatusEditorComponentVM(params) {
@@ -14,7 +14,16 @@ define(['knockout', 'KOMap', 'amplify', 'text!app/components/statusEditor/status
             this.entryId  = params.entryId;
             this.inEditMode = ko.observable(false);
             this.showEditable = ko.observable(false);
+            this.addESCKeyListener();
         }
+
+        StatusEditorComponentVM.prototype.addESCKeyListener = function () {
+            $(document).keyup(function(e) {
+                if (e.keyCode == 27) { // escape key maps to keycode `27`
+                    this.inEditMode(false);
+                }
+            }.bind(this));
+        };
 
         StatusEditorComponentVM.prototype.onMouseOver = function (evData, ev) {
             this.showEditable(true);
@@ -25,8 +34,8 @@ define(['knockout', 'KOMap', 'amplify', 'text!app/components/statusEditor/status
         };
 
         StatusEditorComponentVM.prototype.onClick = function (evData, ev) {
-            this.inEditMode(true);
             ev.stopImmediatePropagation();
+            this.inEditMode(true);
         };
 
         StatusEditorComponentVM.prototype.onDismissEditor = function (evData, ev) {
@@ -35,8 +44,9 @@ define(['knockout', 'KOMap', 'amplify', 'text!app/components/statusEditor/status
         };
 
         StatusEditorComponentVM.prototype.onUpdate = function (status, entry, ev) {
-            console.log('Raise Claim Entry status update Ev. ' + this.entryId);
-            amplify.publish(Events.UPDATE_CLAIM_ENTRY_STATUS, {'claimEntryId': this.entryId, 'status': status});
+            ev.stopImmediatePropagation();
+            console.log('Raise Claim Entry status update Ev. ' + this.entryId());
+            amplify.publish(Events.UPDATE_CLAIM_ENTRY_STATUS, {'claimEntryId': this.entryId(), 'status': status});
         };
 
         return {viewModel: StatusEditorComponentVM, template: viewHtml};

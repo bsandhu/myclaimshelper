@@ -18,6 +18,7 @@ describe('Claims Service', function () {
     testClaim.summary = "I am test entry";
     testClaim.state = 'open';
     testClaim.insuredContact = {name: 'TestFist', city: 'TestCity', zip: 11010};
+    testClaim.insuranceCompanyFileNum = "ZZ123";
 
     var testBillingItem = new BillingItem();
     testBillingItem.description = 'Test billing item';
@@ -230,6 +231,7 @@ describe('Claims Service', function () {
 
             var entry = data.data[0];
             assert.equal(entry.state, testClaim.state);
+            assert.equal(entry.claimFileNumber, testClaim.insuranceCompanyFileNum);
             done();
         };
         claimsService.searchClaimEntries(req, res);

@@ -307,14 +307,16 @@ div {
     color: #999;
 }
 
-.summaryRow:hover td:first-child {
+/* Drag affordance */
+.summaryRow td:first-child {
     opacity: .9;
     transition-duration: 0.25s;
     transition-property: opacity;
     transition-timing-function: ease;
 }
 
-.summaryRow td:nth-child(2) {
+/* Red notebook lines */
+.summaryRow td:nth-child(1) {
     padding-right: 5px;
     border-right-color: rgb(255, 225, 235);
     border-right-style: double;
