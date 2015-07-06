@@ -144,6 +144,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
                     console.log('Saved ClaimEntry: ' + JSON.stringify(response));
                     this.claimEntry()._id(response.data._id)
                     // Update description with Entity enriched version
+                    this.myDescription(response.data.description);
                     this.claimEntry().description(response.data.description);
                     amplify.publish(Events.SUCCESS_NOTIFICATION, {msg: 'Saved entry'});
                     amplify.publish(Events.SAVED_CLAIM_ENTRY, {claimId: activeClaimId, claimEntryId: response.data._id});
