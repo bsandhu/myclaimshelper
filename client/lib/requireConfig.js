@@ -2,6 +2,7 @@ require.config({
     baseUrl: '/',
     paths: {
         'jquery': 'lib/jquery.min',
+        'jqueryBase64': 'lib/jquery.base64',
         'jqueryui': 'lib/jquery.ui.min',
         'hotkeys': 'lib/jquery.hotkeys',
         'knockout': 'lib/knockout',
@@ -12,6 +13,9 @@ require.config({
         'text': 'lib/require.text',           // Require plugin for html templates
         'Path': 'lib/path',
         'bootstrap': 'lib/bootstrap.min',
+        'bootstrapTable' : 'lib/bootstrap.table',
+        'tableExport': 'lib/bootstrap.table.export',
+        'kayalshriTableExport' : 'lib/kayalshri.table.export',
         'wysiwyg': 'lib/bootstrap.wysiwyg',
         'async': 'lib/async',
         'datetimepicker': 'lib/jquery.datetimepicker',
@@ -31,11 +35,23 @@ require.config({
         'velocity': {
             deps: ['jquery']
         },
+        'jqueryBase64': {
+            deps: ['jquery']
+        },
         'datetimepicker': {
             deps: ['jquery', 'jqueryui']
         },
+        'kayalshriTableExport': {
+            deps: ['jquery', 'jqueryBase64']
+        },
+        'tableExport': {
+            deps: ['jquery', 'bootstrapTable', 'kayalshriTableExport']
+        },
         'bootstrap': {
             deps: ['jquery']
+        },
+        'bootstrapTable': {
+            deps: ['jquery', 'bootstrap']
         },
         'sortable': {
             deps: ['jquery']

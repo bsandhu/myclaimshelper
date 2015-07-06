@@ -47,6 +47,10 @@
           media="screen and (min-device-width: 481px) and (max-device-width: 1024px) and (orientation:portrait)">
     <link rel="apple-touch-startup-image" href="img/splash/iphone.png" media="screen and (max-device-width: 320px)">
 
+
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.8.1/bootstrap-table.min.css">
+
+
     <script src="../../../lib/require.js"></script>
     <script src="../../../lib/requireConfig.js"></script>
 </head>
@@ -331,7 +335,7 @@ Use search to find needed section.
     require(['jquery', 'knockout', 'KOAmd', 'text', 'amplify', 'app/components/appVM', 'shared/dateUtils', 'app/utils/session',
                 'jarvis', 'smartnotify', 'app/utils/koDatetimePickerBinding', 'app/utils/koWYSIWYGBinding',
                 'app/utils/koTextTruncateBinding', 'app/utils/koSortableBinding', 'app/utils/koAutoComplete',
-                'velocity', 'bootstrap', 'KOXeditable'],
+                'velocity', 'bootstrap', 'KOXeditable', 'bootstrapTable', 'tableExport'],
             function ($, ko, KOAmd, text, amplify, AppVM, DateUtils, Session) {
                 console.log('Init App');
 
