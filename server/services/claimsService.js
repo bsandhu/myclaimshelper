@@ -108,7 +108,12 @@ function saveOrUpdateClaimEntry(req, res) {
     var entity = req.body;
     var description = entity.description;
     var billingItem = entity.billingItem;
+
+    // Persisted separately
     delete entity.billingItem;
+
+    // Added by the search
+    delete entity.claimFileNumber;
 
     entityExtractionService.extractEntities(description)
         .then(function (people) {
@@ -318,6 +323,21 @@ function searchClaimEntries(req, res) {
             .find(query, options)
             .toArray(onResults);
 
+        function populateClaimFileNumber(item) {
+            var defer = jQuery.Deferred();
+            mongoUtils
+                .findEntities(mongoUtils.CLAIMS_COL_NAME, {_id: item.claimId}, db)
+                .then(function (claims) {
+                    // ClaimEntry has only one Claim
+                    var claim = _.first(claims);
+                    if (claim) {
+                        item.claimFileNumber = claim.insuranceCompanyFileNum || 'None';
+                    }
+                    defer.resolve();
+                })
+            return defer;
+        }
+
         function populateBillingItem(item) {
             var defer = jQuery.Deferred();
             mongoUtils
@@ -328,7 +348,7 @@ function searchClaimEntries(req, res) {
                     if (billingItem) {
                         item.billingItem = mongoUtils.hydrate(BillingItem, billingItem)[0];
                     }
-                    defer.resolve(item);
+                    defer.resolve();
                 })
             return defer;
         }
@@ -337,10 +357,11 @@ function searchClaimEntries(req, res) {
             var defereds = [];
             _.each(items, function (item) {
                 defereds.push(populateBillingItem(item));
+                defereds.push(populateClaimFileNumber(item));
             });
             jQuery.when.apply(jQuery, defereds)
-                .then(function (populatedItems) {
-                    var modelObjs = _.map(arguments, convertToModel);
+                .then(function () {
+                    var modelObjs = _.map(items, convertToModel);
                     sendResponse(res, err, modelObjs);
                 })
         }

@@ -67,7 +67,7 @@ function populateUserProfiles() {
 //   Example: ~/src/Agent/007> node tests/data/testDataLoader.js
 
 //nukeDB();
-populateUserProfiles();
+//populateUserProfiles();
 //populateContacts()
 //populateClaimEntries();
 //populateClaims()
