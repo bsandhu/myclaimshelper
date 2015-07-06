@@ -51,7 +51,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
          */
         TaskEntryVM.prototype.startStateTracking = function () {
             this.claimEntryState = ko.computed(function () {
-                return KOMap.toJSON(this.claimEntry);
+                return KOMap.toJSON(this.claimEntry) + KOMap.toJSON(this.myDueDate) + KOMap.toJSON(this.myDescription);
             }, this);
             this.claimEntryState.extend({ rateLimit: { timeout: 100, method: "notifyWhenChangesStop" } });
 
@@ -123,6 +123,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
         /***********************************************************/
 
         TaskEntryVM.prototype.onSave = function () {
+            var defer = $.Deferred();
             this.stopStateTracking();
             /**
              * Since only once Claim can be active, its assumed to be the parent
@@ -148,7 +149,9 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
                     amplify.publish(Events.SAVED_CLAIM_ENTRY, {claimId: activeClaimId, claimEntryId: response.data._id});
 
                     this.startStateTracking();
+                    defer.resolve();
                 }.bind(this));
+            return defer;
         };
 
         TaskEntryVM.prototype.loadClaimEntry = function (claimEntryId) {
@@ -183,7 +186,29 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
         };
 
         TaskEntryVM.prototype.onCancel = function () {
-            Router.routeToClaim(Session.getActiveClaimId());
+            var self = this;
+
+            function navigateAway() {
+                Router.routeToClaim(Session.getActiveClaimId());
+            }
+
+            if (this.stateChange()){
+                $.SmartMessageBox({
+                    title: "Unsaved Changes!",
+                    content: "Save? ",
+                    buttons: '[No][Yes]'
+                }, function (ButtonPressed) {
+                    if (ButtonPressed === "Yes") {
+                        self.onSave().then(function onDone(){
+                            navigateAway();
+                        });
+                    } else {
+                        navigateAway();
+                    }
+                });
+            } else {
+                navigateAway();
+            }
         };
 
         return {viewModel: TaskEntryVM, template: taskEntryView};

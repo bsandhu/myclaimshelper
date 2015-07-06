@@ -1,7 +1,10 @@
 <div class="panel panel-default">
     <div class="panel-heading">
-        <div data-bind="text: niceHeader(),
+        <div class="inline" data-bind="text: niceHeader(),
                         attr: {title: 'Task Id ' + claimEntry()._id()}"></div>
+        <div class="inline pull-right">
+            <a href="" data-bind="click: onCancel">Close <i class="fa fa-times"></i></a>
+        </div>
     </div>
 
     <div class="panel-body">
