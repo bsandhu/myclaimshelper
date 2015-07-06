@@ -23,6 +23,9 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'text!app/components/statusEdi
                     this.inEditMode(false);
                 }
             }.bind(this));
+            $(window).click(function(){
+                this.inEditMode(false);
+            }.bind(this));
         };
 
         StatusEditorComponentVM.prototype.onMouseOver = function (evData, ev) {
