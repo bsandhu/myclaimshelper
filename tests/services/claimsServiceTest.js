@@ -37,7 +37,7 @@ describe('Claims Service', function () {
 
         jQuery.when(
             claimsService.deleteClaim(testClaim._id),
-            contactService.deleteContact(testClaim.insuredContactId),
+            mongoUtils.deleteEntity({name: {$eq: "TestFist"}}, mongoUtils.CONTACTS_COL_NAME),
             mongoUtils.deleteEntity({_id: testBillingItem._id}, mongoUtils.BILLING_ITEMS_COL_NAME))
                 .done(done)
                 .fail('Failed to cleanup test data');
@@ -56,6 +56,7 @@ describe('Claims Service', function () {
 
             // Contact ref
             assert.ok(claim.insuredContactId);
+            testClaim.insuredContactId = claim.insuredContactId;
             assert.ok(!claim.hasOwnProperty('insuredContact'));
 
             // Saved with all model attributes even if no data is supplied
