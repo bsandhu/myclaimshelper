@@ -17,7 +17,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
         }
 
         ClaimsListVM.prototype.onClaimSelect = function (claim) {
-            Router.routeToClaim(claim._id());
+            //Router.routeToClaim(claim._id());
         };
 
         ClaimsListVM.prototype.loadClaims = function () {
