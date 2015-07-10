@@ -6,6 +6,7 @@ var claimsService = require("../../services/claimsService.js");
 var ClaimEntry = require("../../model/claimEntry.js");
 var MailParser = require('./mailParser.js').MailParser;
 var saveToDB = require('../uploadService.js').saveToDB;
+var mongoUtils = require('../../mongoUtils.js');
 
 
 var process = function(req, res) {
@@ -18,9 +19,45 @@ var process = function(req, res) {
     dif.reject();
     return dif.promise()
   }
-  return saveAttachments(mailEntry)
+  return checkClaim(mailEntry)
+          .then(saveAttachments)
           .then(saveEntry)
           .then(notifySuccess, notifyFailure);
+};
+
+var checkClaim(mailEntry){
+  var r = jQuery.Deferred();
+  var updateId = function(claimId){
+    mailEntry.claimId = claimId;
+    r.resolve(mailEntry);
+  }
+  findParentClaimId(mailEntry.claimId)
+    .then(updateId);
+  return r;
+}
+
+var findParentClaim = function(insuranceId){
+  var db = mongoUtils.connect(config.db);
+  var search = {insuranceCompanyFileNum: insuranceId};
+  return mongoUtils.findEntities(mongoUtils.CLAIMS_COL_NAME, search, db);
+};
+
+var findParentClaimId = function(insuranceId){
+  var r = jQuery.Deferred();
+  var _getId(claims){
+    if (claims.length < 1){
+      r.reject('No Claim found with Insurance Id ' + insuranceId);
+    }
+    else if (claims.length > 1){
+      r.reject('Oh! more than one Claim found with Insurance Id' + insuranceId);
+    }
+    else {
+      r.resolve(claims[0]._id);
+    }
+  };
+
+  findParentClaim(insuranceId).then(_getId);
+  return r;
 };
 
 var saveEntry = function(mailEntry) {
