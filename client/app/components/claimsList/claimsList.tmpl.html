@@ -16,6 +16,7 @@
            data-export-types="['csv', 'excel']"
            data-bind="event: {'click-row.bs.table': onClaimSelect}">
         <thead>
+        <th data-field="claimId" data-sortable="true" data-visible="false">Claim Id.</th>
         <th data-field="fileNo" data-sortable="true" data-visible="true">Insurance Co. File No.</th>
         <th data-field="desc" data-sortable="true">Description</th>
         <th data-field="insuranceCo" data-sortable="true">Insurance Company</th>
@@ -25,6 +26,7 @@
 
         <tbody data-bind="foreach : {data: searchResults, as: 'claim'}">
         <tr>
+            <td class="col-lg-2" data-bind="text: claim._id"></td>
             <td class="col-lg-2" data-bind="text: claim.insuranceCompanyFileNum"></td>
             <td class="col-lg-4" data-bind="textTruncate: claim.description, maxLength: 40,
                                             attr: {title: claim.description}"></td>
