@@ -13,11 +13,11 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
             this.searchText = ko.observable('');
 
             this.loadClaims();
-            this.setupSearchListeners();
+            //this.setupSearchListeners();
         }
 
-        ClaimsListVM.prototype.onClaimSelect = function (claim) {
-            //Router.routeToClaim(claim._id());
+        ClaimsListVM.prototype.onClaimSelect = function (vm, event, data) {
+            Router.routeToClaim(data.claimId);
         };
 
         ClaimsListVM.prototype.loadClaims = function () {
