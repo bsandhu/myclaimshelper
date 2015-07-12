@@ -1,5 +1,6 @@
 var jQuery = require('jquery-deferred');
 var Mailgun = require('mailgun-js');
+var _ = require('underscore');
 
 var config = require('../../config.js');
 var claimsService = require("../../services/claimsService.js");
@@ -19,45 +20,52 @@ var process = function(req, res) {
     dif.reject();
     return dif.promise()
   }
-  return checkClaim(mailEntry)
+  return mongoUtils.connect(config.db)
+    .then(_.partial(checkClaim, mailEntry))
           .then(saveAttachments)
           .then(saveEntry)
           .then(notifySuccess, notifyFailure);
 };
 
-var checkClaim(mailEntry){
+var checkClaim = function(mailEntry, db){
   var r = jQuery.Deferred();
   var updateId = function(claimId){
     mailEntry.claimId = claimId;
     r.resolve(mailEntry);
   }
-  findParentClaimId(mailEntry.claimId)
-    .then(updateId);
+  var error = function(msg){
+    mailEntry.error = msg;
+    r.reject(mailEntry);
+  }
+
+  findParentClaimId(mailEntry.claimId, db)
+    .then(updateId, error);
   return r;
 }
 
-var findParentClaim = function(insuranceId){
-  var db = mongoUtils.connect(config.db);
-  var search = {insuranceCompanyFileNum: insuranceId};
-  return mongoUtils.findEntities(mongoUtils.CLAIMS_COL_NAME, search, db);
-};
-
-var findParentClaimId = function(insuranceId){
+var findParentClaimId = function(insuranceId, db){
   var r = jQuery.Deferred();
-  var _getId(claims){
+  var _getId = function(claims){
     if (claims.length < 1){
       r.reject('No Claim found with Insurance Id ' + insuranceId);
     }
-    else if (claims.length > 1){
-      r.reject('Oh! more than one Claim found with Insurance Id' + insuranceId);
-    }
+    //else if (claims.length > 1){
+      //r.reject('Oh! more than one Claim found with Insurance Id' + insuranceId);
+    //}
     else {
       r.resolve(claims[0]._id);
     }
   };
-
-  findParentClaim(insuranceId).then(_getId);
+  findParentClaims(insuranceId, db)
+    .then(_getId);
   return r;
+};
+
+var findParentClaims = function(insuranceId, db){
+  return mongoUtils.findEntities(mongoUtils.CLAIMS_COL_NAME,
+                      {insuranceCompanyFileNum: insuranceId},
+                      db);
+
 };
 
 var saveEntry = function(mailEntry) {
@@ -115,9 +123,6 @@ var notifySuccess = function(mailEntry) {
   body += '\n\n' + mailEntry;
   sendEmail(mailEntry.mail.from, mailEntry.mail.subject, body);
   return mailEntry;
-  //var r = jQuery.Deferred();
-  //r.resolve(mailEntry);
-  //return r.promise();
 };
 
 var notifyFailure = function(mailEntry) {
@@ -125,9 +130,6 @@ var notifyFailure = function(mailEntry) {
   body += '\n\n' + mailEntry.error;
   sendEmail(mailEntry.mail.from, mailEntry.mail.subject, body);
   return mailEntry;
-  //var r = jQuery.Deferred();
-  //r.reject(mailEntry);
-  //return r.promise();
 };
 
 // helpers 
