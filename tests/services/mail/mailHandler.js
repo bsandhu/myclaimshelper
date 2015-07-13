@@ -7,7 +7,7 @@ var claimsService = require("../../../server/services/claimsService.js");
 
 var setupClaim = function(){
     var testClaim = new Claim();
-    testClaim.insuranceCompanyFileNum = "ZZ123";
+    testClaim.insuranceCompanyFileNum = "123";
     var req = {body: testClaim};
     var res = {};
     res.json = function (data) {
@@ -27,10 +27,10 @@ describe('processRequest', function(){
     it('succeeds', function(done){
       var assertSuccess = function(data){
         assert.ok(data);
-        //assert.equal(data.claimId, 'ZZ123');
+        //assert.equal(data.claimId, '123');
         assert.deepEqual(data.tags, [ '#tag1', '#tag2', 'email' ]);
         assert.ok(data.attachments);
-        assert.equal(data.mail.subject, 'the subject claim id:ZZ123');
+        assert.equal(data.mail.subject, 'the subject claim id:123');
         assert.equal(data.mail['body-plain'], 'the body\r\n#tag1\r\n#tag2');
         assert.equal(data.mail.from, 'plato@nonsense.foo');
         var ce = mongoUtils.getEntityById(data._id, 'ClaimEntries');
