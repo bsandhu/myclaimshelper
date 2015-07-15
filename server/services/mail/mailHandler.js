@@ -120,14 +120,14 @@ var saveAttachments = function(mailEntry) {
 
 var notifySuccess = function(mailEntry) {
   var body = 'Email processed successfully!';
-  body += '\n\n' + mailEntry;
+  body += '\n\n' + JSON.stringify(mailEntry);
   sendEmail(mailEntry.mail.from, mailEntry.mail.subject, body);
   return mailEntry;
 };
 
 var notifyFailure = function(mailEntry) {
   var body = 'ERROR processing email.';
-  body += '\n\n' + mailEntry.error;
+  body += '\n\n' + JSON.stringify(mailEntry.error);
   sendEmail(mailEntry.mail.from, mailEntry.mail.subject, body);
   return mailEntry;
 };
