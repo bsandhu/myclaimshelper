@@ -1,13 +1,17 @@
-define(['knockout', 'text!app/components/maps/mapsDashboard.tmpl.html',
+define(['knockout', 'KOMap',
+        'text!app/components/maps/mapsDashboard.tmpl.html',
+        'model/tags', 'model/claimEntry',
+        'shared/dateUtils', 'app/utils/ajaxUtils',
         'async!https://maps.googleapis.com/maps/api/js?key=AIzaSyBB-Qincf0sNQcsu5PzZh7znG3GiB98GRU&libraries=places&signed_in=true&v=3.exp'],
 
-    function (ko, viewHtml) {
+    function (ko, KOMap, viewHtml, Tags, ClaimEntry, DateUtils, AjaxUtils) {
         'use strict';
         console.log('Maps Dash');
 
         function TripPlannerVM(params) {
             this.showDirections = ko.observable(false);
-            this.travelDate = ko.observable(new Date());
+            this.travelDate = ko.observable();
+            this.claimEntries = ko.observableArray([]);
             var entryLocation = {address: "Manhattan, NY", location: {lat: 40.99, lng: -73.9}};
 
             var mapOptions = {
@@ -20,76 +24,82 @@ define(['knockout', 'text!app/components/maps/mapsDashboard.tmpl.html',
                 streetViewControl: true,
                 overviewMapControl: true
             };
+
+            // Init map
             var mapDiv = document.getElementById('map-dash');
             this.map = new google.maps.Map(mapDiv, mapOptions);
             var options = {componentRestrictions: {country: 'us'}};
 
+            // Trigger initial load
+            this.travelDate.subscribe(function(){
+                this.map = new google.maps.Map(mapDiv, mapOptions);
+                this.loadAndShowRoutes();
+
+                // Init Controls
+                this.setupPrinting();
+                this.setupDirectionsListing();
+                this.setupOptimization();
+            }, this);
+            this.travelDate(DateUtils.startOfToday());
+        }
+
+        TripPlannerVM.prototype.loadAndShowRoutes = function () {
             $('#map-dash').css('height', '400px');
             google.maps.event.trigger(this.map, 'resize');
             var self = this;
-            self.getStartPos()
-                .done(function (startPos) {
-                    self.showRoutes(
-                        new google.maps.LatLng(startPos.lat, startPos.lng),
-                        "Hoboken NJ",
-                        //new google.maps.LatLng(51.99, -73.9),
-                        [
-                            {location: 'Bryant Park, Manhattan, NY', stopover: true},
-                            {location: 'Far Rockaway, Queens, NY', stopover: true},
-//                            {location: 'Brooklyn Heights, Brooklyn, NY', stopover: true},
-//                            {location: 'Deere Park, Staten Island, NY', stopover: true},
-//                            {location: 'Hicksville, NY', stopover: true},
-//                            {location: 'Jackson Heights, Queens, NY', stopover: true},
-//                            {location: 'White Plains, NY', stopover: true}
-                        ]);
 
-                    // multiple map input test
-                    //self.showMultiLocations(['Syracuse, NY', 'Rome, NY', 'Carthage, NY']);
-                })
-                .fail(function(){
-                    console.error('Falied to find currenrt location');
-                })
-
-            // Controls
-            this.setupPrinting();
-            this.setupDirectionsListing();
-            this.setupOptimization();
-        }
-
-        TripPlannerVM.prototype.createMarker = function (place) {
-            //console.log(place);
-            var marker = new google.maps.Marker({
-                map: this.map,
-                title: place.name,
-                place: {'location': place.geometry.location, query: place.address_components[0].short_name},
-                attribution: {'source': 'Agent 007'}
-            });
-            marker.setMap(this.map);
-            var infowindow = new google.maps.InfoWindow({
-                content: place.name
-            });
-            marker.addListener('click', function () {
-                infowindow.open(map, marker);
-            });
-        }
-
-/*
-        TripPlannerVM.prototype.showMultiLocations = function (locations) {
-            var self = this;
-            var geocoder = new google.maps.Geocoder();
-            for (var i = 0; i < locations.length; i++) {
-                geocoder.geocode({'address': locations[i]}, function (res, status) {
-                    if (status == google.maps.GeocoderStatus.OK) {
-                        console.log(res[0]);
-                        self.createMarker(res[0]);
-                    }
-                    else {
-                        console.log('geocoder error: ' + status);
-                    }
+            $.when(self.loadEntries(), self.getStartPos())
+                .done(function (entries, startPos) {
+                    console.log(entries.length + ' stops on itenary');
+                    // Convert to waypoint objs
+                    var destinations = $.map(entries, function (entry) {
+                        if (entry.location && entry.location.geometry && entry.location.geometry.location) {
+                            var loc = entry.location.geometry.location;
+                            return {location: new google.maps.LatLng(loc.lat(), loc.lng()), stopover: true};
+                        }
+                    });
+                    // Start pos from Geo location
+                    var start = new google.maps.LatLng(startPos.lat, startPos.lng);
+                    // End from last Claim entry loc
+                    var end = destinations.length > 0
+                        ? destinations[destinations.length - 1].location
+                        : start;
+                    var waypoints = destinations.length > 1
+                        ? destinations.slice(0, destinations.length - 1)
+                        : [];
+                    self.showRoutes(start, end, waypoints);
+                    self.createMarker(entries);
                 });
-            }
         }
-*/
+
+        TripPlannerVM.prototype.createMarker = function (entries) {
+            var self = this;
+            var alphabets = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P'];
+            $.each(entries, function (index, entry) {
+                var entryPos = null;
+                if (entry.location && entry.location.geometry && entry.location.geometry.location) {
+                    var loc = entry.location.geometry.location;
+                    entryPos = new google.maps.LatLng(loc.lat(), loc.lng());
+                }
+                if (!entryPos) {
+                    return;
+                }
+                var marker = new google.maps.Marker({
+                    map: self.map,
+                    title: entry.summary(),
+                    position: entryPos,
+                    icon: 'http://www.google.com/mapfiles/marker' + alphabets[index] + '.png'
+                });
+                var infowindow = new google.maps.InfoWindow({
+                    content: entry.summary()
+                        + '<br/><b>Visit time</b> ' + DateUtils.niceDate(entry.dueDate())
+                        + '<br/><b>Address</b> ' + (entry.location ? entry.location.name() : '')
+                });
+                marker.addListener('click', function () {
+                    infowindow.open(self.map, marker);
+                });
+            });
+        }
 
         TripPlannerVM.prototype.getStartPos = function () {
             var pos;
@@ -98,7 +108,7 @@ define(['knockout', 'text!app/components/maps/mapsDashboard.tmpl.html',
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(function (position) {
                     pos = {lat: position.coords.latitude,
-                           lng: position.coords.longitude};
+                        lng: position.coords.longitude};
                     var pan = true;
                     var infowindow = new google.maps.InfoWindow({
                         disableAutoPan: pan,
@@ -117,9 +127,15 @@ define(['knockout', 'text!app/components/maps/mapsDashboard.tmpl.html',
 
         TripPlannerVM.prototype.showRoutes = function (start, end, via) {
             var dirService = new google.maps.DirectionsService();
-            var dirDisplay = new google.maps.DirectionsRenderer();
+            var dirDisplay = new google.maps.DirectionsRenderer({
+                suppressMarkers: true
+            });
             dirDisplay.setMap(this.map);
-            dirDisplay.setPanel(document.getElementById("directionsPanel"));
+
+            var panel = document.getElementById("directionsPanel");
+            panel.innerHTML = '';
+            dirDisplay.setPanel(panel);
+
             via = via || [];
             dirService.route({
                 origin: start,
@@ -254,6 +270,37 @@ define(['knockout', 'text!app/components/maps/mapsDashboard.tmpl.html',
                 });
             }
         }
+
+        TripPlannerVM.prototype.loadEntries = function () {
+            var millisInADay = 86400000;
+            var postReq =
+            { query: {dueDate: {'$gte': this.travelDate().getTime(), '$lte': this.travelDate().getTime() + millisInADay},
+                tag: {$in: ['visit']}},
+                options: {sort: [
+                    ['dueDate', 'asc']
+                ]}
+            };
+
+            console.log('Loading for Travel tasks for ' + this.travelDate());
+            var defer = $.Deferred();
+
+            AjaxUtils.post(
+                '/claimEntry/search',
+                JSON.stringify(postReq),
+                function onSuccess(res) {
+                    console.log(JSON.stringify(res.data));
+
+                    this.claimEntries(
+                        $.map(res.data, function (claimEntry) {
+                            return KOMap.fromJS(claimEntry, {}, new ClaimEntry());
+                        }));
+                    defer.resolve(this.claimEntries());
+                }.bind(this),
+                function onFail() {
+                    defer.reject();
+                });
+            return defer;
+        };
 
         return {viewModel: TripPlannerVM, template: viewHtml};
     });
