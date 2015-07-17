@@ -16,7 +16,7 @@ var process = function(req, res) {
   var parser = new MailParser();
   var mailEntry = parser.parseRequest(req);
   if (parser.errors.length > 0) {
-    notifyFailure(parser.errors);
+    notifyFailure(mailEntry);
     dif.reject();
     return dif.promise()
   }
@@ -136,7 +136,7 @@ var notifyFailure = function(mailEntry) {
 
 function constructClaimEntry(data){
   var entry = new ClaimEntry();
-  entry.entryDate = new Date();
+  entry.entryDate = (new Date()).getTime();
   entry.summary = data.mail.subject;
   entry.from = data.mail.from;
   entry.description = data.mail['body-plain'];

@@ -16,7 +16,8 @@ MailParser.prototype.parseRequest = function(req){
     return {'claimId': claimId,
             'attachments': attachments,
             'tags': tags,
-            'mail': req.params};
+            'mail': req.params,
+            'error': this.errors};
 };
 
 /*
