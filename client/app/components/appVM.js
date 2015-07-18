@@ -30,10 +30,6 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
             Router.start();
         };
 
-        AppVM.prototype.onHelpClick = function (claim) {
-            window.open('/help/help.html', 'Agent help');
-        };
-
         AppVM.prototype.onUserProfileClick = function () {
             amplify.publish(Events.SHOW_USER_PROFILE);
         };
