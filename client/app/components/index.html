@@ -121,6 +121,7 @@ Use search to find needed section.
         <!-- Top menu userProfile link : this shows only when top menu is active -->
         <ul id="mobile-profile-img" class="header-dropdown-list hidden-xs padding-5">
             <li class="">
+<!--
                 <a href="#" class="dropdown-toggle no-margin userdropdown" data-toggle="dropdown">
                     <img src="img/avatars/sunny.png" alt="John Doe" class="online"/>
                 </a>
@@ -130,22 +131,27 @@ Use search to find needed section.
                                 class="fa fa-sign-out fa-lg"></i> <strong><u>L</u>ogout</strong></a>
                     </li>
                 </ul>
+-->
             </li>
         </ul>
 
         <!-- logout button -->
+<!--
         <div id="logout" class="btn-header transparent pull-right">
             <span> <a href="login.html" title="Sign Out" data-action="userLogout"
                       data-logout-msg="You can improve your security further after logging out by closing this opened browser"><i
                     class="fa fa-sign-out"></i></a> </span>
         </div>
+-->
         <!-- end logout button -->
 
         <!-- fullscreen button -->
+<!--
         <div id="fullscreen" class="btn-header transparent pull-right">
             <span> <a href="javascript:void(0);" data-action="launchFullscreen" title="Full Screen"><i
                     class="fa fa-arrows-alt"></i></a> </span>
         </div>
+-->
         <!-- end fullscreen button -->
 
     </div>
@@ -219,12 +225,6 @@ Use search to find needed section.
                     </li>
                 </ul>
             </li>
-<!--
-            <li>
-                <a href="ajax/calendar.html"><i class="fa fa-lg fa-fw fa-credit-card"></i> <span
-                        class="menu-item-parent">Billing</span></a>
-            </li>
--->
             <li class="top-menu-hidden">
                 <a href="#">
                     <i class="fa fa-lg fa-fw fa-cube txt-color-blue"></i>
@@ -287,13 +287,12 @@ Use search to find needed section.
                             </article>
                         </div>
                         <!--
-                                                    <article class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
-                                                        <div data-bind="component: 'quick-add-component'"></div>
-                                                    </article>
-                                                <article class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
-
-                        </article>
--->
+                            <article class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
+                                <div data-bind="component: 'quick-add-component'"></div>
+                            </article>
+                            <article class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
+                            </article>
+                        -->
                     </section>
                 </div>
             </div>
@@ -375,6 +374,8 @@ Use search to find needed section.
                     return JSON.stringify(str).substring(0, maxLength);
                 };
 
+                // Initializing the widgets.
+                // TODO find a cleaner way trigger once KO is done with initial render
                 setTimeout(function(){
                        $('#widget-grid').jarvisWidgets({
                             grid : 'article',
