@@ -1,7 +1,8 @@
 define(['jquery', 'knockout', 'KOMap', 'amplify', 'shared/dateUtils',
         'app/utils/ajaxUtils', 'app/utils/events', 'app/utils/consts', 'app/utils/router', 'app/utils/session',
-        'model/bill', 'model/billingItem', 'model/billingStatus', 'text!app/components/billing/billing.tmpl.html'],
-    function ($, ko, KOMap, amplify, DateUtils, ajaxUtils, Events, Consts, router, Session, Bill, BillingItem, BillingStatus, viewHtml) {
+        'model/bill', 'model/billingItem', 'model/billingStatus', 'model/contact',
+        'text!app/components/billing/billing.tmpl.html'],
+    function ($, ko, KOMap, amplify, DateUtils, ajaxUtils, Events, Consts, router, Session, Bill, BillingItem, BillingStatus, Contact, viewHtml) {
 
         function BillingVM(claimId) {
             console.log('Init BillingVM. ClaimId: ' + JSON.stringify(claimId));
@@ -11,6 +12,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'shared/dateUtils',
             this.DateUtils = DateUtils;
             this.billingStatus = KOMap.fromJS(BillingStatus);
             this.mode = ko.observable();
+            this.billRecipient = ko.observable(KOMap.fromJS(new Contact()));
 
             // Active Bill - new or unsubmitted
             this.bill = ko.observable(this.newEmptyBill());
