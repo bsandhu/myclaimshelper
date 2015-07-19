@@ -11,7 +11,7 @@ describe('parseRequest', function(){
         var req = JSON.parse(fs.readFileSync(file, 'utf8'));
         var r = mailParser.parseRequest(req);
         assert.deepEqual(r.claimId, '123');
-        assert.deepEqual(Object.keys(r), ['claimId', 'attachments', 'tags', 'mail']);
+        assert.deepEqual(Object.keys(r), ['claimId', 'attachments', 'tags', 'mail', 'error']);
         done();
     });
 

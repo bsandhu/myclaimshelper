@@ -18,7 +18,7 @@ describe('Claims Service', function () {
     testClaim.summary = "I am test entry";
     testClaim.state = 'open';
     testClaim.insuredContact = {name: 'TestFist', city: 'TestCity', zip: 11010};
-    testClaim.insuranceCompanyFileNum = "ZZ123";
+    testClaim.insuranceCompanyFileNum = "123";
 
     var testBillingItem = new BillingItem();
     testBillingItem.description = 'Test billing item';

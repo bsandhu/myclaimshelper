@@ -1,11 +1,13 @@
 var jQuery = require('jquery-deferred');
 var Mailgun = require('mailgun-js');
+var _ = require('underscore');
 
 var config = require('../../config.js');
 var claimsService = require("../../services/claimsService.js");
 var ClaimEntry = require("../../model/claimEntry.js");
 var MailParser = require('./mailParser.js').MailParser;
 var saveToDB = require('../uploadService.js').saveToDB;
+var mongoUtils = require('../../mongoUtils.js');
 
 
 var process = function(req, res) {
@@ -14,13 +16,56 @@ var process = function(req, res) {
   var parser = new MailParser();
   var mailEntry = parser.parseRequest(req);
   if (parser.errors.length > 0) {
-    notifyFailure(parser.errors);
+    notifyFailure(mailEntry);
     dif.reject();
     return dif.promise()
   }
-  return saveAttachments(mailEntry)
+  return mongoUtils.connect(config.db)
+    .then(_.partial(checkClaim, mailEntry))
+          .then(saveAttachments)
           .then(saveEntry)
           .then(notifySuccess, notifyFailure);
+};
+
+var checkClaim = function(mailEntry, db){
+  var r = jQuery.Deferred();
+  var updateId = function(claimId){
+    mailEntry.claimId = claimId;
+    r.resolve(mailEntry);
+  }
+  var error = function(msg){
+    mailEntry.error = msg;
+    r.reject(mailEntry);
+  }
+
+  findParentClaimId(mailEntry.claimId, db)
+    .then(updateId, error);
+  return r;
+}
+
+var findParentClaimId = function(insuranceId, db){
+  var r = jQuery.Deferred();
+  var _getId = function(claims){
+    if (claims.length < 1){
+      r.reject('No Claim found with Insurance Id ' + insuranceId);
+    }
+    //else if (claims.length > 1){
+      //r.reject('Oh! more than one Claim found with Insurance Id' + insuranceId);
+    //}
+    else {
+      r.resolve(claims[0]._id);
+    }
+  };
+  findParentClaims(insuranceId, db)
+    .then(_getId);
+  return r;
+};
+
+var findParentClaims = function(insuranceId, db){
+  return mongoUtils.findEntities(mongoUtils.CLAIMS_COL_NAME,
+                      {insuranceCompanyFileNum: insuranceId},
+                      db);
+
 };
 
 var saveEntry = function(mailEntry) {
@@ -75,29 +120,23 @@ var saveAttachments = function(mailEntry) {
 
 var notifySuccess = function(mailEntry) {
   var body = 'Email processed successfully!';
-  body += '\n\n' + mailEntry;
+  body += '\n\n' + JSON.stringify(mailEntry);
   sendEmail(mailEntry.mail.from, mailEntry.mail.subject, body);
   return mailEntry;
-  //var r = jQuery.Deferred();
-  //r.resolve(mailEntry);
-  //return r.promise();
 };
 
 var notifyFailure = function(mailEntry) {
   var body = 'ERROR processing email.';
-  body += '\n\n' + mailEntry.error;
+  body += '\n\n' + JSON.stringify(mailEntry.error);
   sendEmail(mailEntry.mail.from, mailEntry.mail.subject, body);
   return mailEntry;
-  //var r = jQuery.Deferred();
-  //r.reject(mailEntry);
-  //return r.promise();
 };
 
 // helpers 
 
 function constructClaimEntry(data){
   var entry = new ClaimEntry();
-  entry.entryDate = new Date();
+  entry.entryDate = (new Date()).getTime();
   entry.summary = data.mail.subject;
   entry.from = data.mail.from;
   entry.description = data.mail['body-plain'];
