@@ -226,7 +226,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'shared/dateUtils',
                 buttons: '[No][Yes]'
             }, function (ButtonPressed) {
                 if (ButtonPressed === "Yes") {
-                    self.updateBill(function onDone(){
+                    self.updateBill().done(function onDone(){
                         router.routeToBillingOverview(self.claimId);
                     });
                 } else {
@@ -312,6 +312,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'shared/dateUtils',
                     console.log('getBillsForClaim: ' + JSON.stringify(response));
                     if (response.data[0]){
                         this.bill(KOMap.fromJS(response.data[0]))
+                        this.billRecipient(this.bill().billRecipient);
                         defer.resolve();
                     } else {
                         console.warn('No bill found for Id: ' + billId);
@@ -345,9 +346,9 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'shared/dateUtils',
         /* Save/update                                             */
         /***********************************************************/
 
-        BillingVM.prototype.updateBill = function (onDone) {
+        BillingVM.prototype.updateBill = function () {
             this.bill().billingDate(null);
-            this._persistBill(BillingStatus.NOT_SUBMITTED, onDone);
+            return this._persistBill(BillingStatus.NOT_SUBMITTED);
         };
 
         BillingVM.prototype.submitBill = function () {
@@ -357,9 +358,10 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'shared/dateUtils',
 
         BillingVM.prototype._persistBill = function (billingStatus, onDone) {
             console.log('Saving Bill');
-            onDone = onDone || $.noop;
+            var defer = $.Deferred();
             this.bill().claimId(this.claimId);
             this.bill().status(billingStatus);
+            this.bill().billRecipient = this.billRecipient();
 
             ajaxUtils.post(
                 '/bill',
@@ -373,9 +375,10 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'shared/dateUtils',
                         billingStatus,
                         function () {
                             amplify.publish(Events.SUCCESS_NOTIFICATION, {msg: 'Saved Bill'})
-                            onDone();
+                            defer.resolve();
                         });
                 }.bind(this));
+            return defer;
         };
 
         /*
