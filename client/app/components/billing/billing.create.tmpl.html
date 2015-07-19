@@ -70,16 +70,12 @@
 
     <div class="row">
         <div class="col-sm-8">
-            <h4 class="semi-bold">Rogers, Inc.</h4>
-            <address>
-                <strong>Mr. Simon Hedger</strong>
-                <br>
-                342 Mirlington Road,
-                <br>
-                Calfornia, CA 431464
-                <br>
-                <abbr title="Phone">P:</abbr> (467) 143-4317
-            </address>
+            <contact-component params="contact : billRecipient,
+                                       idSuffix: 'billing-recipient',
+                                       allowEdits: false,
+                                       showDetails: true,
+                                       placeholder: 'Start typing recipient',
+                                       isBusinessOptionApplicable: false"></contact-component>
         </div>
         <div class="col-sm-4">
             <div>

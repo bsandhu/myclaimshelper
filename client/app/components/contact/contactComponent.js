@@ -14,7 +14,9 @@ define(['knockout', 'text!app/components/contact/contactComponent.tmpl.html', 'm
                 throw 'Expecting `isBusinessOptionApplicable` as a param';
             }
 
-            this.showDetails = ko.observable(params.showDetails || false);
+            this.placeholder = ko.observable(params.hasOwnProperty('placeholder') ? params.placeholder : 'Name');
+            this.showDetails = ko.observable(params.hasOwnProperty('showDetails') ? params.showDetails : false);
+            this.allowEdits  = ko.observable(params.hasOwnProperty('allowEdits') ? params.allowEdits : true);
             this.contact     = params.contact;
             this.idSuffix    = ko.observable(params.idSuffix);
 
