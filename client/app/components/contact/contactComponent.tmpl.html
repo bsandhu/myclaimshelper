@@ -28,9 +28,11 @@
         <!--Individual-->
         <div class="inline bottomMargin" data-bind="if: contact().isBusiness() != 'true'">
             <div class="inline">
-                <input type="text" class="form-control wide input-sm" placeholder="Name"
+                <input type="text"
+                       class="form-control wide input-sm"
                        data-bind="autoComplete: contact,
-                                  value: contact().name"/>
+                                  value: contact().name,
+                                  attr: {'placeholder': placeholder}"/>
             </div>
         </div>
 
@@ -48,8 +50,8 @@
 
     </div>
 
-    <!-- Details -->
-    <div data-bind="visible: showDetails">
+    <!-- **** Details form - allow editing **** -->
+    <div data-bind="visible: showDetails() && allowEdits()">
 
         <!--Address-->
         <div class="inline bottomMargin">
@@ -75,4 +77,15 @@
         </div>
 
     </div>
+
+    <!-- **** Details view only **** -->
+    <div data-bind="visible: showDetails() && !allowEdits()">
+        <div data-bind="if: contact()">
+            <span data-bind="text: contact().streetAddress"></span><br>
+            <span data-bind="text: contact().city"></span>
+            <span data-bind="text: contact().zip"></span><br>
+            <a data-bind="attr: {href: 'tel:' + contact().phone()}"><span data-bind="text: contact().phone"></span></a>
+        </div>
+    </div>
+
 </div>
