@@ -1,5 +1,7 @@
-define(['knockout', 'KOMap', 'text!app/components/fileUpload/fileUploadComponent.tmpl.html'],
-    function (ko, KOMap, viewHtml) {
+define(['knockout', 'KOMap',
+        'amplify', 'app/utils/events',
+        'text!app/components/fileUpload/fileUploadComponent.tmpl.html'],
+    function (ko, KOMap, amplify, Events, viewHtml) {
         'use strict';
 
         function FileUploadComponentVM(params) {
@@ -7,6 +9,7 @@ define(['knockout', 'KOMap', 'text!app/components/fileUpload/fileUploadComponent
 
             console.assert(params.claimEntry, 'Expecting claimEntry param');
             this.claimEntry = params.claimEntry;
+            this.showUploadingSpinner = ko.observable(false);
         }
 
         FileUploadComponentVM.prototype.dragenter = function (data, e) {
@@ -22,26 +25,50 @@ define(['knockout', 'KOMap', 'text!app/components/fileUpload/fileUploadComponent
         FileUploadComponentVM.prototype.drop = function (data, e) {
             e.stopPropagation();
             e.preventDefault();
-            this.handleFilesSelection(e);
+            this.handleFilesDrop(e);
         };
 
         FileUploadComponentVM.prototype.handleFilesSelection = function (ev) {
+            console.log("Handle files selection");
+            var files = document.getElementById('fileUpload-input').files;
+            this._upload(files);
+        }
+
+        FileUploadComponentVM.prototype.handleFilesDrop = function (ev) {
             var filesSrc = ev.originalEvent.dataTransfer || ev.currentTarget;
             var files = filesSrc.files;
-            var _this = this;
+            this._upload(files);
+        }
 
-            if (!files.length) {
-                console.log('No files selected');
-                return;
-            }
+        FileUploadComponentVM.prototype._upload = function (files) {
+            try {
+                console.log("Uploading " + files);
+                var _this = this;
 
-            for (var i = 0; i < files.length; i++) {
-                this.uploadFile(files[i])
-                    .done(function (fileMetadata) {
-                        var metaObj = JSON.parse(fileMetadata);
-                        console.log(metaObj);
-                        _this.claimEntry().attachments.push(KOMap.fromJS(metaObj));
-                    });
+                if (!files.length) {
+                    console.log('No files selected');
+                    return;
+                }
+
+                for (var i = 0; i < files.length; i++) {
+                    this.showUploadingSpinner(true);
+                    this.uploadFile(files[i])
+                        .done(function (fileMetadata) {
+                            var metaObj = JSON.parse(fileMetadata);
+                            console.log(metaObj);
+                            _this.claimEntry().attachments.push(KOMap.fromJS(metaObj));
+                            _this.showUploadingSpinner(false);
+                        })
+                        .fail(function (msg) {
+                            amplify.publish(Events.FAILURE_NOTIFICATION,
+                                {msg: "<strong>Error </strong> while uploading files. Please retry." +
+                                    "<br>Techinal details: " + msg})
+                        });
+                }
+            } catch (e) {
+                amplify.publish(Events.FAILURE_NOTIFICATION,
+                    {msg: "<strong>Error</strong> while processing your request. Please retry." +
+                        "<br>Techinal details: " + e})
             }
         };
 

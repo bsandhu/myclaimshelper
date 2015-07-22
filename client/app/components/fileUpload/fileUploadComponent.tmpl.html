@@ -4,9 +4,16 @@
                         'drop': drop}">
 
     <input type="file" class="topMargin leftMargin" multiple
+           id="fileUpload-input"
            data-bind="event: {'change': handleFilesSelection}">
 
-    <div class="backgroundLabel">Drag n drop here</div>
+    <div style="position: relative; left: 40%"
+         class="txt-color-red"
+         data-bind="visible: showUploadingSpinner">
+        <i class="fa fa-spinner fa-spin"></i> Uploading ...
+    </div>
+    <div class="backgroundLabel">Drag n drop files here</div>
+
 
     <!-- List attachments -->
     <ol class="topMargin5" data-bind="foreach: {data: claimEntry().attachments, as: 'file'}">

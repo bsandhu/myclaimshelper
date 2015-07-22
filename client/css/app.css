@@ -137,7 +137,7 @@ div {
 /**********************************************************/
 
 .fileDropBox {
-    width: 100%;
+    width: 80%;
     min-height: 50px;
     border-color: lightslategrey;
     border-width: 1px;
