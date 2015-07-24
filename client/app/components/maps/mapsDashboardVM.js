@@ -1,10 +1,10 @@
-define(['knockout', 'KOMap',
+define(['knockout', 'KOMap', 'amplify',
         'text!app/components/maps/mapsDashboard.tmpl.html',
         'model/tags', 'model/claimEntry',
-        'shared/dateUtils', 'app/utils/ajaxUtils',
+        'shared/dateUtils', 'app/utils/ajaxUtils', 'app/utils/events',
         'async!https://maps.googleapis.com/maps/api/js?key=AIzaSyBB-Qincf0sNQcsu5PzZh7znG3GiB98GRU&libraries=places&signed_in=true&v=3.exp'],
 
-    function (ko, KOMap, viewHtml, Tags, ClaimEntry, DateUtils, AjaxUtils) {
+    function (ko, KOMap, amplify, viewHtml, Tags, ClaimEntry, DateUtils, AjaxUtils, Events) {
         'use strict';
         console.log('Maps Dash');
 
@@ -12,10 +12,17 @@ define(['knockout', 'KOMap',
             this.showDirections = ko.observable(false);
             this.travelDate = ko.observable();
             this.claimEntries = ko.observableArray([]);
-            var entryLocation = {address: "Manhattan, NY", location: {lat: 40.99, lng: -73.9}};
 
-            var mapOptions = {
-                center: entryLocation.location,
+            this.travelDate.subscribe(function () {
+                this.triggerReLoad();
+            }, this);
+
+            // Triggers initial load
+            this.travelDate(DateUtils.startOfToday());
+        }
+
+        TripPlannerVM.prototype.triggerReLoad = function () {
+            this.mapOptions = {
                 zoom: 9,
                 panControl: true,
                 zoomControl: true,
@@ -26,21 +33,14 @@ define(['knockout', 'KOMap',
             };
 
             // Init map
-            var mapDiv = document.getElementById('map-dash');
-            this.map = new google.maps.Map(mapDiv, mapOptions);
-            var options = {componentRestrictions: {country: 'us'}};
+            this.mapDiv = document.getElementById('map-dash');
+            this.map = new google.maps.Map(this.mapDiv, this.mapOptions);
+            this.loadAndShowRoutes();
 
-            // Trigger initial load
-            this.travelDate.subscribe(function(){
-                this.map = new google.maps.Map(mapDiv, mapOptions);
-                this.loadAndShowRoutes();
-
-                // Init Controls
-                this.setupPrinting();
-                this.setupDirectionsListing();
-                this.setupOptimization();
-            }, this);
-            this.travelDate(DateUtils.startOfToday());
+            // Init Controls
+            this.setupPrinting();
+            this.setupDirectionsListing();
+            this.setupRefresh();
         }
 
         TripPlannerVM.prototype.loadAndShowRoutes = function () {
@@ -126,6 +126,7 @@ define(['knockout', 'KOMap',
         }
 
         TripPlannerVM.prototype.showRoutes = function (start, end, via) {
+            var self = this;
             var dirService = new google.maps.DirectionsService();
             var dirDisplay = new google.maps.DirectionsRenderer({
                 suppressMarkers: true
@@ -207,6 +208,35 @@ define(['knockout', 'KOMap',
             }
         }
 
+        TripPlannerVM.prototype.setupRefresh = function () {
+            var self = this;
+            var dirDiv = document.createElement('div');
+            var refreshControl = new RefreshControl(dirDiv, this.map);
+            dirDiv.index = 1;
+            this.map.controls[google.maps.ControlPosition.TOP_CENTER].push(dirDiv);
+
+            function RefreshControl(refreshDiv, map) {
+                dirDiv.style.padding = '5px';
+                var controlUI = document.createElement('div');
+                controlUI.style.backgroundColor = 'white';
+                controlUI.style.borderStyle = 'solid';
+                controlUI.style.borderWidth = '1px';
+                controlUI.style.cursor = 'pointer';
+                controlUI.style.opacity = '.8';
+                refreshDiv.appendChild(controlUI);
+
+                var controlText = document.createElement('i');
+                controlText.className = 'fa fa-refresh';
+                controlText.innerHTML = ' Refresh';
+                controlText.style.padding = '5px';
+                controlUI.appendChild(controlText);
+
+                google.maps.event.addDomListener(controlUI, 'click', function () {
+                    self.triggerReLoad();
+                });
+            }
+        }
+
         TripPlannerVM.prototype.setupDirectionsListing = function () {
             var self = this;
             var dirDiv = document.createElement('div');
@@ -244,7 +274,7 @@ define(['knockout', 'KOMap',
             dirDiv.index = 1;
             this.map.controls[google.maps.ControlPosition.TOP_CENTER].push(dirDiv);
 
-            function OptimizationControl(printDiv, map) {
+            function OptimizationControl(optDiv, map) {
                 dirDiv.style.padding = '5px';
                 var controlUI = document.createElement('div');
                 controlUI.style.padding = '0px 5px 2px 5px';
@@ -253,7 +283,7 @@ define(['knockout', 'KOMap',
                 controlUI.style.borderWidth = '1px';
                 controlUI.style.cursor = 'pointer';
                 controlUI.style.opacity = '.8';
-                printDiv.appendChild(controlUI);
+                optDiv.appendChild(controlUI);
 
                 var checkBox = document.createElement('input');
                 checkBox.setAttribute("type", "checkbox");
@@ -266,7 +296,7 @@ define(['knockout', 'KOMap',
                 controlUI.appendChild(controlText);
 
                 google.maps.event.addDomListener(controlUI, 'click', function () {
-                    self.showDirections(!self.showDirections());
+                    self.shortestRoute(checkBox.checked);
                 });
             }
         }
