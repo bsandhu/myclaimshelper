@@ -52,8 +52,8 @@ define(['knockout', 'KOMap', 'text!app/components/contact/addContactComponent.tm
                     amplify.publish(Events.SUCCESS_NOTIFICATION, {msg: 'Contact saved'});
 
                     var contactJS = KOMap.toJS(this.contact());
-                    amplify.publish(Events.ADDED_CONTACT, contactJS);
                     ContactClient.updateInSession(contactJS);
+                    amplify.publish(Events.ADDED_CONTACT, contactJS);
                 }.bind(this),
                 function onFail(response) {
                     console.log('Failure: ' + JSON.stringify(response));
