@@ -49,11 +49,12 @@ define(['knockout', 'KOMap', 'text!app/components/contact/addContactComponent.tm
                 function onSuccess(response) {
                     console.log('Saved Contact: ' + JSON.stringify(response));
                     this.contact()._id(response.data._id);
-                    amplify.publish(Events.SUCCESS_NOTIFICATION, {msg: 'Contact saved'});
+                    amplify.publish(Events.SUCCESS_NOTIFICATION, {msg: 'Contact <b>' +  response.data.name +'</b> saved'});
 
                     var contactJS = KOMap.toJS(this.contact());
                     ContactClient.updateInSession(contactJS);
                     amplify.publish(Events.ADDED_CONTACT, contactJS);
+                    $('#addContactModal').modal('hide');
                 }.bind(this),
                 function onFail(response) {
                     console.log('Failure: ' + JSON.stringify(response));
