@@ -1,10 +1,11 @@
 define(['jquery', 'knockout', 'KOMap', 'amplify',
         'model/claim', 'model/claimEntry', 'model/contact', 'model/states',
         'app/utils/ajaxUtils', 'app/utils/events', 'app/utils/consts', 'app/utils/router',
-        'app/utils/sessionKeys', 'app/utils/session',
+        'app/utils/sessionKeys', 'app/utils/session', 'app/components/contact/contactClient',
         'shared/dateUtils', 'text!app/components/claim/claim.tmpl.html'],
     function ($, ko, KOMap, amplify, Claim, ClaimEntry, Contact, States,
-              ajaxUtils, Events, Consts, Router, SessionKeys, Session, DateUtils, viewHtml) {
+              ajaxUtils, Events, Consts, Router, SessionKeys, Session, ContactClient,
+              DateUtils, viewHtml) {
 
         function ClaimVM() {
             console.log('Init ClaimVM');
@@ -215,7 +216,15 @@ define(['jquery', 'knockout', 'KOMap', 'amplify',
                     this.claim().claimantsAttorneyContact._id(response.data.claimantsAttorneyContactId);
                     this.claim().insuranceCoContact._id(response.data.insuranceCoContactId);
 
+                    ContactClient.updateInSession(KOMap.toJS(this.claim().insuredContact));
+                    ContactClient.updateInSession(KOMap.toJS(this.claim().insuredAttorneyContact));
+                    ContactClient.updateInSession(KOMap.toJS(this.claim().claimantContact));
+                    ContactClient.updateInSession(KOMap.toJS(this.claim().claimantsAttorneyContact));
+                    ContactClient.updateInSession(KOMap.toJS(this.claim().insuranceCoContact));
+
                     amplify.publish(Events.SUCCESS_NOTIFICATION, {msg: 'Saved Claim'});
+                    amplify.publish(Events.ADDED_CONTACT, KOMap.toJS(this.claim().insuredContact));
+
                     this.storeInSession(this.claim()._id());
                     this.inEditMode(false);
                 }.bind(this));

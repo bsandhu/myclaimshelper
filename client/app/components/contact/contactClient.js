@@ -17,7 +17,11 @@ define(['jquery', 'app/utils/session'],
             updateInSession : function(contactObj) {
                 var contacts = Session.getContacts();
                 var update = false;
-
+                if ($.isEmptyObject(contactObj)
+                    || contactObj._id === undefined
+                    || contactObj._id === null) {
+                    return;
+                }
                 var newList = $.map(contacts, function (contact) {
                     if (contact._id === contactObj._id) {
                         update = true;
