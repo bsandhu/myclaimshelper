@@ -14,6 +14,7 @@ define(['knockout', 'text!app/components/contact/contactWidget.tmpl.html',
             } else {
                 this.initContacts();
             }
+            amplify.subscribe(Events.ADDED_CONTACT, this, this.onAddedContactEv);
         }
 
         ContactWidgetVM.prototype.initFilter = function () {
@@ -22,6 +23,11 @@ define(['knockout', 'text!app/components/contact/contactWidget.tmpl.html',
                     return contact.name.toUpperCase().indexOf(newVal.toUpperCase()) >= 0;
                 }));
             }, this);
+        }
+
+        ContactWidgetVM.prototype.onAddedContactEv = function (contact) {
+            // Note: Newly added contact is already in the Session
+            this.initContacts();
         }
 
         ContactWidgetVM.prototype.onShowContact = function (contact) {

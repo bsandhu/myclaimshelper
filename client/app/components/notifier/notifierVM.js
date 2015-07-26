@@ -14,6 +14,7 @@ define(['knockout', 'amplify', 'app/utils/events', 'text!app/components/notifier
         NotifierVM.prototype.onDismiss = function () {
             this.msg('');
             this.isVisible(false);
+            $('#notifier-container').hide();
             $("#notifier-container").velocity("stop");
         };
 

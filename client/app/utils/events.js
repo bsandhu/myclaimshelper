@@ -5,9 +5,9 @@ define([], function(){
         CLAIMS_GRID_SELCTION : 'GridSelection',
         SHOW_CLAIMS_GRID     : 'ShowClaimsGrid',
 
-        SHOW_CONTACT : 'SHOW_CONTACT',
-        ADD_CONTACT : 'ADD_CONTACT',
-        ADDED_CONTACT : 'ADDED_CONTACT',
+        SHOW_CONTACT         : 'SHOW_CONTACT',
+        ADD_CONTACT          : 'ADD_CONTACT',
+        ADDED_CONTACT        : 'ADDED_CONTACT',
 
         EXPAND_CLAIM_PANEL   : 'ExpandClaimPanel',
         COLLAPSE_CLAIM_PANEL : 'CollapseClaimPanel',
