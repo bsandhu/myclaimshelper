@@ -28,7 +28,7 @@
                             </div>
                             <div class="row margin-bottom-5">
                                 <div class="col-md-3" data-bind="text: 'Rate/' + userProfile.billingProfile.timeUnit()"></div>
-                                <div class="col-md-4" data-bind="text: userProfile.billingProfile.timeRate"></div>
+                                <div class="col-md-4" data-bind="text: '$ ' + userProfile.billingProfile.timeRate()"></div>
                             </div>
                             <div class="row margin-bottom-5">
                                 <div class="col-md-3">Track distance in</div>
@@ -36,7 +36,7 @@
                             </div>
                             <div class="row margin-bottom-5">
                                 <div class="col-md-3" data-bind="text: 'Rate/' + userProfile.billingProfile.distanceUnit()">/</div>
-                                <div class="col-md-4" data-bind="text: userProfile.billingProfile.distanceRate"></div>
+                                <div class="col-md-4" data-bind="text: '$ ' + userProfile.billingProfile.distanceRate()"></div>
                             </div>
 
                         </fieldset>

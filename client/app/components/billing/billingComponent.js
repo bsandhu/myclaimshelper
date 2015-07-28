@@ -207,10 +207,15 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'shared/dateUtils',
         };
 
         BillingVM.prototype.routeToBillingOverview = function () {
+            var self = this;
             if (this.isNewBill()) {
                 this.onNavigateAwayFromUnsavedBill();
             } else {
-                router.routeToBillingOverview(this.claimId);
+                $('#billPanel').velocity("fadeOut",
+                    { duration: 200,
+                      complete: function () {
+                          router.routeToBillingOverview(self.claimId);
+                      }})
             }
         };
 
@@ -230,9 +235,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'shared/dateUtils',
                 buttons: '[No][Yes]'
             }, function (ButtonPressed) {
                 if (ButtonPressed === "Yes") {
-                    self.updateBill().done(function onDone(){
-                        router.routeToBillingOverview(self.claimId);
-                    });
+                    self.updateBill();
                 } else {
                     router.routeToBillingOverview(self.claimId);
                 }
@@ -352,7 +355,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'shared/dateUtils',
 
         BillingVM.prototype.updateBill = function () {
             this.bill().billingDate(null);
-            return this._persistBill(BillingStatus.NOT_SUBMITTED);
+            return this._persistBill(BillingStatus.NOT_SUBMITTED)
         };
 
         BillingVM.prototype.submitBill = function () {
@@ -380,7 +383,8 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'shared/dateUtils',
                         function () {
                             amplify.publish(Events.SUCCESS_NOTIFICATION, {msg: 'Saved Bill'})
                             defer.resolve();
-                        });
+                            this.routeToBillingOverview();
+                        }.bind(this));
                 }.bind(this));
             return defer;
         };
