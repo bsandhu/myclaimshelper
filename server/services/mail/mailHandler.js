@@ -5,6 +5,7 @@ var _ = require('underscore');
 var config = require('../../config.js');
 var claimsService = require("../../services/claimsService.js");
 var ClaimEntry = require("../../model/claimEntry.js");
+var BillingItem = require('./billingItem.js');
 var MailParser = require('./mailParser.js').MailParser;
 var saveToDB = require('../uploadService.js').saveToDB;
 var mongoUtils = require('../../mongoUtils.js');
@@ -143,6 +144,8 @@ function constructClaimEntry(data){
   entry.claimId = data.claimId;
   entry.tag = data.tags || [];
   entry.tag.push('email');
+
+  entry.billingItem = new BillingItem();
   return entry;
 }
 
