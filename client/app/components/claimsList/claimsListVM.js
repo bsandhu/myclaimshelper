@@ -8,20 +8,24 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
             console.log('Init ClaimsListVM');
 
             this.DateUtils = DateUtils;
-            this.claims = ko.observableArray([]);
-            this.searchResults = ko.observableArray([]);
-            this.searchText = ko.observable('');
-
             this.loadClaims();
-            //this.setupSearchListeners();
+            amplify.subscribe(Events.SAVED_CLAIM, this, this.reLoadClaims);
         }
 
         ClaimsListVM.prototype.onClaimSelect = function (vm, event, data) {
             Router.routeToClaim(data.claimId);
         };
 
+        ClaimsListVM.prototype.reLoadClaims = function () {
+            $('#claimListTable').bootstrapTable('destroy');
+            this.loadClaims();
+        }
+
         ClaimsListVM.prototype.loadClaims = function () {
             var _this = this;
+            $('#claimListTable').bootstrapTable();
+            $('#claimListTable').bootstrapTable('showLoading');
+
             $.get('/claim')
                 .done(function (resp) {
                     var data = resp.data;
@@ -29,85 +33,24 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
 
                     var tempArray = [];
                     $.each(data, function (index, claim) {
-                        var koClaim = KOMap.fromJS(claim, {}, new Claim());
-                        tempArray.push(koClaim);
-                    });
-                    _this.claims(tempArray);
-                    _this.searchResults(tempArray);
-                })
-                .fail(function () {
-                    console.log('Fail');
-                });
-        };
-
-        ClaimsListVM.prototype.searchClaims = function (query) {
-            console.log('Searching for claims: ' + query);
-            var _this = this;
-            $("#notifier-container").hide();
-
-            $.getJSON('claim/search/' + query)
-                .done(function (res) {
-                    var data = res.data;
-                    var tempArray = [];
-                    console.log(JSON.stringify(data));
-
-                    if (data[0] != 'N') {
-                        $.each(data, function (index, claim) {
-                            var koClaim = KOMap.fromJS(claim, {}, new Claim());
-                            tempArray.push(koClaim);
+                        var claimDesc = claim.description || '';
+                        var insuranceCoName = claim.insuranceCompanyName || '';
+                        tempArray.push({
+                            claimId: claim._id,
+                            fileNo: claim.insuranceCompanyFileNum,
+                            desc: claimDesc.length > 40 ? claimDesc.substr(0, 40) + '...' : claimDesc,
+                            insuranceCo: insuranceCoName.length > 40 ? insuranceCoName.substr(0, 40) + '...' : insuranceCoName,
+                            date1: DateUtils.niceDate(claim.dateReceived, false),
+                            dateDue: DateUtils.niceDate(claim.dateDue, false)
                         });
-                        amplify.publish(Events.SUCCESS_NOTIFICATION, {msg: 'Found Claims'});
-                    }
-                    else {
-                        amplify.publish(Events.FAILURE_NOTIFICATION, {msg: 'No Claims Found'});
-                    }
-                    _this.claims(tempArray);
-                    _this.searchResults(tempArray);
-
+                    });
+                    $('#claimListTable').bootstrapTable('append', tempArray);
+                    $('#claimListTable').bootstrapTable('hideLoading');
                 })
                 .fail(function () {
-                    console.log('Problem with DB query');
-                    amplify.publish(Events.FAILURE_NOTIFICATION, {msg: 'Problem with DB'});
+                    amplify.publish(Events.FAILURE_NOTIFICATION, {msg: 'Error while refreshing Claims'});
+                    defer.reject();
                 });
-        };
-
-        /**********************************************/
-        /* Search                                     */
-        /**********************************************/
-
-        ClaimsListVM.prototype.onSearchClear = function () {
-            var temp = [];
-            $.each(this.claims(), function (index, claim) {
-                temp.push(claim);
-            });
-            this.searchResults(temp);
-            this.searchText('');
-        };
-
-        ClaimsListVM.prototype.setupSearchListeners = function () {
-            this.searchText.subscribe(onSearchTxtUpdate);
-            var _this = this;
-
-            function onSearchTxtUpdate(txt) {
-                var localMatches = [];
-                console.log('Search... ' + txt);
-                if (txt.length === 0) {
-                    _this.onSearchClear();
-                    return;
-                }
-                if (txt.length < 3) {
-                    return;
-                }
-                $.each(_this.claims(),
-                    function filterBySearchText(index, claim) {
-                        var desc = KOMap.toJSON(claim) || '';
-                        if (desc.toUpperCase().search(_this.searchText().toUpperCase()) >= 0) {
-                            localMatches.push(claim);
-                        }
-                    }
-                );
-                _this.searchResults(localMatches);
-            }
         };
 
         return {viewModel: ClaimsListVM, template: claimsListView};
