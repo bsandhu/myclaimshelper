@@ -224,6 +224,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify',
 
                     amplify.publish(Events.SUCCESS_NOTIFICATION, {msg: 'Saved Claim'});
                     amplify.publish(Events.ADDED_CONTACT, KOMap.toJS(this.claim().insuredContact));
+                    amplify.publish(Events.SAVED_CLAIM, {'claim': KOMap.toJS(this.claim())});
 
                     this.storeInSession(this.claim()._id());
                     this.inEditMode(false);

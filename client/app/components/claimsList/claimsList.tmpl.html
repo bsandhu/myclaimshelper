@@ -1,8 +1,9 @@
 <!-- Note: Div container is managed by parent -->
-<div class="hidden-xs hidden-sm">
-    <table data-classes="table table-hover table-responsive"
+<div >
+    <table id="claimListTable"
+           data-classes="table table-hover table-responsive"
            data-toggle="table"
-           data-striped="false"
+           data-striped="true"
            data-show-columns="true"
            data-show-toggle="true"
            data-search="true"
@@ -13,6 +14,10 @@
            data-sort-name="date1"
            data-sort-order="desc"
            data-show-export="true"
+           data-pagination="true"
+           data-show-pagination-switch="true"
+           data-maintain-selected="true"
+           data-smart-display="true"
            data-export-types="['csv', 'excel']"
            data-bind="event: {'click-row.bs.table': onClaimSelect}">
         <thead>
@@ -24,45 +29,6 @@
         <th data-field="dateDue" data-sortable="true">Due Date</th>
         </thead>
 
-        <tbody data-bind="foreach : {data: searchResults, as: 'claim'}">
-        <tr>
-            <td class="col-lg-2" data-bind="text: claim._id"></td>
-            <td class="col-lg-2" data-bind="text: claim.insuranceCompanyFileNum"></td>
-            <td class="col-lg-4" data-bind="textTruncate: claim.description, maxLength: 40,
-                                            attr: {title: claim.description}"></td>
-            <td class="col-lg-2" data-bind="textTruncate: claim.insuranceCompanyName, maxLength: 40,
-                                            attr: {title: claim.insuranceCompanyName}"></td>
-            <td class="col-lg-2" data-bind="text: $parent.DateUtils.niceDate(claim.dateReceived(), false)"></td>
-            <td class="col-lg-2" data-bind="text: $parent.DateUtils.niceDate(claim.dateDue(), false)"></td>
-        </tr>
-        </tbody>
-    </table>
-</div>
-<!-- Card view for small devices -->
-<div class="hidden-md hidden-lg">
-    <table data-classes="table table-hover table-responsive"
-           data-toggle="table"
-           data-striped="true"
-           data-search="true"
-           data-trim-on-search="true"
-           data-show-header="true"
-           data-card-view="true">
-        <thead>
-        <th data-field="fileNo"><strong class="txt-color-blue">File No.</strong></th>
-        <th data-field="desc"><strong class="txt-color-blue text-right">Description</strong></th>
-        <th data-field="insuranceCo"><strong class="txt-color-blue text-right">Insurance Co. </strong></th>
-        <th data-field="date1"><strong class="txt-color-blue text-right">Received</strong></th>
-        <th data-field="dateDue"><strong class="txt-color-blue text-right">Due</strong></th>
-        </thead>
-
-        <tbody data-bind="foreach : {data: searchResults, as: 'claim'}">
-        <tr data-bind="click: $parent.onClaimSelect">
-            <td class="col-lg-2" data-bind="text: claim.insuranceCompanyFileNum"></td>
-            <td class="col-lg-4" data-bind="textTruncate: claim.description, maxLength: 30"></td>
-            <td class="col-lg-2" data-bind="textTruncate: claim.insuranceCompanyName, maxLength: 30"></td>
-            <td class="col-lg-2" data-bind="text: $parent.DateUtils.niceDate(claim.dateReceived())"></td>
-            <td class="col-lg-2" data-bind="text: $parent.DateUtils.niceDate(claim.dateDue())"></td>
-        </tr>
-        </tbody>
+        <!-- Rows appended by Bootstrap table in VM -->
     </table>
 </div>
