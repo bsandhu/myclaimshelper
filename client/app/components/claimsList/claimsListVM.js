@@ -9,12 +9,17 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
 
             this.DateUtils = DateUtils;
             this.loadClaims();
-            amplify.subscribe(Events.SAVED_CLAIM, this, this.loadClaims);
+            amplify.subscribe(Events.SAVED_CLAIM, this, this.reLoadClaims);
         }
 
         ClaimsListVM.prototype.onClaimSelect = function (vm, event, data) {
             Router.routeToClaim(data.claimId);
         };
+
+        ClaimsListVM.prototype.reLoadClaims = function () {
+            $('#claimListTable').bootstrapTable('destroy');
+            this.loadClaims();
+        }
 
         ClaimsListVM.prototype.loadClaims = function () {
             var _this = this;
