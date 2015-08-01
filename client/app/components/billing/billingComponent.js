@@ -330,7 +330,9 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'shared/dateUtils',
                 function onSuccess(response) {
                     console.log('getBillsForClaim: ' + JSON.stringify(response));
                     if (response.data[0]){
-                        this.bill(KOMap.fromJS(response.data[0]))
+                        var billJS = response.data[0];
+                        billJS.billRecipient = billJS.billRecipient || new Contact();
+                        this.bill(KOMap.fromJS(billJS))
                         this.billRecipient(this.bill().billRecipient);
                         defer.resolve();
                     } else {
