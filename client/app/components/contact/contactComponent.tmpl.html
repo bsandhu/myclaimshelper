@@ -28,6 +28,7 @@
         <!--Individual-->
         <div class="inline bottomMargin" data-bind="if: contact().isBusiness() != 'true'">
             <div class="inline">
+                <!-- Auto complete -->
                 <input type="text"
                        class="form-control wide input-sm"
                        data-bind="autoComplete: contact,
@@ -75,7 +76,6 @@
                        data-bind="value: contact().phone"/>
             </div>
         </div>
-
     </div>
 
     <!-- **** Details view only **** -->
@@ -84,7 +84,9 @@
             <span data-bind="text: contact().streetAddress"></span><br>
             <span data-bind="text: contact().city"></span>
             <span data-bind="text: contact().zip"></span><br>
-            <a data-bind="attr: {href: 'tel:' + contact().phone()}"><span data-bind="text: contact().phone"></span></a>
+            <a>
+                <span data-bind="text: contact().phone"></span>
+            </a>
         </div>
     </div>
 
