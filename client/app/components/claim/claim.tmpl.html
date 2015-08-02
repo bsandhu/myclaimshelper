@@ -13,6 +13,15 @@
             <i class="fa fa-fw fa-lg fa-credit-card"></i>Billing
         </a>
     </li>
+    <li data-bind="if: activeTab() == Consts.CLAIMS_TAB" class="pull-right">
+        <a href="" data-bind="click: onCloseClaim">Close <i class="fa fa-times"></i></a>
+    </li>
+    <!--
+    TODO SmartNotification not disappearing properly on Billing view. Deal with later.
+    <li data-bind="if : activeTab() == Consts.BILLING_TAB"
+        class="pull-right">
+        <a href="" data-bind="click: onCloseBilling">Close <i class="fa fa-times"></i></a>
+    </li>-->
 </ul>
 
 <!-- *** Tabs content *** -->

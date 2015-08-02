@@ -159,6 +159,14 @@ define(['jquery', 'knockout', 'KOMap', 'amplify',
             amplify.publish(Events.ADD_CONTACT);
         }
 
+        ClaimVM.prototype.onCloseClaim = function (contact) {
+            Router.routeToHome();
+        }
+
+        ClaimVM.prototype.onCloseBilling = function (contact) {
+            amplify.publish(Events.CLOSE_BILLING_VIEW);
+        }
+
         /***********************************************************/
         /* View state                                              */
         /***********************************************************/

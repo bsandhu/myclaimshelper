@@ -15,7 +15,11 @@
                     var p = i.contentWindow;
                     p.document.open();
                     p.document.write('<html><head>');
-                    p.document.write('<link rel=stylesheet href=../../css/bootstrap.css type=text/css media=print />');
+                    p.document.write('<link rel=stylesheet href=../../css/bootstrap.css type=text/css />');
+                    p.document.write('<link rel=stylesheet href=../../css/smartadmin-production.css type=text/css />');
+                    p.document.write('<link rel=stylesheet href=../../css/invoice.css type=text/css media=print/>');
+                    p.document.write('<link rel=stylesheet href=../../css/app.css type=text/css >');
+                    p.document.write('<link rel=stylesheet href=../../css/font-awesome.min.css type=text/css />');
                     p.document.write('</head><body >');
                     p.document.write(b.innerHTML);
                     p.document.write('</body></html>');
@@ -66,7 +70,6 @@
     </div>
     <div class="clearfix"></div>
     <br>
-    <br>
 
     <div class="row">
         <div class="col-sm-8" data-bind="if: isBillEditable">
@@ -84,34 +87,26 @@
             <span data-bind="text: billRecipient().zip"></span><br>
             <span data-bind="text: billRecipient().phone"></span>
         </div>
-        <div class="col-sm-4">
+        <div class="col-sm-4 pull-right">
             <div>
-                <div>
-                    <strong>Invoice Num :</strong>
-                    <span class="pull-right" data-bind="text: bill()._id"></span>
-                </div>
-
+                <strong>Invoice Num :</strong>
+                <span class="pull-right" data-bind="text: bill()._id"></span>
             </div>
-            <div>
-                <div class="font-md">
-                    <strong>Invoice Date :</strong>
-                        <span class="pull-right"
-                              data-bind="text: bill().billingDate() != null ? bill().billingDate().toDateString() : 'Not submitted'">
-                            <i class="fa fa-calendar"></i>
-                        </span>
-                </div>
-
-            </div>
+            <div class="font-md">
+                <strong>Invoice Date :</strong>
+                <span class="pull-right"
+                      data-bind="text: bill().billingDate() != null ? bill().billingDate().toDateString() : 'Not submitted'">
+                    <i class="fa fa-calendar"></i>
+                </span>
+           </div>
             <br>
-
             <div class="well well-sm  bg-color-darken txt-color-white no-border">
                 <div class="fa-lg">
                     Total Due :
-                    <span class="pull-right" data-bind="text: bill().total() + '**'"></span>
+                    <span class="pull-right" data-bind="text: bill().total() + ' **'"></span>
                 </div>
 
             </div>
-            <br>
             <br>
         </div>
     </div>
@@ -186,35 +181,37 @@
                 <td><strong data-bind="text: bill().totalMileage() + ' Miles'"></strong></td>
                 <td><strong data-bind="text: '$' + bill().totalExpenseAmount()">$4,400.00</strong></td>
             </tr>
-
             </tbody>
         </table>
     </div>
     <!-- **** End entries listing **** -->
 
     <!-- **** Start footer **** -->
-    <div class="invoice-footer padding-10">
-        <div class="row margin-bottom-5">
-            <div>
-                <div class="col-sm-offset-8 col-sm-2 text-right">Pre-tax Total</div>
-                <div class="col-sm-2"><strong data-bind="text: bill().preTaxTotal"></strong></div>
+    <div class="invoice-footer padding-10 row">
+        <div class="col-sm-3 pull-right">
+            <div class="col-sm-8">
+                <div>
+                    <div class="inline" style="min-width: 100px">Pre-tax Total</div>
+                    <div class="pull-right inline"><strong data-bind="text: bill().preTaxTotal"></strong></div>
+                </div>
+                <div>
+                    <div class="inline" style="min-width: 100px"
+                         data-bind="text: 'Tax (' + bill().taxRate() + ')%'"></div>
+                    <div class="pull-right inline"><strong data-bind="text: bill().tax"></strong></div>
+                </div>
+                <div>
+                    <div class="inline" style="min-width: 100px">
+                        <h3><strong>Total</strong></h3>
+                    </div>
+                    <div class="pull-right inline">
+                        <strong><h3>
+                            <span class="text-success" data-bind="text: bill().total"></span>
+                        </h3></strong>
+                    </div>
+                </div>
             </div>
         </div>
-        <div class="row">
-            <div>
-                <div class="col-sm-offset-8 col-sm-2 text-right"
-                     data-bind="text: 'Tax (' + bill().taxRate() + ')%'"></div>
-                <div class="col-sm-2"><strong data-bind="text: bill().tax"></strong></div>
-            </div>
-        </div>
-        <div class="row">
-            <div>
-                <div class="col-sm-offset-8 col-sm-2 text-right"><h3><strong>Total</strong></h3></div>
-                <div class="col-sm-2"><strong><h3><strong>
-                    <span class="text-success" data-bind="text: bill().total"></span>
-                </strong></h3></strong></div>
-            </div>
-        </div>
+        <!-- Buttons -->
         <div class="row" data-bind="if: isBillEditable">
             <div class="col-sm-12">
                 <div class="pull-right">
