@@ -14,12 +14,10 @@
 
     <!-- SmartAdmin Styles : Please note (smartadmin-production.css) was created using LESS variables -->
     <link rel="stylesheet" type="text/css" media="screen" href="css/smartadmin-production.css">
-    <!--<link rel="stylesheet" type="text/css" media="screen" href="css/smartadmin-skins.css">-->
-    <link rel="stylesheet" type="text/css" media="screen" href="css/invoice.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="css/invoice .css">
     <link rel="stylesheet" type="text/css" href="../../css/jquery.datetimepicker.css">
     <link rel="stylesheet" type="text/css" href="../../css/sortable.css">
     <link rel="stylesheet" type="text/css" href="../../css/app.css">
-    <link rel="stylesheet" type="text/css" media="print" href="css/bootstrap.css">
 
     <!-- #FAVICONS -->
     <link rel="shortcut icon" href="img/favicon/favicon.ico" type="image/x-icon">
@@ -50,204 +48,36 @@
 
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.8.1/bootstrap-table.min.css">
 
-
     <script src="../../../lib/require.js"></script>
     <script src="../../../lib/requireConfig.js"></script>
 </head>
 
-<!--
-
-TABLE OF CONTENTS.
-
-Use search to find needed section.
-
-===================================================================
-
-|  01. #CSS Links                |  all CSS links and file paths  |
-|  02. #FAVICONS                 |  Favicon links and file paths  |
-|  03. #GOOGLE FONT              |  Google font link              |
-|  04. #APP SCREEN / ICONS       |  app icons, screen backdrops   |
-|  05. #BODY                     |  body tag                      |
-|  06. #HEADER                   |  header tag                    |
-|  07. #PROJECTS                 |  project lists                 |
-|  08. #TOGGLE LAYOUT BUTTONS    |  layout buttons and actions    |
-|  09. #MOBILE                   |  mobile view dropdown          |
-|  10. #SEARCH                   |  search field                  |
-|  11. #NAVIGATION               |  left panel & navigation       |
-|  12. #MAIN PANEL               |  main panel                    |
-|  13. #MAIN CONTENT             |  content holder                |
-|  14. #PAGE FOOTER              |  page footer                   |
-|  15. #SHORTCUT AREA            |  dropdown shortcuts area       |
-|  16. #PLUGINS                  |  all scripts and plugins       |
-
-===================================================================
-
--->
-
-<!-- #BODY -->
-<!-- Possible Classes
-
-    * 'smart-skin-{SKIN#}'
-    * 'smart-rtl'         - Switch theme mode to RTL (will be avilable from version SmartAdmin 1.5)
-    * 'menu-on-top'       - Switch to top navigation (no DOM change required)
-    * 'hidden-menu'       - Hides the main menu but still accessable by hovering over left edge
-    * 'fixed-header'      - Fixes the header
-    * 'fixed-navigation'  - Fixes the main menu
-    * 'fixed-ribbon'      - Fixes breadcrumb
-    * 'fixed-footer'      - Fixes footer
-    * 'container'         - boxed layout mode (non-responsive: will not work with fixed-navigation & fixed-ribbon)
--->
 <body class="menu-on-top">
 
 <!-- #HEADER -->
-<header id="header">
-    <div id="logo-group">
-        <span class="headerLogo"></span>
-        <span class="headerLabel"><h3>Agent 007</h3></span>
+<nav class="navbar navbar-default" role="navigation">
+
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggle"
+                data-toggle="collapse" data-target="#example-navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="#">Agent 007</a>
     </div>
 
-    <!-- #TOGGLE LAYOUT BUTTONS -->
-    <!-- pulled right: nav area -->
-    <div class="pull-right">
-
-        <!-- collapse menu button -->
-        <div id="hide-menu" class="btn-header pull-right">
-            <span> <a href="javascript:void(0);" data-action="toggleMenu" title="Collapse Menu"><i
-                    class="fa fa-reorder"></i></a> </span>
-        </div>
-        <!-- end collapse menu -->
-
-        <!-- #MOBILE -->
-        <!-- Top menu userProfile link : this shows only when top menu is active -->
-        <ul id="mobile-profile-img" class="header-dropdown-list hidden-xs padding-5">
-            <li class="">
-<!--
-                <a href="#" class="dropdown-toggle no-margin userdropdown" data-toggle="dropdown">
-                    <img src="img/avatars/sunny.png" alt="John Doe" class="online"/>
-                </a>
-                <ul class="dropdown-menu pull-right">
-                    <li>
-                        <a href="login.html" class="padding-10 padding-top-5 padding-bottom-5" data-action="userLogout"><i
-                                class="fa fa-sign-out fa-lg"></i> <strong><u>L</u>ogout</strong></a>
-                    </li>
-                </ul>
--->
-            </li>
+    <div class="collapse navbar-collapse" id="example-navbar-collapse">
+        <ul class="nav navbar-nav">
+            <li><a href="#">Dashboard</a></li>
+            <li><a href="#">Claims</a></li>
+            <li><a href="#">Billing</a></li>
+            <li><a href="#">Messages</a></li>
         </ul>
-
-        <!-- logout button -->
-<!--
-        <div id="logout" class="btn-header transparent pull-right">
-            <span> <a href="login.html" title="Sign Out" data-action="userLogout"
-                      data-logout-msg="You can improve your security further after logging out by closing this opened browser"><i
-                    class="fa fa-sign-out"></i></a> </span>
-        </div>
--->
-        <!-- end logout button -->
-
-        <!-- fullscreen button -->
-<!--
-        <div id="fullscreen" class="btn-header transparent pull-right">
-            <span> <a href="javascript:void(0);" data-action="launchFullscreen" title="Full Screen"><i
-                    class="fa fa-arrows-alt"></i></a> </span>
-        </div>
--->
-        <!-- end fullscreen button -->
-
     </div>
-    <!-- end pulled right: nav area -->
 
-</header>
-<!-- END HEADER -->
-
-<!-- #NAVIGATION -->
-<!-- Left panel : Navigation area -->
-<!-- Note: This width of the aside area can be adjusted through LESS variables -->
-<aside id="left-panel">
-
-    <!-- User info -->
-    <div class="login-info">
-        <span> <!-- User image size is adjusted inside CSS, it should stay as is -->
-
-            <a href="javascript:void(0);" id="show-shortcut" data-action="toggleShortcut">
-                <img src="img/avatars/sunny.png" alt="me" class="online"/>
-                <span>
-                    john.doe
-                </span>
-                <i class="fa fa-angle-down"></i>
-            </a>
-
-        </span>
-    </div>
-    <!-- end user info -->
-
-    <!-- NAVIGATION : This navigation is also responsive
-
-    To make this navigation dynamic please make sure to link the node
-    (the reference to the nav > ul) after page load. Or the navigation
-    will not initialize.
-    -->
-    <nav>
-        <!--
-        NOTE: Notice the gaps after each icon usage <i></i>..
-        Please note that these links work a bit different than
-        traditional href="" links. See documentation for details.
-        -->
-
-        <ul>
-            <li class="">
-                <a href="#/home" title="Dashboard">
-                    <i class="fa fa-lg fa-fw fa-home"></i>
-                    <span class="menu-item-parent">Dashboard</span>
-                </a>
-                <ul>
-                    <li>
-                        <a href="">
-                            <i class="fa fa-refresh" id="deletepositionkey-options"></i> Reset layout
-                        </a>
-                    </li>
-                    <li>
-                        <a data-bind="click: resetWidgets">
-                            <i class="fa fa-refresh"></i> Reset widgets
-                        </a>
-                    </li>
-
-                </ul>
-            </li>
-            <li>
-                <a href="#">
-                    <i class="fa fa-lg fa-fw fa-plus-square-o"></i>
-                    <span class="menu-item-parent">Add</span>
-                </a>
-                <ul>
-                    <li>
-                        <a href="#" data-bind="click: onAddNewClaim">New Claim</a>
-                    </li>
-                </ul>
-            </li>
-            <li class="top-menu-hidden">
-                <a href="#">
-                    <i class="fa fa-lg fa-fw fa-cube txt-color-blue"></i>
-                    <span class="menu-item-parent">Misc</span></a>
-                <ul>
-                    <li class="divider"></li>
-                    <li>
-                        <a href="#" data-bind="click: onUserProfileClick">
-                            <i class="fa fa-user"></i> User Profile
-                        </a>
-                    </li>
-                    <li class="divider"></li>
-                    <li>
-                        <a href="help/faq.html"
-                           target="_blank"><i class="fa fa-book"></i> Documentation</a>
-                    </li>
-                </ul>
-            </li>
-        </ul>
-    </nav>
-    <span class="minifyme" data-action="minifyMenu"> <i class="fa fa-arrow-circle-left hit"></i> </span>
-
-</aside>
+</nav>
 <!-- END NAVIGATION -->
 
 <!-- #MAIN PANEL -->
@@ -268,52 +98,57 @@ Use search to find needed section.
         <div id="dashboardPanel" class="slidingContainer dashboardPanel">
             <div id="dashboardPanelContent" class="dashboardPanelContent">
 
-                    <!-- Widget container -->
-                    <section id="widget-grid">
-                        <div class="row">
-                            <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12 sortable-grid ui-sortable">
-                                <div data-bind="component: 'summary-component'"></div>
+                <!-- Widget container -->
+                <section id="widget-grid">
+                    <div class="row">
+                        <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12 sortable-grid ui-sortable">
+                            <div data-bind="component: 'summary-component'"></div>
+                        </article>
+                    </div>
+                    <div class="row">
+                        <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12 sortable-grid ui-sortable">
+                            <div data-bind="component: 'claims-list-component'"></div>
+                        </article>
+                    </div>
+                    <div class="row">
+                        <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12 sortable-grid ui-sortable">
+                            <article class="col-xs-12 col-sm-12 col-md-8 col-lg-8 sortable-grid ui-sortable">
+                                <div data-bind="component: 'stats-component'"></div>
+                                <div data-bind="component: 'maps-dash-component'"></div>
                             </article>
-                        </div>
-                        <div class="row">
-                            <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12 sortable-grid ui-sortable">
-                                <article class="col-xs-12 col-sm-12 col-md-8 col-lg-8 sortable-grid ui-sortable">
-                                    <div data-bind="component: 'stats-component'"></div>
-                                    <div data-bind="component: 'maps-dash-component'"></div>
-                                </article>
-                                <article class="col-xs-12 col-sm-12 col-md-4 col-lg-4 sortable-grid ui-sortable">
-                                    <div data-bind="component: 'contact-widget-component'"></div>
-                                </article>
+                            <article class="col-xs-12 col-sm-12 col-md-4 col-lg-4 sortable-grid ui-sortable">
+                                <div data-bind="component: 'contact-widget-component'"></div>
                             </article>
-                        </div>
-                        <!--
-                            <article class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
-                                <div data-bind="component: 'quick-add-component'"></div>
-                            </article>
-                            <article class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
-                            </article>
-                        -->
-                    </section>
-                </div>
-            </div>
-        </div>
-
-        <!-- **** Claim module **** -->
-        <div id="claimPanel" class="slidingContainer claimPanel" style="width: 0%;">
-            <!-- Note: Still using module for the afterRender fn -->
-            <div data-bind="module: {name: 'app/components/claim/claimVM',
-                                         template: 'app/components/claim/claim',
-                                         afterRender: startRouter}"></div>
-        </div>
-
-        <!-- **** Claim Entry module **** -->
-        <div id="claimEntryPanel" class="slidingContainer claimEntryPanel" style="width: 0%;">
-            <div id="claimEntryPanelContent" class="claimEntryPanelContent">
-                <div data-bind="component: 'task-entry-component'"></div>
+                        </article>
+                    </div>
+                    <!--
+                        <article class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
+                            <div data-bind="component: 'quick-add-component'"></div>
+                        </article>
+                        <article class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
+                        </article>
+                    -->
+                </section>
             </div>
         </div>
     </div>
-    <!-- END #MAIN CONTENT -->
+
+    <!-- **** Claim module **** -->
+    <div id="claimPanel" class="slidingContainer claimPanel" style="width: 0%;">
+        <!-- Note: Still using module for the afterRender fn -->
+        <div data-bind="module: {name: 'app/components/claim/claimVM',
+                                         template: 'app/components/claim/claim',
+                                         afterRender: startRouter}"></div>
+    </div>
+
+    <!-- **** Claim Entry module **** -->
+    <div id="claimEntryPanel" class="slidingContainer claimEntryPanel" style="width: 0%;">
+        <div id="claimEntryPanelContent" class="claimEntryPanelContent">
+            <div data-bind="component: 'task-entry-component'"></div>
+        </div>
+    </div>
+</div>
+<!-- END #MAIN CONTENT -->
 </div>
 <!-- END #MAIN PANEL -->
 
@@ -332,7 +167,7 @@ Use search to find needed section.
      * Load libs and init Knockout - on app startup. See requireConfig.js
      */
     require(['jquery', 'knockout', 'KOAmd', 'text', 'amplify', 'app/components/appVM', 'shared/dateUtils', 'app/utils/session',
-                'jarvis', 'smartnotify', 'app/utils/koDatetimePickerBinding', 'app/utils/koWYSIWYGBinding',
+                'smartnotify', 'app/utils/koDatetimePickerBinding', 'app/utils/koWYSIWYGBinding',
                 'app/utils/koTextTruncateBinding', 'app/utils/koSortableBinding', 'app/utils/koAutoComplete',
                 'velocity', 'bootstrap', 'KOXeditable', 'bootstrapTable', 'tableExport'],
             function ($, ko, KOAmd, text, amplify, AppVM, DateUtils, Session) {
@@ -376,82 +211,82 @@ Use search to find needed section.
 
                 // Initializing the widgets.
                 // TODO find a cleaner way trigger once KO is done with initial render
-                setTimeout(function(){
-                       $('#widget-grid').jarvisWidgets({
-                            grid : 'article',
-                            widgets : '.jarviswidget',
-                            localStorage : true,
-                            deleteSettingsKey : '#deletesettingskey-options',
-                            settingsKeyLabel : 'Reset settings?',
-                            deletePositionKey : '#deletepositionkey-options',
-                            positionKeyLabel : 'Reset position?',
-                            sortable : true,
-                            buttonsHidden : false,
-                            // toggle button
-                            toggleButton : true,
-                            toggleClass : 'fa fa-minus | fa fa-plus',
-                            toggleSpeed : 200,
-                            onToggle : function() {
-                            },
-                            // delete btn
-                            deleteButton : false,
-                            deleteClass : 'fa fa-times',
-                            deleteSpeed : 200,
-                            onDelete : function() {
-                            },
-                            // edit btn
-                            editButton : false,
-                            editPlaceholder : '.jarviswidget-editbox',
-                            editClass : 'fa fa-cog | fa fa-save',
-                            editSpeed : 200,
-                            onEdit : function() {
-                            },
-                            // color button
-                            colorButton : true,
-                            // full screen
-                            fullscreenButton : true,
-                            fullscreenClass : 'fa fa-expand | fa fa-compress',
-                            fullscreenDiff : 3,
-                            onFullscreen : function() {
-                            },
-                            // custom btn
-                            customButton : false,
-                            customClass : 'folder-10 | next-10',
-                            customStart : function() {
-                                alert('Hello you, this is a custom button...');
-                            },
-                            customEnd : function() {
-                                alert('bye, till next time...');
-                            },
-                            // order
-                            buttonOrder : '%refresh% %custom% %edit% %toggle% %fullscreen% %delete%',
-                            opacity : 1.0,
-                            dragHandle : '> header',
-                            placeholderClass : 'jarviswidget-placeholder',
-                            indicator : true,
-                            indicatorTime : 600,
-                            ajax : true,
-                            timestampPlaceholder : '.jarviswidget-timestamp',
-                            timestampFormat : 'Last update: %m%/%d%/%y% %h%:%i%:%s%',
-                            refreshButton : true,
-                            refreshButtonClass : 'fa fa-refresh',
-                            labelError : 'Sorry but there was a error:',
-                            labelUpdated : 'Last Update:',
-                            labelRefresh : 'Refresh',
-                            labelDelete : 'Delete widget:',
-                            afterLoad : function() {
-                            },
-                            rtl : false, // best not to toggle this!
-                            onChange : function() {
+                /*setTimeout(function(){
+                 $('#widget-grid').jarvisWidgets({
+                 grid : 'article',
+                 widgets : '.jarviswidget',
+                 localStorage : true,
+                 deleteSettingsKey : '#deletesettingskey-options',
+                 settingsKeyLabel : 'Reset settings?',
+                 deletePositionKey : '#deletepositionkey-options',
+                 positionKeyLabel : 'Reset position?',
+                 sortable : true,
+                 buttonsHidden : true,
+                 // toggle button
+                 toggleButton : false,
+                 toggleClass : 'fa fa-minus | fa fa-plus',
+                 toggleSpeed : 200,
+                 onToggle : function() {
+                 },
+                 // delete btn
+                 deleteButton : false,
+                 deleteClass : 'fa fa-times',
+                 deleteSpeed : 200,
+                 onDelete : function() {
+                 },
+                 // edit btn
+                 editButton : false,
+                 editPlaceholder : '.jarviswidget-editbox',
+                 editClass : 'fa fa-cog | fa fa-save',
+                 editSpeed : 200,
+                 onEdit : function() {
+                 },
+                 // color button
+                 colorButton : false,
+                 // full screen
+                 fullscreenButton : false,
+                 fullscreenClass : 'fa fa-expand | fa fa-compress',
+                 fullscreenDiff : 3,
+                 onFullscreen : function() {
+                 },
+                 // custom btn
+                 customButton : false,
+                 customClass : 'folder-10 | next-10',
+                 customStart : function() {
+                 alert('Hello you, this is a custom button...');
+                 },
+                 customEnd : function() {
+                 alert('bye, till next time...');
+                 },
+                 // order
+                 buttonOrder : '%refresh% %custom% %edit% %toggle% %fullscreen% %delete%',
+                 opacity : 1.0,
+                 dragHandle : '> header',
+                 placeholderClass : 'jarviswidget-placeholder',
+                 indicator : true,
+                 indicatorTime : 600,
+                 ajax : true,
+                 timestampPlaceholder : '.jarviswidget-timestamp',
+                 timestampFormat : 'Last update: %m%/%d%/%y% %h%:%i%:%s%',
+                 refreshButton : true,
+                 refreshButtonClass : 'fa fa-refresh',
+                 labelError : 'Sorry but there was a error:',
+                 labelUpdated : 'Last Update:',
+                 labelRefresh : 'Refresh',
+                 labelDelete : 'Delete widget:',
+                 afterLoad : function() {
+                 },
+                 rtl : false, // best not to toggle this!
+                 onChange : function() {
 
-                            },
-                            onSave : function() {
+                 },
+                 onSave : function() {
 
-                            },
-                            ajaxnav : $.navAsAjax // declears how the localstorage should be saved (HTML or AJAX page)
+                 },
+                 ajaxnav : $.navAsAjax // declears how the localstorage should be saved (HTML or AJAX page)
 
-                        })}, 2000);
-           });
+                 })}, 2000);*/
+            });
 
 </script>
 

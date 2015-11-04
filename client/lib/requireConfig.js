@@ -20,7 +20,6 @@ require.config({
         'async': 'lib/async',
         'datetimepicker': 'lib/jquery.datetimepicker',
         'smartnotify': 'lib/SmartNotification.min',
-        'jarvis': 'lib/jarvis.widget.min',
         'sortable': 'lib/sortable.min',
         'xeditable': 'lib/x-editable.min',
         'KOXeditable': 'lib/ko.xeditable'
@@ -28,9 +27,6 @@ require.config({
     shim: {
         'jqueryui': {
             deps: ['jquery']
-        },
-        'jarvis': {
-            deps: ['jquery', 'jqueryui']
         },
         'velocity': {
             deps: ['jquery']

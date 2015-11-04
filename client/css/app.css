@@ -349,7 +349,7 @@ div {
     margin-right: -5px;
 }
 
-.menu-on-top .page-footer{
+.menu-on-top .page-footer {
     padding: 0px;
     padding-top: 5px;
 }
@@ -364,4 +364,82 @@ div {
     position: absolute;
     display: block;
     bottom: 0px;
+}
+
+/**********************************************************/
+/**** Bootstrap overrides ****/
+/**********************************************************/
+
+body {
+    font-family: "Open Sans", Arial, Helvetica, Sans-Serif;
+    font-size: 13px;
+    line-height: 1.42857143;
+    color: #333333;
+    background-color: rgb(235, 238, 243);
+}
+
+/**********************************************************/
+/**** Smartadmin widget overrides ****/
+/**********************************************************/
+
+.jarviswidget > header {
+    border-bottom-width: 0px;
+}
+
+.jarviswidget > div {
+    border-bottom-width: 1px;
+}
+
+.menu-on-top #main {
+    margin-left: 0px !important;
+    margin-top: 10px !important;
+}
+
+/**********************************************************/
+/**** Bootstrap navbar overrides ****/
+/**********************************************************/
+
+nav ul {
+    width: 80%;
+}
+
+.navbar-default {
+    background-color: rgb(28, 135, 209);
+}
+
+.navbar-header {
+    /*background-color: rgb(0, 100, 184);*/
+    background-color: rgb(48, 125, 195);
+    height: 90px;
+}
+
+.navbar-default .navbar-brand {
+    font-size: 26pt;
+    font-family: 'Open sans';
+    color: white;
+    letter-spacing: 0em;
+    height: 90px;
+    line-height: 60px;
+}
+
+/* Un-selected menu item */
+.navbar-default .navbar-nav > li > a {
+    font-size: 16pt;
+    font-family: 'Open sans';
+    height: 90px;
+    line-height: 60px;
+    color: #c0bfbf;
+    letter-spacing: 0.05em;
+    width: 150px;
+    text-align: center;
+}
+
+/* Hover/Selected menu item */
+.navbar-default .navbar-nav > li > a:hover, .navbar-default .navbar-nav > li > a:focus {
+    color: white;
+    font-family: 'Open sans';
+    letter-spacing: 0.05em;
+    border-bottom-color: rgb(235, 238, 243);
+    border-bottom-width: 10px;
+    border-bottom-style: solid;
 }
