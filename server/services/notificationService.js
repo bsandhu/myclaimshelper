@@ -1,0 +1,120 @@
+var sendResponse = require('./claimsService.js').sendResponse;
+var EventEmitter = require('events').EventEmitter;
+var Notification = require('../model/notification.js');
+var consts = require('../model/consts.js');
+var mongoUtils = require('./../mongoUtils.js');
+var dateUtils = require('./../shared/dateUtils.js');
+var jQuery = require('jquery-deferred');
+var _ = require('underscore');
+
+
+var broadcaster = new EventEmitter();
+
+function broadcast(req, res) {
+    var msg = req.body.msg;
+    console.log('Broadcasting msg: ' + msg);
+
+    var notification = new Notification();
+    notification.name = 'NewMsg';
+    notification.body = msg;
+
+    // Broadcast event - picked up by the start.js module
+    var defer = jQuery.Deferred();
+    broadcaster.emit(consts.Events.NOTIFICATION, notification);
+
+    // Persist
+    mongoUtils.saveOrUpdateEntity(notification, mongoUtils.NOTIFICATIONS_COL_NAME)
+        .then(function (err, entity) {
+            sendResponse(res, err, entity);
+            defer.resolve();
+        });
+    return defer;
+}
+
+function markAllAsRead(req, res) {
+    console.log('Marking as msgs as read');
+    markAllAsReadInDB()
+        .then(_.partial(sendResponse, res, null, {}))
+        .fail(_.partial(sendResponse, res, 'Failed to update', {}));
+}
+
+function getUnreadMsgs(req, res) {
+    console.log('Get unread notifications');
+    getUnreadinDB(5)
+        .then(function (err, result) {
+            sendResponse(res, err, result);
+        })
+}
+
+/****************************************************/
+/* CRUD Ops */
+/****************************************************/
+
+
+function getUnreadinDB(daysAgo) {
+    var defer = jQuery.Deferred();
+    mongoUtils.run(function find(db) {
+        db.collection(mongoUtils.NOTIFICATIONS_COL_NAME)
+            .find({
+                $or: [
+                    {lastUpdateDate: {$gt: dateUtils.daysBeforeNowInMillis(daysAgo)}},
+                    {lastUpdateDate: { $exists: false }},
+                ],
+                read: false
+            }).toArray(
+            function onDone(err, result) {
+                console.log('Unread messages: ' + result.length);
+                defer.resolve(err, result);
+            });
+    });
+    return defer;
+}
+
+function deleteNotificationInDB(notificationId) {
+    var defer = jQuery.Deferred();
+    jQuery
+        .when(mongoUtils.deleteEntity({_id: notificationId}, mongoUtils.NOTIFICATIONS_COL_NAME))
+        .then(defer.resolve())
+        .fail(defer.reject());
+    return defer;
+}
+
+function markAllAsReadInDB() {
+    var defer = jQuery.Deferred();
+    jQuery
+        .when(mongoUtils.modifyAttr(mongoUtils.NOTIFICATIONS_COL_NAME, {"read": true}))
+        .then(defer.resolve())
+        .fail(defer.reject());
+    return defer;
+}
+
+function unreadMsgCountInDB() {
+    var defer = jQuery.Deferred();
+
+    mongoUtils.run(function count(db) {
+        db.collection(mongoUtils.NOTIFICATIONS_COL_NAME)
+            .aggregate([
+                { $match: { read: false} },
+                { $group: { _id: "$read", count: { $sum: 1 } } }
+            ],
+            function onDone(err, resultsArray) {
+                if (err) {
+                    defer.reject(err);
+                } else {
+                    console.log('Unread msg count query result: ' + JSON.stringify(resultsArray));
+                    defer.resolve(err, resultsArray && resultsArray.length > 0 ? resultsArray[0].count : 0);
+                }
+            });
+    });
+    return defer;
+}
+
+
+exports.broadcast = broadcast;
+exports.markAllAsRead = markAllAsRead;
+exports.getUnreadMsgs = getUnreadMsgs;
+
+exports.markAllAsReadInDB = markAllAsReadInDB;
+exports.getUnreadinDB = getUnreadinDB;
+exports.deleteNotificationInDB = deleteNotificationInDB;
+exports.unreadMsgCountInDB = unreadMsgCountInDB;

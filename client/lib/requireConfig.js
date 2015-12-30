@@ -22,7 +22,8 @@ require.config({
         'smartnotify': 'lib/SmartNotification.min',
         'sortable': 'lib/sortable.min',
         'xeditable': 'lib/x-editable.min',
-        'KOXeditable': 'lib/ko.xeditable'
+        'KOXeditable': 'lib/ko.xeditable',
+        'socketio': 'lib/socket.io-1.2.0'
     },
     shim: {
         'jqueryui': {
@@ -81,8 +82,10 @@ require.config({
         },
         'KOXeditable': {
             deps: ['xeditable']
+        },
+        'socketio': {
+            exports: 'io'
         }
-
     }
 });
 

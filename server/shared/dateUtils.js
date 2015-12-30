@@ -133,6 +133,10 @@ define([],
             return startOfToday().getTime() + (numOfDays * millisInADay);
         }
 
+        function daysBeforeNowInMillis(numOfDays) {
+            return startOfToday().getTime() - (numOfDays * millisInADay);
+        }
+
         function isYesterdayOrBefore(date) {
             return date.getTime() < startOfToday().getTime();
         }
@@ -150,6 +154,7 @@ define([],
             'now'                   : now,
             'startOfWeekInMillis'   : startOfWeekInMillis,
             'endOfWeekInMillis'     : endOfWeekInMillis,
-            'daysFromNowInMillis'   : daysFromNowInMillis
+            'daysFromNowInMillis'   : daysFromNowInMillis,
+            'daysBeforeNowInMillis' : daysBeforeNowInMillis
         };
     });

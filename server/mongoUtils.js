@@ -7,14 +7,14 @@ var dbConn;
 
 // :: Promise -> a -> b -> none
 function _onResult(result, err, ok) {
-  if (err) {
-    console.log('Error: ' + err.message);
-    result.reject(err);
-  }
-  else {
-    console.log('OK');
-    result.resolve(ok);
-  }
+    if (err) {
+        console.log('Error: ' + err.message);
+        result.reject(err);
+    }
+    else {
+        console.log('OK');
+        result.resolve(ok);
+    }
 };
 
 // :: f -> Dict -> [Obj]
@@ -130,7 +130,7 @@ function saveOrUpdateEntity(entity, colName) {
 
 function modifyEntityAttr(entityId, colName, attributesAsJson) {
     var defer = jQuery.Deferred();
-    if(!entityId){
+    if (!entityId) {
         defer.reject("EntityId not specified");
     }
 
@@ -143,6 +143,28 @@ function modifyEntityAttr(entityId, colName, attributesAsJson) {
             function onUpdate(err, result) {
                 console.log('Modified Mongo collection ' + colName + '. Id: ' + entityId);
                 defer.resolve(err, entityId);
+            });
+    });
+    return defer;
+}
+
+function modifyAttr(colName, attributesAsJson) {
+    console.log('Modifing ' + colName + ' with ' + attributesAsJson);
+    var defer = jQuery.Deferred();
+    run(function update(db) {
+        var entityCol = db.collection(colName);
+        entityCol.update(
+            {},
+            {$set: attributesAsJson},
+            {w: 1, multi: true},
+            function onUpdate(err, result) {
+                console.log('Modified Mongo collection ' + colName);
+                if (err) {
+                    console.error(err);
+                    defer.reject(err);
+                } else {
+                    defer.resolve();
+                }
             });
     });
     return defer;
@@ -207,7 +229,6 @@ var findEntities = function (collectionName, search, db) {
 }
 
 
-
 function initCollections() {
     initCollection('Bills');
     initCollection('BillingItems');
@@ -217,6 +238,7 @@ function initCollections() {
     initCollection('Files');
     initCollection('Sequences');
     initCollection('UserProfiles');
+    initCollection('Notifications');
 }
 
 exports.run = run;
@@ -226,6 +248,7 @@ exports.initCollections = initCollections;
 exports.incrementAndGet = incrementAndGet;
 exports.saveOrUpdateEntity = saveOrUpdateEntity;
 exports.modifyEntityAttr = modifyEntityAttr;
+exports.modifyAttr = modifyAttr;
 exports.getEntityById = getEntityById;
 exports.deleteEntity = deleteEntity;
 exports.findEntities = findEntities;
@@ -237,3 +260,4 @@ exports.CONTACTS_COL_NAME = 'Contacts';
 exports.BILL_COL_NAME = 'Bills';
 exports.BILLING_ITEMS_COL_NAME = 'BillingItems';
 exports.USERPROFILE_COL_NAME = 'UserProfiles';
+exports.NOTIFICATIONS_COL_NAME = 'Notifications';
