@@ -11,6 +11,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
             this.gridNavEffect = 'easeOut';
             this.claimPanelState = undefined;
             this.claimEntryPanelState = undefined;
+            this.unreadMsgCount = ko.observable(0);
 
             // Model
             this.stateChoice = ko.observable();
@@ -23,6 +24,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
 
             // View state
             this.setupEvListeners();
+            this.getUnreadMsgCount();
         }
 
         AppVM.prototype.startRouter = function () {
@@ -97,15 +99,13 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
         /* WS subscribtion                                */
         /*************************************************/
 
-        AppVM.prototype.onWSMsgs = function () {
-            var socket = io('http://localhost');
-            socket.on('broadcast', function (msg) {
-                console.log('WS broadcast: ' + JSON.stringify(msg));
-                if (msg.name == 'UnreadMsgCount') {
-
-                }
-            }.bind(this));
-        };
+        AppVM.prototype.getUnreadMsgCount = function () {
+            $.getJSON('notification/unreadMsgCount')
+                .done(function (resp) {
+                    console.log('Unread msg count: ' + resp);
+                    this.unreadMsgCount(resp.data);
+                }.bind(this));
+        }
 
         /*************************************************/
         /* Panels animation                              */
@@ -129,7 +129,9 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
             if (this.searchPanelState !== 'expanded') {
                 $("#dashboardPanel").velocity(
                     { width: '100%'},
-                    {begin: function () { $("#dashboardPanel").show(); }},
+                    {begin: function () {
+                        $("#dashboardPanel").show();
+                    }},
                     this.gridNavDelay);
                 $('#dashboardPanelCollapsedContent').hide();
                 this.searchPanelState = 'expanded';
@@ -140,8 +142,10 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
             if (this.searchPanelState !== 'collapsed') {
                 $("#dashboardPanel").velocity(
                     { width: '0%'},
-                    {duration: this.gridNavDelay/100,
-                    complete: function () {$("#dashboardPanel").hide(); }},
+                    {duration: this.gridNavDelay / 100,
+                        complete: function () {
+                            $("#dashboardPanel").hide();
+                        }},
                     this.gridNavEffect);
                 this.searchPanelState = 'collapsed';
             }
@@ -153,7 +157,9 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
             if (this.claimPanelState !== 'expanded') {
                 $("#claimPanel").velocity(
                     { width: '96%'},
-                    {begin: function () { $("#claimPanel").show(); }},
+                    {begin: function () {
+                        $("#claimPanel").show();
+                    }},
                     this.gridNavDelay);
                 this.claimPanelState = 'expanded';
                 amplify.publish(Events.EXPAND_CLAIM_PANEL);
@@ -164,8 +170,10 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
             if (this.claimPanelState !== 'collapsed') {
                 $("#claimPanel").velocity(
                     { width: '0%'},
-                    {duration: this.gridNavDelay/100,
-                     complete: function () { $("#claimPanel").hide(); }},
+                    {duration: this.gridNavDelay / 100,
+                        complete: function () {
+                            $("#claimPanel").hide();
+                        }},
                     this.gridNavEffect);
                 this.claimPanelState = 'collapsed';
                 amplify.publish(Events.COLLAPSE_CLAIM_PANEL);

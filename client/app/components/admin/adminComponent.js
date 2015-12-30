@@ -8,6 +8,7 @@ define(['jquery', 'knockout', 'app/utils/events', 'app/utils/ajaxUtils',
         function AdminVM(params) {
             console.log('Init AdminVM');
             this.serverMsgs = ko.observableArray([]);
+            this.unreadMsgCount = ko.observable(0);
 
             amplify.subscribe(Events.SHOW_MSGS, this, this.onShowMsgs);
 
@@ -34,6 +35,7 @@ define(['jquery', 'knockout', 'app/utils/events', 'app/utils/ajaxUtils',
 
         AdminVM.prototype.onShowMsgs = function () {
             $('#msgs-modal').modal('show');
+            // Todo load msgs
         }
 
         return {viewModel: AdminVM, template: viewHtml};

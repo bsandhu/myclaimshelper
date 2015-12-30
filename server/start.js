@@ -41,8 +41,8 @@ function setupMailServiceRoutes() {
 
 function setupNotificationRoutes() {
     server.post('/notification/broadcast', notificationService.broadcast);
-    server.post('/notification/markAllasRead', notificationService.markAllAsReadInDB);
-    server.get('/notification/unreadMsgCountInDB', notificationService.unreadMsgCountInDB);
+    server.post('/notification/markAllasRead', notificationService.markAllAsRead);
+    server.get('/notification/unreadMsgCount', notificationService.getUnreadMsgCount);
     server.get('/notification/unreadMsgs', notificationService.getUnreadMsgs);
 }
 

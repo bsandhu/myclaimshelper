@@ -46,10 +46,17 @@ function getUnreadMsgs(req, res) {
         })
 }
 
+function getUnreadMsgCount(req, res) {
+    console.log('Get unread msg count');
+    getUnreadMsgCountInDB()
+        .then(function (err, result) {
+            sendResponse(res, err, result);
+        })
+}
+
 /****************************************************/
 /* CRUD Ops */
 /****************************************************/
-
 
 function getUnreadinDB(daysAgo) {
     var defer = jQuery.Deferred();
@@ -88,7 +95,7 @@ function markAllAsReadInDB() {
     return defer;
 }
 
-function unreadMsgCountInDB() {
+function getUnreadMsgCountInDB() {
     var defer = jQuery.Deferred();
 
     mongoUtils.run(function count(db) {
@@ -98,12 +105,8 @@ function unreadMsgCountInDB() {
                 { $group: { _id: "$read", count: { $sum: 1 } } }
             ],
             function onDone(err, resultsArray) {
-                if (err) {
-                    defer.reject(err);
-                } else {
-                    console.log('Unread msg count query result: ' + JSON.stringify(resultsArray));
-                    defer.resolve(err, resultsArray && resultsArray.length > 0 ? resultsArray[0].count : 0);
-                }
+                console.log('Unread msg count query result: ' + JSON.stringify(resultsArray));
+                defer.resolve(err, resultsArray && resultsArray.length > 0 ? resultsArray[0].count : 0);
             });
     });
     return defer;
@@ -113,8 +116,9 @@ function unreadMsgCountInDB() {
 exports.broadcast = broadcast;
 exports.markAllAsRead = markAllAsRead;
 exports.getUnreadMsgs = getUnreadMsgs;
+exports.getUnreadMsgCount = getUnreadMsgCount;
 
 exports.markAllAsReadInDB = markAllAsReadInDB;
 exports.getUnreadinDB = getUnreadinDB;
 exports.deleteNotificationInDB = deleteNotificationInDB;
-exports.unreadMsgCountInDB = unreadMsgCountInDB;
+exports.getUnreadMsgCountInDB = getUnreadMsgCountInDB;

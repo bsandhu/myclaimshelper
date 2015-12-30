@@ -61,7 +61,7 @@ describe('NotificationService', function () {
     });
 
     it('Unread count', function (done) {
-        notificationService.unreadMsgCountInDB()
+        notificationService.getUnreadMsgCountInDB()
             .then(function (err, result) {
                 assert.equal(null, err);
                 assert.equal(result, 0);
