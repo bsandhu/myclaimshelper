@@ -265,6 +265,12 @@ div {
     cursor: pointer;
 }
 
+.table thead tr {
+    background-color: white;
+    background-image: none;
+    border-top-width: 0px;
+}
+
 .toggleButton {
     color: rgb(190, 207, 224);
 }
@@ -378,12 +384,21 @@ body {
     background-color: rgb(235, 238, 243);
 }
 
+h2 {
+    font-size: 18px;
+}
+
 /**********************************************************/
 /**** Smartadmin widget overrides ****/
 /**********************************************************/
 
 .jarviswidget > header {
     border-bottom-width: 0px;
+}
+
+.jarviswidget > header h2 {
+    font-size: 16px;
+    font-weight: 500;
 }
 
 .jarviswidget > div {
@@ -441,5 +456,32 @@ nav ul {
     letter-spacing: 0.05em;
     border-bottom-color: rgb(235, 238, 243);
     border-bottom-width: 10px;
+    border-bottom-style: solid;
+}
+
+/**********************************************************/
+/**** Bootstrap table overrides ****/
+/**********************************************************/
+
+.bootstrap-table {
+    position: relative;
+    top: -30px;
+}
+
+.fixed-table-container {
+    border: 0px;
+}
+
+.fixed-table-container thead th {
+    border-left: 0px;
+}
+
+.fixed-table-container tbody td {
+    border-left: 0px;
+}
+
+.fixed-table-toolbar .form-control {
+    border: 0px;
+    border-bottom-width: 1px;
     border-bottom-style: solid;
 }

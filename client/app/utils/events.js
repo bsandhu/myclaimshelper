@@ -31,6 +31,7 @@ define([], function(){
         SHOW_BILLING_HISTORY : 'SHOW_BILLING_HISTORY',
         CLOSE_BILLING_VIEW   : 'CLOSE_BILLING_VIEW',
 
-        SHOW_USER_PROFILE    : 'SHOW_USER_PROFILE'
+        SHOW_USER_PROFILE    : 'SHOW_USER_PROFILE',
+        SHOW_MSGS            : 'SHOW_MSGS'
     };
 });

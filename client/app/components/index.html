@@ -11,12 +11,11 @@
     <!-- Basic Styles -->
     <link rel="stylesheet" type="text/css" media="screen" href="css/bootstrap.css">
     <link rel="stylesheet" type="text/css" media="screen" href="css/font-awesome.min.css">
-
-    <!-- SmartAdmin Styles : Please note (smartadmin-production.css) was created using LESS variables -->
     <link rel="stylesheet" type="text/css" media="screen" href="css/smartadmin-production.css">
     <link rel="stylesheet" type="text/css" media="screen" href="css/invoice .css">
     <link rel="stylesheet" type="text/css" href="../../css/jquery.datetimepicker.css">
     <link rel="stylesheet" type="text/css" href="../../css/sortable.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.8.1/bootstrap-table.min.css">
     <link rel="stylesheet" type="text/css" href="../../css/app.css">
 
     <!-- #FAVICONS -->
@@ -25,14 +24,6 @@
 
     <!-- #GOOGLE FONT -->
     <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,300,400,700">
-
-    <!-- #APP SCREEN / ICONS -->
-    <!-- Specifying a Webpage Icon for Web Clip
-         Ref: https://developer.apple.com/library/ios/documentation/AppleApplications/Reference/SafariWebContent/ConfiguringWebApplications/ConfiguringWebApplications.html -->
-    <link rel="apple-touch-icon" href="img/splash/sptouch-icon-iphone.png">
-    <link rel="apple-touch-icon" sizes="76x76" href="img/splash/touch-icon-ipad.png">
-    <link rel="apple-touch-icon" sizes="120x120" href="img/splash/touch-icon-iphone-retina.png">
-    <link rel="apple-touch-icon" sizes="152x152" href="img/splash/touch-icon-ipad-retina.png">
 
     <!-- iOS web-app metas : hides Safari UI Components and Changes Status Bar Appearance -->
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -44,9 +35,6 @@
     <link rel="apple-touch-startup-image" href="img/splash/ipad-portrait.png"
           media="screen and (min-device-width: 481px) and (max-device-width: 1024px) and (orientation:portrait)">
     <link rel="apple-touch-startup-image" href="img/splash/iphone.png" media="screen and (max-device-width: 320px)">
-
-
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.8.1/bootstrap-table.min.css">
 
     <script src="../../../lib/require.js"></script>
     <script src="../../../lib/requireConfig.js"></script>
@@ -73,7 +61,7 @@
             <li><a href="#">Dashboard</a></li>
             <li><a href="#">Claims</a></li>
             <li><a href="#">Billing</a></li>
-            <li><a href="#">Messages</a></li>
+            <li><a href="" data-bind="click: onShowMsgs">Msgs<span class="badge badge-important pull-right">4</span></a></li>
         </ul>
     </div>
 
@@ -82,6 +70,9 @@
 
 <!-- #MAIN PANEL -->
 <div id="main" role="main">
+
+    <!-- Msgs component -->
+    <admin-component></admin-component>
 
     <!-- Add contact -->
     <add-contact-component></add-contact-component>
@@ -137,8 +128,8 @@
     <div id="claimPanel" class="slidingContainer claimPanel" style="width: 0%;">
         <!-- Note: Still using module for the afterRender fn -->
         <div data-bind="module: {name: 'app/components/claim/claimVM',
-                                         template: 'app/components/claim/claim',
-                                         afterRender: startRouter}"></div>
+                                        template: 'app/components/claim/claim',
+                                        afterRender: startRouter}"></div>
     </div>
 
     <!-- **** Claim Entry module **** -->
@@ -200,6 +191,7 @@
                 ko.components.register('stats-component', {require: 'app/components/stats/statsVM'});
                 ko.components.register('task-entry-component', {require: 'app/components/taskEntry/taskEntryVM'});
                 ko.components.register('user-profile-component', {require: 'app/components/userProfile/userProfileComponent'});
+                ko.components.register('admin-component', {require: 'app/components/admin/adminComponent'});
 
                 // Knockout bindings init
                 ko.applyBindings(new AppVM());
@@ -208,86 +200,7 @@
                     var maxLength = 80;
                     return JSON.stringify(str).substring(0, maxLength);
                 };
-
-                // Initializing the widgets.
-                // TODO find a cleaner way trigger once KO is done with initial render
-                /*setTimeout(function(){
-                 $('#widget-grid').jarvisWidgets({
-                 grid : 'article',
-                 widgets : '.jarviswidget',
-                 localStorage : true,
-                 deleteSettingsKey : '#deletesettingskey-options',
-                 settingsKeyLabel : 'Reset settings?',
-                 deletePositionKey : '#deletepositionkey-options',
-                 positionKeyLabel : 'Reset position?',
-                 sortable : true,
-                 buttonsHidden : true,
-                 // toggle button
-                 toggleButton : false,
-                 toggleClass : 'fa fa-minus | fa fa-plus',
-                 toggleSpeed : 200,
-                 onToggle : function() {
-                 },
-                 // delete btn
-                 deleteButton : false,
-                 deleteClass : 'fa fa-times',
-                 deleteSpeed : 200,
-                 onDelete : function() {
-                 },
-                 // edit btn
-                 editButton : false,
-                 editPlaceholder : '.jarviswidget-editbox',
-                 editClass : 'fa fa-cog | fa fa-save',
-                 editSpeed : 200,
-                 onEdit : function() {
-                 },
-                 // color button
-                 colorButton : false,
-                 // full screen
-                 fullscreenButton : false,
-                 fullscreenClass : 'fa fa-expand | fa fa-compress',
-                 fullscreenDiff : 3,
-                 onFullscreen : function() {
-                 },
-                 // custom btn
-                 customButton : false,
-                 customClass : 'folder-10 | next-10',
-                 customStart : function() {
-                 alert('Hello you, this is a custom button...');
-                 },
-                 customEnd : function() {
-                 alert('bye, till next time...');
-                 },
-                 // order
-                 buttonOrder : '%refresh% %custom% %edit% %toggle% %fullscreen% %delete%',
-                 opacity : 1.0,
-                 dragHandle : '> header',
-                 placeholderClass : 'jarviswidget-placeholder',
-                 indicator : true,
-                 indicatorTime : 600,
-                 ajax : true,
-                 timestampPlaceholder : '.jarviswidget-timestamp',
-                 timestampFormat : 'Last update: %m%/%d%/%y% %h%:%i%:%s%',
-                 refreshButton : true,
-                 refreshButtonClass : 'fa fa-refresh',
-                 labelError : 'Sorry but there was a error:',
-                 labelUpdated : 'Last Update:',
-                 labelRefresh : 'Refresh',
-                 labelDelete : 'Delete widget:',
-                 afterLoad : function() {
-                 },
-                 rtl : false, // best not to toggle this!
-                 onChange : function() {
-
-                 },
-                 onSave : function() {
-
-                 },
-                 ajaxnav : $.navAsAjax // declears how the localstorage should be saved (HTML or AJAX page)
-
-                 })}, 2000);*/
             });
-
 </script>
 
 

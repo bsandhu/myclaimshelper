@@ -89,6 +89,24 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
             Router.routeToNewClaim();
         };
 
+        AppVM.prototype.onShowMsgs = function () {
+            amplify.publish(Events.SHOW_MSGS);
+        };
+
+        /*************************************************/
+        /* WS subscribtion                                */
+        /*************************************************/
+
+        AppVM.prototype.onWSMsgs = function () {
+            var socket = io('http://localhost');
+            socket.on('broadcast', function (msg) {
+                console.log('WS broadcast: ' + JSON.stringify(msg));
+                if (msg.name == 'UnreadMsgCount') {
+
+                }
+            }.bind(this));
+        };
+
         /*************************************************/
         /* Panels animation                              */
         /*************************************************/
