@@ -12,7 +12,7 @@
             </div>
             <div class="modal-body" id="msgs-modal-body">
                 <ul class="list-group">
-                    <!-- ko foreach: serverMsgs() -->
+                    <!-- ko foreach: msgs() -->
                         <li class="list-group-item"
                             data-bind="text: $data.body,
                                        css: 'list-group-item-' + $data.type"></li>

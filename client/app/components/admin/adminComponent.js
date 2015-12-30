@@ -7,7 +7,7 @@ define(['jquery', 'knockout', 'app/utils/events', 'app/utils/ajaxUtils',
 
         function AdminVM(params) {
             console.log('Init AdminVM');
-            this.serverMsgs = ko.observableArray([]);
+            this.msgs = ko.observableArray([]);
             this.unreadMsgCount = ko.observable(0);
 
             amplify.subscribe(Events.SHOW_MSGS, this, this.onShowMsgs);
@@ -19,7 +19,7 @@ define(['jquery', 'knockout', 'app/utils/events', 'app/utils/ajaxUtils',
 
                 }
                 if (msg.name == 'NewMsg') {
-                    this.serverMsgs.push(msg);
+                    this.msgs.push(msg);
                 }
             }.bind(this));
         }
@@ -35,7 +35,11 @@ define(['jquery', 'knockout', 'app/utils/events', 'app/utils/ajaxUtils',
 
         AdminVM.prototype.onShowMsgs = function () {
             $('#msgs-modal').modal('show');
-            // Todo load msgs
+            $.getJSON('notification/unreadMsgs')
+                .done(function (resp) {
+                    console.log('Loaded unread msgs: ' + JSON.stringify(resp));
+                    this.msgs(resp.data);
+                }.bind(this));
         }
 
         return {viewModel: AdminVM, template: viewHtml};

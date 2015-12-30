@@ -3,29 +3,26 @@ var EventEmitter = require('events').EventEmitter;
 var Notification = require('../model/notification.js');
 var consts = require('../model/consts.js');
 var mongoUtils = require('./../mongoUtils.js');
+var serviceUtils = require('./../serviceUtils.js');
 var dateUtils = require('./../shared/dateUtils.js');
 var jQuery = require('jquery-deferred');
 var _ = require('underscore');
 
 
-var broadcaster = new EventEmitter();
-
 function broadcast(req, res) {
     var msg = req.body.msg;
-    console.log('Broadcasting msg: ' + msg);
-
     var notification = new Notification();
     notification.name = 'NewMsg';
     notification.body = msg;
 
-    // Broadcast event - picked up by the start.js module
     var defer = jQuery.Deferred();
-    broadcaster.emit(consts.Events.NOTIFICATION, notification);
 
-    // Persist
+    // Persist and broadcast
+    // Broadcast event picked up by the start.js module
     mongoUtils.saveOrUpdateEntity(notification, mongoUtils.NOTIFICATIONS_COL_NAME)
         .then(function (err, entity) {
             sendResponse(res, err, entity);
+            serviceUtils.eventEmitter.emit('foo', entity);
             defer.resolve();
         });
     return defer;

@@ -1,6 +1,8 @@
 var restify = require('restify');
 var socketio = require('socket.io');
 var config = require('./config.js');
+var EventEmitter = require('events').EventEmitter;
+var consts = require('./model/consts.js');
 var claimsService = require('./services/claimsService.js');
 var billingServices = require('./services/billingServices.js');
 var contactService = require('./services/contactService.js');
@@ -10,10 +12,12 @@ var entityExtractionService = require('./services/entityExtractionService.js');
 var notificationService = require('./services/notificationService.js');
 var processMail = require('./services/mail/mailHandler.js').process;
 var mongoUtils = require('./mongoUtils.js');
+var serviceUtils = require('./serviceUtils.js');
 var os = require('os');
 
 var server = restify.createServer();
 var io = socketio.listen(server);
+
 
 function init() {
     server = restify.createServer();
@@ -126,8 +130,11 @@ function setUpWSConn() {
     });
 }
 
-function broadcast(notifictaion) {
-    io.emit('broadcast', notifictaion, {for: 'everyone'});
+function setupBroadcastListener() {
+    serviceUtils.eventEmitter.on('foo', function onMsg(notification) {
+        console.log('Broadcasting: ' + JSON.stringify(notification));
+        io.emit('broadcast', notification, {for: 'everyone'});
+    });
 }
 
 /*********************************************************/
@@ -149,8 +156,6 @@ setupProfileServiceRoutes();
 setupNotificationRoutes();
 setupStaticRoutes();
 setUpWSConn();
+setupBroadcastListener();
 mongoUtils.initConnPool().then(mongoUtils.initCollections);
 startServer();
-
-exports.broadcast = broadcast;
-
