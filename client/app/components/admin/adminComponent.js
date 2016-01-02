@@ -12,7 +12,8 @@ define(['jquery', 'knockout', 'app/utils/events', 'app/utils/ajaxUtils',
 
             amplify.subscribe(Events.SHOW_MSGS, this, this.onShowMsgs);
 
-            var socket = io('http://localhost');
+            var host = "http://"+window.location.hostname;
+            var socket = io(host);
             socket.on('broadcast', function (msg) {
                 console.log('WS broadcast: ' + JSON.stringify(msg));
                 if (msg.name == 'UnreadMsgCount') {
