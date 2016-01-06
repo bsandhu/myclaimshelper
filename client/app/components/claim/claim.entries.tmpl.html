@@ -20,6 +20,7 @@
                 </a>
             </th>
             <th>Status</th>
+            <th>Billing</th>
             <th>&nbsp;</th>
         </tr>
         </thead>
@@ -32,11 +33,11 @@
                                    mouseout : function(){$('#claimEntryArrowCell' + $index()).css('font-weight', 'inherit');}}">
                 <td style="min-width: 15px">
                     <!-- Tag -->
-                                <span class="glyphicon leftMargin"
-                                      data-bind="css: {'glyphicon-earphone'   : entry.tag.toString().search('phone') >= 0,
-                                                       'glyphicon-map-marker' : entry.tag.toString().search('visit') >= 0,
-                                                       'glyphicon-camera'     : entry.tag.toString().search('photos') >= 0,
-                                                       'glyphicon-envelope'   : entry.tag.toString().search('email') >= 0}"></span>
+                    <span class="glyphicon leftMargin"
+                          data-bind="css: {'glyphicon-earphone'   : entry.tag.toString().search('phone') >= 0,
+                                           'glyphicon-map-marker' : entry.tag.toString().search('visit') >= 0,
+                                           'glyphicon-camera'     : entry.tag.toString().search('photos') >= 0,
+                                           'glyphicon-envelope'   : entry.tag.toString().search('email') >= 0}"></span>
                 </td>
                 <td style="min-width: 20%;">
                     <a data-bind="attr: {href: '#/claimEntry/' + entry._id}">
@@ -49,11 +50,11 @@
                 <td>
                     <!-- Current state -->
                     <a href="#" data-bind="event: { mouseover: $parent.onStatusFocus.bind($parent)}">
-                                    <span class="glyphicon"
-                                          data-bind="css: {'glyphicon-unchecked': entry.state == undefined || entry.state == $parent.States.None,
-                                                           'glyphicon-inbox'    : entry.state == $parent.States.TODO,
-                                                           'glyphicon-time'     : entry.state == $parent.States.Pending,
-                                                           'glyphicon-ok'       : entry.state == $parent.States.Complete}"></span>
+                        <span class="glyphicon"
+                              data-bind="css: {'glyphicon-unchecked': entry.state == undefined || entry.state == $parent.States.None,
+                                               'glyphicon-inbox'    : entry.state == $parent.States.TODO,
+                                               'glyphicon-time'     : entry.state == $parent.States.Pending,
+                                               'glyphicon-ok'       : entry.state == $parent.States.Complete}"></span>
                     </a>
 
                     <!-- Pick new State -->
@@ -90,6 +91,9 @@
                             <span class="leftMargin">Clear</span>
                         </a>
                     </div>
+                </td>
+                <td>
+                    <span data-bind="text: entry.billingItem.status"></span>
                 </td>
                 <td class="rightMargin">
                     <i class="fa fa-angle-right"
