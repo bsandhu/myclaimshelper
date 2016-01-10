@@ -237,7 +237,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify',
                     amplify.publish(Events.ADDED_CONTACT, KOMap.toJS(this.claim().insuredContact));
                     amplify.publish(Events.SAVED_CLAIM, {'claim': KOMap.toJS(this.claim())});
 
-                    this.storeInSession(this.claim()._id());
+                    this.storeInSession(this.claim()._id(), KOMap.toJS(this.claim()));
                     this.inEditMode(false);
                 }.bind(this));
         };
@@ -247,7 +247,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify',
                 .done(function (resp) {
                     console.log('Loaded claim ' + JSON.stringify(resp.data));
                     KOMap.fromJS(resp.data, {}, this.claim);
-                    this.storeInSession(claimId);
+                    this.storeInSession(claimId, resp.data);
                 }.bind(this));
         };
 
@@ -260,8 +260,9 @@ define(['jquery', 'knockout', 'KOMap', 'amplify',
                 }.bind(this));
         };
 
-        ClaimVM.prototype.storeInSession = function (claimId) {
+        ClaimVM.prototype.storeInSession = function (claimId, claim) {
             amplify.store.sessionStorage(SessionKeys.ACTIVE_CLAIM_ID, claimId);
+            amplify.store.sessionStorage(SessionKeys.ACTIVE_CLAIM_OBJ, claim);
             console.log('Stored ClaimId: ' + claimId + ' in session storage');
         };
 

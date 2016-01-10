@@ -1,8 +1,12 @@
 define(['jquery', 'knockout', 'KOMap', 'amplify', 'shared/dateUtils',
-        'app/utils/ajaxUtils', 'app/utils/events', 'app/utils/consts', 'app/utils/router', 'app/utils/session',
+        'app/utils/ajaxUtils', 'app/utils/events', 'app/utils/consts', 'app/utils/router',
+        'app/utils/session', 'app/utils/sessionKeys',
         'model/bill', 'model/billingItem', 'model/billingStatus', 'model/contact',
-        'text!app/components/billing/billing.tmpl.html'],
-    function ($, ko, KOMap, amplify, DateUtils, ajaxUtils, Events, Consts, router, Session, Bill, BillingItem, BillingStatus, Contact, viewHtml) {
+        'text!app/components/billing/billing.tmpl.html',
+        'text!app/components/billing/billing.print.tmpl.html'
+    ],
+    function ($, ko, KOMap, amplify, DateUtils, ajaxUtils, Events, Consts, router, Session, SessionKeys, Bill,
+              BillingItem, BillingStatus, Contact, viewHtml, printHtml) {
 
         function BillingVM(claimId) {
             console.log('Init BillingVM. ClaimId: ' + JSON.stringify(claimId));
@@ -18,6 +22,8 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'shared/dateUtils',
             this.bill = ko.observable(this.newEmptyBill());
             // All bills associated with this Claim - for Overview
             this.bills = ko.observableArray([]);
+            // Current claim
+            this.activeClaim = KOMap.fromJS(amplify.store.sessionStorage(SessionKeys.ACTIVE_CLAIM_OBJ));
 
             this.setupEvListeners();
             this.setupModeListener();
@@ -31,10 +37,10 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'shared/dateUtils',
                 var itemClicked = this;
                 var ev = arguments[1];
                 var rowNode = $(ev.target).parent().parent();
-                var itemClickedJSON =  KOMap.toJSON(itemClicked);
+                var itemClickedJSON = KOMap.toJSON(itemClicked);
                 var undoTimer = 4000;
 
-                if (itemClicked.removeOrUndoLabel() === 'Undo'){
+                if (itemClicked.removeOrUndoLabel() === 'Undo') {
                     console.log('Cancelled remove BillingItem: ' + itemClickedJSON);
                     clearTimeout(itemClicked.timeoutId);
                     itemClicked.timeoutId = undefined;
@@ -46,7 +52,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'shared/dateUtils',
                     itemClicked.timeoutId = setTimeout(
                         function () {
                             console.log('Remove BillingItem: ' + itemClickedJSON);
-                            rowNode.fadeTo('slow', .1, function(){
+                            rowNode.fadeTo('slow', .1, function () {
                                 self.bill().billingItems.remove(itemClicked);
                                 self.calcAll();
                             });
@@ -55,7 +61,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'shared/dateUtils',
                 }
             };
 
-            self.isBillEditable = ko.computed(function(){
+            self.isBillEditable = ko.computed(function () {
                 return this.bill().status() == this.billingStatus.NOT_SUBMITTED();
             }, this);
 
@@ -102,7 +108,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'shared/dateUtils',
 
         BillingVM.prototype.loadBillingProfileFromSession = function (evData) {
             this.billingProfile = Session.getCurrentUserProfile().billingProfile;
-            if(!this.billingProfile){
+            if (!this.billingProfile) {
                 console.error('Could not retrieve bililng profile from session');
             }
         }
@@ -134,7 +140,8 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'shared/dateUtils',
             console.assert(evData.claimId, 'Expecting ev to carry claimId');
             console.assert(evData.billId, 'Expecting ev to billId');
             this.claimId = evData.claimId;
-            this.loadBill(evData.billId).done(this.calcAll.bind(this));;
+            this.loadBill(evData.billId).done(this.calcAll.bind(this));
+            ;
             this.mode(Consts.BILLING_TAB_VIEW_MODE);
         }
 
@@ -163,9 +170,9 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'shared/dateUtils',
             } else {
                 $('#billPanel').velocity("fadeOut",
                     { duration: 200,
-                      complete: function () {
-                         router.routeToBillingOverview(self.claimId);
-                      }})
+                        complete: function () {
+                            router.routeToBillingOverview(self.claimId);
+                        }})
             }
         };
 
@@ -186,7 +193,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'shared/dateUtils',
             });
         }
 
-        BillingVM.prototype.isNewBill = function(){
+        BillingVM.prototype.isNewBill = function () {
             return this.bill() && !$.isNumeric(this.bill()._id());
         }
 
@@ -296,12 +303,12 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'shared/dateUtils',
             var N = Number;
 
             var preTax = 0;
-            $.each(bill.billingItems(), function(index, item){
-                preTax = preTax +  N(item.totalAmount());
+            $.each(bill.billingItems(), function (index, item) {
+                preTax = preTax + N(item.totalAmount());
             });
             bill.preTaxTotal(N(preTax).toFixed(2));
             bill.taxRate(N(this.billingProfile.taxRate));
-            bill.tax(N((bill.taxRate()/100 * bill.preTaxTotal()).toFixed(2)));
+            bill.tax(N((bill.taxRate() / 100 * bill.preTaxTotal()).toFixed(2)));
             bill.total(N(N(bill.preTaxTotal()) + N(bill.tax())).toFixed(2));
         };
 
@@ -313,9 +320,9 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'shared/dateUtils',
             }
             var N = Number;
             billingItem.totalAmount(Number(
-                N(billingItem.time() * billingItem.timeRate()) +
-                N(billingItem.mileage() * billingItem.distanceRate()) +
-                N(billingItem.expenseAmount())).toFixed(2));
+                    N(billingItem.time() * billingItem.timeRate()) +
+                    N(billingItem.mileage() * billingItem.distanceRate()) +
+                    N(billingItem.expenseAmount())).toFixed(2));
         };
 
         BillingVM.prototype.clearBill = function () {
@@ -329,7 +336,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'shared/dateUtils',
                 JSON.stringify({_id: billId}),
                 function onSuccess(response) {
                     console.log('getBillsForClaim: ' + JSON.stringify(response));
-                    if (response.data[0]){
+                    if (response.data[0]) {
                         var billJS = response.data[0];
                         billJS.billRecipient = billJS.billRecipient || new Contact();
                         this.bill(KOMap.fromJS(billJS))
@@ -424,6 +431,40 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'shared/dateUtils',
                     console.log('Saved Billing Items: ' + JSON.stringify(response));
                     onDone();
                 }
+            );
+        };
+
+        BillingVM.prototype.printBill = function () {
+            // Poulate the print template with AMD content
+            $('#print-template').html(printHtml);
+            var container = document.createElement("div");
+            var _this = this;
+
+            ko.renderTemplate(
+                "print-template",
+                _this,
+                {
+                    afterRender: function print() {
+                        console.log(container.innerHTML);
+
+                        // Add frame
+                        var frame = document.createElement('iframe');
+                        document.body.appendChild(frame);
+
+                        // Print
+                        var frameContent = frame.contentWindow;
+                        frameContent.document.open();
+                        frameContent.document.write('<head><link rel=stylesheet href=../../css/print.css type=text/css ></head>');
+                        frameContent.document.write(container.innerHTML);
+                        frameContent.document.close();
+                        setTimeout(function afterFrameRender(){
+                            frameContent.focus();
+                            frameContent.print();
+                            document.body.removeChild(frame);
+                        }, 500);
+                    }
+                },
+                container
             );
         };
 

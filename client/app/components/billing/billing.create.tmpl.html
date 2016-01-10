@@ -9,25 +9,7 @@
 
     <div class="pull-right">
         <i class="fa fa-print" style="cursor: pointer"
-           onclick="var b = document.getElementById('invoice-body');
-                    var i = document.createElement('iframe');
-                    document.body.appendChild(i);
-                    var p = i.contentWindow;
-                    p.document.open();
-                    p.document.write('<html><head>');
-                    p.document.write('<link rel=stylesheet href=../../css/bootstrap.css type=text/css />');
-                    p.document.write('<link rel=stylesheet href=../../css/smartadmin-production.css type=text/css />');
-                    p.document.write('<link rel=stylesheet href=../../css/invoice.css type=text/css media=print/>');
-                    p.document.write('<link rel=stylesheet href=../../css/app.css type=text/css >');
-                    p.document.write('<link rel=stylesheet href=../../css/font-awesome.min.css type=text/css />');
-                    p.document.write('</head><body >');
-                    p.document.write(b.innerHTML);
-                    p.document.write('</body></html>');
-                    p.document.close();
-                    p.focus();
-                    p.print();
-                    document.body.removeChild(i);
-                    return false;"> Print</i>
+           data-bind="click: printBill">Print</i>
     </div>
 </div>
 
@@ -237,3 +219,8 @@
 
 </div>
 </div>
+
+<script type="text/html" id="print-template">
+    <div>Foo bar </div>
+    <span class="text-success" data-bind="text: bill().total"></span>
+</script>

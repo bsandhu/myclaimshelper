@@ -1,0 +1,89 @@
+<head>
+    <link rel=stylesheet href=../../../css/invoice.css type=text/css/>
+    <link rel=stylesheet href=../../../css/print.css type=text/css/>
+</head>
+<table style="border: solid #000000 1px; width: 100%">
+    <tbody class="invoice-body">
+    <tr style="">
+        <th>Date</th>
+        <th>Code</th>
+        <th>Activity Description</th>
+        <th>Mileage</th>
+        <th>Time</th>
+        <th>Expense Type</th>
+        <th>Expense Amount</th>
+    </tr>
+    <!-- ko foreach: { data: bill().billingItems(), as: 'billingItem' } -->
+    <tr>
+        <td data-bind="text: $parent.DateUtils.niceDate(billingItem.entryDate(), false)" style="width: 90px">Jul 21 2014</td>
+        <td data-bind="text: billingItem.tag()">phone</td>
+        <td data-bind="text: billingItem.summary()">Called Mr. Madonia</td>
+        <td data-bind="text: billingItem.time">10</td>
+        <td data-bind="text: billingItem.mileage">0</td>
+        <td data-bind="text: billingItem.expenseAmount">0</td>
+    </tr>
+
+    <tr>
+        <td data-bind="text: $parent.DateUtils.niceDate(billingItem.entryDate(), false)">Aug 7 2014</td>
+        <td data-bind="text: billingItem.tag()">other</td>
+        <td data-bind="text: billingItem.summary()">Emailed Diane</td>
+        <td data-bind="text: billingItem.time">0</td>
+        <td data-bind="text: billingItem.mileage">0</td>
+        <td data-bind="text: billingItem.expenseAmount">0</td>
+    </tr>
+
+    <tr>
+        <td data-bind="text: $parent.DateUtils.niceDate(billingItem.entryDate(), false)">Jul 29 2014</td>
+        <td data-bind="text: billingItem.tag()">other</td>
+        <td data-bind="text: billingItem.summary()">Watch video</td>
+        <td data-bind="text: billingItem.time">0</td>
+        <td data-bind="text: billingItem.mileage">0</td>
+        <td data-bind="text: billingItem.expenseAmount">0</td>
+    </tr>
+
+    <tr>
+        <td data-bind="text: $parent.DateUtils.niceDate(billingItem.entryDate(), false)">Aug 12 2014</td>
+        <td data-bind="text: billingItem.tag()">visit</td>
+        <td data-bind="text: billingItem.summary()">TRAVELED to Suff PD Head on another file and picked up this
+            report.
+        </td>
+        <td data-bind="text: billingItem.time">0</td>
+        <td data-bind="text: billingItem.mileage">0</td>
+        <td data-bind="text: billingItem.expenseAmount">0</td>
+    </tr>
+    <!-- /ko -->
+
+    <tr>
+        <td colspan="2"></td>
+        <td><strong>Total Hours:<strong></td>
+        <td colspan="4"></td>
+    </tr>
+    <tr>
+        <td colspan="2"></td>
+        <td><strong>Total Mileage:<strong></td>
+        <td colspan="4"></td>
+    </tr>
+    <tr>
+        <td colspan="2"></td>
+        <td><strong>Total Expenses:<strong></td>
+        <td colspan="4"></td>
+    </tr>
+    <tr>
+        <td colspan="2"></td>
+        <td><strong>Total:<strong></td>
+        <td colspan="4"></td>
+    </tr>
+    <tr>
+        <td colspan="3"><strong>Insured:</strong></td>
+        <td colspan="4"><strong>Date of loss:</strong></td>
+    </tr>
+    <tr>
+        <td colspan="3"><strong>Clmnt:</strong></td>
+        <td colspan="4"><strong>Adjuster:</strong></td>
+    </tr>
+    <tr>
+        <td colspan="3"><strong>Client file:</strong></td>
+        <td colspan="4"><strong>Mark file:</strong></td>
+    </tr>
+    </tbody>
+</table>
