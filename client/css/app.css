@@ -222,6 +222,11 @@ div {
     border-color: darkgray;
 }
 
+.maps-datepicker {
+    font-weight: 500;
+    font-size: small;
+}
+
 /**********************************************************/
 /**** Navigation panels ****/
 /**********************************************************/
