@@ -1,23 +1,24 @@
-<div class="jarviswidget jarviswidget-color-white" id="wid-id-4">
-    <header>
-        <h2>Travel</h2>
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">Travel
 
-        <div class="widget-toolbar smart-form" role="menu">
-            <label class="input">
-                <i class="icon-append fa fa-question-circle"></i>
-                <input type="text"
-                       data-bind="datetimePicker: {
+            <div class="pull-right" role="menu">
+                <label class="input">
+                    <i class="icon-append fa fa-question-circle"></i>
+                    <input type="text"
+                           data-bind="datetimePicker: {
                                               datepicker: true,
                                               timepicker: false,
                                               dateValue: travelDate}"/>
-                <b class="tooltip tooltip-top-right">
-                    <i class="fa fa-warning txt-color-teal"></i>
-                    Select the date to show travel for</b>
-            </label>
-        </div>
-    </header>
+                    <b class="tooltip tooltip-top-right">
+                        <i class="fa fa-warning txt-color-teal"></i>
+                        Select the date to show travel for</b>
+                </label>
+            </div>
+        </h3>
+    </div>
 
-    <div>
+    <div class="panel-body">
         <div class="widget-body no-padding">
             <div class="tab-content padding-5" id="map-container">
                 <div id="map-dash" style="width:100%; height:100%"></div>

@@ -389,28 +389,6 @@ h2 {
 }
 
 /**********************************************************/
-/**** Smartadmin widget overrides ****/
-/**********************************************************/
-
-.jarviswidget > header {
-    border-bottom-width: 0px;
-}
-
-.jarviswidget > header h2 {
-    font-size: 16px;
-    font-weight: 500;
-}
-
-.jarviswidget > div {
-    border-bottom-width: 1px;
-}
-
-.menu-on-top #main {
-    margin-left: 0px !important;
-    margin-top: 10px !important;
-}
-
-/**********************************************************/
 /**** Bootstrap navbar overrides ****/
 /**********************************************************/
 
@@ -465,7 +443,7 @@ nav ul {
 
 .bootstrap-table {
     position: relative;
-    top: -30px;
+    top: -20px;
 }
 
 .fixed-table-container {
