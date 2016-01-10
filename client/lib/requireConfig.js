@@ -23,7 +23,8 @@ require.config({
         'sortable': 'lib/sortable.min',
         'xeditable': 'lib/x-editable.min',
         'KOXeditable': 'lib/ko.xeditable',
-        'socketio': 'lib/socket.io-1.2.0'
+        'socketio': 'lib/socket.io-1.2.0',
+        'select2': 'lib/select2.min'
     },
     shim: {
         'jqueryui': {
