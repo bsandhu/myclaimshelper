@@ -132,7 +132,7 @@ var data = [
                     '317': 'Meals',
                     '318': 'Other',
                     '319': 'Weekend Surcharge',
-                    '320': 'Cell phone',
+                    '320': 'Cell phone'
                 }
             }
         }

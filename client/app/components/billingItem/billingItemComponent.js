@@ -16,9 +16,17 @@ define(['knockout', 'KOMap',
         /**
          * Data setup for (Select2) codes widget
          */
-        BillingItemVM.prototype.billingCodesDatasource = function (billingItem) {
+        BillingItemVM.prototype.billingCodesDatasource = function () {
+            var allCodeGroups = this.userProfile.billingProfile.codes;
+            var data = [];
+            $.each(allCodeGroups, function (codeGroup){
+                data.push({id: '', text: "-------- " + codeGroup + " --------", children: toSelect2Format(allCodeGroups[codeGroup])})
+            });
+            return data;
+        }
+
+        function toSelect2Format(codes) {
             var ds = [];
-            var codes = this.userProfile.billingProfile.codes.OutsideCodes;
             $.each(codes, function (code) {
                 ds.push({id: code, text: codes[code]});
             });
@@ -30,4 +38,5 @@ define(['knockout', 'KOMap',
         }
 
         return {viewModel: BillingItemVM, template: viewHtml};
-    });
+    })
+;

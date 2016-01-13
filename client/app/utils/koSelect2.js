@@ -21,8 +21,7 @@ define(['jquery', 'knockout', 'KOMap', 'shared/dateUtils', 'select2'],
 
                 // Set value
                 var value = ko.utils.unwrapObservable(valueAccessor());
-                var initialValue = value || data[0].id;
-                $select2Elem.val(initialValue);
+                $select2Elem.val(value);
 
                 // Update model
                 $select2Elem.on('change', function (ev) {
