@@ -39,7 +39,7 @@ var data = [
                     '127': 'Postal Check for Address',
                     '128': 'Cold Call w/travel',
                     '129': 'Travel to Loss location',
-                    '130': 'Scope the loss',
+                    '130': 'Scope the loss'
                 },
                 "InsideCodes": {
                     '201': 'Dictation',
