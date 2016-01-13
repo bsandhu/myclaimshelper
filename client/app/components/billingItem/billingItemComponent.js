@@ -1,5 +1,5 @@
 define(['knockout', 'KOMap',
-        'app/utils/Session',
+        'app/utils/session',
         'text!app/components/billingItem/billingItemComponent.tmpl.html', 'model/billingItem'],
 
     function (ko, KOMap, Session, viewHtml, BillingItem) {
