@@ -95,6 +95,10 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
             amplify.publish(Events.SHOW_MSGS);
         };
 
+        AppVM.prototype.onShowProfile = function () {
+            amplify.publish(Events.SHOW_USER_PROFILE);
+        };
+
         /*************************************************/
         /* WS subscribtion                                */
         /*************************************************/
