@@ -1,6 +1,8 @@
 <div class="row">
+    <!-- First column -->
     <div class="form-group col-lg-6 col-md-6 col-xs-6">
         <label class="col-lg-3 col-md-3 control-label">Type</label>
+
         <div class="col-lg-9 col-md-9">
             <row>
                 <label class="col-lg-6 col-md-6 control-label">Mileage</label>
@@ -32,23 +34,26 @@
         </div>
     </div>
 
-    <div class="form-group col-lg-3 col-md-3 col-xs-3">
-        <label class="control-label col-md-3" for="appendprepend">Code</label>
+    <!-- Second column -->
+    <div class="form-group col-lg-6 col-md-6 col-xs-6">
+        <div class="row">
+            <label class="control-label col-md-3" for="appendprepend">Code</label>
 
-        <div class="col-md-9">
-            <!-- Select 2 component -->
-            <select class="form-control input-sm" type="text"
-                   data-bind="select2: {modelAttr: billingItem().code}">
-                <option value="AL">Alabama</option>
-                <option value="NY">New York</option>
-                <option value="AK">XX</option>
-                <option value="BC">Canada</option>
-            </select>
+            <div class="col-lg-9 col-md-9" style="padding-left: 0px">
+                <!-- Select 2 component -->
+                <select class="form-control input-sm bigdrop" type="text" style="width: 90%;"
+                        data-bind="select2: billingItem().code,
+                                   myoptions: billingCodesDatasource()">
+                </select>
+            </div>
         </div>
-    </div>
+        <div class="row">
+            <label class="control-label col-md-3" for="appendprepend">Status</label>
 
-    <div class="form-group col-lg-3 col-md-3 col-xs-3">
-        <span data-bind="text: billingItem().status"></span>
+            <div class="form-group col-lg-6 col-md-6 col-xs-6" style="margin-top: 8px">
+                <span class="label label-default" data-bind="text: billingItem().status">Default</span>
+            </div>
+        </div>
     </div>
 </div>
 <!--At the moment we are allowing a single BillingItem per ClaimEntry-->

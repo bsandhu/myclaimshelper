@@ -22,7 +22,7 @@ define(['./billingStatus'], function (BillingStatus) {
         this.timeRate = null;
         this.distanceRate = null;
 
-        this.code = null; // is specific to Bill's need. How to generalize?
+        this.code = null; // Sourced from user profile
         this.mileage = 0;
         this.time = 0;
         this.expenseAmount = 0;
