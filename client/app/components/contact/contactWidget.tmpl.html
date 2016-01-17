@@ -1,53 +1,59 @@
-<div class="panel panel-default">
-    <div class="panel-heading">
-        <h3 class="panel-title">Contacts
-            <div class="badge bg-color-teal font-xs pull-right" data-bind="text: contacts().length"></div>
-        </h3>
-    </div>
+<div class="card">
 
-    <!-- widget div-->
-    <div class="panel-body">
-        <!-- widget edit box -->
-        <div class="jarviswidget-editbox">
-            <!-- This area used as dropdown edit box -->
+    <div class="card-height-indicator"></div>
+
+    <div class="card-content">
+
+        <div class="card-image">
+            <img src="./image.jpg" alt="Loading image...">
+            <h3 class="card-image-headline">Contacts</h3>
         </div>
-        <!-- end widget edit box -->
 
-        <!-- widget content -->
-        <div class="widget-body">
-            <div class="widget-body-toolbar">
-                <div class="row">
-                    <div class="col-xs-10 col-sm-10 col-md-8 col-lg-8">
-                        <div class="input-group">
-                            <span class="input-group-addon"><i class="fa fa-search"></i></span>
-                            <input class="form-control" id="prepend" placeholder="Start typing to filter" type="text"
-                                   data-bind="textInput: filterText">
+        <div class="card-body">
+            <!-- widget edit box -->
+            <div class="jarviswidget-editbox">
+                <!-- This area used as dropdown edit box -->
+            </div>
+            <!-- end widget edit box -->
+
+            <!-- widget content -->
+            <div class="widget-body">
+                <div class="widget-body-toolbar">
+                    <div class="row">
+                        <div class="col-xs-10 col-sm-10 col-md-8 col-lg-8">
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-search"></i></span>
+                                <input class="form-control" id="prepend" placeholder="Start typing to filter" type="text"
+                                       data-bind="textInput: filterText">
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-xs-2 col-sm-2 col-md-4 col-lg-4">
-                        <div class="btn btn-default btn-info pull-right" data-bind="click: onAddContact">
-                            <i class="fa fa-user fa-lg"></i>
-                            <i class="fa fa-plus"></i>
+                        <div class="col-xs-2 col-sm-2 col-md-4 col-lg-4">
+                            <div class="btn btn-default btn-info pull-right" data-bind="click: onAddContact">
+                                <i class="fa fa-user fa-lg"></i>
+                                <i class="fa fa-plus"></i>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="custom-scroll table-responsive" style="height:290px; overflow-y: scroll;">
-                <table class="table table-bordered">
-                    <thead>
-                    <tr>
-                        <th><i class="fa fa-user text-info"></i> Name</th>
-                    </tr>
-                    </thead>
+                <div class="custom-scroll table-responsive" style="height:290px; overflow-y: scroll;">
+                    <table class="table table-bordered">
+                        <thead>
+                        <tr>
+                            <th><i class="fa fa-user text-info"></i> Name</th>
+                        </tr>
+                        </thead>
 
-                    <tbody data-bind="foreach: { data: filteredContacts , as: 'contact' }">
-                    <tr>
-                        <td><a data-bind="text: contact.name, click: $parent.onShowContact"></a></td>
-                    </tr>
-                    </tbody>
-                </table>
+                        <tbody data-bind="foreach: { data: filteredContacts , as: 'contact' }">
+                        <tr>
+                            <td><a data-bind="text: contact.name, click: $parent.onShowContact"></a></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
+
     </div>
+
 </div>

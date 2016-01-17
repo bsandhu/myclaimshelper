@@ -24,9 +24,17 @@ require.config({
         'xeditable': 'lib/x-editable.min',
         'KOXeditable': 'lib/ko.xeditable',
         'socketio': 'lib/socket.io-1.2.0',
-        'select2': 'lib/select2.min'
+        'select2': 'lib/select2.min',
+        'material': 'lib/material',
+        'ripples': 'lib/ripples'
     },
     shim: {
+        'material': {
+            deps: ['jquery']
+        },
+        'ripples': {
+            deps: ['jquery']
+        },
         'jqueryui': {
             deps: ['jquery']
         },
