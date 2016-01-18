@@ -1,41 +1,35 @@
-<div class="card">
+<div class="panel panel-default">
 
-    <div class="card-height-indicator"></div>
+    <div class="panel-heading">
+        <h3 class="panel-title">Contacts
+            <div class="badge bg-color-teal font-xs pull-right" data-bind="text: contacts().length"></div>
+        </h3>
+    </div>
 
-    <div class="card-content">
+    <div class="panel-body">
 
-        <div class="card-image">
-            <img src="./image.jpg" alt="Loading image...">
-            <h3 class="card-image-headline">Contacts</h3>
+        <div class="row bottomMargin">
+            <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
+                <span class="glyphicon glyphicon-search"
+                      style="font-size: initial; padding-top: 10px;"
+                      aria-hidden="true"></span>
+            </div>
+            <div class="col-xs-9 col-sm-9 col-md-7 col-lg-7"
+                 style="padding-left: 0px">
+                <input class="form-control no-border" id="prepend"
+                       placeholder="Start typing to filter" type="text"
+                       data-bind="textInput: filterText">
+            </div>
+            <div class="col-xs-2 col-sm-2 col-md-4 col-lg-4">
+                <div class="btn btn-default btn-info pull-right" data-bind="click: onAddContact">
+                    <i class="fa fa-user fa-lg"></i>
+                    <i class="fa fa-plus"></i>
+                </div>
+            </div>
         </div>
 
-        <div class="card-body">
-            <!-- widget edit box -->
-            <div class="jarviswidget-editbox">
-                <!-- This area used as dropdown edit box -->
-            </div>
-            <!-- end widget edit box -->
-
-            <!-- widget content -->
-            <div class="widget-body">
-                <div class="widget-body-toolbar">
-                    <div class="row">
-                        <div class="col-xs-10 col-sm-10 col-md-8 col-lg-8">
-                            <div class="input-group">
-                                <span class="input-group-addon"><i class="fa fa-search"></i></span>
-                                <input class="form-control" id="prepend" placeholder="Start typing to filter" type="text"
-                                       data-bind="textInput: filterText">
-                            </div>
-                        </div>
-                        <div class="col-xs-2 col-sm-2 col-md-4 col-lg-4">
-                            <div class="btn btn-default btn-info pull-right" data-bind="click: onAddContact">
-                                <i class="fa fa-user fa-lg"></i>
-                                <i class="fa fa-plus"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                 <div class="custom-scroll table-responsive" style="height:290px; overflow-y: scroll;">
                     <table class="table table-bordered">
                         <thead>
@@ -53,7 +47,5 @@
                 </div>
             </div>
         </div>
-
     </div>
-
 </div>

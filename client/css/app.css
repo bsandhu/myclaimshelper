@@ -124,6 +124,14 @@ div {
     border-bottom-color: #2d6ca2;
 }
 
+.noBorder {
+    border: 0;
+}
+
+.noShadow {
+    box-shadow: none;
+}
+
 .clear {
     clear: both;
 }
@@ -168,6 +176,12 @@ div {
 
 #modal-button {
     display: none
+}
+
+.form-control.no-border {
+    border: 0;
+    box-shadow: none;
+    border-bottom: 1px solid;
 }
 
 /**********************************************************/
@@ -389,8 +403,14 @@ body {
     background-color: rgb(235, 238, 243);
 }
 
-h2 {
+h3.panel-title {
     font-size: 18px;
+    font-weight: 600;
+}
+
+.panel-default .panel-heading {
+    background-color: white;
+    border-bottom: 0px;
 }
 
 /**********************************************************/
@@ -463,8 +483,6 @@ nav ul {
     border-left: 0px;
 }
 
-.fixed-table-toolbar .form-control {
-    border: 0px;
-    border-bottom-width: 1px;
-    border-bottom-style: solid;
-}
+/**********************************************************/
+/**** Contact panel ****/
+/**********************************************************/
