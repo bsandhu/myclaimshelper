@@ -112,6 +112,12 @@ div {
     border-top-color: #2d6ca2;
 }
 
+.rightBorderSolid {
+    border-right: solid;
+    border-right-width: 1px;
+    border-right-color: rgb(228, 229, 230);
+}
+
 .bottomBorderDashed {
     border-bottom-color: rgba(0, 0, 0, 0.2);
     border-bottom-style: dashed;
@@ -277,29 +283,7 @@ div {
 }
 
 /**********************************************************/
-/**** Search panel ****/
-/**********************************************************/
-
-.table > tbody > tr:hover {
-    cursor: pointer;
-}
-
-.table thead tr {
-    background-color: white;
-    background-image: none;
-    border-top-width: 0px;
-}
-
-.toggleButton {
-    color: rgb(190, 207, 224);
-}
-
-.toggleButton:HOVER {
-    color: white;
-}
-
-/**********************************************************/
-/**** Dashboard panel ****/
+/**** Dashboard - Summary panel ****/
 /**********************************************************/
 
 .dashboardPanelCollapsedContent {
@@ -307,10 +291,20 @@ div {
     padding: 0px;
 }
 
-/**** Task summary widget ****/
+/**********************************************************/
+/**** Task Summary panel ****/
+/**********************************************************/
+
+/* First column color */
+.summaryRow td:nth-child(2) {
+    color: rgb(85, 85, 85);
+}
 
 .summaryGroupSelector {
-    background-color: whitesmoke;
+    background-color: white;
+    border: 0;
+    box-shadow: none;
+    color: rgb(110, 203, 232);
 }
 
 .summaryGroupHeader {
@@ -366,32 +360,6 @@ div {
 }
 
 /**********************************************************/
-/**** Smart admin theme overrid ****/
-/**********************************************************/
-
-.row {
-    margin-left: -5px;
-    margin-right: -5px;
-}
-
-.menu-on-top .page-footer {
-    padding: 0px;
-    padding-top: 5px;
-}
-
-.page-footer {
-    height: 35px;
-    padding: 15px 13px 0;
-    padding-left: 233px;
-    border-top: 1px solid #CECECE;
-    background: #2a2725;
-    width: 100%;
-    position: absolute;
-    display: block;
-    bottom: 0px;
-}
-
-/**********************************************************/
 /**** Bootstrap overrides ****/
 /**********************************************************/
 
@@ -411,6 +379,18 @@ h3.panel-title {
 .panel-default .panel-heading {
     background-color: white;
     border-bottom: 0px;
+}
+
+.table > tbody > tr:hover {
+    cursor: pointer;
+}
+
+.table > thead > tr > th {
+    color: rgb(168, 168, 168);
+}
+
+.table > tbody > tr > td {
+    color: rgb(162, 162, 162);
 }
 
 /**********************************************************/

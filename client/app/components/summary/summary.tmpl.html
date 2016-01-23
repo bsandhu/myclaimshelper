@@ -17,44 +17,32 @@
                 <div class="panel-heading">
                     <form class="form-inline" role="form">
                         <!-- Due date group filter -->
-                        <div class="form-group control-label">
-                            <strong>Show tasks</strong>
-                        </div>
-                        <div class="form-group">
-                            <span>due</span>
-                            <!--<li role="presentation" class="dropdown">
-                                <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
-                                    Dropdown <span class="caret"></span>
-                                </a>
-                                <ul class="dropdown-menu">
-                                    <li><a href="#">Foo</a></li>
-                                    <li><a href="#">Foo</a></li>
-                                    <li><a href="#">Foo</a></li>
-                                </ul>
-                            </li>-->
+                        <div class="form-group rightBorderSolid paddingRight5">
+                            <span>Due </span>
                             <select class="form-control input-sm summaryGroupSelector"
                                     data-bind="value: dueDateFilter,
                                        options: dueDateFilters,
                                        optionsText: 'description'"></select>
-                        </div>
-                        <div class="form-group" data-bind="if: showDueDateDaysFilter">
-                            <!-- Due date - day group filter -->
-                            <input class="form-control input-sm summaryGroupSelector" style="width: 70px"
-                                   type="number" min="0"
-                                   data-bind="value: dueDateDaysFilterValue">
-                            <span>days.</span>
+
+                            <div class="form-group" data-bind="if: showDueDateDaysFilter">
+                                <!-- Due date - day group filter -->
+                                <input class="form-control input-sm summaryGroupSelector" style="width: 50px"
+                                       type="number" min="0"
+                                       data-bind="value: dueDateDaysFilterValue">
+                                <span>days</span>
+                            </div>
                         </div>
                         <!-- Status filter -->
-                        <div class="form-group">
-                            <span class="rightMargin5"> with status</span>
+                        <div class="form-group rightBorderSolid paddingRight5">
+                            <span class="leftMargin5">Status</span>
                             <select class="form-control input-sm summaryGroupSelector"
                                     data-bind="value: statusFilter,
                                        options: statusFilters,
                                        optionsText: 'description'"></select>
                         </div>
-                        <div class="form-group col-md-offset-1 col-lg-offset-1">
+                        <div class="form-group rightBorderSolid paddingRight5">
                             <!-- Group selection -->
-                            <span><strong>Arrange by</strong></span>
+                            <span class="leftMargin5">Sort</span>
                             <select class="form-control input-sm summaryGroupSelector"
                                     data-bind="value: groupBy,
                                        options: groupByOptions,
@@ -68,11 +56,11 @@
                         <table class="table table-hover table-responsive summaryTable">
                             <thead>
                             <th>&nbsp;</th>
-                            <th>Claim File no.</th>
-                            <th>Summary</th>
+                            <th>Claim</th>
+                            <th>Description</th>
                             <th>Entry Date</th>
                             <th>Due Date</th>
-                            <th>State</th>
+                            <th>Status</th>
                             </thead>
 
                             <tbody data-bind="foreach : {data: arrangeByKeys, as: 'groupKey'}">
@@ -117,7 +105,7 @@
                                 </td>
                                 <td class="summaryGroupCell">
                                     <status-editor-component params="'statusValue': $data.state,
-                                                                             'entryId': $data._id">
+                                                                     'entryId': $data._id">
                                     </status-editor-component>
                                 </td>
                             </tr>
