@@ -122,7 +122,7 @@ var saveAttachments = function (mailEntry) {
 var notifySuccess = function (mailEntry) {
     var body = 'Email processed successfully!';
     body += '\n\n' + JSON.stringify(mailEntry);
-    broadcastNoHTTP('SUCCESS! ' + mailEntry.mail.subject)
+    broadcastNoHTTP('Email processed successsfully! ' + mailEntry.mail.subject)
       .always(function doit(){
         sendEmail(mailEntry.mail.from, mailEntry.mail.subject, body);
       }); 
@@ -130,9 +130,9 @@ var notifySuccess = function (mailEntry) {
 };
 
 var notifyFailure = function (mailEntry) {
-    var body = 'ERROR processing email.';
-    body += '\n\n' + JSON.stringify(mailEntry.error);
-    broadcastNoHTTP('FAILURE! ' + mailEntry.mail.subject)
+    var err = 'ERROR processing email:';
+    var body = err + mailEntry.mail.subject + '\n\n' + JSON.stringify(mailEntry.error);
+    broadcastNoHTTP(body)
       .always(function doit(){
         sendEmail(mailEntry.mail.from, mailEntry.mail.subject, body);
       }); 

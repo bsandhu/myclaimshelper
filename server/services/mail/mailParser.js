@@ -9,10 +9,15 @@ util.inherits(MailParser, EventEmitter);
 
 MailParser.prototype.parseRequest = function(req){
     //if (!claimId) this.emit('error', new Error('ClaimId not found'));
-    var claimId = this._getClaimId(req.params.subject);
-    if (!claimId) this.errors.push(new Error('ClaimId not found'));
-    var attachments = this._getEmbeddedAttachmentInfo(req);
-    var tags = this._getTags(req.params['body-plain']);
+    try{
+      var claimId = this._getClaimId(req.params.subject);
+      if (!claimId) this.errors.push(new Error('ClaimId not found'));
+      var attachments = this._getEmbeddedAttachmentInfo(req);
+      var tags = this._getTags(req.params['body-plain']);
+    }
+    catch (e){
+      this.errors.push(e);
+    }
     return {'claimId': claimId,
             'attachments': attachments,
             'tags': tags,
