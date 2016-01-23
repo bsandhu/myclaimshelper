@@ -182,7 +182,7 @@
                 </div>
 
                 <!-- New task btn -->
-                <div class="btn-group inline pull-right rightMargin5">
+                <div class="btn-group inline rightMargin5">
                     <button type="button" class="btn btn-default dropdown-toggle btn-info" data-toggle="dropdown">
                         <span class="fa fa-plus"></span>
                         New Task <span class="caret"></span>
@@ -216,7 +216,7 @@
                 </div>
 
                 <!-- Edit claim button -->
-                <div data-bind="ifnot: inEditMode && isPartiallyCollapsed" class="inline">
+                <div data-bind="ifnot: inEditMode && isPartiallyCollapsed" class="inline pull-right rightMargin5">
                     <div class="btn btn-default inline btn-info"
                          data-bind="click: onEditModeClick.bind($data)">
                         <i class="fa fa-pencil"></i>
@@ -224,17 +224,8 @@
                     </div>
                 </div>
 
-                <!-- Add contact Button
+                <!-- New Invoice Button -->
                 <div class="inline" data-bind="ifnot: inEditMode && isPartiallyCollapsed">
-                    <div class="btn btn-default inline btn-info"
-                         data-bind="click: onAddContact">
-                        <i class="fa fa-user fa-lg"></i>
-                        <i class="fa fa-plus"></i> New Contact
-                    </div>
-                </div>
-                -->
-                <!-- Create Bill Button -->
-                <div class="inline pull-right rightMargin5" data-bind="ifnot: inEditMode && isPartiallyCollapsed">
                     <div class="btn-group">
                         <a class="btn btn-sm btn-info" data-bind="attr: {href: '#/claim/' + claim()._id() + '/newbill'}">
                             <i class="fa fa-plus"></i> New Invoice
@@ -243,6 +234,7 @@
                 </div>
             </div>
 
+            <div class="clear"></div>
             <!-- *** Entries *** -->
             <div data-bind="template: {name: 'app/components/claim/claim.entries'}"></div>
 
