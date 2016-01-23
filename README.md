@@ -11,7 +11,6 @@
 `~> git clone https://github.com/vadan/007.git`
 
 2 Start the Node server<br/>
-`~/007> cd web`
 `~/007> node server/start.js`
 
 3 You should see a msg like this<br/>
@@ -35,11 +34,11 @@ Mocha is being used as the testing lib. Assertions are from Node standard pkgs.
 The easy way to run tests is by using WebStorm. Create a Mocha test runner for the 'tests' dir.
 Use the following options for the test runner:
 
-1 *MochaPackage* 007/web/node_modules/mocha
+1 *MochaPackage* 007/node_modules/mocha
 
 2 *User Interface* BDD
 
-3 *Test dir* 007/web/tests
+3 *Test dir* 007/tests
 
 #Devtools
 
