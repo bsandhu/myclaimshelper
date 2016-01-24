@@ -94,6 +94,14 @@ define(['Path', 'amplify', 'app/utils/events'],
             }
         };
 
+        Router.prototype.showMsgsPopup = function () {
+            amplify.publish(Events.SHOW_MSGS);
+        };
+
+        Router.prototype.showProfilePopup = function () {
+            amplify.publish(Events.SHOW_USER_PROFILE);
+        };
+
         Router.prototype.start = function () {
             console.log('Listen for Routes');
             this.setupRoutes();

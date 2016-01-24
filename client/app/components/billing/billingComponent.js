@@ -114,7 +114,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'shared/dateUtils',
         }
 
         BillingVM.prototype.onUserProfileClick = function () {
-            amplify.publish(Events.SHOW_USER_PROFILE);
+            router.showProfilePopup();
         };
 
         BillingVM.prototype.onUpdateBillStatus = function (newStatus, bill) {

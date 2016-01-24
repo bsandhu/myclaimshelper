@@ -291,6 +291,10 @@ div {
     padding: 0px;
 }
 
+.label-as-badge {
+    border-radius: 1em;
+}
+
 /**********************************************************/
 /**** Task Summary panel ****/
 /**********************************************************/
@@ -403,6 +407,10 @@ nav ul {
 
 .navbar-default {
     background-color: rgb(28, 135, 209);
+}
+
+.navbar-msg-count {
+    background-color: rgb(217, 68, 57);
 }
 
 .navbar-header {

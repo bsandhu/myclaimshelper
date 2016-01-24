@@ -23,6 +23,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
             ];
 
             // View state
+            this.router = Router;
             this.setupEvListeners();
             this.getUnreadMsgCount();
         }
@@ -89,14 +90,6 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
 
         AppVM.prototype.onAddNewClaim = function () {
             Router.routeToNewClaim();
-        };
-
-        AppVM.prototype.onShowMsgs = function () {
-            amplify.publish(Events.SHOW_MSGS);
-        };
-
-        AppVM.prototype.onShowProfile = function () {
-            amplify.publish(Events.SHOW_USER_PROFILE);
         };
 
         /*************************************************/
