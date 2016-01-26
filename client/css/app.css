@@ -450,6 +450,15 @@ nav ul {
     border-bottom-style: solid;
 }
 
+.navbar-selected {
+    color: white !important;
+    font-family: 'Open sans';
+    letter-spacing: 0.05em;
+    border-bottom-color: rgb(235, 238, 243);
+    border-bottom-width: 10px;
+    border-bottom-style: solid;
+}
+
 /**********************************************************/
 /**** Bootstrap table overrides ****/
 /**********************************************************/

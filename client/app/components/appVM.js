@@ -25,6 +25,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
             // View state
             this.router = Router;
             this.setupEvListeners();
+            this.setupToolbarListeners();
             this.getUnreadMsgCount();
         }
 
@@ -69,6 +70,15 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
                 console.log('AppVM - SUCCESS_NOTIFICATION ev');
             });
         };
+
+        AppVM.prototype.setupToolbarListeners = function () {
+            var toolbarLinks = '.navbar-default .navbar-nav > li > a';
+            $(toolbarLinks).click(function (ev) {
+                $(toolbarLinks).removeClass('navbar-selected');
+                $(ev.target).addClass('navbar-selected');
+            });
+            $(toolbarLinks)[0].click();
+        }
 
         AppVM.prototype.transitionToSearchResults = function () {
             this.collapseClaimPanel();
