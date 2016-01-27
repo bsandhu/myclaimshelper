@@ -23,7 +23,11 @@ define(['Path', 'amplify', 'app/utils/events'],
             });
 
             Path.map("#/home").to(function () {
-                amplify.publish(Events.SHOW_CLAIMS_GRID);
+                amplify.publish(Events.SHOW_DASHBOARD);
+            });
+
+            Path.map("#/claim/list").to(function () {
+                amplify.publish(Events.SHOW_CLAIMS_LIST);
             });
 
             Path.map("#/claim").to(function () {

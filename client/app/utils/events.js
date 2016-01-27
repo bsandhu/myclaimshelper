@@ -3,7 +3,8 @@ define([], function(){
     return {
         // Event names
         CLAIMS_GRID_SELCTION : 'GridSelection',
-        SHOW_CLAIMS_GRID     : 'ShowClaimsGrid',
+        SHOW_CLAIMS_LIST     : 'ShowClaimsList',
+        SHOW_DASHBOARD       : 'ShowDashboard',
 
         SHOW_CONTACT         : 'SHOW_CONTACT',
         ADD_CONTACT          : 'ADD_CONTACT',

@@ -38,7 +38,7 @@
 
 <body class="menu-on-top">
 
-<!-- #HEADER -->
+<!-- Navigation header -->
 <nav class="navbar navbar-default" role="navigation">
 
     <div class="navbar-header">
@@ -51,20 +51,21 @@
         </button>
         <a class="navbar-brand" href="#">Agent 007</a>
     </div>
-
     <!-- `collapse` class needed for smaller devices -->
-    <div class="collapse navbar-collapse" id="main-navbar-collapse"  >
+    <div class="collapse navbar-collapse" id="main-navbar-collapse">
         <ul class="nav navbar-nav">
             <li><a href="#/home">Dashboard</a></li>
-            <li><a href="#">Claims</a></li>
+            <li><a href="#/claim/list">Claims</a></li>
             <li><a href="#">Billing</a></li>
-            <li><a href="" data-bind="click: router.showMsgsPopup">Messages<span class="badge badge-important pull-right navbar-msg-count" data-bind="text: unreadMsgCount"></span></a></li>
+            <li><a href="" data-bind="click: router.showMsgsPopup">Messages<span
+                    class="badge badge-important pull-right navbar-msg-count"
+                    data-bind="text: unreadMsgCount"></span></a></li>
             <li><a href="" data-bind="click: router.showProfilePopup">Profile</a></li>
         </ul>
     </div>
 
 </nav>
-<!-- END NAVIGATION -->
+<!-- End navigation header -->
 
 <!-- #MAIN PANEL -->
 <div id="main" role="main">
@@ -81,43 +82,38 @@
     <!-- User profile -->
     <div data-bind="component: 'user-profile-component'"></div>
 
-    <!-- #MAIN CONTENT -->
-    <div id="content">
-        <!-- Summary Component -->
-        <div id="dashboardPanel" class="slidingContainer dashboardPanel">
-            <div id="dashboardPanelContent" class="dashboardPanelContent">
+    <!-- **** Dashboard **** -->
+    <div id="dashboardPanel" class="slidingContainer dashboardPanel">
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <div data-bind="component: 'summary-component'"></div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+                    <div data-bind="component: 'stats-component'"></div>
+                    <div data-bind="component: 'maps-dash-component'"></div>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4s">
+                    <div data-bind="component: 'contact-widget-component'"></div>
+                </div>
+            </div>
+        </div>
+        <!--
+            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
+                <div data-bind="component: 'quick-add-component'"></div>
+            </div>
+            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
+            </div>
+        -->
+    </div>
 
-                <!-- Widget container -->
-                <section id="widget-grid">
-                    <div class="row">
-                        <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12 sortable-grid ui-sortable">
-                            <div data-bind="component: 'summary-component'"></div>
-                        </article>
-                    </div>
-                    <div class="row">
-                        <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12 sortable-grid ui-sortable">
-                            <div data-bind="component: 'claims-list-component'"></div>
-                        </article>
-                    </div>
-                    <div class="row">
-                        <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12 sortable-grid ui-sortable">
-                            <article class="col-xs-12 col-sm-12 col-md-8 col-lg-8 sortable-grid ui-sortable">
-                                <div data-bind="component: 'stats-component'"></div>
-                                <div data-bind="component: 'maps-dash-component'"></div>
-                            </article>
-                            <article class="col-xs-12 col-sm-12 col-md-4 col-lg-4 sortable-grid ui-sortable">
-                                <div data-bind="component: 'contact-widget-component'"></div>
-                            </article>
-                        </article>
-                    </div>
-                    <!--
-                        <article class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
-                            <div data-bind="component: 'quick-add-component'"></div>
-                        </article>
-                        <article class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
-                        </article>
-                    -->
-                </section>
+    <!-- **** Claims list **** -->
+    <div id="claimsListPanel" class="slidingContainer claimsListPanel">
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <div data-bind="component: 'claims-list-component'"></div>
             </div>
         </div>
     </div>
@@ -137,7 +133,6 @@
         </div>
     </div>
 </div>
-
 <!-- END #MAIN CONTENT -->
 
 <!-- Footer -->
@@ -195,7 +190,7 @@
                 // Knockout bindings init
                 ko.applyBindings(new AppVM());
 
-                setTimeout(3000, function(){
+                setTimeout(3000, function () {
                     $.material.init();
                     $.material.ripples();
                     $.material.input();
