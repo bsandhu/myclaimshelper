@@ -9,14 +9,31 @@ var jQuery = require('jquery-deferred');
 var _ = require('underscore');
 
 
+function broadcastNoHTTP(msg){
+  var notification = new Notification();
+  notification.name = 'NewMsg';
+  notification.body = msg;
+  var defer = jQuery.Deferred();
+  // Persist and broadcast
+  // Broadcast event picked up by the start.js module
+  mongoUtils.saveOrUpdateEntity(notification, mongoUtils.NOTIFICATIONS_COL_NAME)
+    .then(function (err, entity) {
+      if (err) {defer.reject()}
+      else {
+        serviceUtils.eventEmitter.emit('foo', entity);
+        console.log("Broadcast 'foo' event emited")
+        defer.resolve();
+      }
+    });
+  return defer;
+}
+
 function broadcast(req, res) {
     var msg = req.body.msg;
     var notification = new Notification();
     notification.name = 'NewMsg';
     notification.body = msg;
-
     var defer = jQuery.Deferred();
-
     // Persist and broadcast
     // Broadcast event picked up by the start.js module
     mongoUtils.saveOrUpdateEntity(notification, mongoUtils.NOTIFICATIONS_COL_NAME)
@@ -111,6 +128,7 @@ function getUnreadMsgCountInDB() {
 
 
 exports.broadcast = broadcast;
+exports.broadcastNoHTTP = broadcastNoHTTP;
 exports.markAllAsRead = markAllAsRead;
 exports.getUnreadMsgs = getUnreadMsgs;
 exports.getUnreadMsgCount = getUnreadMsgCount;
