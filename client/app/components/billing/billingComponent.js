@@ -14,6 +14,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'shared/dateUtils',
             this.Consts = Consts;
             this.claimId = claimId;
             this.DateUtils = DateUtils;
+            this.router = router;
             this.billingStatus = KOMap.fromJS(BillingStatus);
             this.mode = ko.observable();
             this.billRecipient = ko.observable(KOMap.fromJS(new Contact()));

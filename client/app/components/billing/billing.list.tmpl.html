@@ -37,16 +37,16 @@
                     </thead>
                     <tbody data-bind="foreach: { data: bills, as: 'bill' }">
                     <tr>
-                        <td data-bind="attr: {'data-value': bill._id}">
-                            <a data-bind="text: bill._id, attr: {href: '#/claim/' + $parent.claimId + '/bill/' + bill._id}"></a>
-                        </td>
-                        <td data-bind="text: bill.billingDate ? bill.billingDate.toLocaleString() : 'None'"></td>
+                        <td data-bind="text: bill._id,
+                                       click: $parent.router.routeToBill"></td>
+                        <td data-bind="text: bill.billingDate ? bill.billingDate.toLocaleString() : 'None',
+                                       click: $parent.router.routeToBill"></td>
                         <td>
                             <div class="btn-group">
                                 <button class="btn btn-sm dropdown-toggle"
                                         data-toggle="dropdown"
                                         data-bind="html: bill.status + ' <span class=\'caret\'></span>',
-                                               css: bill.status === $parent.billingStatus.PAID() ? 'btn-success' : 'btn-info'">
+                                               css: bill.status === $parent.billingStatus.PAID() ? 'btn-success' : 'btn-link'">
                                 </button>
                                 <ul class="dropdown-menu">
                                     <li>
@@ -64,7 +64,8 @@
                                 </ul>
                             </div>
                         </td>
-                        <td data-bind="text: bill.total ? '$' + bill.total : ''"></td>
+                        <td data-bind="text: bill.total ? '$' + bill.total : '',
+                                       click: $parent.router.routeToBill"></td>
                     </tr>
                     </tbody>
                 </table>

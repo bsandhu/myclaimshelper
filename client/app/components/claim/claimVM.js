@@ -171,6 +171,14 @@ define(['jquery', 'knockout', 'KOMap', 'amplify',
         /* View state                                              */
         /***********************************************************/
 
+        ClaimVM.prototype.showTasksCollapsed = function () {
+            $(window).resize(function(){
+                if ($(window).width() < 768){
+                    amplify.publish()
+                }
+            });
+        }
+
         ClaimVM.prototype.onSortEntries = function () {
             this.sortDir(this.sortDir() === 'desc' ? 'asc' : 'desc');
             this.sortEntries();

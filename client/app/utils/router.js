@@ -30,7 +30,7 @@ define(['Path', 'amplify', 'app/utils/events'],
                 amplify.publish(Events.SHOW_CLAIMS_LIST);
             });
 
-            Path.map("#/claim").to(function () {
+            Path.map("#/claim/new").to(function () {
                 amplify.publish(Events.NEW_CLAIM);
             });
 
@@ -64,12 +64,19 @@ define(['Path', 'amplify', 'app/utils/events'],
         };
 
         Router.prototype.routeToNewClaim = function () {
-            window.location.hash = '#/claim';
+            window.location.hash = '#/claim/new';
         };
 
         Router.prototype.routeToBillingOverview = function (claimId) {
             console.log('Navigating to Billing overview ' + claimId);
             window.location.hash = '#/claim/' + claimId + '/billhistory';
+        };
+
+        /**
+         * `this` bound the bill object
+         */
+        Router.prototype.routeToBill = function () {
+            window.location.hash = '#/claim/' + this.claimId + '/bill/' + this._id;
         };
 
         Router.prototype.routeToClaim = function (claimId) {

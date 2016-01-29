@@ -2,11 +2,12 @@
 <!--List Claim Entries -->
 <!-- ************************************************ -->
 
+<!-- Hide completely on xs devices -->
 <div data-bind="ifnot: inEditMode,
                 style: {'max-height': screenHeight()+ 'px'}"
      class="rightMargin topMargin5 overflowY">
 
-    <table class="table table-hover table-responsive" id="claimEntriesList">
+    <table class="table table-hover table-responsive " id="claimEntriesList">
         <thead>
         <tr>
             <th>&nbsp;</th>
@@ -42,9 +43,7 @@
                                            'glyphicon-envelope'   : entry.tag.toString().search('email') >= 0}"></span>
                 </td>
                 <td style="min-width: 20%;">
-                    <a data-bind="attr: {href: '#/claimEntry/' + entry._id}">
-                        <span data-bind="text: entry.summary"></span>
-                    </a>
+                    <span data-bind="text: entry.summary"></span>
                 </td>
 
                 <!-- ko ifnot: $parent.isPartiallyCollapsed -->

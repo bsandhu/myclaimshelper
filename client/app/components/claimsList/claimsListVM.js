@@ -8,6 +8,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
             console.log('Init ClaimsListVM');
 
             this.DateUtils = DateUtils;
+            this.router = Router;
             this.loadClaims();
             amplify.subscribe(Events.SAVED_CLAIM, this, this.reLoadClaims);
         }

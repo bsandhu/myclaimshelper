@@ -2,9 +2,6 @@
     <div class="panel-heading">
         <div class="inline" data-bind="text: niceHeader(),
                         attr: {title: 'Task Id ' + claimEntry()._id()}"></div>
-        <div class="inline pull-right">
-            <a href="" data-bind="click: onCancel">Close <i class="fa fa-times"></i></a>
-        </div>
     </div>
 
     <div class="panel-body">
@@ -100,16 +97,16 @@
         <footer>
             <div class="form-actions row">
                 <div class="col-lg-8 pull-left text-left">
-                    <span class="note"><strong>Last updated</strong></span>
-                    <span class="note" data-bind="text : DateUtils.niceDate(claimEntry().updateDate())"></span>
-                </div>
-                <div class="col-lg-4 pull-right">
                     <button type="button" class="btn btn"
                             data-bind="click: onSave,
-                                   css: { 'btn-primary' : stateChange(),
+                                   css: { 'btn-info' : stateChange(),
                                           'btn-default' : !stateChange()}">Save
                     </button>
                     <button type="button" class="btn btn-default" data-bind="click: onCancel">Cancel</button>
+                </div>
+                <div class="col-lg-4 pull-right">
+                    <span class="note"><strong>Last updated</strong></span>
+                    <span class="note" data-bind="text : DateUtils.niceDate(claimEntry().updateDate())"></span>
                 </div>
             </div>
         </footer>

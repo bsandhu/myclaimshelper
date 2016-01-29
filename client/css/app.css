@@ -283,6 +283,14 @@ div {
 }
 
 /**********************************************************/
+/**** Billing ****/
+/**********************************************************/
+
+.panel-default .bill-heading {
+    background-color: #ECEFF1;
+}
+
+/**********************************************************/
 /**** Dashboard - Summary panel ****/
 /**********************************************************/
 
@@ -397,6 +405,10 @@ h3.panel-title {
     color: rgb(162, 162, 162);
 }
 
+.btn-info {
+    background-color: #009688;
+}
+
 /**********************************************************/
 /**** Bootstrap navbar overrides ****/
 /**********************************************************/
@@ -420,8 +432,8 @@ nav ul {
 }
 
 .navbar-default .navbar-brand {
-    font-size: 26pt;
-    font-family: 'Open sans';
+    font-family: 'Pinyon Script', cursive;
+    font-size: -webkit-xxx-large;
     color: white;
     letter-spacing: 0em;
     height: 90px;
@@ -462,11 +474,6 @@ nav ul {
 /**********************************************************/
 /**** Bootstrap table overrides ****/
 /**********************************************************/
-
-.bootstrap-table {
-    position: relative;
-    top: -20px;
-}
 
 .fixed-table-container {
     border: 0px;

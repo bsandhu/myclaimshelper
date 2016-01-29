@@ -33,6 +33,9 @@ define([], function(){
         CLOSE_BILLING_VIEW   : 'CLOSE_BILLING_VIEW',
 
         SHOW_USER_PROFILE    : 'SHOW_USER_PROFILE',
-        SHOW_MSGS            : 'SHOW_MSGS'
+        SHOW_MSGS            : 'SHOW_MSGS',
+
+        SMALL_DEVICE_MODE       : 'SMALL_DEVICE_MODE',
+        MEDIUM_OR_BIGGER_DEVICE : 'MEDIUM_OR_BIGGER_DEVICE'
     };
 });

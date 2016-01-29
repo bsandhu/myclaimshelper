@@ -13,15 +13,6 @@
             <i class="fa fa-fw fa-lg fa-credit-card"></i>Billing
         </a>
     </li>
-    <li data-bind="if: activeTab() == Consts.CLAIMS_TAB" class="pull-right">
-        <a href="" data-bind="click: onCloseClaim">Close <i class="fa fa-times"></i></a>
-    </li>
-    <!--
-    TODO SmartNotification not disappearing properly on Billing view. Deal with later.
-    <li data-bind="if : activeTab() == Consts.BILLING_TAB"
-        class="pull-right">
-        <a href="" data-bind="click: onCloseBilling">Close <i class="fa fa-times"></i></a>
-    </li>-->
 </ul>
 
 <!-- *** Tabs content *** -->
@@ -171,18 +162,9 @@
             <!-- ************************************************ -->
 
             <div data-bind="ifnot: inEditMode" class="topMargin1pc">
-                <!-- Back btn -->
-                <div data-bind="if: isPartiallyCollapsed" class="inline leftMargin5">
-                    <a href="javascript:void(0);"
-                       class="btn-xs btn-labeled btn-link leftMargin5"
-                       data-bind="click: function(){Router.routeToClaim(Session.getActiveClaimId());}">
-                        <span class="btn-label">
-                        <i class="glyphicon glyphicon-chevron-left"></i></span>Back
-                    </a>
-                </div>
 
                 <!-- New task btn -->
-                <div class="btn-group inline rightMargin5">
+                <div class="btn-group inline leftMargin5">
                     <button type="button" class="btn btn-default dropdown-toggle btn-info" data-toggle="dropdown">
                         <span class="fa fa-plus"></span>
                         New Task <span class="caret"></span>
