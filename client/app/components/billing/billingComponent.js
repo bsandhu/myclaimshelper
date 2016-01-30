@@ -1,11 +1,12 @@
-define(['jquery', 'knockout', 'KOMap', 'amplify', 'shared/dateUtils',
-        'app/utils/ajaxUtils', 'app/utils/events', 'app/utils/consts', 'app/utils/router',
+define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox',
+        'shared/dateUtils', 'app/utils/ajaxUtils', 'app/utils/events', 'app/utils/consts', 'app/utils/router',
         'app/utils/session', 'app/utils/sessionKeys',
         'model/bill', 'model/billingItem', 'model/billingStatus', 'model/contact',
         'text!app/components/billing/billing.tmpl.html',
         'text!app/components/billing/billing.print.tmpl.html'
     ],
-    function ($, ko, KOMap, amplify, DateUtils, ajaxUtils, Events, Consts, router, Session, SessionKeys, Bill,
+    function ($, ko, KOMap, amplify, bootbox,
+              DateUtils, ajaxUtils, Events, Consts, router, Session, SessionKeys, Bill,
               BillingItem, BillingStatus, Contact, viewHtml, printHtml) {
 
         function BillingVM(claimId) {
@@ -179,17 +180,26 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'shared/dateUtils',
 
         BillingVM.prototype.onNavigateAwayFromUnsavedBill = function () {
             var self = this;
-            $.SmartMessageBox({
+            bootbox.dialog({
+                size: 'small',
+                backdrop: 'false',
                 title: "Unsaved Bill!",
-                content: "Save a draft copy of the Invoice? ",
-                buttons: '[No][Yes]'
-            }, function (ButtonPressed) {
-                if (ButtonPressed === "Yes") {
-                    self.updateBill();
-                }
-                if (ButtonPressed === "No") {
-                    router.routeToBillingOverview(self.claimId);
-                    $('#MsgBoxBack').remove();
+                message: "Save a draft copy of the Invoice? ",
+                buttons: {
+                    no: {
+                        label: "No",
+                        className: "btn-danger",
+                        callback: function () {
+                            router.routeToBillingOverview(self.claimId);
+                        }
+                    },
+                    yes: {
+                        label: "Yes",
+                        className: "btn-info",
+                        callback: function () {
+                            self.updateBill();
+                        }
+                    }
                 }
             });
         }
@@ -458,7 +468,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'shared/dateUtils',
                         frameContent.document.write('<head><link rel=stylesheet href=../../css/print.css type=text/css ></head>');
                         frameContent.document.write(container.innerHTML);
                         frameContent.document.close();
-                        setTimeout(function afterFrameRender(){
+                        setTimeout(function afterFrameRender() {
                             frameContent.focus();
                             frameContent.print();
                             document.body.removeChild(frame);

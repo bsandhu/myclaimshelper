@@ -10,6 +10,7 @@
 
     <!-- Bootstrap and libs -->
     <link rel="stylesheet" type="text/css" media="screen" href="css/bootstrap.css">
+
     <link rel="stylesheet" type="text/css" media="screen" href="css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="../../css/jquery.datetimepicker.css">
     <link rel="stylesheet" type="text/css" href="../../css/sortable.css">
@@ -145,9 +146,9 @@
      * Load libs and init Knockout - on app startup. See requireConfig.js
      */
     require(['jquery', 'knockout', 'KOAmd', 'text', 'amplify', 'app/components/appVM', 'shared/dateUtils', 'app/utils/session',
-                'smartnotify', 'app/utils/koDatetimePickerBinding', 'app/utils/koWYSIWYGBinding',
+                'bootbox', 'app/utils/koDatetimePickerBinding', 'app/utils/koWYSIWYGBinding',
                 'app/utils/koTextTruncateBinding', 'app/utils/koSortableBinding', 'app/utils/koAutoComplete', 'app/utils/koSelect2',
-                'velocity', 'bootstrap', 'KOXeditable', 'bootstrapTable', 'tableExport', 'material', 'ripples'],
+                'velocity', 'bootstrap', 'KOXeditable', 'bootstrapTable', 'tableExport'],
             function ($, ko, KOAmd, text, amplify, AppVM, DateUtils, Session) {
                 console.log('Init App');
 

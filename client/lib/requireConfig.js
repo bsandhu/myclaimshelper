@@ -14,26 +14,21 @@ require.config({
         'Path': 'lib/path',
         'bootstrap': 'lib/bootstrap.min',
         'bootstrapTable' : 'lib/bootstrap.table',
+        'bootbox' : 'lib/bootbox.min',
         'tableExport': 'lib/bootstrap.table.export',
         'kayalshriTableExport' : 'lib/kayalshri.table.export',
         'wysiwyg': 'lib/bootstrap.wysiwyg',
         'async': 'lib/async',
         'datetimepicker': 'lib/jquery.datetimepicker',
-        'smartnotify': 'lib/SmartNotification.min',
         'sortable': 'lib/sortable.min',
         'xeditable': 'lib/x-editable.min',
         'KOXeditable': 'lib/ko.xeditable',
         'socketio': 'lib/socket.io-1.2.0',
-        'select2': 'lib/select2.min',
-        'material': 'lib/material',
-        'ripples': 'lib/ripples'
+        'select2': 'lib/select2.min'
     },
     shim: {
-        'material': {
-            deps: ['jquery']
-        },
-        'ripples': {
-            deps: ['jquery']
+        'bootbox': {
+            deps: ['jquery', 'bootstrap']
         },
         'jqueryui': {
             deps: ['jquery']
@@ -82,9 +77,6 @@ require.config({
         },
         'Path': {
             exports: 'Path'
-        },
-        'smartnotify': {
-            deps: ['jquery', 'bootstrap']
         },
         'xeditable': {
             deps: ['bootstrap']
