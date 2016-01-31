@@ -191,6 +191,7 @@
                         <li class="divider"></li>
                         <li>
                             <a href="#/claimEntry/new/other">
+                                <span class="fa fa-tag"></span>
                                 <span class="leftMargin5">Other</span>
                             </a>
                         </li>
@@ -218,7 +219,8 @@
 
             <div class="clear"></div>
             <!-- *** Entries *** -->
-            <div data-bind="template: {name: 'app/components/claim/claim.entries'}"></div>
+            <div data-bind="template: {name: 'app/components/claim/claim.entries',
+                                       afterRender: initTooltipComponent}"></div>
 
         </div>
         <!-- *** Claim Panel - end -->

@@ -10,7 +10,6 @@
 
     <!-- Bootstrap and libs -->
     <link rel="stylesheet" type="text/css" media="screen" href="css/bootstrap.css">
-
     <link rel="stylesheet" type="text/css" media="screen" href="css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="../../css/jquery.datetimepicker.css">
     <link rel="stylesheet" type="text/css" href="../../css/sortable.css">
@@ -148,6 +147,7 @@
     require(['jquery', 'knockout', 'KOAmd', 'text', 'amplify', 'app/components/appVM', 'shared/dateUtils', 'app/utils/session',
                 'bootbox', 'app/utils/koDatetimePickerBinding', 'app/utils/koWYSIWYGBinding',
                 'app/utils/koTextTruncateBinding', 'app/utils/koSortableBinding', 'app/utils/koAutoComplete', 'app/utils/koSelect2',
+                'app/utils/koTaskEntryTag',
                 'velocity', 'bootstrap', 'KOXeditable', 'bootstrapTable', 'tableExport'],
             function ($, ko, KOAmd, text, amplify, AppVM, DateUtils, Session) {
                 console.log('Init App');

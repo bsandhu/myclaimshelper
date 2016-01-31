@@ -48,7 +48,7 @@
     </div>
 
     <div class="pull-right">
-        <h1 class="font-400">Invoice</h1>
+        <h1>Invoice</h1>
     </div>
     <div class="clearfix"></div>
     <br>
@@ -97,12 +97,12 @@
             <thead>
             <tr>
                 <th data-sortable="true" data-sorted="true" data-sorted-direction="ascending">DATE</th>
-                <th>TASK</th>
-                <th>DESCRIPTION</th>
-                <th>TIME</th>
-                <th>MILEAGE</th>
-                <th>EXPENSE</th>
-                <th>AMOUNT</th>
+                <th>Task</th>
+                <th>Description</th>
+                <th>Time</th>
+                <th>Mileage</th>
+                <th>Expense</th>
+                <th>Amount</th>
                 <th data-bind="if: isBillEditable">&nbsp;</th>
             </tr>
             </thead>
@@ -110,9 +110,10 @@
             <!-- ko foreach: { data: bill().billingItems(), as: 'billingItem' } -->
             <tr>
                 <td data-bind="text: $parent.DateUtils.niceDate(billingItem.entryDate(), false)"></td>
-                <td><a href="javascript:void(0);" data-bind="text: billingItem.tag()"></a></td>
+                <td>
+                    <i data-bind="taskEntryTag: billingItem.tag()"></i>
+                </td>
                 <td data-bind="text: billingItem.summary()"></td>
-
                 <td>
                     <span data-bind="ifnot: $parent.isBillEditable">
                          <span data-bind="text: billingItem.time"></span>

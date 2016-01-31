@@ -171,6 +171,11 @@ define(['jquery', 'knockout', 'KOMap', 'amplify',
         /* View state                                              */
         /***********************************************************/
 
+
+        ClaimVM.prototype.initTooltipComponent = function () {
+            $('[data-toggle="tooltip"]').tooltip();
+        };
+
         ClaimVM.prototype.showTasksCollapsed = function () {
             $(window).resize(function(){
                 if ($(window).width() < 768){

@@ -36,11 +36,8 @@
                                    mouseout : function(){$('#claimEntryArrowCell' + $index()).css('font-weight', 'inherit');}}">
                 <td style="min-width: 15px">
                     <!-- Tag -->
-                    <span class="glyphicon leftMargin"
-                          data-bind="css: {'glyphicon-earphone'   : entry.tag.toString().search('phone') >= 0,
-                                           'glyphicon-map-marker' : entry.tag.toString().search('visit') >= 0,
-                                           'glyphicon-camera'     : entry.tag.toString().search('photos') >= 0,
-                                           'glyphicon-envelope'   : entry.tag.toString().search('email') >= 0}"></span>
+                    <i class="leftMargin"
+                          data-bind="taskEntryTag: entry.tag.toString()"></i>
                 </td>
                 <td style="min-width: 20%;">
                     <span data-bind="text: entry.summary"></span>

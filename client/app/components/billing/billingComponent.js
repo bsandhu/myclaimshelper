@@ -143,7 +143,6 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox',
             console.assert(evData.billId, 'Expecting ev to billId');
             this.claimId = evData.claimId;
             this.loadBill(evData.billId).done(this.calcAll.bind(this));
-            ;
             this.mode(Consts.BILLING_TAB_VIEW_MODE);
         }
 
