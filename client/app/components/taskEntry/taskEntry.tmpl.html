@@ -1,7 +1,10 @@
 <div class="panel panel-default">
     <div class="panel-heading">
-        <div class="inline" data-bind="text: niceHeader(),
-                        attr: {title: 'Task Id ' + claimEntry()._id()}"></div>
+        <h3>
+            <div class="inline"
+                 data-bind="text: niceHeader(),
+                            attr: {title: 'Task Id ' + claimEntry()._id()}"></div>
+        </h3>
     </div>
 
     <div class="panel-body">
@@ -104,7 +107,7 @@
                     </button>
                     <button type="button" class="btn btn-default" data-bind="click: onCancel">Cancel</button>
                 </div>
-                <div class="col-lg-4 pull-right">
+                <div class="col-lg-4 pull-right text-right">
                     <span class="note"><strong>Last updated</strong></span>
                     <span class="note" data-bind="text : DateUtils.niceDate(claimEntry().updateDate())"></span>
                 </div>

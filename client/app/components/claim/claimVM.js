@@ -191,14 +191,14 @@ define(['jquery', 'knockout', 'KOMap', 'amplify',
 
         ClaimVM.prototype.sortEntries = function () {
             function sortAsc(a, b) {
-                var dateA = new Date(Date.parse(a.entryDate));
-                var dateB = new Date(Date.parse(b.entryDate));
+                var dateA = new Date(Date.parse(a.dueDate));
+                var dateB = new Date(Date.parse(b.dueDate));
                 return dateA.getTime() - dateB.getTime();
             }
 
             function sortDesc(a, b) {
-                var dateA = new Date(Date.parse(a.entryDate));
-                var dateB = new Date(Date.parse(b.entryDate));
+                var dateA = new Date(Date.parse(a.dueDate));
+                var dateB = new Date(Date.parse(b.dueDate));
                 return dateB.getTime() - dateA.getTime();
             }
 

@@ -15,7 +15,7 @@
             <!-- ko ifnot: isPartiallyCollapsed -->
                 <th>
                     <a href="#" data-bind="click: onSortEntries.bind($data)">
-                        Entered on
+                        Due on
                         <span data-bind="css: {'glyphicon-sort-by-attributes': sortDir() == 'asc',
                                                'glyphicon-sort-by-attributes-alt': sortDir() == 'desc'}"
                               class="glyphicon"></span>
@@ -45,7 +45,7 @@
 
                 <!-- ko ifnot: $parent.isPartiallyCollapsed -->
                     <td class="rightMargin">
-                        <span data-bind="text: $parent.DateUtils.niceDate(entry.entryDate)"></span>
+                        <span data-bind="text: $parent.DateUtils.niceDate(entry.dueDate)"></span>
                     </td>
                     <td>
                         <!-- Current state -->
