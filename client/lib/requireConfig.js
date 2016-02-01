@@ -8,9 +8,9 @@ require.config({
         'knockout': 'lib/knockout',
         'KOMap': 'lib/knockout.mapping.min',   // Map KO <-> JSON
         'KOAmd': 'lib/knockout.amd.helpers',   // Load templates async
-        'velocity': 'lib/jquery.velocity.min',    // JS animations
-        'amplify': 'lib/amplify',                // Pub/sub
-        'text': 'lib/require.text',           // Require plugin for html templates
+        'velocity': 'lib/jquery.velocity.min', // JS animations
+        'amplify': 'lib/amplify',              // Pub/sub
+        'text': 'lib/require.text',            // Require plugin for html templates
         'Path': 'lib/path',
         'bootstrap': 'lib/bootstrap.min',
         'bootstrapTable' : 'lib/bootstrap.table',
