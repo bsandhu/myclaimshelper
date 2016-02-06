@@ -1,5 +1,5 @@
 <div id="userProfileModal"
-     class="modal" role="dialog" aria-labelledby="userProfileModalLabel" aria-hidden="true"
+     class="modal fade" role="dialog" aria-labelledby="userProfileModalLabel" aria-hidden="true"
      style="width: 50%; right: 25%; left: 25%; top:25%">
 
     <div class="modal-dialog">
@@ -22,19 +22,19 @@
 
                         <fieldset>
                             <legend>Billing Profile</legend>
-                            <div class="row margin-bottom-5">
+                            <div class="row bottomMargin5">
                                 <div class="col-md-3">Track time in</div>
                                 <div class="col-md-4" data-bind="text: userProfile.billingProfile.timeUnit"></div>
                             </div>
-                            <div class="row margin-bottom-5">
+                            <div class="row bottomMargin5">
                                 <div class="col-md-3" data-bind="text: 'Rate/' + userProfile.billingProfile.timeUnit()"></div>
                                 <div class="col-md-4" data-bind="text: '$ ' + userProfile.billingProfile.timeRate()"></div>
                             </div>
-                            <div class="row margin-bottom-5">
+                            <div class="row bottomMargin5">
                                 <div class="col-md-3">Track distance in</div>
                                 <div class="col-md-4" data-bind="text: userProfile.billingProfile.distanceUnit"></div>
                             </div>
-                            <div class="row margin-bottom-5">
+                            <div class="row bottomMargin5">
                                 <div class="col-md-3" data-bind="text: 'Rate/' + userProfile.billingProfile.distanceUnit()">/</div>
                                 <div class="col-md-4" data-bind="text: '$ ' + userProfile.billingProfile.distanceRate()"></div>
                             </div>

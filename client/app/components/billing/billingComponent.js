@@ -1,19 +1,27 @@
-define(['jquery', 'knockout', 'KOMap', 'amplify', 'shared/dateUtils',
-        'app/utils/ajaxUtils', 'app/utils/events', 'app/utils/consts', 'app/utils/router', 'app/utils/session',
+define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox',
+        'shared/dateUtils', 'app/utils/ajaxUtils', 'app/utils/events', 'app/utils/consts', 'app/utils/router',
+        'app/utils/session', 'app/utils/sessionKeys',
         'model/bill', 'model/billingItem', 'model/billingStatus', 'model/contact',
-        'text!app/components/billing/billing.tmpl.html'],
-    function ($, ko, KOMap, amplify, DateUtils, ajaxUtils, Events, Consts, router, Session, Bill, BillingItem, BillingStatus, Contact, viewHtml) {
+        'text!app/components/billing/billing.tmpl.html',
+        'text!app/components/billing/billing.print.tmpl.html'
+    ],
+    function ($, ko, KOMap, amplify, bootbox,
+              DateUtils, ajaxUtils, Events, Consts, router, Session, SessionKeys, Bill,
+              BillingItem, BillingStatus, Contact, viewHtml, printHtml) {
 
-        function BillingVM(claimId) {
-            console.log('Init BillingVM. ClaimId: ' + JSON.stringify(claimId));
+        function BillingVM() {
+            console.log('Init BillingVM.');
 
+            this.vmId = new Date().getTime();
             this.Consts = Consts;
-            this.claimId = claimId;
             this.DateUtils = DateUtils;
+            this.router = router;
             this.billingStatus = KOMap.fromJS(BillingStatus);
             this.mode = ko.observable();
             this.billRecipient = ko.observable(KOMap.fromJS(new Contact()));
 
+            // Updated via Claim lifecycle events
+            this.claimId = undefined;
             // Active Bill - new or unsubmitted
             this.bill = ko.observable(this.newEmptyBill());
             // All bills associated with this Claim - for Overview
@@ -31,10 +39,10 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'shared/dateUtils',
                 var itemClicked = this;
                 var ev = arguments[1];
                 var rowNode = $(ev.target).parent().parent();
-                var itemClickedJSON =  KOMap.toJSON(itemClicked);
+                var itemClickedJSON = KOMap.toJSON(itemClicked);
                 var undoTimer = 4000;
 
-                if (itemClicked.removeOrUndoLabel() === 'Undo'){
+                if (itemClicked.removeOrUndoLabel() === 'Undo') {
                     console.log('Cancelled remove BillingItem: ' + itemClickedJSON);
                     clearTimeout(itemClicked.timeoutId);
                     itemClicked.timeoutId = undefined;
@@ -46,7 +54,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'shared/dateUtils',
                     itemClicked.timeoutId = setTimeout(
                         function () {
                             console.log('Remove BillingItem: ' + itemClickedJSON);
-                            rowNode.fadeTo('slow', .1, function(){
+                            rowNode.fadeTo('slow', .1, function () {
                                 self.bill().billingItems.remove(itemClicked);
                                 self.calcAll();
                             });
@@ -55,8 +63,12 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'shared/dateUtils',
                 }
             };
 
-            self.isBillEditable = ko.computed(function(){
+            self.isBillEditable = ko.computed(function () {
                 return this.bill().status() == this.billingStatus.NOT_SUBMITTED();
+            }, this);
+
+            self.haveBillableTasks = ko.computed(function(){
+                return this.bill().billingItems().length > 0;
             }, this);
 
             this.loadBillingProfileFromSession();
@@ -66,6 +78,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'shared/dateUtils',
             var jsObject = new Bill();
             jsObject.billingItems = [];
             jsObject.status = this.billingStatus.NOT_SUBMITTED();
+            jsObject.billingDate = new Date();
             this.billRecipient(KOMap.fromJS(new Contact()));
             var objWithObservableAttributes = KOMap.fromJS(jsObject);
             return objWithObservableAttributes;
@@ -76,6 +89,15 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'shared/dateUtils',
         /***********************************************************/
 
         BillingVM.prototype.setupEvListeners = function () {
+            amplify.subscribe(Events.SHOW_CLAIM, this, function (evData) {
+                this.claimId = evData.claimId;
+                console.log('Billing VM - SHOW_CLAIM ' + this.claimId);
+            });
+            amplify.subscribe(Events.SAVED_CLAIM, this, function (evData) {
+                this.claimId = evData.claim.claimId;
+                console.log('Billing VM - SAVED_CLAIM ' + this.claimId);
+            });
+
             amplify.subscribe(Events.CREATE_NEW_BILL, this, this.onCreateNewBill);
             amplify.subscribe(Events.SHOW_BILL, this, this.onShowBill);
             amplify.subscribe(Events.SHOW_BILLING_HISTORY, this, this.onShowBilllingHistory);
@@ -86,7 +108,11 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'shared/dateUtils',
             this.mode.subscribe(function (mode) {
                 if (mode === Consts.BILLING_TAB_CREATE_MODE) {
                     this.clearBill();
-                    this.loadEligibleBillingItemsForClaim(this.claimId).done(this.calcAll.bind(this));
+                    this.getEligibleBillingItemsForClaim(this.claimId)
+                        .done(function(eligibleItems){
+                            this.bill().billingItems(eligibleItems);
+                            this.calcAll.bind(this);
+                        }.bind(this));
                 } else if (mode === Consts.BILLING_TAB_HISTORY_MODE) {
                     this.getBillsForClaim();
                 } else if (mode === Consts.BILLING_TAB_VIEW_MODE) {
@@ -102,13 +128,13 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'shared/dateUtils',
 
         BillingVM.prototype.loadBillingProfileFromSession = function (evData) {
             this.billingProfile = Session.getCurrentUserProfile().billingProfile;
-            if(!this.billingProfile){
+            if (!this.billingProfile) {
                 console.error('Could not retrieve bililng profile from session');
             }
         }
 
         BillingVM.prototype.onUserProfileClick = function () {
-            amplify.publish(Events.SHOW_USER_PROFILE);
+            router.showProfilePopup();
         };
 
         BillingVM.prototype.onUpdateBillStatus = function (newStatus, bill) {
@@ -130,18 +156,53 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'shared/dateUtils',
         }
 
         BillingVM.prototype.onShowBill = function (evData) {
-            console.log('BillingVM > onShowBilll');
+            if (this.mode() === Consts.BILLING_TAB_VIEW_MODE) {
+                console.log('In View mode already');
+                return;
+            }
+            console.log('BillingVM > onShowBilll ' + this.vmId);
             console.assert(evData.claimId, 'Expecting ev to carry claimId');
             console.assert(evData.billId, 'Expecting ev to billId');
             this.claimId = evData.claimId;
-            this.loadBill(evData.billId).done(this.calcAll.bind(this));;
+            this.loadBill(evData.billId).done(this.calcAll.bind(this));
             this.mode(Consts.BILLING_TAB_VIEW_MODE);
+
+            // Check for new eligible Tasks
+            if (this.bill().status() === BillingStatus.NOT_SUBMITTED){
+                this.getEligibleBillingItemsForClaim(evData.claimId)
+                    .done(function(allEligibleItems){
+                        if (allEligibleItems.length > this.bill().billingItems().length) {
+                            bootbox.dialog({
+                                size: 'small',
+                                backdrop: 'true',
+                                title: "New tasks",
+                                message: "New tasks have been added since the last draft was saved. Add these?",
+                                buttons: {
+                                    no: {
+                                        label: "No",
+                                        className: "btn-danger",
+                                        callback: function () {
+                                            // No-op
+                                        }
+                                    },
+                                    yes: {
+                                        label: "Yes",
+                                        className: "btn-info",
+                                        callback: function () {
+                                            this.bill().billingItems(allEligibleItems);
+                                        }.bind(this)
+                                    }
+                                }
+                            });
+                        }
+                    }.bind(this));
+            }
         }
 
         BillingVM.prototype.onShowBilllingHistory = function (evData) {
-            console.log('BillingVM > onShowBilllingHistory');
             console.assert(evData.claimId, 'Expecting ev to carry claimId');
             this.claimId = evData.claimId;
+            console.log('BillingVM - onShowBilllingHistory - Claim Id ' + this.claimId);
             this.mode(Consts.BILLING_TAB_HISTORY_MODE);
         }
 
@@ -158,35 +219,44 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'shared/dateUtils',
 
         BillingVM.prototype.routeToBillingOverview = function () {
             var self = this;
-            if (this.isNewBill()) {
+            if (this.isNewBill() && this.haveBillableTasks()) {
                 this.onNavigateAwayFromUnsavedBill();
             } else {
                 $('#billPanel').velocity("fadeOut",
                     { duration: 200,
-                      complete: function () {
-                         router.routeToBillingOverview(self.claimId);
-                      }})
+                        complete: function () {
+                            router.routeToBillingOverview(self.claimId);
+                        }})
             }
         };
 
         BillingVM.prototype.onNavigateAwayFromUnsavedBill = function () {
             var self = this;
-            $.SmartMessageBox({
+            bootbox.dialog({
+                size: 'small',
+                backdrop: 'false',
                 title: "Unsaved Bill!",
-                content: "Save a draft copy of the Invoice? ",
-                buttons: '[No][Yes]'
-            }, function (ButtonPressed) {
-                if (ButtonPressed === "Yes") {
-                    self.updateBill();
-                }
-                if (ButtonPressed === "No") {
-                    router.routeToBillingOverview(self.claimId);
-                    $('#MsgBoxBack').remove();
+                message: "Save a draft copy of the Invoice? ",
+                buttons: {
+                    no: {
+                        label: "No",
+                        className: "btn-danger",
+                        callback: function () {
+                            router.routeToBillingOverview(self.claimId);
+                        }
+                    },
+                    yes: {
+                        label: "Yes",
+                        className: "btn-info",
+                        callback: function () {
+                            self.updateBill();
+                        }
+                    }
                 }
             });
         }
 
-        BillingVM.prototype.isNewBill = function(){
+        BillingVM.prototype.isNewBill = function () {
             return this.bill() && !$.isNumeric(this.bill()._id());
         }
 
@@ -220,7 +290,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'shared/dateUtils',
             );
         };
 
-        BillingVM.prototype.loadEligibleBillingItemsForClaim = function (claimId) {
+        BillingVM.prototype.getEligibleBillingItemsForClaim = function (claimId) {
             var defer = $.Deferred();
             $.getJSON('/claim/' + claimId + '/entries')
                 .done(function (resp) {
@@ -247,8 +317,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'shared/dateUtils',
                             console.log('Eligible BillingItem: ' + JSON.stringify(entry.billingItem));
                         }
                     }.bind(this));
-                    this.bill().billingItems(billingItems);
-                    defer.resolve();
+                    defer.resolve(billingItems);
                 }.bind(this));
             return defer;
         };
@@ -296,12 +365,12 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'shared/dateUtils',
             var N = Number;
 
             var preTax = 0;
-            $.each(bill.billingItems(), function(index, item){
-                preTax = preTax +  N(item.totalAmount());
+            $.each(bill.billingItems(), function (index, item) {
+                preTax = preTax + N(item.totalAmount());
             });
             bill.preTaxTotal(N(preTax).toFixed(2));
             bill.taxRate(N(this.billingProfile.taxRate));
-            bill.tax(N((bill.taxRate()/100 * bill.preTaxTotal()).toFixed(2)));
+            bill.tax(N((bill.taxRate() / 100 * bill.preTaxTotal()).toFixed(2)));
             bill.total(N(N(bill.preTaxTotal()) + N(bill.tax())).toFixed(2));
         };
 
@@ -313,9 +382,9 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'shared/dateUtils',
             }
             var N = Number;
             billingItem.totalAmount(Number(
-                N(billingItem.time() * billingItem.timeRate()) +
-                N(billingItem.mileage() * billingItem.distanceRate()) +
-                N(billingItem.expenseAmount())).toFixed(2));
+                    N(billingItem.time() * billingItem.timeRate()) +
+                    N(billingItem.mileage() * billingItem.distanceRate()) +
+                    N(billingItem.expenseAmount())).toFixed(2));
         };
 
         BillingVM.prototype.clearBill = function () {
@@ -323,13 +392,14 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'shared/dateUtils',
         };
 
         BillingVM.prototype.loadBill = function (billId) {
+            console.log('Load bill' + billId);
             var defer = $.Deferred();
             ajaxUtils.post(
                 '/bill/search',
                 JSON.stringify({_id: billId}),
                 function onSuccess(response) {
-                    console.log('getBillsForClaim: ' + JSON.stringify(response));
-                    if (response.data[0]){
+                    console.debug('Loaded blll for claim: ' + JSON.stringify(response));
+                    if (response.data[0]) {
                         var billJS = response.data[0];
                         billJS.billRecipient = billJS.billRecipient || new Contact();
                         this.bill(KOMap.fromJS(billJS))
@@ -349,11 +419,12 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'shared/dateUtils',
         };
 
         BillingVM.prototype.getBillsForClaim = function () {
+            console.log('Get bills for claim ' + this.claimId);
             ajaxUtils.post(
                 '/bill/search',
                 JSON.stringify({claimId: this.claimId}),
                 function onSuccess(response) {
-                    console.log('getBillsForClaim: ' + JSON.stringify(response));
+                    console.debug('getBillsForClaim: ' + JSON.stringify(response));
                     this.bills(response.data);
                 }.bind(this)
             );
@@ -368,7 +439,6 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'shared/dateUtils',
         /***********************************************************/
 
         BillingVM.prototype.updateBill = function () {
-            this.bill().billingDate(null);
             return this._persistBill(BillingStatus.NOT_SUBMITTED)
         };
 
@@ -424,6 +494,40 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'shared/dateUtils',
                     console.log('Saved Billing Items: ' + JSON.stringify(response));
                     onDone();
                 }
+            );
+        };
+
+        BillingVM.prototype.printBill = function () {
+            // Poulate the print template with AMD content
+            $('#print-template').html(printHtml);
+            var container = document.createElement("div");
+            var _this = this;
+
+            ko.renderTemplate(
+                "print-template",
+                _this,
+                {
+                    afterRender: function print() {
+                        console.log(container.innerHTML);
+
+                        // Add frame
+                        var frame = document.createElement('iframe');
+                        document.body.appendChild(frame);
+
+                        // Print
+                        var frameContent = frame.contentWindow;
+                        frameContent.document.open();
+                        frameContent.document.write('<head><link rel=stylesheet href=../../css/print.css type=text/css ></head>');
+                        frameContent.document.write(container.innerHTML);
+                        frameContent.document.close();
+                        setTimeout(function afterFrameRender() {
+                            frameContent.focus();
+                            frameContent.print();
+                            document.body.removeChild(frame);
+                        }, 500);
+                    }
+                },
+                container
             );
         };
 

@@ -2,9 +2,8 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
         'app/utils/ajaxUtils', 'app/utils/events', 'app/utils/router',
         'app/utils/sessionKeys', 'app/utils/session',
         'shared/dateUtils',
-        'text!app/components/taskEntry/taskEntry.tmpl.html'],
-    function ($, ko, KOMap, amplify, Claim, ClaimEntry, BillingItem, States, ajaxUtils, Events, Router,
-              SessionKeys, Session, DateUtils, taskEntryView) {
+        'text!app/components/taskEntry/taskEntry.tmpl.html', 'bootbox'],
+    function ($, ko, KOMap, amplify, Claim, ClaimEntry, BillingItem, States, ajaxUtils, Events, Router, SessionKeys, Session, DateUtils, taskEntryView, bootbox) {
         'use strict';
 
         function TaskEntryVM() {
@@ -193,18 +192,27 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
                 Router.routeToClaim(Session.getActiveClaimId());
             }
 
-            if (this.stateChange()){
-                $.SmartMessageBox({
+            if (this.stateChange()) {
+                bootbox.dialog({
                     title: "Unsaved Changes!",
-                    content: "Save? ",
-                    buttons: '[No][Yes]'
-                }, function (ButtonPressed) {
-                    if (ButtonPressed === "Yes") {
-                        self.onSave().then(function onDone(){
-                            navigateAway();
-                        });
-                    } else {
-                        navigateAway();
+                    message: "Save? ",
+                    buttons: {
+                        no: {
+                            label: "No",
+                            className: "btn-danger",
+                            callback: function () {
+                                navigateAway();
+                            }
+                        },
+                        yes: {
+                            label: "Yes",
+                            className: "btn-info",
+                            callback: function () {
+                                self.onSave().then(function onDone() {
+                                    navigateAway();
+                                });
+                            }
+                        }
                     }
                 });
             } else {

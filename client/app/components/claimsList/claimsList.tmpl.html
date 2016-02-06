@@ -1,34 +1,49 @@
-<!-- Note: Div container is managed by parent -->
-<div >
-    <table id="claimListTable"
-           data-classes="table table-hover table-responsive"
-           data-toggle="table"
-           data-striped="true"
-           data-show-columns="true"
-           data-show-toggle="true"
-           data-search="true"
-           data-trim-on-search="true"
-           data-show-header="true"
-           data-show-footer="false"
-           data-sortable="true"
-           data-sort-name="date1"
-           data-sort-order="desc"
-           data-show-export="true"
-           data-pagination="true"
-           data-show-pagination-switch="true"
-           data-maintain-selected="true"
-           data-smart-display="true"
-           data-export-types="['csv', 'excel']"
-           data-bind="event: {'click-row.bs.table': onClaimSelect}">
-        <thead>
-        <th data-field="claimId" data-sortable="true" data-visible="false">Claim Id.</th>
-        <th data-field="fileNo" data-sortable="true" data-visible="true">Insurance Co. File No.</th>
-        <th data-field="desc" data-sortable="true">Description</th>
-        <th data-field="insuranceCo" data-sortable="true">Insurance Company</th>
-        <th data-field="date1" data-sortable="true">Date Received</th>
-        <th data-field="dateDue" data-sortable="true">Due Date</th>
-        </thead>
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">Claims</h3>
+    </div>
 
-        <!-- Rows appended by Bootstrap table in VM -->
-    </table>
+    <div id="claims-list-toolbar">
+        <button type="button" class="btn btn-default dropdown-toggle btn-info"
+                data-bind="click: router.routeToNewClaim">
+            <span class="fa fa-plus"></span>
+            New Claim
+        </button>
+    </div>
+    <!-- Note: Div container is managed by parent -->
+    <div class="panel-body" style="padding-top: 0">
+
+        <table id="claimListTable"
+               data-classes="table table-hover table-responsive"
+               data-toggle="table"
+               data-striped="false"
+               data-show-columns="false"
+               data-show-toggle="false"
+               data-search="true"
+               data-trim-on-search="true"
+               data-show-header="true"
+               data-show-footer="false"
+               data-sortable="true"
+               data-sort-name="date1"
+               data-sort-order="desc"
+               data-show-export="true"
+               data-pagination="true"
+               data-show-pagination-switch="false"
+               data-maintain-selected="true"
+               data-smart-display="false"
+               data-export-types="['excel']"
+               data-bind="event: {'click-row.bs.table': onClaimSelect}"
+               data-toolbar="#claims-list-toolbar">
+            <thead>
+            <th data-field="claimId" data-sortable="true" data-visible="false">Claim Id.</th>
+            <th data-field="fileNo" data-sortable="true" data-visible="true">Insurance Co. File No.</th>
+            <th data-field="desc" data-sortable="true">Description</th>
+            <th data-field="insuranceCo" data-sortable="true">Insurance Company</th>
+            <th data-field="date1" data-sortable="true">Date Received</th>
+            <th data-field="dateDue" data-sortable="true">Due Date</th>
+            </thead>
+
+            <!-- Rows appended by Bootstrap table in VM -->
+        </table>
+    </div>
 </div>

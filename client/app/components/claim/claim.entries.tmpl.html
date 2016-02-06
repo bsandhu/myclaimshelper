@@ -2,25 +2,29 @@
 <!--List Claim Entries -->
 <!-- ************************************************ -->
 
+<!-- Hide completely on xs devices -->
 <div data-bind="ifnot: inEditMode,
                 style: {'max-height': screenHeight()+ 'px'}"
      class="rightMargin topMargin5 overflowY">
 
-    <table class="table table-hover table-responsive" id="claimEntriesList">
+    <table class="table table-hover table-responsive " id="claimEntriesList">
         <thead>
         <tr>
             <th>&nbsp;</th>
             <th>Tasks</th>
-            <th>
-                <a href="#" data-bind="click: onSortEntries.bind($data)">
-                    Entered on
-                    <span data-bind="css: {'glyphicon-sort-by-attributes': sortDir() == 'asc',
-                                           'glyphicon-sort-by-attributes-alt': sortDir() == 'desc'}"
-                          class="glyphicon"></span>
-                </a>
-            </th>
-            <th>Status</th>
-            <th>&nbsp;</th>
+            <!-- ko ifnot: isPartiallyCollapsed -->
+                <th>
+                    <a href="#" data-bind="click: onSortEntries.bind($data)">
+                        Due on
+                        <span data-bind="css: {'glyphicon-sort-by-attributes': sortDir() == 'asc',
+                                               'glyphicon-sort-by-attributes-alt': sortDir() == 'desc'}"
+                              class="glyphicon"></span>
+                    </a>
+                </th>
+                <th>Status</th>
+                <th>Billing</th>
+                <th>&nbsp;</th>
+            <!-- /ko -->
         </tr>
         </thead>
 
@@ -32,69 +36,71 @@
                                    mouseout : function(){$('#claimEntryArrowCell' + $index()).css('font-weight', 'inherit');}}">
                 <td style="min-width: 15px">
                     <!-- Tag -->
-                                <span class="glyphicon leftMargin"
-                                      data-bind="css: {'glyphicon-earphone'   : entry.tag.toString().search('phone') >= 0,
-                                                       'glyphicon-map-marker' : entry.tag.toString().search('visit') >= 0,
-                                                       'glyphicon-camera'     : entry.tag.toString().search('photos') >= 0,
-                                                       'glyphicon-envelope'   : entry.tag.toString().search('email') >= 0}"></span>
+                    <i class="leftMargin"
+                          data-bind="taskEntryTag: entry.tag.toString()"></i>
                 </td>
                 <td style="min-width: 20%;">
-                    <a data-bind="attr: {href: '#/claimEntry/' + entry._id}">
-                        <span data-bind="text: entry.summary"></span>
-                    </a>
+                    <span data-bind="text: entry.summary"></span>
                 </td>
-                <td class="rightMargin">
-                    <span data-bind="text: $parent.DateUtils.niceDate(entry.entryDate)"></span>
-                </td>
-                <td>
-                    <!-- Current state -->
-                    <a href="#" data-bind="event: { mouseover: $parent.onStatusFocus.bind($parent)}">
-                                    <span class="glyphicon"
-                                          data-bind="css: {'glyphicon-unchecked': entry.state == undefined || entry.state == $parent.States.None,
-                                                           'glyphicon-inbox'    : entry.state == $parent.States.TODO,
-                                                           'glyphicon-time'     : entry.state == $parent.States.Pending,
-                                                           'glyphicon-ok'       : entry.state == $parent.States.Complete}"></span>
-                    </a>
 
-                    <!-- Pick new State -->
-                    <div style="z-index: 9999; width: 160px; position: absolute " class="list-group"
-                         data-bind="visible: $parent.showStatusForEntryId() == entry._id">
-                        <li class="list-group-item bg-color-blueLight" style="cursor: default">
-                            <span>
-                                Update status to
-                                <span class="pull-right">
-                                    <span class="glyphicon glyphicon-remove"
-                                          style="cursor: pointer"
-                                          data-bind="click: $parent.onDismissStatus.bind($parent)"></span>
+                <!-- ko ifnot: $parent.isPartiallyCollapsed -->
+                    <td class="rightMargin">
+                        <span data-bind="text: $parent.DateUtils.niceDate(entry.dueDate)"></span>
+                    </td>
+                    <td>
+                        <!-- Current state -->
+                        <a href="#" data-bind="event: { mouseover: $parent.onStatusFocus.bind($parent)}">
+                            <span class="glyphicon"
+                                  data-bind="css: {'glyphicon-unchecked': entry.state == undefined || entry.state == $parent.States.None,
+                                                   'glyphicon-inbox'    : entry.state == $parent.States.TODO,
+                                                   'glyphicon-time'     : entry.state == $parent.States.Pending,
+                                                   'glyphicon-ok'       : entry.state == $parent.States.Complete}"></span>
+                        </a>
+
+                        <!-- Pick new State -->
+                        <div style="z-index: 9999; width: 160px; position: absolute " class="list-group"
+                             data-bind="visible: $parent.showStatusForEntryId() == entry._id">
+                            <li class="list-group-item bg-color-blueLight" style="cursor: default">
+                                <span>
+                                    Update status to
+                                    <span class="pull-right">
+                                        <span class="glyphicon glyphicon-remove"
+                                              style="cursor: pointer"
+                                              data-bind="click: $parent.onDismissStatus.bind($parent)"></span>
+                                    </span>
                                 </span>
-                            </span>
-                        </li>
-                        <a data-bind="click: $parent.onEntryStatusUpdate.bind($parent, $parent.States.TODO)"
-                           class="list-group-item" href="#">
-                            <span class="glyphicon glyphicon-inbox"></span>
-                            <span class="leftMargin">To Do</span>
-                        </a>
-                        <a data-bind="click: $parent.onEntryStatusUpdate.bind($parent, $parent.States.Complete)"
-                           href="#" class="list-group-item">
-                            <span class="glyphicon glyphicon-ok"></span>
-                            <span class="leftMargin">Complete</span>
-                        </a>
-                        <a data-bind="click: $parent.onEntryStatusUpdate.bind($parent, $parent.States.Pending)"
-                           href="#" class="list-group-item">
-                            <span class="glyphicon glyphicon-time"></span>
-                            <span class="leftMargin">Pending</span>
-                        </a>
-                        <a data-bind="click: $parent.onEntryStatusUpdate.bind($parent, $parent.States.None)"
-                           href="#" class="list-group-item">
-                            <span class="glyphicon glyphicon-unchecked"></span>
-                            <span class="leftMargin">Clear</span>
-                        </a>
-                    </div>
-                </td>
-                <td class="rightMargin">
-                    <i class="fa fa-angle-right"
-                       data-bind="attr: {id: 'claimEntryArrowCell' + $index()}"></i>
-                </td>
+                            </li>
+                            <a data-bind="click: $parent.onEntryStatusUpdate.bind($parent, $parent.States.TODO)"
+                               class="list-group-item" href="#">
+                                <span class="glyphicon glyphicon-inbox"></span>
+                                <span class="leftMargin">To Do</span>
+                            </a>
+                            <a data-bind="click: $parent.onEntryStatusUpdate.bind($parent, $parent.States.Complete)"
+                               href="#" class="list-group-item">
+                                <span class="glyphicon glyphicon-ok"></span>
+                                <span class="leftMargin">Complete</span>
+                            </a>
+                            <a data-bind="click: $parent.onEntryStatusUpdate.bind($parent, $parent.States.Pending)"
+                               href="#" class="list-group-item">
+                                <span class="glyphicon glyphicon-time"></span>
+                                <span class="leftMargin">Pending</span>
+                            </a>
+                            <a data-bind="click: $parent.onEntryStatusUpdate.bind($parent, $parent.States.None)"
+                               href="#" class="list-group-item">
+                                <span class="glyphicon glyphicon-unchecked"></span>
+                                <span class="leftMargin">Clear</span>
+                            </a>
+                        </div>
+                    </td>
+                    <td>
+                        <span data-bind="text: entry.billingItem.status"></span>
+                    </td>
+                    <td class="rightMargin">
+                        <i class="fa fa-angle-right"
+                           data-bind="attr: {id: 'claimEntryArrowCell' + $index()}"></i>
+                    </td>
+                <!-- /ko -->
+
             </tr>
         </tbody>
 

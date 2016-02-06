@@ -112,6 +112,12 @@ div {
     border-top-color: #2d6ca2;
 }
 
+.rightBorderSolid {
+    border-right: solid;
+    border-right-width: 1px;
+    border-right-color: rgb(228, 229, 230);
+}
+
 .bottomBorderDashed {
     border-bottom-color: rgba(0, 0, 0, 0.2);
     border-bottom-style: dashed;
@@ -122,6 +128,14 @@ div {
     border-bottom: dotted;
     border-bottom-width: 1px;
     border-bottom-color: #2d6ca2;
+}
+
+.noBorder {
+    border: 0;
+}
+
+.noShadow {
+    box-shadow: none;
 }
 
 .clear {
@@ -168,6 +182,12 @@ div {
 
 #modal-button {
     display: none
+}
+
+.form-control.no-border {
+    border: 0;
+    box-shadow: none;
+    border-bottom: 1px solid;
 }
 
 /**********************************************************/
@@ -222,6 +242,11 @@ div {
     border-color: darkgray;
 }
 
+.maps-datepicker {
+    font-weight: 500;
+    font-size: small;
+}
+
 /**********************************************************/
 /**** Navigation panels ****/
 /**********************************************************/
@@ -258,23 +283,19 @@ div {
 }
 
 /**********************************************************/
-/**** Search panel ****/
+/**** Billing ****/
 /**********************************************************/
 
-.table > tbody > tr:hover {
-    cursor: pointer;
+.panel-default .bill-heading {
+    background-color: #ECEFF1;
 }
 
-.toggleButton {
-    color: rgb(190, 207, 224);
-}
-
-.toggleButton:HOVER {
-    color: white;
+.bg-color-greenLighter {
+    background: #cde0c4;
 }
 
 /**********************************************************/
-/**** Dashboard panel ****/
+/**** Dashboard - Summary panel ****/
 /**********************************************************/
 
 .dashboardPanelCollapsedContent {
@@ -282,10 +303,24 @@ div {
     padding: 0px;
 }
 
-/**** Task summary widget ****/
+.label-as-badge {
+    border-radius: 1em;
+}
+
+/**********************************************************/
+/**** Task Summary panel ****/
+/**********************************************************/
+
+/* First column color */
+.summaryRow td:nth-child(2) {
+    color: rgb(85, 85, 85);
+}
 
 .summaryGroupSelector {
-    background-color: whitesmoke;
+    background-color: white;
+    border: 0;
+    box-shadow: none;
+    color: rgb(110, 203, 232);
 }
 
 .summaryGroupHeader {
@@ -336,32 +371,122 @@ div {
     opacity: .9;
 }
 
-.bg-color-greenLighter {
-    background: #cde0c4;
+/**********************************************************/
+/**** Bootstrap overrides ****/
+/**********************************************************/
+
+body {
+    font-family: "Open Sans", Arial, Helvetica, Sans-Serif;
+    font-size: 13px;
+    line-height: 1.42857143;
+    color: #333333;
+    background-color: rgb(235, 238, 243);
+}
+
+h3.panel-title {
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.panel-default .panel-heading {
+    background-color: white;
+    border-bottom: 0px;
+}
+
+.table > tbody > tr:hover {
+    cursor: pointer;
+}
+
+.table > thead > tr > th {
+    color: rgb(168, 168, 168);
+}
+
+.table > tbody > tr > td {
+    color: rgb(162, 162, 162);
+}
+
+.btn-info {
+    background-color: #009688;
 }
 
 /**********************************************************/
-/**** Smart admin theme overrid ****/
+/**** Bootstrap navbar overrides ****/
 /**********************************************************/
 
-.row {
-    margin-left: -5px;
-    margin-right: -5px;
+nav ul {
+    width: 80%;
 }
 
-.menu-on-top .page-footer{
-    padding: 0px;
-    padding-top: 5px;
+.navbar-default {
+    background-color: rgb(28, 135, 209);
 }
 
-.page-footer {
-    height: 35px;
-    padding: 15px 13px 0;
-    padding-left: 233px;
-    border-top: 1px solid #CECECE;
-    background: #2a2725;
-    width: 100%;
-    position: absolute;
-    display: block;
-    bottom: 0px;
+.navbar-msg-count {
+    background-color: rgb(217, 68, 57);
 }
+
+.navbar-header {
+    /*background-color: rgb(0, 100, 184);*/
+    background-color: rgb(48, 125, 195);
+    height: 90px;
+}
+
+.navbar-default .navbar-brand {
+    font-family: 'Pinyon Script', cursive;
+    font-size: -webkit-xxx-large;
+    color: white;
+    letter-spacing: 0em;
+    height: 90px;
+    line-height: 60px;
+}
+
+/* Un-selected menu item */
+.navbar-default .navbar-nav > li > a {
+    font-size: 16pt;
+    font-family: 'Open sans';
+    height: 90px;
+    line-height: 60px;
+    color: #c0bfbf;
+    letter-spacing: 0.05em;
+    width: 150px;
+    text-align: center;
+}
+
+/* Hover/Selected menu item */
+.navbar-default .navbar-nav > li > a:hover, .navbar-default .navbar-nav > li > a:focus {
+    color: white;
+    font-family: 'Open sans';
+    letter-spacing: 0.05em;
+    border-bottom-color: rgb(235, 238, 243);
+    border-bottom-width: 10px;
+    border-bottom-style: solid;
+}
+
+.navbar-selected {
+    color: white !important;
+    font-family: 'Open sans';
+    letter-spacing: 0.05em;
+    border-bottom-color: rgb(235, 238, 243);
+    border-bottom-width: 10px;
+    border-bottom-style: solid;
+}
+
+/**********************************************************/
+/**** Bootstrap table overrides ****/
+/**********************************************************/
+
+.fixed-table-container {
+    border: 0px;
+}
+
+.fixed-table-container thead th {
+    border-left: 0px;
+}
+
+.fixed-table-container tbody td {
+    border-left: 0px;
+}
+
+/**********************************************************/
+/**** Contact panel ****/
+/**********************************************************/

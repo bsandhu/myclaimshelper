@@ -1,19 +1,29 @@
 var restify = require('restify');
+var socketio = require('socket.io');
 var config = require('./config.js');
+var EventEmitter = require('events').EventEmitter;
+var consts = require('./model/consts.js');
 var claimsService = require('./services/claimsService.js');
 var billingServices = require('./services/billingServices.js');
 var contactService = require('./services/contactService.js');
 var profileService = require('./services/profileService.js');
 var uploadService = require('./services/uploadService.js');
 var entityExtractionService = require('./services/entityExtractionService.js');
+var notificationService = require('./services/notificationService.js');
 var processMail = require('./services/mail/mailHandler.js').process;
 var mongoUtils = require('./mongoUtils.js');
+var serviceUtils = require('./serviceUtils.js');
 var os = require('os');
 
-var server;
+var server = restify.createServer();
+var io = socketio.listen(server);
+
 
 function init() {
     server = restify.createServer();
+    // Wrap with socket io instance
+    io = socketio.listen(server);
+
     server.use(restify.acceptParser(server.acceptable));
     server.use(restify.authorizationParser());
     server.use(restify.dateParser());
@@ -29,8 +39,15 @@ function init() {
     server.use(restify.gzipResponse());
 }
 
-function setupMailServiceRoutes(){
+function setupMailServiceRoutes() {
     server.post('/mailman', processMail);
+}
+
+function setupNotificationRoutes() {
+    server.post('/notification/broadcast', notificationService.broadcast);
+    server.post('/notification/markAllasRead', notificationService.markAllAsRead);
+    server.get('/notification/unreadMsgCount', notificationService.getUnreadMsgCount);
+    server.get('/notification/unreadMsgs', notificationService.getUnreadMsgs);
 }
 
 function setupClaimsServiceRoutes() {
@@ -60,7 +77,7 @@ function setupContactServiceRoutes() {
 function setupBillingServiceRoutes() {
     server.post('/bill/search', billingServices.getBillsREST);
     server.post('/bill', billingServices.saveOrUpdateBillREST);
-    server.get('/billingItem/search/:search', billingServices.getBillingItemsREST); 
+    server.get('/billingItem/search/:search', billingServices.getBillingItemsREST);
     server.post('/billingItem', billingServices.saveOrUpdateBillingItemsREST);
 }
 
@@ -69,7 +86,6 @@ function setupProfileServiceRoutes() {
     server.get('/userProfile/:id', profileService.getUserProfileREST);
     console.log('setingup userProfile');
 }
-
 
 function setupStaticRoutes() {
     // Server side code shared with the client
@@ -97,9 +113,33 @@ function setupStaticRoutes() {
     }));
     server.get('/.*/ ', restify.serveStatic({
         'directory': 'client',
-        'default'  : '/app/components/index.html'
+        'default': '/app/components/index.html'
     }));
 }
+
+/*********************************************************/
+/* Push notifications */
+/*********************************************************/
+
+function setUpWSConn() {
+    io.sockets.on('connection', function (socket) {
+        console.log("Web Socket connection established");
+    });
+    io.sockets.on('disconnect', function (socket) {
+        console.log("Web Socket disconnected");
+    });
+}
+
+function setupBroadcastListener() {
+    serviceUtils.eventEmitter.on('foo', function onMsg(notification) {
+        console.log('Broadcasting: ' + JSON.stringify(notification));
+        io.emit('broadcast', notification, {for: 'everyone'});
+    });
+}
+
+/*********************************************************/
+/* End of Push notifications */
+/*********************************************************/
 
 function startServer() {
     server.listen(config.port, function () {
@@ -113,7 +153,9 @@ setupBillingServiceRoutes();
 setupClaimsServiceRoutes();
 setupContactServiceRoutes();
 setupProfileServiceRoutes();
+setupNotificationRoutes();
 setupStaticRoutes();
+setUpWSConn();
+setupBroadcastListener();
 mongoUtils.initConnPool().then(mongoUtils.initCollections);
 startServer();
-

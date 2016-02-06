@@ -1,0 +1,37 @@
+<div class="modal fade" id="msgs-modal" tabindex="-1" role="dialog"
+     aria-labelledby="msgModalTitle" aria-hidden="true"
+     style="width: 40%; top: 20%; margin: auto">
+
+    <div class="modal-dialog demo-modal">
+        <div class="modal-content">
+            <div class="modal-header" id="msgs-modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    ×
+                </button>
+                <h4 class="modal-title" id="msgModalTitle">Msgs</h4>
+            </div>
+            <div class="modal-body" id="msgs-modal-body">
+                <ul class="list-group">
+                    <!-- ko foreach: msgs() -->
+                        <li class="list-group-item"
+                            data-bind="text: $data.body,
+                                       css: 'list-group-item-' + $data.type"></li>
+                    <!-- /ko -->
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">
+                    Close
+                </button>
+                <button type="button" class="btn btn-default">
+                    Mark as read
+                </button>
+                <button type="button" class="btn btn-primary" data-bind="click: onServerBroadcast">
+                    Broadcast
+                </button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>

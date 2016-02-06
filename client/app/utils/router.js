@@ -23,10 +23,14 @@ define(['Path', 'amplify', 'app/utils/events'],
             });
 
             Path.map("#/home").to(function () {
-                amplify.publish(Events.SHOW_CLAIMS_GRID);
+                amplify.publish(Events.SHOW_DASHBOARD);
             });
 
-            Path.map("#/claim").to(function () {
+            Path.map("#/claim/list").to(function () {
+                amplify.publish(Events.SHOW_CLAIMS_LIST);
+            });
+
+            Path.map("#/claim/new").to(function () {
                 amplify.publish(Events.NEW_CLAIM);
             });
 
@@ -60,12 +64,20 @@ define(['Path', 'amplify', 'app/utils/events'],
         };
 
         Router.prototype.routeToNewClaim = function () {
-            window.location.hash = '#/claim';
+            window.location.hash = '#/claim/new';
         };
 
         Router.prototype.routeToBillingOverview = function (claimId) {
             console.log('Navigating to Billing overview ' + claimId);
             window.location.hash = '#/claim/' + claimId + '/billhistory';
+        };
+
+        /**
+         * `this` bound the bill object
+         */
+        Router.prototype.routeToBill = function () {
+            console.log('Navigating to Bill ' + this._id);
+            window.location.hash = '#/claim/' + this.claimId + '/bill/' + this._id;
         };
 
         Router.prototype.routeToClaim = function (claimId) {
@@ -92,6 +104,14 @@ define(['Path', 'amplify', 'app/utils/events'],
             } else {
                 this.routeToNewClaimEntry();
             }
+        };
+
+        Router.prototype.showMsgsPopup = function () {
+            amplify.publish(Events.SHOW_MSGS);
+        };
+
+        Router.prototype.showProfilePopup = function () {
+            amplify.publish(Events.SHOW_USER_PROFILE);
         };
 
         Router.prototype.start = function () {

@@ -1,3 +1,47 @@
-.no-print {display: none;}
+.no-print {
+    display: none;
+}
 
-.yes-print {display: normal;}
+.yes-print {
+    display: normal;
+}
+
+#shortcut, #header, #left-panel, #ribbon, #sparks, .page-title, .panel-heading {
+    display: none !important;
+}
+
+table {
+    border-spacing: 0px;
+}
+
+.invoice-body tr th {
+    border-bottom: 1px solid #333;
+    border-right: 1px solid #333;
+}
+
+.invoice-body tr td {
+    border-bottom: 1px dotted #333;
+    border-right: 1px dotted #333;
+    padding-left: 5px;
+    padding-top: 0px;
+}
+
+.invoice-body tr td:last-child {
+    border-right: none;
+}
+
+.invoice-body tr:last-child td {
+    border-bottom: none;
+}
+
+.invoice {
+    border: none;
+}
+
+.invoice td a {
+    font-weight: normal;
+}
+
+.invoice-body table td, .invoice-body table th, .invoice-header, .invoice-client-info, .invoice-footer {
+    font-family: 'Segoe UI', Tahoma, sans-serif !important;
+}

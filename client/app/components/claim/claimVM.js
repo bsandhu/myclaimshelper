@@ -55,6 +55,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify',
             amplify.subscribe(Events.SHOW_CLAIM_ENTRY, this, this.onShowClaimEntry);
             amplify.subscribe(Events.SAVED_CLAIM_ENTRY, this, this.refreshClaimEntriesListing);
             amplify.subscribe(Events.CREATE_NEW_BILL, this, this.onCreateNewBill);
+            amplify.subscribe(Events.SHOW_BILLING_HISTORY, this, this.selectBillingTab);
 
             amplify.subscribe(Events.EXPAND_CLAIM_PANEL, this, function(){this.isPartiallyCollapsed(false)});
             amplify.subscribe(Events.COLLAPSE_CLAIM_PANEL, this, function(){this.isPartiallyCollapsed(false)});
@@ -70,12 +71,8 @@ define(['jquery', 'knockout', 'KOMap', 'amplify',
         ClaimVM.prototype.onShowClaim = function (evData) {
             console.log('ClaimVM - SHOW_CLAIM ev' + JSON.stringify(evData));
             console.assert(evData.claimId, 'Expecting claim Id on event data');
+            this.selectClaimTab();
 
-            // Need to load?
-            if (String(this.claim()._id()) === String(evData.claimId)) {
-                console.log('Claim Id ' + evData.claimId + ' already loaded. Skipping');
-                return;
-            }
             // Clear
             this.claim(this.newEmptyClaim());
             // Re-load
@@ -90,6 +87,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify',
             this.claim().entryDate(new Date());
             this.claimEntries([]);
             this.inEditMode(true);
+            this.selectClaimTab();
         };
 
         ClaimVM.prototype.onNewClaimEntry = function () {
@@ -147,6 +145,24 @@ define(['jquery', 'knockout', 'KOMap', 'amplify',
             amplify.publish(Events.SHOW_BILL, ev);
         }
 
+        ClaimVM.prototype.onShowBillingHistory = function (entry, ev) {
+            this.Router.routeToBillingOverview(this.claim()._id());
+        }
+
+        ClaimVM.prototype.onShowClaimTab = function (entry, ev) {
+            this.Router.routeToClaim(this.claim()._id());
+        }
+
+        ClaimVM.prototype.selectClaimTab = function () {
+            console.log("Switch to Claim tab");
+            this.activeTab(Consts.CLAIMS_TAB);
+        };
+
+        ClaimVM.prototype.selectBillingTab = function () {
+            console.log("Switch to Billing tab");
+            this.activeTab(Consts.BILLING_TAB);
+        };
+
         ClaimVM.prototype.onClaimEntryClick = function (entry, ev) {
             // Toggle row highlight
             $('#claimEntriesList tr').removeClass('info');
@@ -171,6 +187,19 @@ define(['jquery', 'knockout', 'KOMap', 'amplify',
         /* View state                                              */
         /***********************************************************/
 
+
+        ClaimVM.prototype.initTooltipComponent = function () {
+            $('[data-toggle="tooltip"]').tooltip();
+        };
+
+        ClaimVM.prototype.showTasksCollapsed = function () {
+            $(window).resize(function(){
+                if ($(window).width() < 768){
+                    amplify.publish()
+                }
+            });
+        }
+
         ClaimVM.prototype.onSortEntries = function () {
             this.sortDir(this.sortDir() === 'desc' ? 'asc' : 'desc');
             this.sortEntries();
@@ -178,14 +207,14 @@ define(['jquery', 'knockout', 'KOMap', 'amplify',
 
         ClaimVM.prototype.sortEntries = function () {
             function sortAsc(a, b) {
-                var dateA = new Date(Date.parse(a.entryDate));
-                var dateB = new Date(Date.parse(b.entryDate));
+                var dateA = new Date(Date.parse(a.dueDate));
+                var dateB = new Date(Date.parse(b.dueDate));
                 return dateA.getTime() - dateB.getTime();
             }
 
             function sortDesc(a, b) {
-                var dateA = new Date(Date.parse(a.entryDate));
-                var dateB = new Date(Date.parse(b.entryDate));
+                var dateA = new Date(Date.parse(a.dueDate));
+                var dateB = new Date(Date.parse(b.dueDate));
                 return dateB.getTime() - dateA.getTime();
             }
 
@@ -237,7 +266,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify',
                     amplify.publish(Events.ADDED_CONTACT, KOMap.toJS(this.claim().insuredContact));
                     amplify.publish(Events.SAVED_CLAIM, {'claim': KOMap.toJS(this.claim())});
 
-                    this.storeInSession(this.claim()._id());
+                    this.storeInSession(this.claim()._id(), KOMap.toJS(this.claim()));
                     this.inEditMode(false);
                 }.bind(this));
         };
@@ -247,7 +276,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify',
                 .done(function (resp) {
                     console.log('Loaded claim ' + JSON.stringify(resp.data));
                     KOMap.fromJS(resp.data, {}, this.claim);
-                    this.storeInSession(claimId);
+                    this.storeInSession(claimId, resp.data);
                 }.bind(this));
         };
 
@@ -260,23 +289,14 @@ define(['jquery', 'knockout', 'KOMap', 'amplify',
                 }.bind(this));
         };
 
-        ClaimVM.prototype.storeInSession = function (claimId) {
+        ClaimVM.prototype.storeInSession = function (claimId, claim) {
             amplify.store.sessionStorage(SessionKeys.ACTIVE_CLAIM_ID, claimId);
+            amplify.store.sessionStorage(SessionKeys.ACTIVE_CLAIM_OBJ, claim);
             console.log('Stored ClaimId: ' + claimId + ' in session storage');
         };
 
         ClaimVM.prototype.getActiveClaimEntryId = function () {
             return amplify.store.sessionStorage(SessionKeys.ACTIVE_CLAIM_ENTRY_ID);
-        };
-
-        ClaimVM.prototype.selectClaimTab = function () {
-            console.log("Switch to Claim tab");
-            this.activeTab(Consts.CLAIMS_TAB);
-        };
-
-        ClaimVM.prototype.selectBillingTab = function (tabName) {
-            console.log("Switch to Billing tab");
-            this.activeTab(Consts.BILLING_TAB);
         };
 
         return ClaimVM;

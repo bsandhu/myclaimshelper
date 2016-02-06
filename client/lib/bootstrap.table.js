@@ -895,10 +895,16 @@
         if (this.options.search) {
             html = [];
             html.push(
-                    '<div class="pull-' + this.options.searchAlign + ' search">',
-                sprintf('<input class="form-control' + (this.options.iconSize === undefined ? '' : ' input-' + this.options.iconSize) + '" type="text" placeholder="%s">',
-                    this.options.formatSearch()),
-                '</div>');
+                    '<div class="pull-right search">',
+                sprintf(
+                        '<input '
+                            + 'class="form-control no-border" '
+                            + 'type="text" '
+                            + 'placeholder="%s" '
+                            + 'style="margin-top: 8px;"/>',
+                            this.options.formatSearch()),
+                    '</div>' +
+                    '<div class="pull-right glyphicon glyphicon-search" style="padding-top: 30px; padding-right: 5px; font-size:initial;"></div>');
 
             this.$toolbar.append(html.join(''));
             $search = this.$toolbar.find('.search input');

@@ -1,4 +1,6 @@
 var jQuery = require('jquery-deferred');
+var EventEmitter = require('events').EventEmitter;
+
 
 function createResponse(err, results) {
     if (err) {
@@ -8,4 +10,5 @@ function createResponse(err, results) {
     }
 }
 
+exports.eventEmitter = new EventEmitter();
 exports.createResponse = createResponse;
