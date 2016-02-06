@@ -28,6 +28,8 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
             this.setupGroupByListener();
             this.setupClaimEntryListener();
             this.setupGrouping();
+
+            this.searchClaimEntries();
         }
 
         SummaryVM.prototype.componentLoaded = function () {
@@ -144,7 +146,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
                 {description: 'this week', query: {'$gte': DateUtils.startOfWeekInMillis(), '$lte': DateUtils.endOfWeekInMillis()}},
                 {description: 'within next', query: {'$gte': DateUtils.startOfToday().getTime(), '$lte': DateUtils.daysFromNowInMillis(this.dueDateDaysFilterValue())}}
             ]);
-            this.dueDateFilter = ko.observable(this.dueDateFilters()[0]);
+            this.dueDateFilter = ko.observable(this.dueDateFilters()[2]);
         };
 
         SummaryVM.prototype.setupStatusFilters = function () {
@@ -155,7 +157,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
                 {description: States.Complete, query: States.Complete},
                 {description: States.None, query: States.None}
             ]);
-            this.statusFilter = ko.observable(this.statusFilters()[1]);
+            this.statusFilter = ko.observable(this.statusFilters()[0]);
         };
 
         SummaryVM.prototype.setupFilterVisibility = function () {
