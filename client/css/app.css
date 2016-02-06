@@ -290,6 +290,10 @@ div {
     background-color: #ECEFF1;
 }
 
+.bg-color-greenLighter {
+    background: #cde0c4;
+}
+
 /**********************************************************/
 /**** Dashboard - Summary panel ****/
 /**********************************************************/
@@ -365,10 +369,6 @@ div {
 
 .summaryRow:hover .summaryGroupCell span:last-child {
     opacity: .9;
-}
-
-.bg-color-greenLighter {
-    background: #cde0c4;
 }
 
 /**********************************************************/

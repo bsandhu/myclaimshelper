@@ -164,7 +164,6 @@
                 Session.setCurrentUserId("TestUser");
                 Session.clearContacts();
 
-
                 // Knockout AMD supoprt setup
                 ko.amdTemplateEngine.defaultRequireTextPluginName = "text";
                 ko.amdTemplateEngine.defaultPath = "/";
@@ -191,12 +190,6 @@
 
                 // Knockout bindings init
                 ko.applyBindings(new AppVM());
-
-                setTimeout(3000, function () {
-                    $.material.init();
-                    $.material.ripples();
-                    $.material.input();
-                })
 
                 JSON.prettyPrint = function (str) {
                     var maxLength = 80;

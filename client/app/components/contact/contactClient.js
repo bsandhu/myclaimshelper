@@ -8,7 +8,7 @@ define(['jquery', 'app/utils/session'],
                             if (resp.status !== 'Success') {
                                 console.error('Failed to load contacts');
                             } else {
-                                console.log('Loaded contacts' + JSON.stringify(resp.data));
+                                console.debug('Loaded contacts' + JSON.stringify(resp.data));
                                 Session.setContacts(resp.data)
                             }
                         })

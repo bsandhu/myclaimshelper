@@ -1,15 +1,16 @@
-<!-- *** Tabs *** -->
 <ul id="myTab1" class="nav nav-tabs bordered">
+    <!-- *** Claim tab *** -->
     <li data-bind="attr: {class: activeTab() == Consts.CLAIMS_TAB ? 'active' : ''}">
-        <a href="#" data-toggle="tab" data-bind="click: selectClaimTab">
+        <a href="#" data-toggle="tab" data-bind="click: onShowClaimTab">
             Claim
             <span class="badge bg-color-blue txt-color-white"
                   data-bind="text: (claim().insuranceCompanyFileNum() || '')"></span>
         </a>
     </li>
+    <!-- *** Billing tab *** -->
     <li data-bind="attr: {class: activeTab() == Consts.BILLING_TAB ? 'active' : ''},
                    ifnot: inEditMode && isPartiallyCollapsed">
-        <a href="#" data-toggle="tab" data-bind="click: selectBillingTab">
+        <a href="#" data-toggle="tab" data-bind="click: onShowBillingHistory">
             <i class="fa fa-fw fa-lg fa-credit-card"></i>Billing
         </a>
     </li>
@@ -230,8 +231,7 @@
     <div class="tab-pane fade in" id="bilingTab"
          data-bind="css: {active: activeTab() == Consts.BILLING_TAB}">
         <div id="billPanelContent">
-            <div data-bind="component: {name: 'billing-component',
-                                        params: claim()._id()}"></div>
+            <div data-bind="component: {name: 'billing-component'}"></div>
         </div>
     </div>
     <!-- *** Biling panel - end *** -->

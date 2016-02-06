@@ -29,7 +29,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'app/utils/events', 'app/utils
         UserProfileComponent.prototype.loadUserProfile = function(userProfileId){
             return $.getJSON('/userProfile/' + userProfileId)
                 .done(function (resp) {
-                    console.log('Loaded UserProfile ' + JSON.stringify(resp.data));
+                    console.debug('Loaded UserProfile ' + JSON.stringify(resp.data));
                     KOMap.fromJS(resp.data, {}, this.userProfile);
                     Session.setCurrentUserProfile(resp.data);
                 }.bind(this))

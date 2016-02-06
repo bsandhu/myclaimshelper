@@ -76,6 +76,7 @@ define(['Path', 'amplify', 'app/utils/events'],
          * `this` bound the bill object
          */
         Router.prototype.routeToBill = function () {
+            console.log('Navigating to Bill ' + this._id);
             window.location.hash = '#/claim/' + this.claimId + '/bill/' + this._id;
         };
 
