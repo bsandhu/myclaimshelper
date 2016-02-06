@@ -515,13 +515,16 @@ nav ul {
 }
 
 .stats-counter-text {
-    color: #3bafda;
+    color: #00b19d;
     line-height: 30px;
-    font-weight: bold;
     font-size: 18px;
 }
 
 .stats-well {
+    background-color: white;
+    border-color: #dddddd;
     padding: 10px;
     padding-bottom: 0px;
+    max-height: 105px;
+    min-height: 105px;
 }

@@ -87,13 +87,19 @@
     <div id="dashboardPanel" class="slidingContainer dashboardPanel">
         <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                <div data-bind="component: 'summary-component'"></div>
+                <div data-bind="component: 'stats-component'"></div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <div data-bind="component: 'summary-component'"></div>
+                </div>
             </div>
         </div>
         <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                 <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
-                    <div data-bind="component: 'stats-component'"></div>
                     <div data-bind="component: 'maps-dash-component'"></div>
                 </div>
                 <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4s">
@@ -156,7 +162,7 @@
                 'bootbox', 'app/utils/koDatetimePickerBinding', 'app/utils/koWYSIWYGBinding',
                 'app/utils/koTextTruncateBinding', 'app/utils/koSortableBinding', 'app/utils/koAutoComplete', 'app/utils/koSelect2',
                 'app/utils/koTaskEntryTag',
-                'velocity', 'bootstrap', 'KOXeditable', 'bootstrapTable', 'tableExport'],
+                'velocity', 'bootstrap', 'KOXeditable', 'bootstrapTable', 'tableExport', 'circliful'],
             function ($, ko, KOAmd, text, amplify, AppVM, DateUtils, Session) {
                 console.log('Init App');
 

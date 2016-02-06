@@ -1,47 +1,61 @@
-<div class="panel panel-default">
-    <div class="panel-heading">
-        <h3 class="panel-title">Stats (Under construction)
+<div>
 
-            <ul class="nav nav-tabs pull-right in" id="myTab">
-                <li class="active">
-                    <a data-toggle="tab" href="#s1"><i class="fa fa-clock-o"></i> <span
-                            class="hidden-mobile hidden-tablet">Live Stats</span></a>
-                </li>
-                <li>
-                    <a data-toggle="tab" href="#s3"><i class="fa fa-dollar"></i> <span
-                            class="hidden-mobile hidden-tablet">Revenue</span></a>
-                </li>
-            </ul>
-        </h3>
-    </div>
-
-    <div class="panel-body">
+    <div>
         <!-- widget content -->
         <div class="widget-body">
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 show-stats">
-
                 <div class="row">
-                    <div class="col-xs-6 col-sm-6 col-md-12 col-lg-12"><span class="text"> Today's Tasks <span
-                            class="pull-right">130/200</span> </span>
-
-                        <div class="progress">
-                            <div class="progress-bar bg-color-blueDark" style="width: 80%;"></div>
-                        </div>
+                    <!-- Tasks --->
+                    <div class="col-xs-4 col-sm-4 col-md-2 col-lg-2" style="padding-right: 1px">
+                        <div data-bind='template: { name: "tasksStatsTemplate",
+                                                    afterRender: onTasksStatsTemplRender }'></div>
                     </div>
-                    <div class="col-xs-6 col-sm-6 col-md-12 col-lg-12"><span class="text"> Overdue <span
-                            class="pull-right">8</span> </span>
-
-                        <div class="progress">
-                            <div class="progress-bar bg-color-blue" style="width: 34%;"></div>
-                        </div>
-                    </div>
-                    <div class="col-xs-6 col-sm-6 col-md-12 col-lg-12">
-                        <span class="text padding-5">Revenue</span>
-                        <span class="sparks-info txt-color-blue">$47,171</span>
+                    <!-- Billing --->
+                    <div class="col-xs-4 col-sm-4 col-md-2 col-lg-2" style="padding-left: 1px">
+                        <div data-bind='template: { name: "billStatsTemplate",
+                                                    afterRender: onBillStatsTemplRender }'></div>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>
 </div>
+</div>
+
+<script type="text/html" id="billStatsTemplate">
+    <div class="well stats-well text-left">
+        <div class="row">
+            <div class="col-lg-8">
+                <p class="stats-counter-text">Billing</p>
+                <span class="text-muted text-nowrap">Today $500.35</span>
+                <p class="text-muted text-nowrap">Month TODO</p>
+            </div>
+            <div class="col-lg-4" style="padding-top: 5px">
+                <i class="fa fa-usd fa-4x" style="color: darkgrey; opacity: .5"></i>
+            </div>
+        </div>
+    </div>
+</script>
+
+<script type="text/html" id="tasksStatsTemplate">
+    <div class="well stats-well text-left">
+        <div class="row">
+            <div class="col-lg-6">
+                <p class="stats-counter-text">Todays Tasks</p>
+                <p class="text-muted text-nowrap">Due 100. Done 35</p>
+            </div>
+            <div class="col-lg-6">
+                <div id="tasksStatsCircliful" class="circliful-chart circliful"
+                     data-dimension="70"
+                     data-text="35%"
+                     data-width="5"
+                     data-fontsize="14"
+                     data-percent="35"
+                     data-fgcolor="#00b19d"
+                     data-bgcolor="#ebeff2"
+                     data-delay=10000
+                     style="width: 90px;">
+                </div>
+            </div>
+        </div>
+</script>
