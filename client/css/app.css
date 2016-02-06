@@ -386,6 +386,8 @@ body {
 h3.panel-title {
     font-size: 18px;
     font-weight: 600;
+    color: #797979 !important;
+    letter-spacing: 0.04em;
 }
 
 .panel-default .panel-heading {
@@ -488,5 +490,38 @@ nav ul {
 }
 
 /**********************************************************/
-/**** Contact panel ****/
+/**** Stats panel ****/
 /**********************************************************/
+
+.circliful {
+    position: relative;
+}
+
+.circle-text, .circle-info, .circle-text-half, .circle-info-half {
+    width: 100%;
+    position: absolute;
+    text-align: center;
+    display: inline-block;
+}
+
+.circle-info, .circle-info-half {
+    color: #999;
+}
+
+.circliful .fa {
+    margin: -10px 3px 0 3px;
+    position: relative;
+    bottom: 4px;
+}
+
+.stats-counter-text {
+    color: #3bafda;
+    line-height: 30px;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.stats-well {
+    padding: 10px;
+    padding-bottom: 0px;
+}

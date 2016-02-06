@@ -24,9 +24,13 @@ require.config({
         'xeditable': 'lib/x-editable.min',
         'KOXeditable': 'lib/ko.xeditable',
         'socketio': 'lib/socket.io-1.2.0',
-        'select2': 'lib/select2.min'
+        'select2': 'lib/select2.min',
+        'circliful': 'lib/jquery.circliful.min'
     },
     shim: {
+        'circliful': {
+            deps: ['jquery']
+        },
         'bootbox': {
             deps: ['jquery', 'bootstrap']
         },
