@@ -98,7 +98,7 @@ var getBillObjects = function (search, db) {
 function getBillsREST(req, res) {
     assert.ok(req.body, 'Expecting Mongo query as a parameter');
     var query = req.body;
-    var db = mongoUtils.connect(config.db);
+    var db = mongoUtils.connect();
     db.then(_.partial(getBillObjects, query))
         .then(_.partial(sendResponse, res, null),
         _.partial(sendResponse, res, 'Failed to get Bill for query ' + query));
@@ -107,7 +107,7 @@ function getBillsREST(req, res) {
 // :: Dict -> Dict -> None
 function getBillingItemsREST(req, res) {
     assert.ok(req.params.search, 'Expecting BillId as a parameter');
-    var db = mongoUtils.connect(config.db);
+    var db = mongoUtils.connect();
     db.then(_.partial(_getBillingItems, req.params.search))
         .then(_.partial(sendResponse, res, null),
         _.partial(sendResponse, res, 'Failed to get BillingItems  ' + req.params.search));

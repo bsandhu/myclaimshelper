@@ -22,7 +22,7 @@ var process = function (req, res) {
         defer.reject();
         return defer.promise()
     }
-    return mongoUtils.connect(config.db)
+    return mongoUtils.connect()
         .then(_.partial(checkClaim, mailEntry))
         .then(saveAttachments)
         .then(saveEntry)

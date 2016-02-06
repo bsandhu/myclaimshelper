@@ -210,10 +210,14 @@ function deleteEntity(predicate, colName) {
     return defer;
 }
 
-// :: String -> Promise
-var connect = function (url) {
+// :: None -> Promise
+var connect = function () {
     var result = jQuery.Deferred();
-    MongoClient.connect(url, _.partial(_onResult, result));
+    if (!dbConn) {
+        MongoClient.connect(config.db, _.partial(_onResult, result));
+    } else {
+        result.resolve(dbConn);
+    }
     return result;
 }
 
