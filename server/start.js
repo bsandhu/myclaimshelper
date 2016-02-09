@@ -10,6 +10,7 @@ var profileService = require('./services/profileService.js');
 var uploadService = require('./services/uploadService.js');
 var entityExtractionService = require('./services/entityExtractionService.js');
 var notificationService = require('./services/notificationService.js');
+var statsService = require('./services/statsService');
 var processMail = require('./services/mail/mailHandler.js').process;
 var mongoUtils = require('./mongoUtils.js');
 var serviceUtils = require('./serviceUtils.js');
@@ -37,6 +38,10 @@ function init() {
     }));
     server.use(restify.jsonp());
     server.use(restify.gzipResponse());
+}
+
+function setupStatsRoutes() {
+    server.get('/stats/all', statsService.getAllStatsREST);
 }
 
 function setupMailServiceRoutes() {
@@ -148,6 +153,7 @@ function startServer() {
 }
 
 init();
+setupStatsRoutes();
 setupMailServiceRoutes();
 setupBillingServiceRoutes();
 setupClaimsServiceRoutes();

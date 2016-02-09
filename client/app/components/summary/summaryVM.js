@@ -278,6 +278,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
                 function onSuccess(response) {
                     console.log('Saved ClaimEntry: ' + JSON.stringify(response));
                     amplify.publish(Events.SUCCESS_NOTIFICATION, {msg: successMsg});
+                    amplify.publish(Events.SAVED_CLAIM_ENTRY, {claimId: sourceEntry.claimId(), claimEntryId: entryIdToUpdate});
                     this.searchClaimEntries();
                 }.bind(this)
             );

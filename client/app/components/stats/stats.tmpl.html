@@ -8,7 +8,7 @@
                     <!-- Tasks --->
                     <div class="col-xs-4 col-sm-4 col-md-2 col-lg-2" style="padding-right: 1px">
                         <div data-bind='template: { name: "tasksStatsTemplate",
-                                                    afterRender: onTasksStatsTemplRender }'></div>
+                                                    afterRender: onTasksStatsTemplRender.bind($data) }'></div>
                     </div>
                     <!-- Billing --->
                     <div class="col-xs-4 col-sm-4 col-md-2 col-lg-2" style="padding-left: 1px">
@@ -42,18 +42,12 @@
         <div class="row">
             <div class="col-lg-6">
                 <p class="stats-counter-text">Todays Tasks</p>
-                <p class="text-muted text-nowrap">Due 100. Done 35</p>
+                <p class="text-muted text-nowrap"
+                   data-bind="text: 'Due ' + tasksDueToday() + '. Done ' + tasksDoneToday()"></p>
             </div>
             <div class="col-lg-6">
-                <div id="tasksStatsCircliful" class="circliful-chart circliful"
-                     data-dimension="70"
-                     data-text="35%"
-                     data-width="5"
-                     data-fontsize="14"
-                     data-percent="35"
-                     data-fgcolor="#00b19d"
-                     data-bgcolor="#ebeff2"
-                     data-delay=10000
+                <div id="tasksStatsCircliful"
+                     class="circliful-chart circliful"
                      style="width: 90px;">
                 </div>
             </div>

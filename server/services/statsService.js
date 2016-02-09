@@ -1,16 +1,23 @@
 var sendResponse = require('./claimsService.js').sendResponse;
 var mongoUtils = require('./../mongoUtils.js');
+var dateUtils = require('./../shared/dateUtils.js');
 var jQuery = require("jquery-deferred");
 var _ = require('underscore');
 
+var sod = dateUtils.startOfToday().getTime();
+var eod = dateUtils.endOfToday().getTime();
 
 var aggregations = {
-    'Tasks done today': [
+    'TasksDoneToday': [
         {$match: {state: "Complete"}},
-        {$group: {_id: {state: "$state"}, total: {$sum: 1}}}
-    ], 'Tasks due today': [
-        {$match: {state: "Complete"}},
-        {$group: {_id: {state: "$state"}, total: {$sum: 1}}}
+        {$match: {dueDate: { $gt: sod} }},
+        {$match: {dueDate: { $lt: eod} }},
+        {$group: {_id: "$state", total: {$sum: 1}}}
+    ],
+    'TasksDueToday': [
+        {$match: {dueDate: { $gt: sod} }},
+        {$match: {dueDate: { $lt: eod} }},
+        {$group: {_id: null, total: {$sum: 1}}}
     ]
 }
 
