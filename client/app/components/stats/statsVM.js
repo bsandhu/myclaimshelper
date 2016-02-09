@@ -39,8 +39,8 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'app/utils/events',
                 .data('fontsize', 14)
                 .data('fgcolor', '#00b19d')
                 .data('bgcolor', '#ebeff2')
-                .data('percent', 35)
-                .data('text', 35 + '%')
+                .data('percent', this.percentTasksDone())
+                .data('text', this.percentTasksDone() + '%')
                 .circliful()
         }
 
@@ -54,6 +54,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'app/utils/events',
                 .done(function (resp) {
                     console.debug('Loaded Stats ' + JSON.stringify(resp.data));
                     this.stats(resp.data);
+                    this.onTasksStatsTemplRender();
                 }.bind(this))
                 .fail(function (resp) {
                     console.error('Failed to load Stats ' + JSON.stringify(resp));
