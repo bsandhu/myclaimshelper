@@ -1,6 +1,7 @@
 <div class="panel panel-default">
     <div class="panel-heading">
         <h3>
+            <i data-bind="taskEntryTag: claimEntry().tag()"></i>
             <div class="inline"
                  data-bind="text: niceHeader(),
                             attr: {title: 'Task Id ' + claimEntry()._id()}"></div>
