@@ -28,10 +28,17 @@ define(['amplify', 'app/utils/sessionKeys'], function (amplify, SessionKeys) {
             return amplify.store.sessionStorage(SessionKeys.ACTIVE_USER_PROFILE);
         },
 
+        // Claim
         getActiveClaimId: function () {
             var activeClaimId = amplify.store.sessionStorage(SessionKeys.ACTIVE_CLAIM_ID);
             console.assert(activeClaimId, 'No claim active in session');
             return activeClaimId;
+        },
+
+        getActiveClaim: function () {
+            var activeClaim = amplify.store.sessionStorage(SessionKeys.ACTIVE_CLAIM_OBJ);
+            console.assert(activeClaim, 'No claim active in session');
+            return activeClaim;
         }
     };
 });

@@ -22,6 +22,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox',
 
             // Updated via Claim lifecycle events
             this.claimId = undefined;
+            this.activeClaim = undefined;
             // Active Bill - new or unsubmitted
             this.bill = ko.observable(this.newEmptyBill());
             // All bills associated with this Claim - for Overview
@@ -502,6 +503,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox',
             $('#print-template').html(printHtml);
             var container = document.createElement("div");
             var _this = this;
+            _this.activeClaim = Session.getActiveClaim();
 
             ko.renderTemplate(
                 "print-template",

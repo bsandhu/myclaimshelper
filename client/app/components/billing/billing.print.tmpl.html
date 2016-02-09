@@ -55,11 +55,11 @@
         <td colspan="4"></td>
     </tr>
     <tr>
-        <td colspan="3"><strong>Insured: </strong><span data-bind="text: activeClaim.insuredContact.name"/></td>
-        <td colspan="4"><strong>Date of loss: </strong><span data-bind="text: DateUtils.niceDate(activeClaim.dateOfLoss(), false)"/></td>
+        <td colspan="3"><strong>Insured: </strong><span data-bind="text: activeClaim.insuredContact ? activeClaim.insuredContact.name : 'None'"/></td>
+        <td colspan="4"><strong>Date of loss: </strong><span data-bind="text: DateUtils.niceDate(activeClaim.dateOfLoss, false)"/></td>
     </tr>
     <tr>
-        <td colspan="3"><strong>Clmnt: </strong><span data-bind="text: activeClaim.claimantContact.name"/></td>
+        <td colspan="3"><strong>Clmnt: </strong><span data-bind="text: activeClaim.claimantContact ? activeClaim.claimantContact.name : 'None'"/></td>
         <td colspan="4"><strong>Adjuster: </strong><span data-bind="text: 'Bill B.'"/></td>
     </tr>
     <tr>
