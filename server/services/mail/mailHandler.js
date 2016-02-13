@@ -9,6 +9,7 @@ var BillingItem = require('../../model/billingItem.js');
 var MailParser = require('./mailParser.js').MailParser;
 var saveToDB = require('../uploadService.js').saveToDB;
 var mongoUtils = require('../../mongoUtils.js');
+var Consts = require('./../../shared/consts.js');
 var broadcastNoHTTP = require('../../services/notificationService.js').broadcastNoHTTP;
 
 
@@ -120,10 +121,12 @@ var saveAttachments = function (mailEntry) {
 };
 
 var notifySuccess = function (mailEntry) {
-    var body = 'Email processed successfully!';
-    body += '\n\n' + JSON.stringify(mailEntry);
-    broadcastNoHTTP('Email processed successsfully! ' + mailEntry.mail.subject)
+    broadcastNoHTTP(
+            Consts.NotificationName.NEW_MSG,
+            'Email processed successsfully! ' + mailEntry.mail.subject + mailEntry.claimId + ' ' + mailEntry._id)
         .always(function doit() {
+            var body = 'Email processed successfully!';
+            body += '\n\n' + JSON.stringify(mailEntry);
             sendEmail(mailEntry.mail.from, mailEntry.mail.subject, body);
         });
     return mailEntry;
