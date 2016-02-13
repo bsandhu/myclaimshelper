@@ -14,7 +14,7 @@
                 <ul class="list-group">
                     <!-- ko foreach: msgs() -->
                         <li class="list-group-item"
-                            data-bind="text: $data.body,
+                            data-bind="html: $data.body,
                                        css: 'list-group-item-' + $data.type"></li>
                     <!-- /ko -->
                 </ul>

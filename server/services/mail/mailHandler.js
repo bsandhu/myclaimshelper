@@ -123,7 +123,7 @@ var saveAttachments = function (mailEntry) {
 var notifySuccess = function (mailEntry) {
     broadcastNoHTTP(
             Consts.NotificationName.NEW_MSG,
-            'Email processed successsfully! ' + mailEntry.mail.subject + mailEntry.claimId + ' ' + mailEntry._id)
+            'Email processed. ' + mailEntry.mail.subject + ' <a href="#/claimEntry/' + mailEntry.claimId + '/' + mailEntry._id + '>Goto task</a>')
         .always(function doit() {
             var body = 'Email processed successfully!';
             body += '\n\n' + JSON.stringify(mailEntry);
