@@ -123,9 +123,9 @@ var notifySuccess = function (mailEntry) {
     var body = 'Email processed successfully!';
     body += '\n\n' + JSON.stringify(mailEntry);
     broadcastNoHTTP('Email processed successsfully! ' + mailEntry.mail.subject)
-      .always(function doit(){
-        sendEmail(mailEntry.mail.from, mailEntry.mail.subject, body);
-      }); 
+        .always(function doit() {
+            sendEmail(mailEntry.mail.from, mailEntry.mail.subject, body);
+        });
     return mailEntry;
 };
 
@@ -133,9 +133,9 @@ var notifyFailure = function (mailEntry) {
     var err = 'ERROR processing email:';
     var body = err + mailEntry.mail.subject + '\n\n' + JSON.stringify(mailEntry.error);
     broadcastNoHTTP(body)
-      .always(function doit(){
-        sendEmail(mailEntry.mail.from, mailEntry.mail.subject, body);
-      }); 
+        .always(function doit() {
+            sendEmail(mailEntry.mail.from, mailEntry.mail.subject, body);
+        });
     return mailEntry;
 };
 
@@ -157,7 +157,7 @@ function constructClaimEntry(data) {
 
 function sendEmail(recipient, subject, body) {
     var mailgun = new Mailgun({apiKey: config.mailgun.api_key,
-                               domain: config.mailgun.domain});
+        domain: config.mailgun.domain});
     var data = {
         from: 'Agent 007 <no-reply@007.com>',
         to: recipient,

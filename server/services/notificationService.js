@@ -1,49 +1,13 @@
 var sendResponse = require('./claimsService.js').sendResponse;
 var EventEmitter = require('events').EventEmitter;
 var Notification = require('../model/notification.js');
-var consts = require('../model/consts.js');
 var mongoUtils = require('./../mongoUtils.js');
 var serviceUtils = require('./../serviceUtils.js');
 var dateUtils = require('./../shared/dateUtils.js');
+var Consts = require('./../shared/consts.js');
 var jQuery = require('jquery-deferred');
 var _ = require('underscore');
 
-
-function broadcastNoHTTP(msg){
-  var notification = new Notification();
-  notification.name = 'NewMsg';
-  notification.body = msg;
-  var defer = jQuery.Deferred();
-  // Persist and broadcast
-  // Broadcast event picked up by the start.js module
-  mongoUtils.saveOrUpdateEntity(notification, mongoUtils.NOTIFICATIONS_COL_NAME)
-    .then(function (err, entity) {
-      if (err) {defer.reject()}
-      else {
-        serviceUtils.eventEmitter.emit('foo', entity);
-        console.log("Broadcast 'foo' event emited")
-        defer.resolve();
-      }
-    });
-  return defer;
-}
-
-function broadcast(req, res) {
-    var msg = req.body.msg;
-    var notification = new Notification();
-    notification.name = 'NewMsg';
-    notification.body = msg;
-    var defer = jQuery.Deferred();
-    // Persist and broadcast
-    // Broadcast event picked up by the start.js module
-    mongoUtils.saveOrUpdateEntity(notification, mongoUtils.NOTIFICATIONS_COL_NAME)
-        .then(function (err, entity) {
-            sendResponse(res, err, entity);
-            serviceUtils.eventEmitter.emit('foo', entity);
-            defer.resolve();
-        });
-    return defer;
-}
 
 function markAllAsRead(req, res) {
     console.log('Marking as msgs as read');
@@ -55,22 +19,69 @@ function markAllAsRead(req, res) {
 function getUnreadMsgs(req, res) {
     console.log('Get unread notifications');
     getUnreadinDB(5)
-        .then(function (err, result) {
-            sendResponse(res, err, result);
-        })
+        .then(_.partial(sendResponse, res, null))
+        .fail(_.partial(sendResponse, res, 'Failed to get unread msgs'));
 }
 
 function getUnreadMsgCount(req, res) {
     console.log('Get unread msg count');
     getUnreadMsgCountInDB()
-        .then(function (err, result) {
-            sendResponse(res, err, result);
+        .then(_.partial(sendResponse, res, null))
+        .fail(_.partial(sendResponse, res, 'Failed to get unread msg count'));
+}
+
+/****************************************************/
+/* No Http Ops */
+/****************************************************/
+
+function broadcastNoHTTP(name, body) {
+    var defer = jQuery.Deferred();
+
+    var notification = new Notification();
+    notification.name = name;
+    notification.body = body;
+
+    // Persist and broadcast
+    // Broadcast event picked up by the start.js module
+    saveNotificationInDB(notification)
+        .then(function (entity) {
+            serviceUtils.eventEmitter.emit('foo', entity);
         })
+        .then(getUnreadMsgCountInDB)
+        .then(function (count) {
+            var msgCountNotification = new Notification();
+            msgCountNotification.name = Consts.NotificationName.UNREAD_COUNT;
+            msgCountNotification.body = count;
+
+            serviceUtils.eventEmitter.emit('foo', msgCountNotification);
+            defer.resolve(notification);
+        })
+        .fail(function (err) {
+            console.log(err);
+            defer.reject(err);
+        });
+    return defer;
+}
+
+function broadcast(req, res) {
+    return broadcastNoHTTP(Consts.NotificationName.NEW_MSG, req.body.msg)
+        .then(_.partial(sendResponse, res, null))
+        .fail(_.partial(sendResponse, res, 'Failed to update'));
 }
 
 /****************************************************/
 /* CRUD Ops */
 /****************************************************/
+
+function saveNotificationInDB(notification) {
+    var defer = jQuery.Deferred();
+    mongoUtils.saveOrUpdateEntity(notification, mongoUtils.NOTIFICATIONS_COL_NAME)
+        .then(function (err, entity) {
+            err ? defer.reject(err)
+                : defer.resolve(entity)
+        });
+    return defer;
+}
 
 function getUnreadinDB(daysAgo) {
     var defer = jQuery.Deferred();
@@ -85,7 +96,7 @@ function getUnreadinDB(daysAgo) {
             }).toArray(
             function onDone(err, result) {
                 console.log('Unread messages: ' + result.length);
-                defer.resolve(err, result);
+                Boolean(err) ? defer.reject(err) : defer.resolve(result);
             });
     });
     return defer;
@@ -120,7 +131,11 @@ function getUnreadMsgCountInDB() {
             ],
             function onDone(err, resultsArray) {
                 console.log('Unread msg count query result: ' + JSON.stringify(resultsArray));
-                defer.resolve(err, resultsArray && resultsArray.length > 0 ? resultsArray[0].count : 0);
+                Boolean(err)
+                    ? defer.reject(err)
+                    : defer.resolve(resultsArray && resultsArray.length > 0
+                    ? resultsArray[0].count
+                    : 0);
             });
     });
     return defer;

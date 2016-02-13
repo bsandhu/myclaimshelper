@@ -5,12 +5,12 @@ if (typeof define !== 'function') {
     var define = require('amdefine')(module)
 }
 
-define(['./consts'], function (consts) {
+define(['./../shared/consts'], function (consts) {
 
     function Notification() {
         this._id = undefined;
 
-        this.name = undefined;
+        this.name = consts.NotificationName.NEW_MSG;
         this.type = consts.NotificationType.INFO;
         this.read = false;
         this.summary = '';

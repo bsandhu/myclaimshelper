@@ -25,12 +25,28 @@
 <script type="text/html" id="billStatsTemplate">
     <div class="well stats-well text-left">
         <div class="row">
-            <div class="col-md-9 col-lg-10">
+            <div class="col-md-8 col-lg-9">
+                <div class="btn-group">
+                    <button class="btn btn-sm dropdown-toggle btn-link"
+                            data-toggle="dropdown"
+                            data-bind="html: 'Today'">
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a data-bind="html: 'Month to date'"></a>
+                            <a data-bind="html: 'Year to date'"></a>
+                        </li>
+                    </ul>
+                </div>
                 <p class="stats-counter-text">Billing</p>
-                <span class="text-muted text-nowrap">Today $500.35</span>
-                <p class="text-muted text-nowrap">Month TODO</p>
+                Paid <span class="text-muted text-nowrap"
+                           data-bind="text: billByBillingStatus()['Paid']"></span><br/>
+                Submitted <span class="text-muted text-nowrap"
+                                data-bind="text: billByBillingStatus()['Submitted']"></span><br/>
+                Not Submitted <span class="text-muted text-nowrap"
+                                    data-bind="text: billByBillingStatus()['Not Submitted']"></span>
             </div>
-            <div class="col-md-3 col-lg-2" style="padding-top: 5px">
+            <div class="col-md-4 col-lg-3" style="padding-top: 5px">
                 <i class="fa fa-usd fa-4x" style="color: darkgrey; opacity: .5"></i>
             </div>
         </div>
@@ -42,6 +58,7 @@
         <div class="row">
             <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
                 <p class="stats-counter-text">Todays Tasks</p>
+
                 <p class="text-muted text-nowrap"
                    data-bind="text: 'Due ' + tasksDueToday() + '. Done ' + tasksDoneToday()"></p>
             </div>

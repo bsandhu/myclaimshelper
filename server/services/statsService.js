@@ -8,17 +8,41 @@ var sod = dateUtils.startOfToday().getTime();
 var eod = dateUtils.endOfToday().getTime();
 
 var aggregations = {
-    'TasksDoneToday': [
-        {$match: {state: "Complete"}},
-        {$match: {dueDate: { $gt: sod} }},
-        {$match: {dueDate: { $lt: eod} }},
-        {$group: {_id: "$state", total: {$sum: 1}}}
-    ],
-    'TasksDueToday': [
-        {$match: {dueDate: { $gt: sod} }},
-        {$match: {dueDate: { $lt: eod} }},
-        {$group: {_id: null, total: {$sum: 1}}}
-    ]
+    'TasksDoneToday': {
+        colName: mongoUtils.CLAIM_ENTRIES_COL_NAME,
+        query: [
+            {$match: {dueDate: { $gt: sod} }},
+            {$match: {dueDate: { $lt: eod} }},
+            {$match: {state: "Complete"}},
+            {$group: {_id: "$state", total: {$sum: 1}}}
+        ]},
+    'TasksDueToday': {
+        colName: mongoUtils.CLAIM_ENTRIES_COL_NAME,
+        query: [
+            {$match: {dueDate: { $gt: sod} }},
+            {$match: {dueDate: { $lt: eod} }},
+            {$group: {_id: null, total: {$sum: 1}}}
+        ]},
+    'TaskByCategory': {
+        colName: mongoUtils.CLAIM_ENTRIES_COL_NAME,
+        query: [
+            {$match: {dueDate: { $gt: sod} }},
+            {$match: {dueDate: { $lt: eod} }},
+            {$match: {$or: [
+                {tag: { $eq: 'phone'}},
+                {tag: { $eq: 'visit'}},
+                {tag: { $eq: 'other'}},
+                {tag: { $eq: 'photos'}}
+            ]}},
+            {$group: {_id: "$tag", total: {$sum: 1}}}
+        ]},
+    'BillsByBillingStatus': {
+        colName: mongoUtils.BILL_COL_NAME,
+        query: [
+            {$match: {billingDate: { $gt: sod} }},
+            {$match: {billingDate: { $lt: eod} }},
+            {$group: { _id: '$status', total: { $sum: '$total' }}}
+        ]}
 }
 
 var _getAllStats = function () {
@@ -34,13 +58,13 @@ var _getAllStats = function () {
     return defer;
 }
 
-var _getStats = function (query) {
+var _getStats = function (queryMetaData) {
     var defer = jQuery.Deferred();
     var tag = tag;
     mongoUtils.connect()
         .then(function (db) {
-            var col = db.collection(mongoUtils.CLAIM_ENTRIES_COL_NAME);
-            col.aggregate(query,
+            var col = db.collection(queryMetaData.colName);
+            col.aggregate(queryMetaData.query,
                 function (err, result) {
                     err
                         ? defer.reject(err)

@@ -75,6 +75,10 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
             amplify.subscribe(Events.SUCCESS_NOTIFICATION, this, function () {
                 console.log('AppVM - SUCCESS_NOTIFICATION ev');
             });
+            amplify.subscribe(Events.UPDATE_UNREAD_MSGS_COUNT, this, function (count) {
+                console.log('AppVM - UPDATE_UNREAD_MSGS_COUNT ev');
+                this.unreadMsgCount(count);
+            });
         };
 
         AppVM.prototype.setNavBarHighlight = function () {

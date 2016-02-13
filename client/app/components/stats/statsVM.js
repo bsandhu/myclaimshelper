@@ -1,6 +1,6 @@
-define(['jquery', 'knockout', 'KOMap', 'amplify', 'app/utils/events',
+define(['jquery', 'underscore', 'knockout', 'KOMap', 'amplify', 'app/utils/events',
         'text!app/components/stats/stats.tmpl.html'],
-    function ($, ko, KOMap, amplify, Events, statsView) {
+    function ($, _, ko, KOMap, amplify, Events, statsView) {
 
         var N = Number;
 
@@ -19,6 +19,19 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'app/utils/events',
             }, this)
             this.percentTasksDone = ko.computed(function () {
                 return Math.round((N(this.tasksDoneToday()) / N(this.tasksDueToday())) * 100);
+            }, this);
+            // Billing
+            // Example - "BillsByBillingStatus":[{"_id":"Submitted","total":16.24}]}
+            this.billByBillingStatus = ko.computed(function () {
+                var result = {'Submitted': 0, 'Paid': 0, 'Not Submitted': 0};
+                if (this.stats()) {
+                    _.each(
+                        this.stats()['BillsByBillingStatus'],
+                        function (val) {
+                            result[val._id] = val.total;
+                        });
+                }
+                return result;
             }, this);
 
             this.setupEvListeners();

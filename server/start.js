@@ -2,7 +2,6 @@ var restify = require('restify');
 var socketio = require('socket.io');
 var config = require('./config.js');
 var EventEmitter = require('events').EventEmitter;
-var consts = require('./model/consts.js');
 var claimsService = require('./services/claimsService.js');
 var billingServices = require('./services/billingServices.js');
 var contactService = require('./services/contactService.js');
@@ -50,7 +49,7 @@ function setupMailServiceRoutes() {
 
 function setupNotificationRoutes() {
     server.post('/notification/broadcast', notificationService.broadcast);
-    server.post('/notification/markAllasRead', notificationService.markAllAsRead);
+    server.post('/notification/markAllAsRead', notificationService.markAllAsRead);
     server.get('/notification/unreadMsgCount', notificationService.getUnreadMsgCount);
     server.get('/notification/unreadMsgs', notificationService.getUnreadMsgs);
 }

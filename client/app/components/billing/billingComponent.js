@@ -369,10 +369,10 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox',
             $.each(bill.billingItems(), function (index, item) {
                 preTax = preTax + N(item.totalAmount());
             });
-            bill.preTaxTotal(N(preTax).toFixed(2));
+            bill.preTaxTotal(N(N(preTax).toFixed(2)));
             bill.taxRate(N(this.billingProfile.taxRate));
             bill.tax(N((bill.taxRate() / 100 * bill.preTaxTotal()).toFixed(2)));
-            bill.total(N(N(bill.preTaxTotal()) + N(bill.tax())).toFixed(2));
+            bill.total(N(N(N(bill.preTaxTotal()) + N(bill.tax())).toFixed(2)));
         };
 
         BillingVM.prototype.calcBillingItemTotal = function (billingItem) {

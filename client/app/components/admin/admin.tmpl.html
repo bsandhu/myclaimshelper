@@ -8,7 +8,7 @@
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
                     ×
                 </button>
-                <h4 class="modal-title" id="msgModalTitle">Msgs</h4>
+                <h4 class="modal-title" id="msgModalTitle">Unread messages</h4>
             </div>
             <div class="modal-body" id="msgs-modal-body">
                 <ul class="list-group">
@@ -20,15 +20,17 @@
                 </ul>
             </div>
             <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-bind="click: onMarkAllAsRead">
+                    Mark as read
+                </button>
                 <button type="button" class="btn btn-default" data-dismiss="modal">
                     Close
                 </button>
-                <button type="button" class="btn btn-default">
-                    Mark as read
-                </button>
+
                 <button type="button" class="btn btn-primary" data-bind="click: onServerBroadcast">
                     Broadcast
                 </button>
+
             </div>
         </div>
         <!-- /.modal-content -->

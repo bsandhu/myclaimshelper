@@ -42,8 +42,7 @@ describe('NotificationService', function () {
 
     it('Get unread Notification', function (done) {
         notificationService.getUnreadinDB(5)
-            .then(function (err, result) {
-                assert.equal(null, err);
+            .then(function (result) {
                 assert.ok(_.isArray(result));
             })
             .then(done);
@@ -62,8 +61,7 @@ describe('NotificationService', function () {
 
     it('Unread count', function (done) {
         notificationService.getUnreadMsgCountInDB()
-            .then(function (err, result) {
-                assert.equal(null, err);
+            .then(function (result) {
                 assert.equal(result, 0);
             })
             .then(done);
