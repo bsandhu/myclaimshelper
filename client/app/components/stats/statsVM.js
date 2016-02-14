@@ -18,7 +18,9 @@ define(['jquery', 'underscore', 'knockout', 'KOMap', 'amplify', 'app/utils/event
                 return this.stats() ? this.stats()['TasksDueToday'][0]['total'] : 0;
             }, this)
             this.percentTasksDone = ko.computed(function () {
-                return Math.round((N(this.tasksDoneToday()) / N(this.tasksDueToday())) * 100);
+                return  N(this.tasksDueToday()) > 0
+                        ? Math.round((N(this.tasksDoneToday()) / N(this.tasksDueToday())) * 100)
+                        : 100;
             }, this);
             // Billing
             // Example - "BillsByBillingStatus":[{"_id":"Submitted","total":16.24}]}

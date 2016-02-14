@@ -25,12 +25,16 @@
         </div>
         <div class="row">
             <div class="col-sm-8 col-lg-6">
-                <table id="billingListTable" data-sortable
-                       data-bind="sortable" class="table table-hover table-responsive">
+                <!-- Sorting is enabled via koSortableBinding -->
+                <table id="billingListTable"
+                       data-sortable
+                       data-bind="sortable"
+                       class="table table-hover table-responsive">
                     <thead>
                     <tr>
                         <th data-field="id" data-sortable="true">Bill ID</th>
-                        <th data-field="billingDate" data-sortable="true">Billing Date</th>
+                        <th data-field="submissionDate" data-sortable="true">Submitted on</th>
+                        <th data-field="paiDate" data-sortable="true">Paid on</th>
                         <th>Status</th>
                         <th data-field="total" data-sortable="true">Total</th>
                     </tr>
@@ -39,7 +43,9 @@
                     <tr>
                         <td data-bind="text: bill._id,
                                        click: $parent.router.routeToBill"></td>
-                        <td data-bind="text: bill.billingDate ? bill.billingDate.toLocaleString() : 'None',
+                        <td data-bind="text: bill.submissionDate ? $parent.DateUtils.niceDate(bill.submissionDate) : '-',
+                                       click: $parent.router.routeToBill"></td>
+                        <td data-bind="text: bill.paidDate ? $parent.DateUtils.niceDate(bill.paidDate) : '-',
                                        click: $parent.router.routeToBill"></td>
                         <td>
                             <div class="btn-group">

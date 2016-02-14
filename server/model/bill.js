@@ -10,7 +10,9 @@ define(['./billingStatus'], function (BillingStatus) {
     function Bill() {
         this._id = undefined;
         this.claimId = undefined;
-        this.billingDate = undefined;
+        this.creationDate = undefined;
+        this.submissionDate = undefined;
+        this.paidDate = undefined;
         this.description = undefined;
 
         // Instance of Contact.

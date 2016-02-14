@@ -1,11 +1,11 @@
-define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox',
+define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox', 'underscore',
         'shared/dateUtils', 'app/utils/ajaxUtils', 'app/utils/events', 'app/utils/consts', 'app/utils/router',
         'app/utils/session', 'app/utils/sessionKeys',
         'model/bill', 'model/billingItem', 'model/billingStatus', 'model/contact',
         'text!app/components/billing/billing.tmpl.html',
         'text!app/components/billing/billing.print.tmpl.html'
     ],
-    function ($, ko, KOMap, amplify, bootbox,
+    function ($, ko, KOMap, amplify, bootbox, _,
               DateUtils, ajaxUtils, Events, Consts, router, Session, SessionKeys, Bill,
               BillingItem, BillingStatus, Contact, viewHtml, printHtml) {
 
@@ -64,8 +64,15 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox',
                 }
             };
 
+            // Status tracking
             self.isBillEditable = ko.computed(function () {
                 return this.bill().status() == this.billingStatus.NOT_SUBMITTED();
+            }, this);
+            self.isBillSubmitted = ko.computed(function () {
+                return this.bill().status() == this.billingStatus.SUBMITTED();
+            }, this);
+            self.isBillPaid = ko.computed(function () {
+                return this.bill().status() == this.billingStatus.PAID();
             }, this);
 
             self.haveBillableTasks = ko.computed(function(){
@@ -79,7 +86,9 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox',
             var jsObject = new Bill();
             jsObject.billingItems = [];
             jsObject.status = this.billingStatus.NOT_SUBMITTED();
-            jsObject.billingDate = new Date();
+            jsObject.creationDate = new Date();
+            jsObject.submissionDate = null;
+            jsObject.paidDate = null;
             this.billRecipient(KOMap.fromJS(new Contact()));
             var objWithObservableAttributes = KOMap.fromJS(jsObject);
             return objWithObservableAttributes;
@@ -106,16 +115,18 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox',
         }
 
         BillingVM.prototype.setupModeListener = function () {
-            this.mode.subscribe(function (mode) {
+            var _this = this;
+
+            _this.mode.subscribe(function (mode) {
                 if (mode === Consts.BILLING_TAB_CREATE_MODE) {
-                    this.clearBill();
-                    this.getEligibleBillingItemsForClaim(this.claimId)
+                    _this.clearBill();
+                    _this.getEligibleBillingItemsForClaim(_this.claimId)
                         .done(function(eligibleItems){
-                            this.bill().billingItems(eligibleItems);
-                            this.calcAll.bind(this);
-                        }.bind(this));
+                            _this.bill().billingItems(eligibleItems);
+                            _this.calcAll();
+                        });
                 } else if (mode === Consts.BILLING_TAB_HISTORY_MODE) {
-                    this.getBillsForClaim();
+                    _this.getBillsForClaim();
                 } else if (mode === Consts.BILLING_TAB_VIEW_MODE) {
                     console.log('View Bill');
                 }
@@ -157,6 +168,8 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox',
         }
 
         BillingVM.prototype.onShowBill = function (evData) {
+            var _this = this;
+
             if (this.mode() === Consts.BILLING_TAB_VIEW_MODE) {
                 console.log('In View mode already');
                 return;
@@ -165,39 +178,43 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox',
             console.assert(evData.claimId, 'Expecting ev to carry claimId');
             console.assert(evData.billId, 'Expecting ev to billId');
             this.claimId = evData.claimId;
-            this.loadBill(evData.billId).done(this.calcAll.bind(this));
-            this.mode(Consts.BILLING_TAB_VIEW_MODE);
 
-            // Check for new eligible Tasks
-            if (this.bill().status() === BillingStatus.NOT_SUBMITTED){
-                this.getEligibleBillingItemsForClaim(evData.claimId)
-                    .done(function(allEligibleItems){
-                        if (allEligibleItems.length > this.bill().billingItems().length) {
-                            bootbox.dialog({
-                                size: 'small',
-                                backdrop: 'true',
-                                title: "New tasks",
-                                message: "New tasks have been added since the last draft was saved. Add these?",
-                                buttons: {
-                                    no: {
-                                        label: "No",
-                                        className: "btn-danger",
-                                        callback: function () {
-                                            // No-op
+            this.loadBill(evData.billId)
+                .then(_this.calcAll())
+                .then(function checkForNewEligibleTasks() {
+                    if (_this.bill().status() === BillingStatus.NOT_SUBMITTED) {
+                        _this.getEligibleBillingItemsForClaim(evData.claimId)
+                            .done(function showDialog(allEligibleItems) {
+                                if (allEligibleItems.length > _this.bill().billingItems().length) {
+                                    bootbox.dialog({
+                                        size: 'small',
+                                        backdrop: 'true',
+                                        title: "New tasks",
+                                        message: "New tasks have been added since the last draft was saved. Add these?",
+                                        buttons: {
+                                            no: {
+                                                label: "No",
+                                                className: "btn-danger",
+                                                callback: function () {
+                                                    // No-op
+                                                }
+                                            },
+                                            yes: {
+                                                label: "Yes",
+                                                className: "btn-info",
+                                                callback: function () {
+                                                    _this.bill().billingItems(allEligibleItems);
+                                                }
+                                            }
                                         }
-                                    },
-                                    yes: {
-                                        label: "Yes",
-                                        className: "btn-info",
-                                        callback: function () {
-                                            this.bill().billingItems(allEligibleItems);
-                                        }.bind(this)
-                                    }
+                                    });
                                 }
                             });
-                        }
-                    }.bind(this));
-            }
+                    }
+                })
+                .then(function(){
+                    _this.mode(Consts.BILLING_TAB_VIEW_MODE);
+                })
         }
 
         BillingVM.prototype.onShowBilllingHistory = function (evData) {
@@ -274,12 +291,13 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox',
         }
 
         BillingVM.prototype._onBillingItemAttrUpdate = function (billingItemObservable, attrName, newValue) {
+            var _this = this;
             newValue = newValue || 0;
             console.log('Updating ' + attrName + ' for BillingItem: ' + KOMap.toJSON(billingItemObservable));
             console.log('New value: ' + newValue);
 
             billingItemObservable[attrName](newValue);
-            this.calcAll();
+            _this.calcAll();
             return ajaxUtils.post(
                 '/billingItem',
                 KOMap.toJSON([billingItemObservable]),
@@ -287,6 +305,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox',
                     console.log('Saved Billing Items: ' + JSON.stringify(response));
                     billingItemObservable._id(response.data._id);
                     amplify.publish(Events.SUCCESS_NOTIFICATION, {msg: 'Updated billing item'})
+                    _this.getBillsForClaim();
                 }
             );
         };
@@ -300,7 +319,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox',
                     var billingItems = [];
 
                     $.each(claimEntries, function (index, entry) {
-                        if (entry.billingItem && entry.billingItem.status === BillingStatus.SUBMITTED) {
+                        if (entry.billingItem && entry.billingItem.status !== BillingStatus.NOT_SUBMITTED) {
                             console.log('Item already billed: ' + JSON.stringify(entry.billingItem));
                         } else {
                             // TODO Item not billable?
@@ -426,7 +445,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox',
                 JSON.stringify({claimId: this.claimId}),
                 function onSuccess(response) {
                     console.debug('getBillsForClaim: ' + JSON.stringify(response));
-                    this.bills(response.data);
+                    this.bills(_.sortBy(response.data, '_id').reverse());
                 }.bind(this)
             );
         };
@@ -444,7 +463,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox',
         };
 
         BillingVM.prototype.submitBill = function () {
-            this.bill().billingDate(new Date());
+            this.bill().submissionDate(new Date());
             this._persistBill(BillingStatus.SUBMITTED);
         }
 
@@ -452,8 +471,16 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox',
             console.log('Saving Bill');
             var defer = $.Deferred();
             this.bill().claimId(this.claimId);
-            this.bill().status(billingStatus);
             this.bill().billRecipient = this.billRecipient();
+
+            // Timestamp status update
+            this.bill().status(billingStatus);
+            if (billingStatus == BillingStatus.SUBMITTED) {
+                this.bill().submissionDate(new Date());
+            }
+            if (billingStatus == BillingStatus.PAID) {
+                this.bill().paidDate(new Date());
+            }
 
             ajaxUtils.post(
                 '/bill',
@@ -469,6 +496,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox',
                             amplify.publish(Events.SUCCESS_NOTIFICATION, {msg: 'Saved Bill'})
                             defer.resolve();
                             this.routeToBillingOverview();
+                            this.getBillsForClaim();
                         }.bind(this));
                 }.bind(this));
             return defer;

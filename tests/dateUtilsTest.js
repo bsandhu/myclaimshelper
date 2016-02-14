@@ -48,6 +48,7 @@ describe('DateUtils', function () {
         assert.equal(dateUtils.niceDate(new Date(2016, 8, 20, 10, 10)), 'Sep 20  10:10');
         assert.equal(dateUtils.niceDate(undefined), 'None');
         assert.equal(dateUtils.niceDate(null), 'None');
+        assert.equal(dateUtils.niceDate(new Date(0)), 'None');
 
         var today = dateUtils.niceDate(new Date());
         assert.ok(today.toLowerCase().search('today') >= 0);
