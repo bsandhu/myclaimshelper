@@ -66,10 +66,12 @@ define(['jquery', 'underscore', 'chartjs', 'knockout', 'KOMap', 'amplify', 'app/
 
         StatsVM.prototype.setupEvListeners = function () {
             amplify.subscribe(Events.SAVED_CLAIM_ENTRY, this, this.loadStats);
+            amplify.subscribe(Events.SAVED_BILL, this, this.loadStats);
             amplify.subscribe(Events.SAVED_CLAIM_ENTRY, this, this.onTasksStatsTemplRender);
         }
 
         StatsVM.prototype.onTasksStatsTemplRender = function () {
+            console.log('Rendering task Stats');
             $('#tasksStatsCircliful').empty().removeData();
 
             $('#tasksStatsCircliful')
@@ -113,10 +115,12 @@ define(['jquery', 'underscore', 'chartjs', 'knockout', 'KOMap', 'amplify', 'app/
         }
 
         StatsVM.prototype.loadStats = function () {
+            console.log('Loading All Stats');
             return $.getJSON('/stats/all')
                 .done(function (resp) {
                     console.debug('Loaded Stats ' + JSON.stringify(resp.data));
                     this.stats(resp.data);
+                    // Handle first load
                     this.onTasksStatsTemplRender();
                 }.bind(this))
                 .fail(function (resp) {

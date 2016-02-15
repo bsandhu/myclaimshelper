@@ -39,8 +39,6 @@ var aggregations = {
     'BillsByBillingStatus': {
         colName: mongoUtils.BILL_COL_NAME,
         query: [
-            {$match: {billingDate: { $gt: sod} }},
-            {$match: {billingDate: { $lt: eod} }},
             {$group: { _id: '$status', total: { $sum: '$total' }}}
         ]}
 }

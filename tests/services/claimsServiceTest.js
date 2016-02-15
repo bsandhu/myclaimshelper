@@ -23,6 +23,7 @@ describe('Claims Service', function () {
     var testBillingItem = new BillingItem();
     testBillingItem.description = 'Test billing item';
     testBillingItem.mileage = 100;
+    testBillingItem.time = '20';
 
     var testEntry = new ClaimEntry();
     testEntry.entryDate = new Date(2014, 2, 1);
@@ -83,6 +84,8 @@ describe('Claims Service', function () {
 
             assert.ok(data.data.billingItem._id, 'BillingItem should be saved and returned');
             assert.ok(data.data.billingItem.claimEntryId, 'BillingItem should hold ref to ClaimEntry');
+            assert.equal(data.data.billingItem.mileage, 100);
+            assert.equal(data.data.billingItem.time, 20);
             done();
         };
         claimsService.saveOrUpdateClaimEntry(req, res);

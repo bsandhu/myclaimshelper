@@ -130,6 +130,13 @@ function saveOrUpdateClaimEntry(req, res) {
                     // Save BillingItem
                     if (billingItem && !err) {
                         billingItem.claimEntryId = results._id;
+                        billingItem.claimEntryId
+                        // Ensure numeric values
+                        billingItem.mileage = Number(billingItem.mileage || 0)
+                        billingItem.time = Number(billingItem.time || 0)
+                        billingItem.expenseAmount = Number(billingItem.expenseAmount || 0)
+                        billingItem.totalAmount = Number(billingItem.totalAmount || 0)
+
                         mongoUtils.saveOrUpdateEntity(billingItem, mongoUtils.BILLING_ITEMS_COL_NAME)
                             .always(function (itemErr, itemResults) {
                                 assert.ok(itemResults._id);

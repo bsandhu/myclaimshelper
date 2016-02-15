@@ -298,13 +298,15 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox', 'underscore',
 
             billingItemObservable[attrName](newValue);
             _this.calcAll();
+            var billingItemJS = KOMap.toJSON([billingItemObservable]);
             return ajaxUtils.post(
                 '/billingItem',
-                KOMap.toJSON([billingItemObservable]),
+                billingItemJS,
                 function onSuccess(response) {
                     console.log('Saved Billing Items: ' + JSON.stringify(response));
                     billingItemObservable._id(response.data._id);
                     amplify.publish(Events.SUCCESS_NOTIFICATION, {msg: 'Updated billing item'})
+                    amplify.publish(Events.SAVED_CLAIM_ENTRY, {claimId: _this.claimId, claimEntryId: billingItemJS.claimEntryId});
                     _this.getBillsForClaim();
                 }
             );
@@ -494,6 +496,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox', 'underscore',
                         billingStatus,
                         function () {
                             amplify.publish(Events.SUCCESS_NOTIFICATION, {msg: 'Saved Bill'})
+                            amplify.publish(Events.SAVED_BILL, {billId: this.bill()._id()})
                             defer.resolve();
                             this.routeToBillingOverview();
                             this.getBillsForClaim();
