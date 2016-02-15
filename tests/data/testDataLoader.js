@@ -4,6 +4,7 @@ var jQuery = require('jquery-deferred');
 
 var testContacts = require('./testContacts.js');
 var testClaimEntries = require('./testClaimEntries.js');
+var testBililngItems = require('./testBIllingItems.js');
 var testClaims = require('./testClaims.js');
 var testUserProfile = require('./testUserProfile.js');
 
@@ -43,6 +44,15 @@ function populateClaimEntries() {
     });
 }
 
+function populateBillingItems() {
+    _.each(testBililngItems.data, function (entry) {
+        mongoUtils.saveOrUpdateEntity(entry, mongoUtils.BILLING_ITEMS_COL_NAME)
+            .always(function (err) {
+                console.info(!err ? 'Saved BillingItem' : err);
+            });
+    });
+}
+
 function populateClaims() {
     _.each(testClaims.data, function (claim) {
         mongoUtils.saveOrUpdateEntity(claim, mongoUtils.CLAIMS_COL_NAME)
@@ -65,9 +75,11 @@ function populateUserProfiles() {
 // How to run?
 // Uncomment the one you need and run from command line.
 //   Example: ~/src/Agent/007> node tests/data/testDataLoader.js
+// Run one fn at a time, in the order below
 
 //nukeDB();
 //populateUserProfiles();
 //populateContacts()
 //populateClaimEntries();
+//populateBillingItems();
 //populateClaims()
