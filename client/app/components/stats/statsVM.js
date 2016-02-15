@@ -29,7 +29,7 @@ define(['jquery', 'underscore', 'chartjs', 'knockout', 'KOMap', 'amplify', 'app/
             this.tasksByCategory = ko.computed(function () {
                 return this.stats()
                     ? _.zip(
-                            _.map(this.stats()['TaskByCategory'], function(i){return i._id[0]}),
+                            _.map(this.stats()['TaskByCategory'], function(i){return capitalizeFirstLetter(i._id[0])}),
                             _.map(this.stats()['TaskByCategory'], function(i){return i.total}))
                     : ''
             }, this);
@@ -58,6 +58,10 @@ define(['jquery', 'underscore', 'chartjs', 'knockout', 'KOMap', 'amplify', 'app/
             } catch (e) {
                 return 0;
             }
+        }
+
+        function capitalizeFirstLetter(string) {
+            return string.charAt(0).toUpperCase() + string.slice(1);
         }
 
         StatsVM.prototype.setupEvListeners = function () {
