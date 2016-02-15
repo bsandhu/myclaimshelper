@@ -164,10 +164,13 @@
                 'bootbox', 'app/utils/koDatetimePickerBinding', 'app/utils/koWYSIWYGBinding',
                 'app/utils/koTextTruncateBinding', 'app/utils/koSortableBinding', 'app/utils/koAutoComplete', 'app/utils/koSelect2',
                 'app/utils/koTaskEntryTag',
-                'velocity', 'bootstrap', 'KOXeditable', 'bootstrapTable', 'tableExport', 'circliful'],
+                'velocity', 'bootstrap', 'KOXeditable', 'bootstrapTable', 'tableExport', 'circliful', 'chartjs'],
             function ($, ko, KOAmd, text, amplify, AppVM, DateUtils, Session) {
                 console.log('Init App');
 
+                // Chart.noConflict restores the Chart global variable to it's previous owner
+                // The function returns what was previously Chart, allowing you to reassign.
+                var Chartjs = Chart.noConflict();
                 DateUtils.enableJSONDateHandling();
                 Session.setCurrentUserId("TestUser");
                 Session.clearContacts();

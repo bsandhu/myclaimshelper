@@ -26,7 +26,8 @@ require.config({
         'socketio': 'lib/socket.io-1.2.0',
         'select2': 'lib/select2.min',
         'circliful': 'lib/jquery.circliful.min',
-        'underscore': 'lib/underscore.min'
+        'underscore': 'lib/underscore.min',
+        'chartjs': 'lib/Chart'
     },
     shim: {
         'circliful': {

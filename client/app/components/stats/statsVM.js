@@ -1,6 +1,6 @@
-define(['jquery', 'underscore', 'knockout', 'KOMap', 'amplify', 'app/utils/events',
+define(['jquery', 'underscore', 'chartjs', 'knockout', 'KOMap', 'amplify', 'app/utils/events',
         'text!app/components/stats/stats.tmpl.html'],
-    function ($, _, ko, KOMap, amplify, Events, statsView) {
+    function ($, _, Chart, ko, KOMap, amplify, Events, statsView) {
 
         var N = Number;
 
@@ -22,6 +22,17 @@ define(['jquery', 'underscore', 'knockout', 'KOMap', 'amplify', 'app/utils/event
                     ? Math.round((N(this.tasksDoneToday()) / N(this.tasksDueToday())) * 100)
                     : 100;
             }, this);
+            // Convert from
+            //  [ { "_id" : [ "visit" ], "total" : 2 }, { "_id" : [ "other" ], "total" : 4 }, { "_id" : [ "phone" ], "total" : 5 } ];
+            // to
+            //  {visit: 2, other: 4, phone: 5}
+            this.tasksByCategory = ko.computed(function () {
+                return this.stats()
+                    ? _.zip(
+                            _.map(this.stats()['TaskByCategory'], function(i){return i._id[0]}),
+                            _.map(this.stats()['TaskByCategory'], function(i){return i.total}))
+                    : ''
+            }, this);
             // Billing
             // Example - "BillsByBillingStatus":[{"_id":"Submitted","total":16.24}]}
             this.billByBillingStatus = ko.computed(function () {
@@ -42,8 +53,8 @@ define(['jquery', 'underscore', 'knockout', 'KOMap', 'amplify', 'app/utils/event
         StatsVM.prototype.nullSafeStats = function (fn) {
             try {
                 return this.stats()
-                        ? eval('this.stats()' + fn)
-                        : 0;
+                    ? eval('this.stats()' + fn)
+                    : 0;
             } catch (e) {
                 return 0;
             }
@@ -52,7 +63,6 @@ define(['jquery', 'underscore', 'knockout', 'KOMap', 'amplify', 'app/utils/event
         StatsVM.prototype.setupEvListeners = function () {
             amplify.subscribe(Events.SAVED_CLAIM_ENTRY, this, this.loadStats);
             amplify.subscribe(Events.SAVED_CLAIM_ENTRY, this, this.onTasksStatsTemplRender);
-
         }
 
         StatsVM.prototype.onTasksStatsTemplRender = function () {
@@ -66,7 +76,31 @@ define(['jquery', 'underscore', 'knockout', 'KOMap', 'amplify', 'app/utils/event
                 .data('bgcolor', '#ebeff2')
                 .data('percent', this.percentTasksDone())
                 .data('text', this.percentTasksDone() + '%')
-                .circliful()
+                .circliful();
+
+           /* var ctx = document.getElementById("tasksStatsByType").getContext("2d");
+            var data = [
+                {
+                    value: 300,
+                    color:"#F7464A",
+                    highlight: "#FF5A5E",
+                    label: "Visit"
+                },
+                {
+                    value: 50,
+                    color: "#46BFBD",
+                    highlight: "#5AD3D1",
+                    label: "Photos"
+                },
+                {
+                    value: 100,
+                    color: "#FDB45C",
+                    highlight: "#FFC870",
+                    label: "Phone"
+                }
+            ];
+            var options = {animateScale: false, animation: false}
+            var myChart = new Chart(ctx).Pie(data, options);*/
         }
 
         StatsVM.prototype.onBillStatsTemplRender = function () {

@@ -6,7 +6,7 @@
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 show-stats">
                 <div class="row">
                     <!-- Tasks --->
-                    <div class="col-xs-4 col-sm-4 col-md-3 col-lg-2" style="padding-right: 1px">
+                    <div class="col-xs-4 col-sm-4 col-md-3 col-lg-3" style="padding-right: 1px">
                         <div data-bind='template: { name: "tasksStatsTemplate",
                                                     afterRender: onTasksStatsTemplRender.bind($data) }'></div>
                     </div>
@@ -20,8 +20,8 @@
         </div>
     </div>
 </div>
-</div>
 
+<!-- Billing -->
 <script type="text/html" id="billStatsTemplate">
     <div class="well stats-well text-left">
         <div class="row">
@@ -53,20 +53,29 @@
     </div>
 </script>
 
+<!-- Tasks -->
 <script type="text/html" id="tasksStatsTemplate">
     <div class="well stats-well text-left">
         <div class="row">
-            <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+            <div class="col-xs-6 col-sm-6 col-md-4 col-lg-4">
                 <p class="stats-counter-text">Todays Tasks</p>
 
                 <p class="text-muted text-nowrap"
                    data-bind="text: 'Due ' + tasksDueToday() + '. Done ' + tasksDoneToday()"></p>
             </div>
-            <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+            <div class="col-xs-6 col-sm-6 col-md-4 col-lg-4">
                 <div id="tasksStatsCircliful"
                      class="circliful-chart circliful"
                      style="width: 90px;">
                 </div>
             </div>
+            <div class="col-xs-6 col-sm-6 col-md-4 col-lg-4">
+                <!-- ko foreach: tasksByCategory -->
+                    <span class="text-muted text-nowrap text-right" data-bind="text: $data[0]"></span>
+                    <span class="text-muted text-nowrap text-right" data-bind="text: $data[1]"></span>
+                    <br/>
+                <!-- /ko -->
+            </div>
         </div>
+    </div>
 </script>
