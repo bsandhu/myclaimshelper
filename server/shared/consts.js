@@ -12,7 +12,8 @@ define([], function () {
         },
         NotificationType: {
             INFO: "Info"
-        }, NotificationName: {
+        },
+        NotificationName: {
             'NEW_MSG': "NewMsg",
             'UNREAD_COUNT': "UnreadMsgCount"
         }

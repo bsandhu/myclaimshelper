@@ -12,15 +12,15 @@ define(['jquery', 'underscore', 'knockout', 'KOMap', 'amplify', 'app/utils/event
 
             // Tasks stats
             this.tasksDoneToday = ko.computed(function () {
-                return this.stats() ? this.stats()['TasksDoneToday'][0]['total'] : 0;
+                return this.nullSafeStats("['TasksDoneToday'][0]['total']");
             }, this);
             this.tasksDueToday = ko.computed(function () {
-                return this.stats() ? this.stats()['TasksDueToday'][0]['total'] : 0;
-            }, this)
+                return this.nullSafeStats("['TasksDueToday'][0]['total']");
+            }, this);
             this.percentTasksDone = ko.computed(function () {
                 return  N(this.tasksDueToday()) > 0
-                        ? Math.round((N(this.tasksDoneToday()) / N(this.tasksDueToday())) * 100)
-                        : 100;
+                    ? Math.round((N(this.tasksDoneToday()) / N(this.tasksDueToday())) * 100)
+                    : 100;
             }, this);
             // Billing
             // Example - "BillsByBillingStatus":[{"_id":"Submitted","total":16.24}]}
@@ -37,6 +37,16 @@ define(['jquery', 'underscore', 'knockout', 'KOMap', 'amplify', 'app/utils/event
             }, this);
 
             this.setupEvListeners();
+        }
+
+        StatsVM.prototype.nullSafeStats = function (fn) {
+            try {
+                return this.stats()
+                        ? eval('this.stats()' + fn)
+                        : 0;
+            } catch (e) {
+                return 0;
+            }
         }
 
         StatsVM.prototype.setupEvListeners = function () {
