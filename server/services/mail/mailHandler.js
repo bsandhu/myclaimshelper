@@ -143,7 +143,7 @@ var notifySuccess = function (mailEntry) {
 
 var notifyFailure = function (mailEntry) {
     var err = 'ERROR processing email:';
-    var body = err + mailEntry.mail.subject + '<br/>Details: ' + JSON.stringify(mailEntry.error);
+    var body = err + mailEntry.mail.subject + '<br/>Details: ' + JSON.stringify(mailEntry.error[0]);
     broadcastNoHTTP(
         Consts.NotificationName.NEW_MSG,
         Consts.NotificationType.ERROR,

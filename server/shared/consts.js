@@ -12,7 +12,7 @@ define([], function () {
         },
         NotificationType: {
             INFO: "Info",
-            ERROR: "Error"
+            ERROR: "danger"
         },
         NotificationName: {
             'NEW_MSG': "NewMsg",
