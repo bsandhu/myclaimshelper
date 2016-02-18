@@ -58,7 +58,7 @@ describe('processRequest', function(){
     it('fails to find matching claim', function(done){
       var assertFailure = function(data){
         console.log(data);
-        assert.equal(data.error[0].message, 'ClaimId not found');
+        assert.equal(data.error[0], 'Could not find a matching claim. Plase ensure that the subject line of the email has the Claim file number');
         done();
       }; 
 

@@ -16,7 +16,7 @@ MailParser.prototype.parseRequest = function (req) {
     //if (!claimId) this.emit('error', new Error('ClaimId not found'));
     try {
         var claimId = this._getClaimId(req.params.subject);
-        if (!claimId) this.errors.push(new Error('ClaimId not found'));
+        if (!claimId) this.errors.push('Could not find a matching claim. Plase ensure that the subject line of the email has the Claim file number');
         var attachments = this._getEmbeddedAttachmentInfo(req);
         var tags = this._getTags(req.params['body-plain']);
     }

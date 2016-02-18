@@ -26,7 +26,7 @@ describe('parseRequest', function () {
         req.params.subject = 'FW: no claim info';
         mailParser.parseRequest(req);
         assert.equal(mailParser.errors.length, 1);
-        assert.deepEqual(mailParser.errors, [new Error('ClaimId not found!')]);
+        assert.deepEqual(mailParser.errors, ['Could not find a matching claim. Plase ensure that the subject line of the email has the Claim file number']);
     });
 });
 
