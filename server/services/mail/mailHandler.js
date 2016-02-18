@@ -131,7 +131,8 @@ var saveAttachments = function (mailEntry) {
 var notifySuccess = function (mailEntry) {
     broadcastNoHTTP(
             Consts.NotificationName.NEW_MSG,
-            'Email processed. ' + mailEntry.mail.subject + ' <a href="#/claimEntry/' + mailEntry.claimId + '/' + mailEntry._id + '">Goto task</a>')
+            Consts.NotificationType.INFO,
+            'Email processed. ' + mailEntry.mail.subject + '  <a href="#/claimEntry/' + mailEntry.claimId + '/' + mailEntry._id + '">Goto task</a>')
         .always(function doit() {
             var body = 'Email processed successfully!';
             body += '\n\n' + JSON.stringify(mailEntry);
@@ -142,8 +143,11 @@ var notifySuccess = function (mailEntry) {
 
 var notifyFailure = function (mailEntry) {
     var err = 'ERROR processing email:';
-    var body = err + mailEntry.mail.subject + '\n\n' + JSON.stringify(mailEntry.error);
-    broadcastNoHTTP(body)
+    var body = err + mailEntry.mail.subject + '<br/>Details: ' + JSON.stringify(mailEntry.error);
+    broadcastNoHTTP(
+        Consts.NotificationName.NEW_MSG,
+        Consts.NotificationType.ERROR,
+        body)
         .always(function doit() {
             sendEmail(mailEntry.mail.from, mailEntry.mail.subject, body);
         });

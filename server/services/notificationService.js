@@ -34,7 +34,7 @@ function getUnreadMsgCount(req, res) {
 /* No Http Ops */
 /****************************************************/
 
-function broadcastNoHTTP(name, body) {
+function broadcastNoHTTP(name, type, body) {
     var defer = jQuery.Deferred();
 
     var notification = new Notification();
@@ -64,7 +64,7 @@ function broadcastNoHTTP(name, body) {
 }
 
 function broadcast(req, res) {
-    return broadcastNoHTTP(Consts.NotificationName.NEW_MSG, req.body.msg)
+    return broadcastNoHTTP(Consts.NotificationName.NEW_MSG, Consts.NotificationType.INFO, req.body.msg)
         .then(_.partial(sendResponse, res, null))
         .fail(_.partial(sendResponse, res, 'Failed to update'));
 }
