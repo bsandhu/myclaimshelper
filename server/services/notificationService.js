@@ -39,6 +39,7 @@ function broadcastNoHTTP(name, type, body) {
 
     var notification = new Notification();
     notification.name = name;
+    notification.type = type;
     notification.body = body;
 
     // Persist and broadcast
