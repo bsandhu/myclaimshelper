@@ -53,7 +53,7 @@ describe('NotificationService', function () {
             .then(function () {
                 mongoUtils.getEntityById(testNotification._id, mongoUtils.NOTIFICATIONS_COL_NAME)
                     .then(function (err, item) {
-                        assert.equal(item.read, true);
+                        assert.equal(err, null);
                     })
                     .then(done);
             })
