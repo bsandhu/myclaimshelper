@@ -17,17 +17,25 @@ var process = function (req, res) {
     res.send(200, 'Request received successfully.');
     var defer = jQuery.Deferred();
     var parser = new MailParser();
-    var mailEntry = parser.parseRequest(req);
-    if (parser.errors.length > 0) {
-        notifyFailure(mailEntry);
-        defer.reject();
-        return defer.promise()
-    }
-    return mongoUtils.connect()
-        .then(_.partial(checkClaim, mailEntry))
-        .then(saveAttachments)
-        .then(saveEntry)
-        .then(notifySuccess, notifyFailure);
+
+    parser
+        ._getAllKnownClaimIds()
+        .then(function(){
+            var mailEntry = parser.parseRequest(req);
+            if (parser.errors.length > 0) {
+                notifyFailure(mailEntry);
+                defer.reject(mailEntry);
+            } else {
+                mongoUtils.connect()
+                    .then(_.partial(checkClaim, mailEntry))
+                    .then(saveAttachments)
+                    .then(saveEntry)
+                    .then(notifySuccess, notifyFailure)
+                    .then(_.partial(defer.resolve))
+                    .fail(_.partial(defer.reject));
+            }
+        })
+    return defer;
 };
 
 var checkClaim = function (mailEntry, db) {

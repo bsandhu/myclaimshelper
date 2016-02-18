@@ -30,7 +30,7 @@ describe('processRequest', function(){
         //assert.equal(data.claimId, '123');
         assert.deepEqual(data.tags, [ '#tag1', '#tag2', 'email' ]);
         assert.ok(data.attachments);
-        assert.equal(data.mail.subject, 'the subject claim id:123');
+        assert.equal(data.mail.subject, 'the subject claim id: 123');
         assert.equal(data.mail['body-plain'], 'the body\r\n#tag1\r\n#tag2');
         assert.equal(data.mail.from, 'plato@nonsense.foo');
         var ce = mongoUtils.getEntityById(data._id, 'ClaimEntries');
@@ -58,7 +58,7 @@ describe('processRequest', function(){
     it('fails to find matching claim', function(done){
       var assertFailure = function(data){
         console.log(data);
-        assert.equal(data.error, 'No Claim found with Insurance Id AAA');
+        assert.equal(data.error[0].message, 'ClaimId not found');
         done();
       }; 
 
