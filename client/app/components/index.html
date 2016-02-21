@@ -41,7 +41,9 @@
                 data-toggle="collapse" data-target="#main-navbar-collapse">
             <span class="sr-only">Toggle navigation</span>
             <span class="icon-bar"></span>
-            <!--<span class="icon-bar"></span>-->
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
         </button>
@@ -50,14 +52,18 @@
     <!-- `collapse` class needed for smaller devices -->
     <div class="collapse navbar-collapse" id="main-navbar-collapse">
         <ul class="nav navbar-nav">
-            <li><a href="#/home">Dashboard</a></li>
-            <li><a href="#/claim/list">Claims</a></li>
-            <!--TODO-->
-            <!--<li><a href="#">Billing</a></li>-->
-            <li><a href="" data-bind="click: router.showMsgsPopup">Messages<span
-                    class="badge badge-important pull-right navbar-msg-count"
-                    data-bind="text: unreadMsgCount"></span></a></li>
-            <li><a href="" data-bind="click: router.showProfilePopup">Profile</a></li>
+            <li><a fixed-width href="#/home">Dashboard</a></li>
+            <li><a fixed-width href="#/claim/list">Claims</a></li>
+            <li><a fixed-width href="#/billing">Billing</a></li>
+            <li><a fixed-width href="#/travel">Travel</a></li>
+            <li><a href="" data-bind="click: router.showMsgsPopup">
+                    <span class="badge badge-important pull-right navbar-msg-count"
+                          data-bind="text: unreadMsgCount"></span>
+                <i class="fa fa-bell"></i></a>
+            </li>
+            <li><a href="" data-bind="click: router.showProfilePopup">
+                <i class="fa fa-user"></i></a>
+            </li>
             <li class="navbar-right">
                 <a style="cursor: pointer"
                    onclick="window.open('/app/components/help/faq.html', 'Agent help')">
@@ -101,9 +107,6 @@
         </div>
         <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
-                    <div data-bind="component: 'maps-dash-component'"></div>
-                </div>
                 <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4s">
                     <div data-bind="component: 'contact-widget-component'"></div>
                 </div>
@@ -116,6 +119,24 @@
             <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
             </div>
         -->
+    </div>
+
+    <!-- **** Billing **** -->
+    <div id="billingPanel" class="slidingContainer billingPanel">
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <!--<div data-bind="component: {name: 'billing-component'}"></div>-->
+            </div>
+        </div>
+    </div>
+
+    <!-- **** Travel **** -->
+    <div id="travelPanel" class="slidingContainer travelPanel">
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <div data-bind="component: 'maps-dash-component'"></div>
+            </div>
+        </div>
     </div>
 
     <!-- **** Claims list **** -->
