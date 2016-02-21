@@ -48,7 +48,7 @@ define(['knockout', 'KOMap', 'amplify',
             google.maps.event.trigger(this.map, 'resize');
             var self = this;
 
-            $.when(self.loadEntries(), self.getStartPos())
+            $.when(self.loadEntries(), self.getStartPos.bind(self)())
                 .done(function (entries, startPos) {
                     console.log(entries.length + ' stops on itenary');
                     // Convert to waypoint objs
@@ -103,6 +103,7 @@ define(['knockout', 'KOMap', 'amplify',
 
         TripPlannerVM.prototype.getStartPos = function () {
             var pos;
+            var self = this;
             var geocoder = new google.maps.Geocoder();
             var defer = $.Deferred();
             if (navigator.geolocation) {
@@ -112,7 +113,7 @@ define(['knockout', 'KOMap', 'amplify',
                     var pan = true;
                     var infowindow = new google.maps.InfoWindow({
                         disableAutoPan: pan,
-                        map: this.map,
+                        map: self.map,
                         position: pos,
                         content: 'You are here'
                     });
