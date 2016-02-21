@@ -10,6 +10,9 @@ define(['knockout', 'KOMap',
 
             console.assert(params.billingItem, 'Expecting billingItem param');
             this.billingItem = params.billingItem;
+            this.billingItem().mileageCode.subscribe(function(newVal){
+                this.billingItem().timeCode(newVal);
+            }, this);
             this.userProfile = Session.getCurrentUserProfile();
         }
 

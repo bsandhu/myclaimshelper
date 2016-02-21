@@ -10,9 +10,9 @@
         <th>Expense Amount</th>
     </tr>
 
-    <!-- ko foreach: { data: bill().billingItems(), as: 'billingItem' } -->
+    <!-- ko foreach: { data: groupedByCode, as: 'billingItem' } -->
     <tr>
-        <td data-bind="text: $parent.DateUtils.niceDate(billingItem.entryDate(), false)" style="width: 90px"></td>
+        <td data-bind="text: $parent.DateUtils.niceLocaleDate(new Date(billingItem.entryDate))" style="width: 90px"></td>
         <td data-bind="text: billingItem.code"></td>
         <td data-bind="text: billingItem.summary"></td>
         <td data-bind="text: billingItem.time"></td>

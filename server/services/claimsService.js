@@ -388,7 +388,7 @@ function sendResponse(res, err, jsonData) {
         console.error('Error: ' + err);
         res.json(500, {'Status': 'Fail', 'Details': err});
     } else {
-        console.info('Success response: ' + JSON.stringify(jsonData));
+        console.info('Success response: ' + JSON.stringify(jsonData).substr(0, 100));
         res.json({'status': 'Success', 'data': jsonData});
     }
 }

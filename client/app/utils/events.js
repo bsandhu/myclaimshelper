@@ -10,6 +10,8 @@ define([], function(){
         ADD_CONTACT          : 'ADD_CONTACT',
         ADDED_CONTACT        : 'ADDED_CONTACT',
 
+        SHOW_TRAVEL          : 'SHOW_TRAVEL',
+
         EXPAND_CLAIM_PANEL   : 'ExpandClaimPanel',
         COLLAPSE_CLAIM_PANEL : 'CollapseClaimPanel',
         PARTIALLY_COLlAPSE_CLAIM_PANEL   : 'PartiallyCollapseClaimPanel',
@@ -22,6 +24,8 @@ define([], function(){
         NEW_CLAIM_ENTRY      : 'NewClaimEntry',
         SAVED_CLAIM_ENTRY    : 'SavedClaimEntry',
         UPDATE_CLAIM_ENTRY_STATUS : 'UpdateClaimEntryStatus',
+
+        SHOW_BILLING         : 'SHOW_BILLING',
 
         SUCCESS_NOTIFICATION : 'SuccessNotification',
         FAILURE_NOTIFICATION : 'FailureNotification',

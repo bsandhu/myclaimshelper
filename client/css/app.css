@@ -450,8 +450,11 @@ nav ul {
     line-height: 60px;
     color: #c0bfbf;
     letter-spacing: 0.05em;
-    width: 150px;
     text-align: center;
+}
+
+.navbar-default .navbar-nav > li > a[fixed-width] {
+    width: 150px;
 }
 
 /* Hover/Selected menu item */

@@ -103,6 +103,15 @@ define([],
             }
         }
 
+        function niceLocaleDate(date, displayIfInvalidDate) {
+            displayIfInvalidDate = displayIfInvalidDate || 'None';
+
+            if (date === undefined || date === null || date === '' || date.getTime() == 0) {
+                return displayIfInvalidDate;
+            }
+            return date.getMonth() + '/' + date.getDate() + '/' + date.getFullYear() ;
+        }
+
         function isThisWeek(date) {
             return date.getTime() >= startOfWeekInMillis() && date.getTime() <= endOfWeekInMillis();
         }
@@ -146,6 +155,7 @@ define([],
 
         return {
             'niceDate': niceDate,
+            'niceLocaleDate': niceLocaleDate,
             'toDatetimePickerFormat': toDatetimePickerFormat,
             'fromDatetimePickerFormat': fromDatetimePickerFormat,
             'enableJSONDateHandling': enableJSONDateHandling,

@@ -12,7 +12,6 @@ function _onResult(result, err, ok) {
         result.reject(err);
     }
     else {
-        console.log('OK');
         result.resolve(ok);
     }
 };
@@ -26,7 +25,6 @@ function hydrate(type, objects) {
         return _.extend(new type(), obj)
     };
     var hydrated = _.map(objs, fn);
-    console.info('Hydrated: ' + JSON.stringify(hydrated));
     return hydrated;
 }
 

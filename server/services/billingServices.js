@@ -18,13 +18,11 @@ function _billsCollection(db) {
 // :: f -> Dict -> [Obj]
 // convert a dict into an Object with dot-accessible attributes
 function _hydrate(type, objects) {
-    console.info('Hydrating ' + type.name);
     var objs = _.isArray(objects) ? objects : [objects];
     var fn = function (obj) {
         return _.extend(new type(), obj)
     };
     var hydrated = _.map(objs, fn);
-    console.info('Hydrated: ' + JSON.stringify(hydrated));
     return hydrated;
 }
 
@@ -47,7 +45,7 @@ var _getBills = function (search, db) {
     jQuery
         .when(mongoUtils.findEntities(BILL_COL_NAME, search, db))
         .then(function (bills) {
-            console.log('_getBills: ' + JSON.stringify(bills));
+            console.log('_getBills: ' + JSON.stringify(bills).substr(0, 100));
             result.resolve(_hydrate(Bill, bills));
         });
     return result;
@@ -58,7 +56,7 @@ var _getBillingItems = function (search, db) {
     var result = jQuery.Deferred();
     jQuery.when(mongoUtils.findEntities(BILLING_ITEMS_COL_NAME, search, db))
         .then(function (billingItems) {
-            console.log('_getBillingItems: ' + JSON.stringify(billingItems));
+            console.log('_getBillingItems: ' + JSON.stringify(billingItems).substr(0, 100));
             result.resolve(_hydrate(BillingItem, billingItems));
         });
     return result;

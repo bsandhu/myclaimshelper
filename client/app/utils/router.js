@@ -26,6 +26,14 @@ define(['Path', 'amplify', 'app/utils/events'],
                 amplify.publish(Events.SHOW_DASHBOARD);
             });
 
+            Path.map("#/travel").to(function () {
+                amplify.publish(Events.SHOW_TRAVEL);
+            });
+
+            Path.map("#/billing").to(function () {
+                amplify.publish(Events.SHOW_BILLING);
+            });
+
             Path.map("#/claim/list").to(function () {
                 amplify.publish(Events.SHOW_CLAIMS_LIST);
             });

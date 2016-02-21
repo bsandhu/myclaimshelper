@@ -55,6 +55,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify',
             amplify.subscribe(Events.SHOW_CLAIM_ENTRY, this, this.onShowClaimEntry);
             amplify.subscribe(Events.SAVED_CLAIM_ENTRY, this, this.refreshClaimEntriesListing);
             amplify.subscribe(Events.CREATE_NEW_BILL, this, this.onCreateNewBill);
+            amplify.subscribe(Events.SHOW_BILL, this, this.onShowBill);
             amplify.subscribe(Events.SHOW_BILLING_HISTORY, this, this.selectBillingTab);
 
             amplify.subscribe(Events.EXPAND_CLAIM_PANEL, this, function(){this.isPartiallyCollapsed(false)});
@@ -142,7 +143,6 @@ define(['jquery', 'knockout', 'KOMap', 'amplify',
 
         ClaimVM.prototype.onShowBill = function (entry, ev) {
             this.selectBillingTab();
-            amplify.publish(Events.SHOW_BILL, ev);
         }
 
         ClaimVM.prototype.onShowBillingHistory = function (entry, ev) {

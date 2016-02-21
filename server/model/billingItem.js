@@ -22,7 +22,10 @@ define(['./billingStatus'], function (BillingStatus) {
         this.timeRate = null;
         this.distanceRate = null;
 
-        this.code = null; // Sourced from user profile
+        this.mileageCode = null; // Sourced from user profile
+        this.timeCode = null; // Sourced from user profile
+        this.expenseCode = null; // Sourced from user profile
+
         this.mileage = 0;
         this.time = 0;
         this.expenseAmount = 0;

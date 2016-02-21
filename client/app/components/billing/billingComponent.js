@@ -1,12 +1,12 @@
 define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox', 'underscore',
-        'shared/dateUtils', 'app/utils/ajaxUtils', 'app/utils/events', 'app/utils/consts', 'app/utils/router',
+        'shared/dateUtils', 'shared/numberUtils', 'app/utils/ajaxUtils', 'app/utils/events', 'app/utils/consts', 'app/utils/router',
         'app/utils/session', 'app/utils/sessionKeys',
         'model/bill', 'model/billingItem', 'model/billingStatus', 'model/contact',
         'text!app/components/billing/billing.tmpl.html',
         'text!app/components/billing/billing.print.tmpl.html'
     ],
     function ($, ko, KOMap, amplify, bootbox, _,
-              DateUtils, ajaxUtils, Events, Consts, router, Session, SessionKeys, Bill,
+              DateUtils, NumberUtils, ajaxUtils, Events, Consts, router, Session, SessionKeys, Bill,
               BillingItem, BillingStatus, Contact, viewHtml, printHtml) {
 
         function BillingVM() {
@@ -15,10 +15,12 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox', 'underscore',
             this.vmId = new Date().getTime();
             this.Consts = Consts;
             this.DateUtils = DateUtils;
+            this.NumberUtils = NumberUtils;
             this.router = router;
             this.billingStatus = KOMap.fromJS(BillingStatus);
             this.mode = ko.observable();
             this.billRecipient = ko.observable(KOMap.fromJS(new Contact()));
+            this.groupedByCode = ko.observableArray([]);
 
             // Updated via Claim lifecycle events
             this.claimId = undefined;
@@ -170,10 +172,10 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox', 'underscore',
         BillingVM.prototype.onShowBill = function (evData) {
             var _this = this;
 
-            if (this.mode() === Consts.BILLING_TAB_VIEW_MODE) {
+/*            if (this.mode() === Consts.BILLING_TAB_VIEW_MODE) {
                 console.log('In View mode already');
                 return;
-            }
+            }*/
             console.log('BillingVM > onShowBilll ' + this.vmId);
             console.assert(evData.claimId, 'Expecting ev to carry claimId');
             console.assert(evData.billId, 'Expecting ev to billId');
@@ -535,6 +537,30 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox', 'underscore',
             var container = document.createElement("div");
             var _this = this;
             _this.activeClaim = Session.getActiveClaim();
+            _this.groupedByCode([]);
+
+            // Split out line item for each type
+            _.each(KOMap.toJS(this.bill().billingItems()), function(item, index){
+                mileageItem = _.clone(item);
+                mileageItem.code = item.mileageCode;
+                mileageItem.time = 0;
+                mileageItem.expenseAmount = 0;
+
+                timeItem = _.clone(item);
+                timeItem.code = item.timeCode;
+                timeItem.mileage = 0;
+                timeItem.expenseAmount = 0;
+
+                expenseItem = _.clone(item);
+                expenseItem.code = item.expenseCode;
+                expenseItem.time = 0;
+                expenseItem.mileage = 0;
+                expenseItem.expenseAmount = '$' + Number(expenseItem.expenseAmount).toFixed(2);
+
+                _this.groupedByCode.push(mileageItem);
+                _this.groupedByCode.push(timeItem);
+                _this.groupedByCode.push(expenseItem);
+            });
 
             ko.renderTemplate(
                 "print-template",

@@ -59,4 +59,11 @@ describe('DateUtils', function () {
         assert.equal(dateUtils.isYesterdayOrBefore(new Date(new Date().getTime() - dateUtils.MILLIS_IN_A_DAY)), true);
     });
 
+    it('NiceLocaleDate', function () {
+        assert.equal(dateUtils.niceLocaleDate(null), 'None');
+        assert.equal(dateUtils.niceLocaleDate(null, 'Foo'), 'Foo');
+        assert.equal(dateUtils.niceLocaleDate(new Date(0)), 'None');
+        assert.equal(dateUtils.niceLocaleDate(new Date(2015, 2, 1)), '2/1/2015');
+    });
+
 });
