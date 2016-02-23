@@ -20,14 +20,16 @@
                 <div class="col-lg-3 col-md-3 col-sm-4 col-xs-4 bottomMargin">
                     <div class="input-group">
                         <input class="form-control input-sm" id="appendprepend" type="number"
-                               data-bind="value: billingItem().mileage">
+                               data-bind="value: billingItem().mileage,
+                                          disable: isDisabled">
                         <span class="input-group-addon">Miles</span>
                     </div>
                 </div>
                 <div class="col-lg-4 col-md-5 col-sm-6 col-xs-6">
                     <select class="form-control input-sm bigdrop" type="text" style="width: 90%;"
                             data-bind="select2: billingItem().mileageCode,
-                                   myoptions: billingCodesDatasource()">
+                                       myoptions: billingCodesDatasource(),
+                                       disable: isDisabled">
                     </select>
                 </div>
             </div>
@@ -41,14 +43,16 @@
                 <div class="col-lg-3 col-md-3 col-sm-4 col-xs-4 bottomMargin">
                     <div class="input-group">
                         <input class="form-control input-sm" id="appendprepend" type="number"
-                               data-bind="value: billingItem().time">
+                               data-bind="value: billingItem().time,
+                                          disable: isDisabled">
                         <span class="input-group-addon">Hours</span>
                     </div>
                 </div>
                 <div class="col-lg-4 col-md-5 col-sm-6 col-xs-6">
                     <select class="form-control input-sm bigdrop" type="text" style="width: 90%;"
                             data-bind="select2: billingItem().timeCode,
-                                   myoptions: billingCodesDatasource()">
+                                       myoptions: billingCodesDatasource(),
+                                       disable: isDisabled">
                     </select>
                 </div>
             </div>
@@ -63,13 +67,15 @@
                     <div class="input-group">
                         <span class="input-group-addon">$</span>
                         <input class="form-control input-sm" id="appendprepend" type="number"
-                               data-bind="value: billingItem().expenseAmount">
+                               data-bind="value: billingItem().expenseAmount,
+                                          disable: isDisabled">
                     </div>
                 </div>
                 <div class="col-lg-4 col-md-5 col-sm-6 col-xs-6">
                     <select class="form-control input-sm bigdrop" type="text" style="width: 90%;"
                             data-bind="select2: billingItem().expenseCode,
-                                   myoptions: billingCodesDatasource()">
+                                       myoptions: billingCodesDatasource(),
+                                       disable: isDisabled">
                     </select>
                 </div>
             </div>

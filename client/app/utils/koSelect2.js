@@ -25,7 +25,6 @@ define(['jquery', 'knockout', 'KOMap', 'shared/dateUtils', 'select2'],
                 // Update model
                 select2Elem.on('change', function (ev) {
                     const newValue = select2Elem.val();
-                    console.log('Select2 value change: ' + newValue);
                     var value = valueAccessor();
                     value(newValue);
                 });

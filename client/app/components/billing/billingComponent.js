@@ -448,7 +448,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox', 'underscore',
                 '/bill/search',
                 JSON.stringify({claimId: this.claimId}),
                 function onSuccess(response) {
-                    console.debug('getBillsForClaim: ' + JSON.stringify(response));
+                    console.log('getBillsForClaim: ' + JSON.stringify(response).substr(0, 100));
                     this.bills(_.sortBy(response.data, '_id').reverse());
                 }.bind(this)
             );

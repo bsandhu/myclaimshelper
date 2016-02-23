@@ -23,6 +23,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify',
             this.isPartiallyCollapsed = ko.observable(false);
 
             // View state
+            this.isClaimClosed = ko.computed(function(){return this.claim().isClosed();}, this);
             this.screenHeight = ko.observable($(window).height() - 215);
             this.inEditMode = ko.observable(false);
             this.showStatusForEntryId = ko.observable();
@@ -67,6 +68,19 @@ define(['jquery', 'knockout', 'KOMap', 'amplify',
 
         ClaimVM.prototype.onEditModeClick = function () {
             this.inEditMode(true);
+        };
+
+        ClaimVM.prototype.onCloseClaimClick = function () {
+            console.log('ClaimVM - Closing claim');
+            this.claim().isClosed(true);
+            this.claim().dateClosed(new Date());
+            this.onSave();
+        };
+
+        ClaimVM.prototype.onReOpenClaimClick = function () {
+            console.log('ClaimVM - ReOpen claim');
+            this.claim().isClosed(false);
+            this.onSave();
         };
 
         ClaimVM.prototype.onShowClaim = function (evData) {
@@ -246,7 +260,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify',
                 '/claim',
                 KOMap.toJSON(this.claim),
                 function onSuccess(response) {
-                    console.log('Saved claim: ' + JSON.stringify(response));
+                    console.log('Saved claim');
 
                     // Update Ids gen. by the server
                     this.claim()._id(response.data._id);
@@ -262,7 +276,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify',
                     ContactClient.updateInSession(KOMap.toJS(this.claim().claimantsAttorneyContact));
                     ContactClient.updateInSession(KOMap.toJS(this.claim().insuranceCoContact));
 
-                    amplify.publish(Events.SUCCESS_NOTIFICATION, {msg: 'Saved Claim'});
+                    amplify.publish(Events.SUCCESS_NOTIFICATION, {msg: 'Updated Claim ' + this.claim().insuranceCompanyFileNum()});
                     amplify.publish(Events.ADDED_CONTACT, KOMap.toJS(this.claim().insuredContact));
                     amplify.publish(Events.SAVED_CLAIM, {'claim': KOMap.toJS(this.claim())});
 
@@ -274,7 +288,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify',
         ClaimVM.prototype.loadClaim = function (claimId) {
             $.getJSON('/claim/' + claimId)
                 .done(function (resp) {
-                    console.log('Loaded claim ' + JSON.stringify(resp.data));
+                    console.log('Loaded claim ' + JSON.stringify(resp.data).substr(0, 100));
                     KOMap.fromJS(resp.data, {}, this.claim);
                     this.storeInSession(claimId, resp.data);
                 }.bind(this));

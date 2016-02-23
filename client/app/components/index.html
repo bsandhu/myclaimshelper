@@ -125,7 +125,7 @@
     <div id="billingPanel" class="slidingContainer billingPanel">
         <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                <!--<div data-bind="component: {name: 'billing-component'}"></div>-->
+                <div data-bind="component: {name: 'billing-component'}"></div>
             </div>
         </div>
     </div>
@@ -148,7 +148,7 @@
         </div>
     </div>
 
-    <!-- **** Claim module **** -->
+    <!-- **** Claim edit/entry module **** -->
     <div id="claimPanel" class="slidingContainer claimPanel" style="width: 0%;">
         <!-- Note: Still using module for the afterRender fn -->
         <div data-bind="module: {name: 'app/components/claim/claimVM',
@@ -156,7 +156,7 @@
                                         afterRender: startRouter}"></div>
     </div>
 
-    <!-- **** Claim Entry module **** -->
+    <!-- **** Task edit/entry module **** -->
     <div id="claimEntryPanel" class="slidingContainer claimEntryPanel" style="width: 0%;">
         <div id="claimEntryPanelContent" class="claimEntryPanelContent">
             <div data-bind="component: 'task-entry-component'"></div>
@@ -202,8 +202,7 @@
                 ko.amdTemplateEngine.defaultSuffix = ".tmpl.html";
 
                 // Register components
-                ko.components.register('billing-component', {require: 'app/components/billing/billingComponent'});
-                ko.components.register('billing-item-component', {require: 'app/components/billingItem/billingItemComponent'});
+                ko.components.register('user-profile-component', {require: 'app/components/userProfile/userProfileComponent'});
                 ko.components.register('contact-component', {require: 'app/components/contact/contactComponent'});
                 ko.components.register('add-contact-component', {require: 'app/components/contact/addContactComponent'});
                 ko.components.register('contact-widget-component', {require: 'app/components/contact/contactWidgetVM'});
@@ -217,8 +216,9 @@
                 ko.components.register('quick-add-component', {require: 'app/components/quickAdd/quickAddVM'});
                 ko.components.register('stats-component', {require: 'app/components/stats/statsVM'});
                 ko.components.register('task-entry-component', {require: 'app/components/taskEntry/taskEntryVM'});
-                ko.components.register('user-profile-component', {require: 'app/components/userProfile/userProfileComponent'});
                 ko.components.register('admin-component', {require: 'app/components/admin/adminComponent'});
+                ko.components.register('billing-component', {require: 'app/components/billing/billingComponent'});
+                ko.components.register('billing-item-component', {require: 'app/components/billingItem/billingItemComponent'});
 
                 // Knockout bindings init
                 ko.applyBindings(new AppVM());

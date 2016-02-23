@@ -1,9 +1,9 @@
-define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEntry', 'model/billingItem', 'model/states',
+define(['underscore', 'jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEntry', 'model/billingItem', 'model/states',
         'app/utils/ajaxUtils', 'app/utils/events', 'app/utils/router',
         'app/utils/sessionKeys', 'app/utils/session',
         'shared/dateUtils',
         'text!app/components/taskEntry/taskEntry.tmpl.html', 'bootbox'],
-    function ($, ko, KOMap, amplify, Claim, ClaimEntry, BillingItem, States, ajaxUtils, Events, Router, SessionKeys, Session, DateUtils, taskEntryView, bootbox) {
+    function (_, $, ko, KOMap, amplify, Claim, ClaimEntry, BillingItem, States, ajaxUtils, Events, Router, SessionKeys, Session, DateUtils, taskEntryView, bootbox) {
         'use strict';
 
         function TaskEntryVM() {
@@ -21,6 +21,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
             // View state
             this.inEditMode = ko.observable(true);
             this.stateChange = ko.observable(false);
+            this.isClosed = ko.computed(function () { return this.claimEntry().isClosed(); }, this);
 
             this.setupEvListeners();
             this.startStateTracking();
@@ -28,6 +29,8 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
 
         TaskEntryVM.prototype.newEmptyClaimEntry = function (tag) {
             var jsEntryObject = new ClaimEntry();
+            jsEntryObject.isClosed = false;
+
             var entryObjWithObserAttrs = KOMap.fromJS(jsEntryObject);
             if (entryObjWithObserAttrs.billingItem && ko.isObservable(entryObjWithObserAttrs.billingItem)) {
                 entryObjWithObserAttrs.billingItem(KOMap.fromJS(new BillingItem()));
@@ -159,7 +162,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
 
             $.getJSON('/claimEntry/' + claimEntryId)
                 .done(function (resp) {
-                    console.log('Loaded claim entry ' + JSON.stringify(resp.data));
+                    console.log('Loaded claim entry ' + JSON.stringify(resp.data).substr(0, 100));
 
                     // Populate with JSON data
                     KOMap.fromJS(resp.data[0], {}, this.claimEntry);

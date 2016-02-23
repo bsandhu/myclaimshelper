@@ -14,7 +14,9 @@
                 <label for="claimEntry-dueDate" class="col-sm-2 control-label">Due on</label>
                 <div class="col-sm-4">
                     <input type="text" class="form-control normal input-sm" id="claimEntry-dueDate"
-                           data-bind="datetimePicker: {
+                           data-bind="
+                           disable: isClosed,
+                           datetimePicker: {
                               datepicker: true,
                               timepicker: true,
                               dateValue: myDueDate}"/></div>
@@ -25,7 +27,9 @@
 
                 <div class="col-sm-10">
                     <textarea class="form-control" rows="1" id="claimEntry-summary"
-                              data-bind="value: claimEntry().summary" placeholder="Note"></textarea>
+                              data-bind="value: claimEntry().summary,
+                                        disable: isClosed"
+                              placeholder="Note"></textarea>
                 </div>
             </div>
 
@@ -33,7 +37,8 @@
                 <label for="claimEntry-desc" class="col-sm-2 control-label">Description</label>
 
                 <div class="col-sm-10">
-                    <div class="btn-toolbar" data-role="editor-toolbar" data-target="#claimEntry-desc">
+                    <div class="btn-toolbar" data-role="editor-toolbar" data-target="#claimEntry-desc"
+                         data-bind="ifnot: isClosed">
                         <div class="btn-group">
                             <a class="btn btn-default dropdown-toggle txt-color-blueDark" data-toggle="dropdown" title="Font Size">
                                 <i class="fa fa-text-height"></i>&nbsp;<b class="caret"></b>
@@ -66,7 +71,8 @@
                         </div>
                     </div>
                     <div class="form-control" rows="3" id="claimEntry-desc"
-                         data-bind="wysiwygEditor: myDescription"
+                         data-bind="wysiwygEditor: myDescription,
+                                    disable: isClosed"
                          placeholder="Note" style="overflow: scroll">
                     </div>
                 </div>
@@ -94,7 +100,8 @@
                 </legend>
                 <div class="col-lg-10">
                     <!-- Billing item component -->
-                    <billing-item-component params="'billingItem': claimEntry().billingItem"></billing-item-component>
+                    <billing-item-component params="'billingItem': claimEntry().billingItem,
+                                                    'disable'    : claimEntry().isClosed"></billing-item-component>
                 </div>
             </div>
         </form>
@@ -103,12 +110,19 @@
         <footer>
             <div class="form-actions row">
                 <div class="col-lg-8 pull-left text-left">
+                    <!-- ko ifnot: isClosed -->
                     <button type="button" class="btn btn"
                             data-bind="click: onSave,
                                    css: { 'btn-info' : stateChange(),
                                           'btn-default' : !stateChange()}">Save
                     </button>
+                    <!-- /ko -->
                     <button type="button" class="btn btn-default" data-bind="click: onCancel">Cancel</button>
+                    <!-- ko if: isClosed -->
+                    <span class="text-primary leftMargin5">
+                        <i class="fa fa-lock">   Claim is closed</i>
+                    </span>
+                    <!-- /ko -->
                 </div>
                 <div class="col-lg-4 pull-right text-right">
                     <span class="note"><strong>Last updated</strong></span>

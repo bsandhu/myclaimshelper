@@ -11,8 +11,10 @@ define([], function () {
         this._id = undefined;
 
         this.description = undefined;
+        this.isClosed = false;
 
         this.dateReceived = undefined;
+        this.dateClosed = undefined;
         this.dateDue = undefined;
         this.dateOfLoss = undefined;
         this.updateDate = undefined;

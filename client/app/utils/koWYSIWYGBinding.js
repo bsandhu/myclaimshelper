@@ -8,12 +8,16 @@ define(['jquery', 'knockout', 'wysiwyg'],
             init: function (element, valueAccessor, allBindings, viewModel, bindingContext) {
                 $(element).wysiwyg();
                 var content = allBindings.get('wysiwygEditor');
+                var isDisabled = allBindings.get('disable');
                 $(element).html(content());
 
                 // Listen to Observable > update DOM
                 content.subscribe(function (val) {
                     $(element).html(val || '');
                 })
+                isDisabled.subscribe(function(val){
+                    $(element).attr('readonly', val);
+                });
 
                 // Listen to DOM > update observable
                 $(element).focusout(function () {

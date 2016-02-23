@@ -276,7 +276,12 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
 
         AppVM.prototype.partiallyCollapseClaimPanel = function () {
             if (this.claimPanelState !== 'partiallyCollapsed') {
-                $("#claimPanel").velocity({ width: '28%' }, {duration: this.gridNavDelay}, this.gridNavEffect);
+                $("#claimPanel").velocity(
+                    { width: '28%' },
+                    {begin: function () {
+                        $("#claimPanel").show();
+                    }},
+                    {duration: this.gridNavDelay}, this.gridNavEffect);
                 $("#claimPanelContent").velocity("fadeIn", { duration: this.gridNavDelay });
                 this.claimPanelState = 'partiallyCollapsed';
                 amplify.publish(Events.PARTIALLY_COLlAPSE_CLAIM_PANEL);
