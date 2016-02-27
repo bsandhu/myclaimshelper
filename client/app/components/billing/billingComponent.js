@@ -5,9 +5,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox', 'underscore',
         'text!app/components/billing/billing.tmpl.html',
         'text!app/components/billing/billing.print.tmpl.html'
     ],
-    function ($, ko, KOMap, amplify, bootbox, _,
-              DateUtils, NumberUtils, ajaxUtils, Events, Consts, router, Session, SessionKeys, Bill,
-              BillingItem, BillingStatus, Contact, viewHtml, printHtml) {
+    function ($, ko, KOMap, amplify, bootbox, _, DateUtils, NumberUtils, ajaxUtils, Events, Consts, router, Session, SessionKeys, Bill, BillingItem, BillingStatus, Contact, viewHtml, printHtml) {
 
         function BillingVM() {
             console.log('Init BillingVM.');
@@ -19,8 +17,13 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox', 'underscore',
             this.router = router;
             this.billingStatus = KOMap.fromJS(BillingStatus);
             this.mode = ko.observable();
+            this.showClosedClaims = ko.observable(false);
             this.billRecipient = ko.observable(KOMap.fromJS(new Contact()));
             this.groupedByCode = ko.observableArray([]);
+
+            // Grouping
+            this.groupBy = ko.observable();
+            this.groupByOptions = ko.observableArray(['Any', 'Not Submitted', 'Submitted', 'Paid']);
 
             // Updated via Claim lifecycle events
             this.claimId = undefined;
@@ -29,6 +32,8 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox', 'underscore',
             this.bill = ko.observable(this.newEmptyBill());
             // All bills associated with this Claim - for Overview
             this.bills = ko.observableArray([]);
+            // Filtered by Status
+            this.filteredBills = ko.observableArray([]);
 
             this.setupEvListeners();
             this.setupModeListener();
@@ -37,6 +42,35 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox', 'underscore',
             this.mode(Consts.BILLING_TAB_HISTORY_MODE);
 
             var self = this;
+            self.filteredBills = ko.computed(function () {
+                return _.filter(self.bills(), function (bill) {
+                    var statusMatch = (bill.status === self.groupBy()) || (self.groupBy() === 'Any');
+                    var closeOpenMatch = self.showClosedClaims() ? true : (bill.isClaimClosed == false);
+                    return statusMatch && closeOpenMatch;
+                })
+            });
+            self.filteredTotal = ko.computed(function () {
+                return _.reduce(self.filteredBills(), function (result, bill) {
+                    return Number(result) + Number(bill.total);
+                }, 0)
+            });
+            self.filteredTotalTime = ko.computed(function () {
+                return _.reduce(self.filteredBills(), function (result, bill) {
+                    return Number(result) + Number(bill.totalTime);
+                }, 0)
+            });
+            self.filteredTotalMileage = ko.computed(function () {
+                return _.reduce(self.filteredBills(), function (result, bill) {
+                    return Number(result) + Number(bill.totalMileage);
+                }, 0)
+            });
+            self.filteredTotalExpenses = ko.computed(function () {
+                return _.reduce(self.filteredBills(), function (result, bill) {
+                    return Number(result) + Number(bill.totalExpenseAmount);
+                }, 0)
+            });
+
+
             self.removeBillingItem = function (ev) {
                 console.log('Toggle remove BillingItem timer');
                 var itemClicked = this;
@@ -77,7 +111,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox', 'underscore',
                 return this.bill().status() == this.billingStatus.PAID();
             }, this);
 
-            self.haveBillableTasks = ko.computed(function(){
+            self.haveBillableTasks = ko.computed(function () {
                 return this.bill().billingItems().length > 0;
             }, this);
 
@@ -123,7 +157,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox', 'underscore',
                 if (mode === Consts.BILLING_TAB_CREATE_MODE) {
                     _this.clearBill();
                     _this.getEligibleBillingItemsForClaim(_this.claimId)
-                        .done(function(eligibleItems){
+                        .done(function (eligibleItems) {
                             _this.bill().billingItems(eligibleItems);
                             _this.calcAll();
                         });
@@ -172,10 +206,10 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox', 'underscore',
         BillingVM.prototype.onShowBill = function (evData) {
             var _this = this;
 
-/*            if (this.mode() === Consts.BILLING_TAB_VIEW_MODE) {
-                console.log('In View mode already');
-                return;
-            }*/
+            /*            if (this.mode() === Consts.BILLING_TAB_VIEW_MODE) {
+             console.log('In View mode already');
+             return;
+             }*/
             console.log('BillingVM > onShowBilll ' + this.vmId);
             console.assert(evData.claimId, 'Expecting ev to carry claimId');
             console.assert(evData.billId, 'Expecting ev to billId');
@@ -214,7 +248,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox', 'underscore',
                             });
                     }
                 })
-                .then(function(){
+                .then(function () {
                     _this.mode(Consts.BILLING_TAB_VIEW_MODE);
                 })
         }
@@ -540,7 +574,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox', 'underscore',
             _this.groupedByCode([]);
 
             // Split out line item for each type
-            _.each(KOMap.toJS(this.bill().billingItems()), function(item, index){
+            _.each(KOMap.toJS(this.bill().billingItems()), function (item, index) {
                 mileageItem = _.clone(item);
                 mileageItem.code = item.mileageCode;
                 mileageItem.time = 0;

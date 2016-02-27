@@ -190,6 +190,14 @@ div {
     border-bottom: 1px solid;
 }
 
+.color-dark-grey {
+    color: rgb(85, 85, 85);
+}
+
+.color-dark-green {
+    color: darkgreen);
+}
+
 /**********************************************************/
 /**** Map ****/
 /**********************************************************/
@@ -292,6 +300,21 @@ div {
 
 .bg-color-greenLighter {
     background: #cde0c4;
+}
+
+.topBorderSubTotal {
+    border-top: solid !important;
+    border-top-width: 1px !important;;
+    border-top-color: darkgrey !important;;
+}
+
+.billTotalAmount {
+    font-size: 1.1em;
+}
+
+.billSubTotal {
+    font-size: 1.1em;
+    font-weight: 500
 }
 
 /**********************************************************/

@@ -1,13 +1,16 @@
 var assert = require('assert')
 var Bill = require('../model/bill.js');
+var Claim = require("../model/claim.js");
 var BillingItem = require('../model/billingItem.js');
 var config = require('./../config.js');
 var sendResponse = require('./claimsService.js').sendResponse;
 var mongoUtils = require('./../mongoUtils.js');
 var jQuery = require("jquery-deferred");
 var _ = require('underscore');
+
 var BILL_COL_NAME = mongoUtils.BILL_COL_NAME;
 var BILLING_ITEMS_COL_NAME = mongoUtils.BILLING_ITEMS_COL_NAME;
+var CLAIMS_COL_NAME = mongoUtils.CLAIMS_COL_NAME;
 
 
 // :: DB -> Obj
@@ -62,6 +65,16 @@ var _getBillingItems = function (search, db) {
     return result;
 }
 
+var _getClaims = function (search, db) {
+    var result = jQuery.Deferred();
+    jQuery.when(mongoUtils.findEntities(CLAIMS_COL_NAME, search, db))
+        .then(function (claims) {
+            console.log('_getClaims: ' + JSON.stringify(claims).substr(0, 100));
+            result.resolve(_hydrate(Claim, claims));
+        });
+    return result;
+}
+
 // :: Dict -> DB -> Promise
 var getBillObjects = function (search, db) {
     var result = jQuery.Deferred();
@@ -70,9 +83,29 @@ var getBillObjects = function (search, db) {
         .when(_getBills(search, db))
         .then(function (bills) {
             var promises = _.map(bills, _.partial(_populateBillingItems));
+            var itemsDefer = jQuery.Deferred();
             jQuery
                 .when.apply(jQuery, promises)
                 .then(function () {
+                    return itemsDefer.resolve(bills);
+                });
+            return itemsDefer;
+        })
+        .then(function populateClaimAttrs(bills) {
+            var correspondingClaimIds = _.uniq(_.map(bills, function (bill) {
+                return bill.claimId
+            }));
+            _getClaims({_id: {$in: correspondingClaimIds}}, db)
+                .then(function (claims) {
+                    _.each(bills, function populateClaimDetails(bill) {
+                        var correspondingClaim = _.find(claims, function (claim) {
+                            return claim._id == bill.claimId
+                        });
+                        bill.isClaimClosed = correspondingClaim ? correspondingClaim.isClosed : false;
+                        bill.claimDescription = correspondingClaim ? correspondingClaim.description : 'None';
+                        bill.claimInsuranceCompanyFileNum = correspondingClaim ? correspondingClaim.insuranceCompanyFileNum : 'None';
+                        bill.claimInsuranceCompanyName = correspondingClaim ? correspondingClaim.insuranceCompanyName : 'None';
+                    })
                     result.resolve(bills);
                 });
         });

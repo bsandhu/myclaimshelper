@@ -10,21 +10,43 @@
     <div class="panel-body" data-bind="if: bills().length > 0">
 
         <div class="row bottomMargin5">
-            <div class="col-sm-8 col-lg-6">
-                <div class="btn-group alignRight">
-                    <a class="btn btn-sm btn-info" data-bind="attr: {href: '#/claim/' + claimId + '/newbill'}">
-                        <i class="fa fa-plus"></i> New Invoice
-                    </a>
+            <div class="col-lg-10 col-md-10 col-sm-12 col-xs-12">
+                <div class="col-lg-5 col-md-5 col-sm-3 col-xs-3">
+                    <div class="btn-group">
+                        <a class="btn btn-sm btn-info" data-bind="attr: {href: '#/claim/' + claimId + '/newbill'}">
+                            <i class="fa fa-plus"></i> New Invoice
+                        </a>
+                    </div>
                 </div>
-                <div class="btn-group alignRight rightMargin5">
-                    <a class="btn btn-default btn-sm" data-bind="click: onUserProfileClick">
-                        <i class="fa fa-gear"></i> Invoice settings
-                    </a>
+                <div class="col-lg-2 col-md-2 col-sm-3 col-xs-3 rightBorderSolid" style="padding: 5px">
+                    <div class="pull-right">
+                        <input type="checkbox" data-bind="checked: showClosedClaims">
+                        <span>Show Closed Claims</span>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-2 col-sm-3 col-xs-3">
+                    <div class="form-group rightBorderSolid inline">
+                        <!-- Group selection -->
+                        <div class="inline">Status</div>
+                        <div class="inline">
+                            <select class="form-control input-sm summaryGroupSelector"
+                                    data-bind="value: groupBy,
+                                               options: groupByOptions"></select></div>
+                    </div>
+                </div>
+                <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1" style="padding: 0px;">
+                    <div class="glyphicon glyphicon-search inline"
+                         style="font-size: initial; padding-top: 10px;"
+                         aria-hidden="true"></div>
+                </div>
+                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 inline" style="padding: 0px;">
+                    <input class="form-control no-border" id="prepend"
+                           placeholder="Start typing Claim file num" type="text"/>
                 </div>
             </div>
         </div>
         <div class="row">
-            <div class="col-sm-8 col-lg-6">
+            <div class="col-lg-10 col-md-10 col-sm-12 col-xs-12">
                 <!-- Sorting is enabled via koSortableBinding -->
                 <table id="billingListTable"
                        data-sortable
@@ -32,24 +54,26 @@
                        class="table table-hover table-responsive">
                     <thead>
                     <tr>
-                        <th data-field="id" data-sortable="true">Bill ID</th>
+                        <th data-field="claimInsuranceCompanyFileNum" data-sortable="true">Claim</th>
+                        <th data-field="id" data-sortable="true">Bill Id</th>
+                        <th>Bill status</th>
                         <th data-field="submissionDate" data-sortable="true">Submitted on</th>
-                        <th data-field="paiDate" data-sortable="true">Paid on</th>
-                        <th>Status</th>
+                        <th data-field="paidDate" data-sortable="true">Paid on</th>
                         <th data-field="total" data-sortable="true">Total</th>
+                        <th data-field="totaTimel" data-sortable="true">Time</th>
+                        <th data-field="totalMileage" data-sortable="true">Mileage</th>
+                        <th data-field="totalExpense" data-sortable="true">Expense</th>
                     </tr>
                     </thead>
-                    <tbody data-bind="foreach: { data: bills, as: 'bill' }">
+                    <tbody data-bind="foreach: { data: filteredBills, as: 'bill' }">
                     <tr>
+                        <td data-bind="html: '<span class=\'color-dark-grey\'>' + bill.claimInsuranceCompanyFileNum + '</span><br/>' + bill.claimInsuranceCompanyName,
+                                       click: $parent.router.routeToBill"></td>
                         <td data-bind="text: bill._id,
-                                       click: $parent.router.routeToBill"></td>
-                        <td data-bind="text: bill.submissionDate ? $parent.DateUtils.niceDate(bill.submissionDate) : '-',
-                                       click: $parent.router.routeToBill"></td>
-                        <td data-bind="text: bill.paidDate ? $parent.DateUtils.niceDate(bill.paidDate) : '-',
                                        click: $parent.router.routeToBill"></td>
                         <td>
                             <div class="btn-group">
-                                <button class="btn btn-sm dropdown-toggle"
+                                <button class="btn btn-md dropdown-toggle"
                                         data-toggle="dropdown"
                                         data-bind="html: bill.status + ' <span class=\'caret\'></span>',
                                                css: bill.status === $parent.billingStatus.PAID() ? 'btn-success' : 'btn-link'">
@@ -70,10 +94,51 @@
                                 </ul>
                             </div>
                         </td>
-                        <td data-bind="text: bill.total ? '$' + bill.total : '',
+                        <td data-bind="text: bill.submissionDate ? $parent.DateUtils.niceDate(bill.submissionDate, false, '-') : '-',
                                        click: $parent.router.routeToBill"></td>
+
+                        <td data-bind="text: bill.paidDate ? $parent.DateUtils.niceDate(bill.paidDate, false, '-') : '-',
+                                       click: $parent.router.routeToBill"></td>
+
+                        <td><span class="color-dark-grey billTotalAmount"
+                                  data-bind="text: $parent.NumberUtils.niceCCY(bill.total),
+                                             click: $parent.router.routeToBill"></span></td>
+
+                        <td><span data-bind="text: $parent.NumberUtils.niceCCY(bill.totalTime),
+                                             click: $parent.router.routeToBill"></span></td>
+
+                        <td><span data-bind="text: $parent.NumberUtils.niceCCY(bill.totalMileage),
+                                             click: $parent.router.routeToBill"></span></td>
+
+                        <td><span data-bind="text: $parent.NumberUtils.niceCCY(bill.totalExpenseAmount),
+                                             click: $parent.router.routeToBill"></span></td>
                     </tr>
                     </tbody>
+                    <tfoot>
+                    <tr>
+                        <td colspan="4" style="border-top-width: 0"></td>
+                        <td class="topBorderSubTotal">
+                            <span class="pull-right billSubTotal">Total</span>
+                        </td>
+                        <td class="topBorderSubTotal">
+                            <span class="text-success billSubTotal"
+                                  data-bind="text: NumberUtils.niceCCY(filteredTotal())"></span>
+                        </td>
+                        <td class="topBorderSubTotal">
+                            <span class="text-success billSubTotal"
+                                  data-bind="text: NumberUtils.niceCCY(filteredTotalTime())"></span>
+                        </td>
+                        <td class="topBorderSubTotal">
+                            <span class="text-success billSubTotal"
+                                  data-bind="text: NumberUtils.niceCCY(filteredTotalMileage())"></span>
+
+                        </td>
+                        <td class="topBorderSubTotal">
+                            <span class="text-success billSubTotal"
+                                  data-bind="text: NumberUtils.niceCCY(filteredTotalExpenses())"></span>
+                        </td>
+                    </tr>
+                    </tfoot>
                 </table>
             </div>
         </div>

@@ -70,18 +70,18 @@ define([],
             };
         }
 
-        function niceDate(date, includeTime) {
+        function niceDate(date, includeTime, defaultValue) {
             if (includeTime === undefined) {
                 includeTime = true;
             }
             if (date === undefined || date === null || date === '') {
-                return 'None';
+                return defaultValue || 'None';
             }
             if (!(date instanceof Date)) {
                 return date;
             }
             if(date.getTime() == 0){
-                return 'None'
+                return defaultValue || 'None'
             }
             var monthNames = [ "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" ];
             var dayNames   = [ "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" ];

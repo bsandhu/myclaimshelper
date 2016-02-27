@@ -1,6 +1,7 @@
 var assert = require("assert");
 var billingServices = require("./../../server/services/billingServices.js");
 var Bill = require("../../server/model/bill.js");
+var Claim = require("../../server/model/claim.js");
 var BillingItem = require("../../server/model/billingItem.js");
 var jQuery = require('jquery-deferred');
 var mongoUtils = require("./../../server/mongoUtils.js");
@@ -66,6 +67,9 @@ describe('billingServices', function () {
             assert.equal(bill.description, 'Test bill');
             assert.equal(bill._id, 'bill_id');
             assert.equal(bill.claimId, 'claim_id');
+            assert.equal(bill.claimDescription, 'None');
+            assert.equal(bill.claimInsuranceCompanyName, 'None');
+            assert.equal(bill.claimInsuranceCompanyFileNum, 'None');
 
             // billingItems included...
             assert.ok(bill.billingItems);
