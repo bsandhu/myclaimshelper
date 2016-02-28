@@ -9,9 +9,21 @@
 
     <div class="panel-body" data-bind="if: bills().length > 0">
 
+        <!-- Filtered msg. -->
+        <div class="row bottomMargin5" data-bind="if: Boolean(claimId)">
+            <div class="col-lg-6 col-md-6 col-lg-offset-3 col-md-offset-3 col-sm-12 col-xs-12">
+                <div class="alert alert-info" role="alert">
+                    Showing bills for Claim
+                    <span data-bind="text: claimId"></span>
+                    <strong><a href="#" data-bind="click: onShowAllClaims">Show all</a></strong>
+                </div>
+            </div>
+        </div>
+
+        <!-- Buttons -->
         <div class="row bottomMargin5">
             <div class="col-lg-10 col-md-10 col-sm-12 col-xs-12">
-                <div class="col-lg-5 col-md-5 col-sm-3 col-xs-3">
+                <div class="col-lg-5 col-md-4 col-sm-2 col-xs-2">
                     <div class="btn-group">
                         <a class="btn btn-sm btn-info" data-bind="attr: {href: '#/claim/' + claimId + '/newbill'}">
                             <i class="fa fa-plus"></i> New Invoice
@@ -24,7 +36,7 @@
                         <span>Show Closed Claims</span>
                     </div>
                 </div>
-                <div class="col-lg-2 col-md-2 col-sm-3 col-xs-3">
+                <div class="col-lg-2 col-md-3 col-sm-4 col-xs-4">
                     <div class="form-group rightBorderSolid inline">
                         <!-- Group selection -->
                         <div class="inline">Status</div>
@@ -46,7 +58,7 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-lg-10 col-md-10 col-sm-12 col-xs-12">
+            <div class="col-lg-11 col-md-11 col-sm-12 col-xs-12">
                 <!-- Sorting is enabled via koSortableBinding -->
                 <table id="billingListTable"
                        data-sortable

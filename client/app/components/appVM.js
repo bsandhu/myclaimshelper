@@ -57,6 +57,14 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
                 console.log('AppVM - SHOW_BILLING ev');
                 this.transitionToBilling();
             });
+            amplify.subscribe(Events.SHOW_BILLING_HISTORY, this, function () {
+                console.log('AppVM - SHOW_BILLING_HISTORY ev');
+                this.transitionToBilling();
+            });
+            amplify.subscribe(Events.SHOW_BILL, this, function () {
+                console.log('AppVM - SHOW_BILL ev');
+                this.transitionToBilling();
+            });
             amplify.subscribe(Events.SHOW_CLAIMS_LIST, this, function () {
                 console.log('AppVM - SHOW_CLAIMS_LIST ev');
                 this.transitionToClaimsList();
@@ -72,10 +80,6 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
             amplify.subscribe(Events.SHOW_CLAIM_ENTRY, this, function () {
                 console.log('AppVM - SHOW_CLAIM_ENTRY ev');
                 this.transitionToClaimEntry(this);
-            });
-            amplify.subscribe(Events.SHOW_BILL, this, function () {
-                console.log('AppVM - SHOW_BILL ev');
-                this.transitionToClaim(this);
             });
             amplify.subscribe(Events.NEW_CLAIM_ENTRY, this, function () {
                 console.log('AppVM - NEW_CLAIM_ENTRY ev');

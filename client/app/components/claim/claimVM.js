@@ -55,10 +55,6 @@ define(['jquery', 'knockout', 'KOMap', 'amplify',
             amplify.subscribe(Events.NEW_CLAIM_ENTRY, this, this.onNewClaimEntry);
             amplify.subscribe(Events.SHOW_CLAIM_ENTRY, this, this.onShowClaimEntry);
             amplify.subscribe(Events.SAVED_CLAIM_ENTRY, this, this.refreshClaimEntriesListing);
-            amplify.subscribe(Events.CREATE_NEW_BILL, this, this.onCreateNewBill);
-            amplify.subscribe(Events.SHOW_BILL, this, this.onShowBill);
-            amplify.subscribe(Events.SHOW_BILLING_HISTORY, this, this.selectBillingTab);
-
             amplify.subscribe(Events.EXPAND_CLAIM_PANEL, this, function(){this.isPartiallyCollapsed(false)});
             amplify.subscribe(Events.COLLAPSE_CLAIM_PANEL, this, function(){this.isPartiallyCollapsed(false)});
             amplify.subscribe(Events.PARTIALLY_COLlAPSE_CLAIM_PANEL, this, function(){this.isPartiallyCollapsed(true)});
@@ -151,18 +147,6 @@ define(['jquery', 'knockout', 'KOMap', 'amplify',
             this.inEditMode(false);
         };
 
-        ClaimVM.prototype.onCreateNewBill = function () {
-            this.selectBillingTab();
-        }
-
-        ClaimVM.prototype.onShowBill = function (entry, ev) {
-            this.selectBillingTab();
-        }
-
-        ClaimVM.prototype.onShowBillingHistory = function (entry, ev) {
-            this.Router.routeToBillingOverview(this.claim()._id());
-        }
-
         ClaimVM.prototype.onShowClaimTab = function (entry, ev) {
             this.Router.routeToClaim(this.claim()._id());
         }
@@ -170,11 +154,6 @@ define(['jquery', 'knockout', 'KOMap', 'amplify',
         ClaimVM.prototype.selectClaimTab = function () {
             console.log("Switch to Claim tab");
             this.activeTab(Consts.CLAIMS_TAB);
-        };
-
-        ClaimVM.prototype.selectBillingTab = function () {
-            console.log("Switch to Billing tab");
-            this.activeTab(Consts.BILLING_TAB);
         };
 
         ClaimVM.prototype.onClaimEntryClick = function (entry, ev) {
@@ -191,10 +170,6 @@ define(['jquery', 'knockout', 'KOMap', 'amplify',
 
         ClaimVM.prototype.onCloseClaim = function (contact) {
             Router.routeToHome();
-        }
-
-        ClaimVM.prototype.onCloseBilling = function (contact) {
-            amplify.publish(Events.CLOSE_BILLING_VIEW);
         }
 
         /***********************************************************/

@@ -190,6 +190,10 @@ div {
     border-bottom: 1px solid;
 }
 
+.color-grey {
+    color: rgb(169, 169, 169);
+}
+
 .color-dark-grey {
     color: rgb(85, 85, 85);
 }

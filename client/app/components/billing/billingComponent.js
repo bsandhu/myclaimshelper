@@ -135,15 +135,6 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox', 'underscore',
         /***********************************************************/
 
         BillingVM.prototype.setupEvListeners = function () {
-            amplify.subscribe(Events.SHOW_CLAIM, this, function (evData) {
-                this.claimId = evData.claimId;
-                console.log('Billing VM - SHOW_CLAIM ' + this.claimId);
-            });
-            amplify.subscribe(Events.SAVED_CLAIM, this, function (evData) {
-                this.claimId = evData.claim.claimId;
-                console.log('Billing VM - SAVED_CLAIM ' + this.claimId);
-            });
-
             amplify.subscribe(Events.CREATE_NEW_BILL, this, this.onCreateNewBill);
             amplify.subscribe(Events.SHOW_BILL, this, this.onShowBill);
             amplify.subscribe(Events.SHOW_BILLING_HISTORY, this, this.onShowBilllingHistory);
@@ -183,6 +174,11 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox', 'underscore',
 
         BillingVM.prototype.onUserProfileClick = function () {
             router.showProfilePopup();
+        };
+
+        BillingVM.prototype.onShowAllClaims = function () {
+            this.claimId = undefined;
+            this.onShowBilllingHistory({});
         };
 
         BillingVM.prototype.onUpdateBillStatus = function (newStatus, bill) {
@@ -254,9 +250,11 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox', 'underscore',
         }
 
         BillingVM.prototype.onShowBilllingHistory = function (evData) {
-            console.assert(evData.claimId, 'Expecting ev to carry claimId');
-            this.claimId = evData.claimId;
-            console.log('BillingVM - onShowBilllingHistory - Claim Id ' + this.claimId);
+            console.assert('Billing component > SHOW_BILLING_HISTORY');
+            if (evData.hasOwnProperty('claimId')) {
+                console.log('Show Billing History for claim ' + evData.claimId);
+                this.claimId = evData.claimId;
+            }
             this.mode(Consts.BILLING_TAB_HISTORY_MODE);
         }
 

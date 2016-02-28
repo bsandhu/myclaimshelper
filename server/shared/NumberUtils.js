@@ -12,7 +12,7 @@ define([],
             if (Number(ccy) === NaN) {
                 return '';
             }
-            return '$' + Number(ccy).toFixed(2);
+            return '$' + Number(ccy).toLocaleString('en-US');
         }
 
         return {

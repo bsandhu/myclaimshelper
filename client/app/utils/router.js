@@ -30,10 +30,6 @@ define(['Path', 'amplify', 'app/utils/events'],
                 amplify.publish(Events.SHOW_TRAVEL);
             });
 
-            Path.map("#/billing").to(function () {
-                amplify.publish(Events.SHOW_BILLING);
-            });
-
             Path.map("#/claim/list").to(function () {
                 amplify.publish(Events.SHOW_CLAIMS_LIST);
             });
@@ -50,12 +46,16 @@ define(['Path', 'amplify', 'app/utils/events'],
                 amplify.publish(Events.CREATE_NEW_BILL, {claimId: this.params.claimId});
             });
 
-            Path.map("#/claim/:claimId/bill/:billId").to(function () {
+            Path.map("#/bill/:claimId/:billId").to(function () {
                 amplify.publish(Events.SHOW_BILL, {claimId: this.params.claimId, billId: this.params.billId});
             });
 
-            Path.map("#/claim/:claimId/billhistory").to(function () {
+            Path.map("#/billing/history/:claimId").to(function () {
                 amplify.publish(Events.SHOW_BILLING_HISTORY, {claimId: this.params.claimId});
+            });
+
+            Path.map("#/billing").to(function () {
+                amplify.publish(Events.SHOW_BILLING_HISTORY, {});
             });
 
             Path.map("#/claimEntry/new/:entryType").to(function () {
@@ -77,7 +77,7 @@ define(['Path', 'amplify', 'app/utils/events'],
 
         Router.prototype.routeToBillingOverview = function (claimId) {
             console.log('Navigating to Billing overview ' + claimId);
-            window.location.hash = '#/claim/' + claimId + '/billhistory';
+            window.location.hash = '#/bill/history/' + claimId;
         };
 
         /**
@@ -85,7 +85,7 @@ define(['Path', 'amplify', 'app/utils/events'],
          */
         Router.prototype.routeToBill = function () {
             console.log('Navigating to Bill ' + this._id);
-            window.location.hash = '#/claim/' + this.claimId + '/bill/' + this._id;
+            window.location.hash = '#/bill/' + this.claimId + '/' + this._id;
         };
 
         Router.prototype.routeToClaim = function (claimId) {
