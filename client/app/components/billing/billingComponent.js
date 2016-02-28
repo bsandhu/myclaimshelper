@@ -1,5 +1,5 @@
 define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox', 'underscore',
-        'shared/dateUtils', 'shared/numberUtils', 'app/utils/ajaxUtils', 'app/utils/events', 'app/utils/consts', 'app/utils/router',
+        'shared/dateUtils', 'shared/NumberUtils', 'app/utils/ajaxUtils', 'app/utils/events', 'app/utils/consts', 'app/utils/router',
         'app/utils/session', 'app/utils/sessionKeys',
         'model/bill', 'model/billingItem', 'model/billingStatus', 'model/contact',
         'text!app/components/billing/billing.tmpl.html',
