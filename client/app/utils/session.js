@@ -28,6 +28,20 @@ define(['amplify', 'app/utils/sessionKeys'], function (amplify, SessionKeys) {
             return amplify.store.sessionStorage(SessionKeys.ACTIVE_USER_PROFILE);
         },
 
+        // User Auth profile
+        setCurrentUserAuthProfile: function (profile) {
+            amplify.store.sessionStorage(SessionKeys.ACTIVE_USER_AUTH_PROFILE, profile);
+        },
+        getCurrentUserAuthProfile: function () {
+            return amplify.store.sessionStorage(SessionKeys.ACTIVE_USER_AUTH_PROFILE);
+        },
+        setCurrentUserAuthToken: function (token) {
+            amplify.store.sessionStorage(SessionKeys.ACTIVE_USER_AUTH_TOKEN, token);
+        },
+        getCurrentUserAuthToken: function () {
+            return amplify.store.sessionStorage(SessionKeys.ACTIVE_USER_AUTH_TOKEN);
+        },
+
         // Claim
         getActiveClaimId: function () {
             var activeClaimId = amplify.store.sessionStorage(SessionKeys.ACTIVE_CLAIM_ID);

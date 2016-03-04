@@ -1,7 +1,7 @@
 require.config({
     baseUrl: '/',
     paths: {
-        'jquery': 'lib/jquery.min',
+        'jquery': 'lib/jquery-2.1.1',
         'jqueryBase64': 'lib/jquery.base64',
         'jqueryui': 'lib/jquery.ui.min',
         'hotkeys': 'lib/jquery.hotkeys',
@@ -27,9 +27,14 @@ require.config({
         'select2': 'lib/select2.min',
         'circliful': 'lib/jquery.circliful.min',
         'underscore': 'lib/underscore.min',
-        'chartjs': 'lib/Chart'
+        'chartjs': 'lib/Chart',
+        'Auth0Lock': 'lib/lock-8.2.min'
     },
     shim: {
+        'Auth0Lock': {
+            deps: ['jquery'],
+            exports: 'Auth0Lock'
+        },
         'circliful': {
             deps: ['jquery']
         },

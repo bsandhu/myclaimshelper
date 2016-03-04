@@ -1,10 +1,11 @@
 define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEntry', 'model/states', 'app/utils/events',
-        'app/utils/router', 'shared/dateUtils', 'app/utils/ajaxUtils'],
-    function ($, ko, KOMap, amplify, Claim, ClaimEntry, States, Events, Router, DateUtils, AjaxUtils) {
+        'app/utils/router', 'shared/dateUtils', 'app/utils/ajaxUtils', 'app/utils/session'],
+    function ($, ko, KOMap, amplify, Claim, ClaimEntry, States, Events, Router, DateUtils, AjaxUtils, Session) {
         'use strict';
 
         function AppVM() {
             console.log('Init AppVM');
+            this.Session = Session;
 
             // UI state
             this.gridNavDelay = 100;

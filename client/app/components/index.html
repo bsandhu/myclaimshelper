@@ -29,6 +29,10 @@
 
     <script src="../../../lib/require.js"></script>
     <script src="../../../lib/requireConfig.js"></script>
+
+    <!-- Setting the right viewport -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+
 </head>
 
 <body class="menu-on-top">
@@ -64,7 +68,9 @@
                 <i class="fa fa-bell"></i></a>
             </li>
             <li><a href="" data-bind="click: router.showProfilePopup">
-                <i class="fa fa-user"></i></a>
+                <i class="fa fa-user"></i>
+                <span data-bind="text: Session.getCurrentUserId()"
+                      style="font-size: 70%"></span></a>
             </li>
             <li class="navbar-right">
                 <a style="cursor: pointer"
@@ -81,6 +87,7 @@
 <!-- #MAIN PANEL -->
 <div id="main" role="main">
 
+    <button id="btn-login">LOGIN</button>
     <!-- Msgs component -->
     <admin-component></admin-component>
 
@@ -195,7 +202,8 @@
                 // The function returns what was previously Chart, allowing you to reassign.
                 var Chartjs = Chart.noConflict();
                 DateUtils.enableJSONDateHandling();
-                Session.setCurrentUserId("TestUser");
+
+                // Cleanup session
                 Session.clearContacts();
 
                 // Knockout AMD supoprt setup
@@ -229,6 +237,11 @@
                     var maxLength = 80;
                     return JSON.stringify(str).substring(0, maxLength);
                 };
+
+                // Auth0
+                $('#btn-login').click(function (e) {
+                    e.preventDefault();
+                });
             });
 </script>
 

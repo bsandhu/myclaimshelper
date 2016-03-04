@@ -1,12 +1,21 @@
 define(['jquery', 'amplify', 'app/utils/events'],
     function ($, amplify, Events) {
 
+        $.ajaxSetup({
+            'beforeSend': function (xhr) {
+                if (localStorage.getItem('userToken')) {
+                    xhr.setRequestHeader('Authorization',
+                            'Bearer ' + localStorage.getItem('userToken'));
+                }
+            }
+        });
+
         function post(url, json, onDone, onFail) {
             if (!onFail) {
                 onFail = function (jqXHR, textStatus, errorThrown) {
                     amplify.publish(Events.FAILURE_NOTIFICATION,
                         {msg: "<strong>Server error</strong> while processing your request. Please retry." +
-                              "<br>Techinal details: " + textStatus});
+                            "<br>Techinal details: " + textStatus});
                 };
             }
             $.ajax({
