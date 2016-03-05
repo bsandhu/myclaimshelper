@@ -12,11 +12,9 @@ var jQuery = require("jquery-deferred");
 var _saveOrUpdateUserProfile = _.partial(mongoUtils.saveOrUpdateEntity, _, USERPROFILE_COL_NAME);
 
 // :: Id -> Promise
-//var _getUserProfile = _.partial(mongoUtils.getEntityById, _, USERPROFILE_COL_NAME);
-function _getUserProfile(id, db) {
+function _getUserProfile(search, db) {
     var result = jQuery.Deferred();
-    var search = {'_id': id};
-    //return mongoUtils.findEntities(USERPROFILE_COL_NAME, search, db);
+
     mongoUtils.findEntities(USERPROFILE_COL_NAME, search, db)
         .then(function (profiles) {
             var profile = profiles[0];
@@ -31,10 +29,11 @@ function _getUserProfile(id, db) {
 
 // :: Dict -> Dict -> None
 function getUserProfileREST(req, res) {
-    console.log(req);
     assert.ok(req.params.id, 'Expecting UserProfile Id as a parameter');
     var db = mongoUtils.connect();
-    db.then(_.partial(_getUserProfile, req.params.id))
+    var search = {'_id': req.params.id, 'owner': req.headers.userid};
+
+    db.then(_.partial(_getUserProfile, search))
         .then(
         _.partial(sendResponse, res, null),
         _.partial(sendResponse, res, 'Failed to get UserProfile  ' + req.params.id));
@@ -43,6 +42,8 @@ function getUserProfileREST(req, res) {
 // :: Dict -> Dict -> None
 function saveOrUpdateUserProfileREST(req, res) {
     var userProfile = req.body;
+    userProfile.owner = req.headers.userid;
+
     _saveOrUpdateUserProfile(userProfile)
         .then(function () {
             sendResponse(res, null, userProfile)

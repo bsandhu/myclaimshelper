@@ -12,15 +12,22 @@ var notificationService = require('./services/notificationService.js');
 var statsService = require('./services/statsService');
 var processMail = require('./services/mail/mailHandler.js').process;
 var mongoUtils = require('./mongoUtils.js');
+var Consts = require('./shared/consts.js');
 var serviceUtils = require('./serviceUtils.js');
 var os = require('os');
 var jwt = require('jsonwebtoken');
 
-var server = restify.createServer();
-var io = socketio.listen(server);
-
+// Auto0 keys
 var JWT_SECRET = 'L3_qew5xG1FsXL6PVGpwP-YLnb1ev9I8ZmRe6BmP_hSwEVwzJsG93E9LizLP7E1j';
 var DECODED_JWT_SECRET = new Buffer(JWT_SECRET, 'base64');
+
+// Testing hooks
+var DISABLE_AUTH = true;
+var TEST_USER = 'baljeet.mail';
+
+// Restify server
+var server = restify.createServer();
+var io = socketio.listen(server);
 
 
 function init() {
@@ -28,6 +35,7 @@ function init() {
     // Wrap with socket io instance
     io = socketio.listen(server);
 
+    // Attach handlers to Server
     server.use(restify.acceptParser(server.acceptable));
     server.use(restify.authorizationParser());
     server.use(restify.dateParser());
@@ -41,10 +49,18 @@ function init() {
     }));
     server.use(restify.jsonp());
     server.use(restify.gzipResponse());
+
+    server.use(function reqSessionHandler(req, res, next) {
+        if (DISABLE_AUTH) {
+            console.log('Injecting test user into req');
+            req.headers.userid = TEST_USER;
+        }
+        next();
+    });
 }
 
 function setupStatsRoutes() {
-    server.get('/stats/all', statsService.getAllStatsREST);
+    server.get('/stats/all', authenticate, statsService.getAllStatsREST);
 }
 
 function setupMailServiceRoutes() {
@@ -59,17 +75,22 @@ function setupNotificationRoutes() {
 }
 
 function authenticate(req, res, next) {
-    jwt.verify(
-        req.authorization.credentials,
-        DECODED_JWT_SECRET,
-        function onDecode(err, decoded) {
-            if (err) {
-                res.send(401);
-            } else {
-                console.log('Authenticated: ' + decoded.sub);
-                return next();
-            }
-        });
+    if (DISABLE_AUTH) {
+        next();
+    } else {
+        jwt.verify(
+            req.authorization.credentials,
+            DECODED_JWT_SECRET,
+            function onDecode(err, decoded) {
+                if (err) {
+                    console.log('Auth error: ' + err);
+                    res.send(401);
+                } else {
+                    console.log('Authenticated: ' + decoded.sub);
+                    return next();
+                }
+            });
+    }
 }
 
 function setupClaimsServiceRoutes() {

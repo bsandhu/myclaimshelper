@@ -87,7 +87,6 @@
 <!-- #MAIN PANEL -->
 <div id="main" role="main">
 
-    <button id="btn-login">LOGIN</button>
     <!-- Msgs component -->
     <admin-component></admin-component>
 
@@ -237,11 +236,6 @@
                     var maxLength = 80;
                     return JSON.stringify(str).substring(0, maxLength);
                 };
-
-                // Auth0
-                $('#btn-login').click(function (e) {
-                    e.preventDefault();
-                });
             });
 </script>
 

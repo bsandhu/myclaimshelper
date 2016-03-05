@@ -16,13 +16,14 @@ function saveOrUpdateContact(req, res) {
     var contactJSON = req.body;
     console.log('Save/update contact: ' + JSON.stringify(contactJSON));
     var contactObj = _.extend(new Contact(), contactJSON);
+    contactObj.owner = req.headers.userid;
 
     // Validate
     if (!_.isString(contactObj.name)) {
         sendResponse(res, 'Please specify a name');
     } else {
         saveOrUpdateContactObject(contactObj)
-            .always(function(result){
+            .always(function (result) {
                 result.status === 'Success' ? sendResponse(res, null, result.data) : sendResponse(res, result.details);
             });
     }
@@ -47,16 +48,16 @@ function getContact(req, res) {
     assert.ok(req.params.id, 'Expecting ContactId as a parameter');
     var contactId = req.params.id;
 
-    getContactObject(contactId)
-        .always(function(result){
+    getContactObject(contactId, req.headers.userid)
+        .always(function (result) {
             result.status === 'Success' ? sendResponse(res, null, result.data) : sendResponse(res, result.details);
         });
 }
 
-function getContactObject(contactId) {
+function getContactObject(contactId, owner) {
     var defer = jQuery.Deferred();
 
-    mongoUtils.getEntityById(contactId, mongoUtils.CONTACTS_COL_NAME)
+    mongoUtils.getEntityById(contactId, mongoUtils.CONTACTS_COL_NAME, owner)
         .always(function (err, results) {
             defer.resolve(serviceUtils.createResponse(err, results));
         });
@@ -67,7 +68,9 @@ function listAllContacts(req, res) {
     console.log('getting all contacts');
     mongoUtils.run(function (db) {
         var contactsCol = db.collection(mongoUtils.CONTACTS_COL_NAME);
-        contactsCol.find().toArray(function (err, items) {
+
+        var userId = req.headers.userid;
+        contactsCol.find({owner: userId}).toArray(function (err, items) {
             sendResponse(res, err, items);
         });
     });

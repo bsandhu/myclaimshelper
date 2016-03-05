@@ -57,7 +57,15 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'Auth0Lock', 'app/utils/events
                     }
                 });
             }
-        }
+        };
+
+        UserProfileComponent.prototype.onLogoff = function () {
+            console.log('Logoff');
+            Session.setCurrentUserAuthProfile(null);
+            Session.setCurrentUserAuthToken(null);
+            Session.setCurrentUserId(null);
+            Session.setCurrentUserProfile(null);
+        };
 
         return {viewModel: UserProfileComponent, template: viewHtml};
     });

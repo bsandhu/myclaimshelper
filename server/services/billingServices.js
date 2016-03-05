@@ -65,11 +65,11 @@ var _getBillingItems = function (search, db) {
     return result;
 }
 
-var _getClaims = function (search, db) {
+var _getClaimsIgnoringOwnership = function (search, db) {
     var result = jQuery.Deferred();
-    jQuery.when(mongoUtils.findEntities(CLAIMS_COL_NAME, search, db))
+    jQuery.when(mongoUtils.findEntities(CLAIMS_COL_NAME, search, db, false))
         .then(function (claims) {
-            console.log('_getClaims: ' + JSON.stringify(claims).substr(0, 100));
+            console.log('_getClaimsIgnoringOwnership: ' + JSON.stringify(claims).substr(0, 100));
             result.resolve(_hydrate(Claim, claims));
         });
     return result;
@@ -95,7 +95,7 @@ var getBillObjects = function (search, db) {
             var correspondingClaimIds = _.uniq(_.map(bills, function (bill) {
                 return bill.claimId
             }));
-            _getClaims({_id: {$in: correspondingClaimIds}}, db)
+            _getClaimsIgnoringOwnership({_id: {$in: correspondingClaimIds}}, db)
                 .then(function (claims) {
                     _.each(bills, function populateClaimDetails(bill) {
                         var correspondingClaim = _.find(claims, function (claim) {
@@ -112,7 +112,7 @@ var getBillObjects = function (search, db) {
 
     function _populateBillingItems(bill) {
         var done = jQuery.Deferred();
-        var itemSearch = {billId: bill._id};
+        var itemSearch = {billId: bill._id, owner: bill.owner};
         jQuery.when(_getBillingItems(itemSearch, db))
             .then(function (billingItems) {
                 bill.billingItems = billingItems;
@@ -128,8 +128,10 @@ var getBillObjects = function (search, db) {
 // :: Dict -> Dict -> None
 function getBillsREST(req, res) {
     assert.ok(req.body, 'Expecting Mongo query as a parameter');
-    var query = req.body;
     var db = mongoUtils.connect();
+    var query = req.body;
+    query.owner = req.headers.userid;
+
     db.then(_.partial(getBillObjects, query))
         .then(_.partial(sendResponse, res, null),
         _.partial(sendResponse, res, 'Failed to get Bill for query ' + query));
@@ -139,39 +141,49 @@ function getBillsREST(req, res) {
 function getBillingItemsREST(req, res) {
     assert.ok(req.params.search, 'Expecting BillId as a parameter');
     var db = mongoUtils.connect();
-    db.then(_.partial(_getBillingItems, req.params.search))
+    var search = req.params.search;
+    search.owner = req.headers.userid;
+
+    db.then(_.partial(_getBillingItems, search))
         .then(_.partial(sendResponse, res, null),
         _.partial(sendResponse, res, 'Failed to get BillingItems  ' + req.params.search));
 }
 
 // :: Dict -> Dict -> None
 function saveOrUpdateBillingItemsREST(req, res) {
-    function _done(msg) {
-        sendResponse(res, null, msg);
-    };
-    function _fail() {
-        sendResponse(res, 'Failed to save');
-    };
     var items = req.body;
     assert.ok(_.isArray(items), 'Expecting BillingItems in an Array');
 
     if (items.length > 1) {
+        // Add owner attr to items
+        items = _.map(items, function (item) {
+            item.owner = req.headers.userid;
+        });
         var promises = _.map(items, _saveOrUpdateBillingItems);
         jQuery.when.apply(jQuery, promises)
             .done(_done)
             .fail(_fail);
     } else {
         // If one item is being saved - return Generated id
+        items[0].owner = req.headers.userid;
         mongoUtils.saveOrUpdateEntity(items[0], mongoUtils.BILLING_ITEMS_COL_NAME)
             .always(function (err, results) {
                 sendResponse(res, err, results);
             });
     }
+
+    function _done(msg) {
+        sendResponse(res, null, msg);
+    };
+    function _fail() {
+        sendResponse(res, 'Failed to save');
+    };
 }
 
 // :: Dict -> Dict -> None
 function saveOrUpdateBillREST(req, res) {
     var bill = req.body;
+    bill.owner = req.headers.userid;
 
     delete bill.billingItems;
 

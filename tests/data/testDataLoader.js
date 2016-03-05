@@ -8,6 +8,8 @@ var testBililngItems = require('./testBIllingItems.js');
 var testClaims = require('./testClaims.js');
 var testUserProfile = require('./testUserProfile.js');
 
+var TEST_USER_ID = 'baljeet.mail';
+
 
 function nukeDB() {
     console.log('NUKING DB');
@@ -28,7 +30,7 @@ function nukeDB() {
 
 function populateContacts() {
     _.each(testContacts.data, function (contact) {
-        mongoUtils.saveOrUpdateEntity(contact, mongoUtils.CONTACTS_COL_NAME)
+        mongoUtils.saveOrUpdateEntity(contact, mongoUtils.CONTACTS_COL_NAME, TEST_USER_ID)
             .always(function (err) {
                 console.info(!err ? 'Saved contact' : err);
             });
@@ -37,7 +39,7 @@ function populateContacts() {
 
 function populateClaimEntries() {
     _.each(testClaimEntries.data, function (entry) {
-        mongoUtils.saveOrUpdateEntity(entry, mongoUtils.CLAIM_ENTRIES_COL_NAME)
+        mongoUtils.saveOrUpdateEntity(entry, mongoUtils.CLAIM_ENTRIES_COL_NAME, TEST_USER_ID)
             .always(function (err) {
                 console.info(!err ? 'Saved ClaimEntry' : err);
             });
@@ -46,7 +48,7 @@ function populateClaimEntries() {
 
 function populateBillingItems() {
     _.each(testBililngItems.data, function (entry) {
-        mongoUtils.saveOrUpdateEntity(entry, mongoUtils.BILLING_ITEMS_COL_NAME)
+        mongoUtils.saveOrUpdateEntity(entry, mongoUtils.BILLING_ITEMS_COL_NAME, TEST_USER_ID)
             .always(function (err) {
                 console.info(!err ? 'Saved BillingItem' : err);
             });
@@ -55,7 +57,7 @@ function populateBillingItems() {
 
 function populateClaims() {
     _.each(testClaims.data, function (claim) {
-        mongoUtils.saveOrUpdateEntity(claim, mongoUtils.CLAIMS_COL_NAME)
+        mongoUtils.saveOrUpdateEntity(claim, mongoUtils.CLAIMS_COL_NAME, TEST_USER_ID)
             .always(function (err) {
                 console.info(!err ? 'Saved Claim' : err);
             });
@@ -64,7 +66,7 @@ function populateClaims() {
 
 function populateUserProfiles() {
     _.each(testUserProfile.data, function (claim) {
-        mongoUtils.saveOrUpdateEntity(claim, mongoUtils.USERPROFILE_COL_NAME)
+        mongoUtils.saveOrUpdateEntity(claim, mongoUtils.USERPROFILE_COL_NAME, TEST_USER_ID)
             .always(function (err) {
                 console.info(!err ? 'Saved UserProfile' : err);
             });

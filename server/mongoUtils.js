@@ -1,6 +1,7 @@
 var MongoClient = require('mongodb').MongoClient;
 var jQuery = require('jquery-deferred');
 var config = require('./config.js');
+var Consts = require('./shared/consts.js');
 var _ = require('underscore');
 
 var dbConn;
@@ -10,8 +11,7 @@ function _onResult(result, err, ok) {
     if (err) {
         console.log('Error: ' + err.message);
         result.reject(err);
-    }
-    else {
+    } else {
         result.resolve(ok);
     }
 };
@@ -89,8 +89,9 @@ function incrementAndGet(sequenceName) {
     return deferred.promise();
 }
 
-function saveOrUpdateEntity(entity, colName) {
+function saveOrUpdateEntity(entity, colName, owner) {
     console.log('saveOrUpdateEntity. ' + JSON.stringify(entity) + '. Collection name: ' + colName);
+    checkOwnerPresent(entity);
     var defer = jQuery.Deferred();
 
     function getSeqNum() {
@@ -168,13 +169,23 @@ function modifyAttr(colName, attributesAsJson) {
     return defer;
 }
 
-function getEntityById(entityId, colName) {
+function checkOwnerPresent(obj) {
+    if ((_.isObject(obj) && (obj.owner === null || obj.owner === undefined))
+        || (obj.length === 0)) {
+        var msg = "Could not find the owner on " + JSON.stringify(obj);
+        console.log(msg);
+        throw msg;
+    }
+}
+
+function getEntityById(entityId, colName, owner) {
     console.log('Getting Entity: ' + entityId);
     var defer = jQuery.Deferred();
+    checkOwnerPresent(owner);
 
     run(function (db) {
         var entityCol = db.collection(colName);
-        entityCol.findOne({'_id': {'$eq': entityId}}, onResults);
+        entityCol.findOne({'_id': {'$eq': entityId}, 'owner': owner}, onResults);
 
         function onResults(err, item) {
             if (err) {
@@ -220,8 +231,16 @@ var connect = function () {
 }
 
 // :: String -> Dict -> DB -> Promise
-var findEntities = function (collectionName, search, db) {
-    console.log('Find entities: ' + collectionName + ', ' + JSON.stringify(search));
+var findEntities = function (collectionName, search, db, checkOwnerAttr) {
+    // Default to checking the owner attr
+    if (checkOwnerAttr === null || checkOwnerAttr === undefined) {
+        checkOwnerAttr = true;
+    }
+    if (checkOwnerAttr) {
+        checkOwnerPresent(search);
+    }
+    console.log('Find entities: ' + collectionName + ', Search: ' + JSON.stringify(search));
+
     var result = jQuery.Deferred();
     var collection = db.collection(collectionName);
     collection.find(search).toArray(function (err, resp) {

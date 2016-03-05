@@ -35,6 +35,7 @@ function saveOrUpdateClaim(req, res) {
 
     function setReferenceToContactObj(contactJSON, callBack) {
         var defer = jQuery.Deferred();
+        contactJSON.owner = req.headers.userid;
         var contactObj = _.extend(new Contact(), contactJSON);
 
         if (_.isEmpty(contactObj.name)) {
@@ -96,6 +97,7 @@ function saveOrUpdateClaim(req, res) {
             delete claim.claimantsAttorneyContact;
             delete claim.insuranceCoContact;
             delete claim.otherContacts;
+            claim.owner = req.headers.userid;
 
             mongoUtils.saveOrUpdateEntity(claim, mongoUtils.CLAIMS_COL_NAME)
                 .always(function (err, results) {
@@ -106,6 +108,7 @@ function saveOrUpdateClaim(req, res) {
 
 function saveOrUpdateClaimEntry(req, res) {
     var entity = req.body;
+    entity.owner = req.headers.userid;
     var description = entity.description;
     var billingItem = entity.billingItem;
 
@@ -133,6 +136,7 @@ function saveOrUpdateClaimEntry(req, res) {
                     if (billingItem && !err) {
                         billingItem.claimEntryId = results._id;
                         billingItem.claimEntryId
+                        billingItem.owner = req.headers.userid;
                         // Ensure numeric values
                         billingItem.mileage = Number(billingItem.mileage || 0)
                         billingItem.time = Number(billingItem.time || 0)
@@ -173,6 +177,7 @@ function modifyClaim(req, res) {
  */
 function saveOrUpdateClaimEntryObject(claimEntry) {
     assert.ok(claimEntry instanceof ClaimEntry, 'Expecting instance of ClaimEntry object');
+    claimEntry.owner = req.headers.userid;
 
     var defer = jQuery.Deferred();
     mongoUtils.saveOrUpdateEntity(claimEntry, mongoUtils.CLAIM_ENTRIES_COL_NAME)
@@ -200,7 +205,7 @@ function getClaim(req, res) {
 
     function populateContactRef(contactId, callback) {
         var defer = jQuery.Deferred();
-        contactService.getContactObject(contactId)
+        contactService.getContactObject(contactId, req.params.id)
             .done(function (result) {
                 var contactObj = result.status.toLowerCase() === 'success' ? result.data : new Contact();
                 defer.resolve(contactObj);
@@ -214,7 +219,7 @@ function getClaim(req, res) {
         return chainedDefer;
     }
 
-    mongoUtils.getEntityById(entityId, mongoUtils.CLAIMS_COL_NAME)
+    mongoUtils.getEntityById(entityId, mongoUtils.CLAIMS_COL_NAME, req.headers.userid)
         .always(function (err, results) {
             if (err) {
                 sendResponse(res, err, results);
@@ -267,7 +272,7 @@ function getAllClaims(req, res) {
     console.log('Get all Claims');
 
     mongoUtils.run(function (db) {
-        claimsCollection(db).find().toArray(onResults);
+        claimsCollection(db).find({owner: req.headers.userid}).toArray(onResults);
 
         function onResults(err, items) {
             var modelObjs = _.map(items, convertToModel);
@@ -285,6 +290,7 @@ function searchClaims(req, res) {
     assert.ok(req.params.search, 'Expecting Search as a parameter');
     var search = req.params.search;
     var query = JSON.parse(search);
+    query.owner = req.headers.userid;
 
     console.log('Searching for Claim with query: ' + search);
     mongoUtils.run(function (db) {
@@ -324,6 +330,8 @@ function getAllEntriesForClaim(req, res) {
 
 function searchClaimEntries(req, res) {
     var query = req.body.query;
+    query.owner = req.headers.userid;
+
     var options = req.body.options || {};
 
     console.log('Searching for ClaimEntries. Req: ' + JSON.stringify(req.body));
@@ -335,7 +343,7 @@ function searchClaimEntries(req, res) {
         function populateClaimFileNumber(item) {
             var defer = jQuery.Deferred();
             mongoUtils
-                .findEntities(mongoUtils.CLAIMS_COL_NAME, {_id: item.claimId}, db)
+                .findEntities(mongoUtils.CLAIMS_COL_NAME, {_id: item.claimId, owner: req.headers.userid}, db)
                 .then(function (claims) {
                     // ClaimEntry has only one Claim
                     var claim = _.first(claims);
@@ -351,7 +359,7 @@ function searchClaimEntries(req, res) {
         function populateBillingItem(item) {
             var defer = jQuery.Deferred();
             mongoUtils
-                .findEntities(mongoUtils.BILLING_ITEMS_COL_NAME, {claimEntryId: item._id}, db)
+                .findEntities(mongoUtils.BILLING_ITEMS_COL_NAME, {claimEntryId: item._id, owner: req.headers.userid}, db)
                 .then(function (billingItems) {
                     // ClaimEntry has only one BilingItem
                     var billingItem = _.first(billingItems);
