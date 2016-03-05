@@ -24,7 +24,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'Auth0Lock', 'app/utils/events
         };
 
         UserProfileComponent.prototype.getCurrentUserId = function () {
-            return amplify.store.sessionStorage(SessionKeys.ACTIVE_USER_ID);
+            return amplify.store.sessionStorage(SessionKeys.USER_ID);
         };
 
         UserProfileComponent.prototype.loadUserProfile = function (userProfileId) {

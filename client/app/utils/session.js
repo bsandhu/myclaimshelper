@@ -1,7 +1,9 @@
 define(['amplify', 'app/utils/sessionKeys'], function (amplify, SessionKeys) {
 
     return {
-        // Contacts
+
+        /************ Contacts ************/
+
         clearContacts: function () {
             amplify.store.sessionStorage(SessionKeys.ALL_CONTACTS, null);
         },
@@ -12,37 +14,43 @@ define(['amplify', 'app/utils/sessionKeys'], function (amplify, SessionKeys) {
             return amplify.store.sessionStorage(SessionKeys.ALL_CONTACTS) || [];
         },
 
-        // User
+
+        /************ User ************/
+
         setCurrentUserId: function (userId) {
-            amplify.store.sessionStorage(SessionKeys.ACTIVE_USER_ID, userId);
+            amplify.store.sessionStorage(SessionKeys.USER_ID, userId);
         },
         getCurrentUserId: function () {
-            return amplify.store.sessionStorage(SessionKeys.ACTIVE_USER_ID);
+            return amplify.store.sessionStorage(SessionKeys.USER_ID);
         },
 
-        // User profile
+        // Profile
         setCurrentUserProfile: function (profile) {
-            amplify.store.sessionStorage(SessionKeys.ACTIVE_USER_PROFILE, profile);
+            amplify.store.sessionStorage(SessionKeys.USER_PROFILE, profile);
         },
         getCurrentUserProfile: function () {
-            return amplify.store.sessionStorage(SessionKeys.ACTIVE_USER_PROFILE);
+            return amplify.store.sessionStorage(SessionKeys.USER_PROFILE);
         },
 
-        // User Auth profile
+        // Auth profile
         setCurrentUserAuthProfile: function (profile) {
-            amplify.store.sessionStorage(SessionKeys.ACTIVE_USER_AUTH_PROFILE, profile);
+            amplify.store.sessionStorage(SessionKeys.USER_AUTH_PROFILE, profile);
         },
         getCurrentUserAuthProfile: function () {
-            return amplify.store.sessionStorage(SessionKeys.ACTIVE_USER_AUTH_PROFILE);
-        },
-        setCurrentUserAuthToken: function (token) {
-            amplify.store.sessionStorage(SessionKeys.ACTIVE_USER_AUTH_TOKEN, token);
-        },
-        getCurrentUserAuthToken: function () {
-            return amplify.store.sessionStorage(SessionKeys.ACTIVE_USER_AUTH_TOKEN);
+            return amplify.store.sessionStorage(SessionKeys.USER_AUTH_PROFILE);
         },
 
-        // Claim
+        // Auth token
+        setCurrentUserAuthToken: function (token) {
+            amplify.store.sessionStorage(SessionKeys.USER_AUTH_TOKEN, token);
+        },
+        getCurrentUserAuthToken: function () {
+            return amplify.store.sessionStorage(SessionKeys.USER_AUTH_TOKEN);
+        },
+
+
+        /************ Claim ************/
+
         getActiveClaimId: function () {
             var activeClaimId = amplify.store.sessionStorage(SessionKeys.ACTIVE_CLAIM_ID);
             console.assert(activeClaimId, 'No claim active in session');

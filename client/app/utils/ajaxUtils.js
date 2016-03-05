@@ -1,11 +1,15 @@
-define(['jquery', 'amplify', 'app/utils/events'],
-    function ($, amplify, Events) {
+define(['jquery', 'amplify', 'app/utils/events', 'app/utils/session'],
+    function ($, amplify, Events, Session) {
 
         $.ajaxSetup({
             'beforeSend': function (xhr) {
-                if (localStorage.getItem('userToken')) {
-                    xhr.setRequestHeader('Authorization',
-                            'Bearer ' + localStorage.getItem('userToken'));
+                if (Session.getCurrentUserAuthToken()) {
+                    xhr.setRequestHeader(
+                        'Authorization',
+                        'Bearer ' + Session.getCurrentUserAuthToken());
+                    xhr.setRequestHeader(
+                        'UserId',
+                        Session.getCurrentUserId());
                 }
             }
         });

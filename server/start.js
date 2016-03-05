@@ -14,9 +14,13 @@ var processMail = require('./services/mail/mailHandler.js').process;
 var mongoUtils = require('./mongoUtils.js');
 var serviceUtils = require('./serviceUtils.js');
 var os = require('os');
+var jwt = require('jsonwebtoken');
 
 var server = restify.createServer();
 var io = socketio.listen(server);
+
+var JWT_SECRET = 'L3_qew5xG1FsXL6PVGpwP-YLnb1ev9I8ZmRe6BmP_hSwEVwzJsG93E9LizLP7E1j';
+var DECODED_JWT_SECRET = new Buffer(JWT_SECRET, 'base64');
 
 
 function init() {
@@ -54,40 +58,54 @@ function setupNotificationRoutes() {
     server.get('/notification/unreadMsgs', notificationService.getUnreadMsgs);
 }
 
+function authenticate(req, res, next) {
+    jwt.verify(
+        req.authorization.credentials,
+        DECODED_JWT_SECRET,
+        function onDecode(err, decoded) {
+            if (err) {
+                res.send(401);
+            } else {
+                console.log('Authenticated: ' + decoded.sub);
+                return next();
+            }
+        });
+}
+
 function setupClaimsServiceRoutes() {
-    server.get('/claim', claimsService.getAllClaims);
-    server.get('/claim/:id', claimsService.getClaim);
-    server.get('/claim/:id/entries', claimsService.getAllEntriesForClaim);
-    server.post('/claim', claimsService.saveOrUpdateClaim);
-    server.get('/claim/search/:search', claimsService.searchClaims);
+    server.get('/claim', authenticate, claimsService.getAllClaims);
+    server.get('/claim/:id', authenticate, claimsService.getClaim);
+    server.get('/claim/:id/entries', authenticate, claimsService.getAllEntriesForClaim);
+    server.post('/claim', authenticate, claimsService.saveOrUpdateClaim);
+    server.get('/claim/search/:search', authenticate, claimsService.searchClaims);
 
-    server.get('/claimEntry/:id', claimsService.getClaimEntry);
-    server.post('/claimEntry', claimsService.saveOrUpdateClaimEntry);
-    server.post('/claimEntry/modify', claimsService.modifyClaimEntry);
-    server.post('/claimEntry/search', claimsService.searchClaimEntries);
+    server.get('/claimEntry/:id', authenticate, claimsService.getClaimEntry);
+    server.post('/claimEntry', authenticate, claimsService.saveOrUpdateClaimEntry);
+    server.post('/claimEntry/modify', authenticate, claimsService.modifyClaimEntry);
+    server.post('/claimEntry/search', authenticate, claimsService.searchClaimEntries);
 
-    server.post('/upload', uploadService.uploadFile);
-    server.get('/download', uploadService.downloadFile);
+    server.post('/upload', authenticate, uploadService.uploadFile);
+    server.get('/download', authenticate, uploadService.downloadFile);
 
-    server.post('/extract/entity', entityExtractionService.extract);
+    server.post('/extract/entity', authenticate, entityExtractionService.extract);
 }
 
 function setupContactServiceRoutes() {
-    server.get('/contact', contactService.listAllContacts);
-    server.get('/contact/:id', contactService.getContact);
-    server.post('/contact', contactService.saveOrUpdateContact);
+    server.get('/contact', authenticate, contactService.listAllContacts);
+    server.get('/contact/:id', authenticate, contactService.getContact);
+    server.post('/contact', authenticate, contactService.saveOrUpdateContact);
 }
 
 function setupBillingServiceRoutes() {
-    server.post('/bill/search', billingServices.getBillsREST);
-    server.post('/bill', billingServices.saveOrUpdateBillREST);
-    server.get('/billingItem/search/:search', billingServices.getBillingItemsREST);
-    server.post('/billingItem', billingServices.saveOrUpdateBillingItemsREST);
+    server.post('/bill/search', authenticate, billingServices.getBillsREST);
+    server.post('/bill', authenticate, billingServices.saveOrUpdateBillREST);
+    server.get('/billingItem/search/:search', authenticate, billingServices.getBillingItemsREST);
+    server.post('/billingItem', authenticate, billingServices.saveOrUpdateBillingItemsREST);
 }
 
 function setupProfileServiceRoutes() {
-    server.post('/userProfile', profileService.saveOrUpdateUserProfileREST);
-    server.get('/userProfile/:id', profileService.getUserProfileREST);
+    server.post('/userProfile', authenticate, profileService.saveOrUpdateUserProfileREST);
+    server.get('/userProfile/:id', authenticate, profileService.getUserProfileREST);
     console.log('setingup userProfile');
 }
 
