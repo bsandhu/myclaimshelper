@@ -35,7 +35,6 @@ function saveOrUpdateClaim(req, res) {
 
     function setReferenceToContactObj(contactJSON, callBack) {
         var defer = jQuery.Deferred();
-        contactJSON.owner = req.headers.userid;
         var contactObj = _.extend(new Contact(), contactJSON);
 
         if (_.isEmpty(contactObj.name)) {
@@ -43,6 +42,7 @@ function saveOrUpdateClaim(req, res) {
             defer.reject();
             return;
         }
+        contactObj.owner = req.headers.userid;
         contactService
             .saveOrUpdateContactObject(contactObj)
             .always(function (result) {
@@ -177,7 +177,6 @@ function modifyClaim(req, res) {
  */
 function saveOrUpdateClaimEntryObject(claimEntry) {
     assert.ok(claimEntry instanceof ClaimEntry, 'Expecting instance of ClaimEntry object');
-    claimEntry.owner = req.headers.userid;
 
     var defer = jQuery.Deferred();
     mongoUtils.saveOrUpdateEntity(claimEntry, mongoUtils.CLAIM_ENTRIES_COL_NAME)
@@ -205,7 +204,7 @@ function getClaim(req, res) {
 
     function populateContactRef(contactId, callback) {
         var defer = jQuery.Deferred();
-        contactService.getContactObject(contactId, req.params.id)
+        contactService.getContactObject(contactId, req.headers.userid)
             .done(function (result) {
                 var contactObj = result.status.toLowerCase() === 'success' ? result.data : new Contact();
                 defer.resolve(contactObj);

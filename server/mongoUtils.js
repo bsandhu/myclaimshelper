@@ -3,6 +3,8 @@ var jQuery = require('jquery-deferred');
 var config = require('./config.js');
 var Consts = require('./shared/consts.js');
 var _ = require('underscore');
+var assert = require('assert');
+
 
 var dbConn;
 
@@ -147,13 +149,18 @@ function modifyEntityAttr(entityId, colName, attributesAsJson) {
     return defer;
 }
 
-function modifyAttr(colName, attributesAsJson) {
-    console.log('Modifing ' + colName + ' with ' + attributesAsJson);
+function modifyAttr(colName, attributesAsJson, search) {
+    search = search || {};
+    console.log(
+            'Modifing ' + JSON.stringify(colName)
+          + ' with ' + JSON.stringify(attributesAsJson)
+          + ' Search: ' + search);
+
     var defer = jQuery.Deferred();
     run(function update(db) {
         var entityCol = db.collection(colName);
         entityCol.update(
-            {},
+            search,
             {$set: attributesAsJson},
             {w: 1, multi: true},
             function onUpdate(err, result) {
@@ -170,22 +177,22 @@ function modifyAttr(colName, attributesAsJson) {
 }
 
 function checkOwnerPresent(obj) {
-    if ((_.isObject(obj) && (obj.owner === null || obj.owner === undefined))
-        || (obj.length === 0)) {
-        var msg = "Could not find the owner on " + JSON.stringify(obj);
-        console.log(msg);
-        throw msg;
+    if (_.isObject(obj)) {
+        assert(obj.owner != null && obj.owner != undefined, 'Owner attr must be present');
+    } else {
+        assert(obj.length > 0, 'Owner attr must be present');
     }
 }
 
 function getEntityById(entityId, colName, owner) {
+    assert(owner, 'Owner attr must be present');
     console.log('Getting Entity: ' + entityId);
     var defer = jQuery.Deferred();
     checkOwnerPresent(owner);
 
     run(function (db) {
         var entityCol = db.collection(colName);
-        entityCol.findOne({'_id': {'$eq': entityId}, 'owner': owner}, onResults);
+        entityCol.findOne({'_id': {'$eq': entityId}, 'owner': {'$eq': owner}}, onResults);
 
         function onResults(err, item) {
             if (err) {
@@ -212,7 +219,7 @@ function deleteEntity(predicate, colName) {
                 if (err) {
                     defer.reject(err);
                 } else {
-                    defer.resolve(result);
+                    defer.resolve();
                 }
             });
     });

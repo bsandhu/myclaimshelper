@@ -78,6 +78,9 @@ function authenticate(req, res, next) {
     if (DISABLE_AUTH) {
         next();
     } else {
+        assert(req.headers.userid, 'Expecting re headers to carry userId');
+        assert(req.authorization.credentials, 'Expecting re headers to carry Auth info');
+
         jwt.verify(
             req.authorization.credentials,
             DECODED_JWT_SECRET,
@@ -126,7 +129,7 @@ function setupBillingServiceRoutes() {
 
 function setupProfileServiceRoutes() {
     server.post('/userProfile', authenticate, profileService.saveOrUpdateUserProfileREST);
-    server.get('/userProfile/:id', authenticate, profileService.getUserProfileREST);
+    server.get('/userProfile/:id', authenticate, profileService.checkAndGetUserProfileREST);
     console.log('setingup userProfile');
 }
 

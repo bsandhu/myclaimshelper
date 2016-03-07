@@ -3,6 +3,7 @@ var notificationService = require('./../../server/services/notificationService.j
 var Notification = require('./../../server/model/notification.js');
 var mongoUtils = require('./../../server/mongoUtils.js');
 var _ = require('underscore');
+var assert = require('assert');
 
 
 describe('NotificationService', function () {
@@ -23,7 +24,7 @@ describe('NotificationService', function () {
     });
 
     it('Add Notification', function (done) {
-        var req = {body: testNotification};
+        var req = {body: testNotification, headers: {userid: 'TestUser'}};
         var res = {};
         res.json = function (data) {
             assert(data);
@@ -31,6 +32,7 @@ describe('NotificationService', function () {
 
             var notification = data.data;
             assert.ok(notification._id);
+            assert.ok(notification.owner);
             testNotification._id = notification._id;
         };
 
@@ -41,7 +43,7 @@ describe('NotificationService', function () {
     });
 
     it('Get unread Notification', function (done) {
-        notificationService.getUnreadinDB(5)
+        notificationService.getUnreadinDB(5, 'TestUser')
             .then(function (result) {
                 assert.ok(_.isArray(result));
             })
@@ -49,9 +51,9 @@ describe('NotificationService', function () {
     });
 
     it('Mark all as read', function (done) {
-        notificationService.markAllAsReadInDB()
+        notificationService.markAllAsReadInDB('TestUser')
             .then(function () {
-                mongoUtils.getEntityById(testNotification._id, mongoUtils.NOTIFICATIONS_COL_NAME)
+                mongoUtils.getEntityById(testNotification._id, mongoUtils.NOTIFICATIONS_COL_NAME, 'TestUser')
                     .then(function (err, item) {
                         assert.equal(err, null);
                     })
@@ -60,7 +62,7 @@ describe('NotificationService', function () {
     });
 
     it('Unread count', function (done) {
-        notificationService.getUnreadMsgCountInDB()
+        notificationService.getUnreadMsgCountInDB('TestUser')
             .then(function (result) {
                 assert.equal(result, 0);
             })

@@ -8,6 +8,9 @@ var _ = require('underscore');
 var assert = require('assert')
 var jQuery = require("jquery-deferred");
 
+const DEFAULT_USER = 'DefaultUser';
+
+
 // :: [Obj] -> Promise
 var _saveOrUpdateUserProfile = _.partial(mongoUtils.saveOrUpdateEntity, _, USERPROFILE_COL_NAME);
 
@@ -51,5 +54,34 @@ function saveOrUpdateUserProfileREST(req, res) {
         _.partial(sendResponse, res, 'Failled to save ' + userProfile));
 }
 
+function checkAndGetUserProfileREST(req, res) {
+    var userId = req.headers.userid;
+
+    // Check if profile exists
+    mongoUtils.getEntityById(userId, USERPROFILE_COL_NAME, userId)
+        .then(function (err, profile) {
+            _.isObject(profile)
+                ? sendResponse(res, null, profile)
+                : copyDefaultProfile();
+        });
+
+    // If not make a copy of the default profile
+    function copyDefaultProfile() {
+        mongoUtils.getEntityById(DEFAULT_USER, USERPROFILE_COL_NAME, DEFAULT_USER)
+
+            .then(function copyDefaultProfile(err, defaultProfile) {
+                console.log('Creating new profile for: ' + userId);
+                defaultProfile._id = userId;
+                defaultProfile.owner = userId;
+
+                _saveOrUpdateUserProfile(defaultProfile)
+                    .then(_.partial(sendResponse, res))
+                    .fail(_.partial(sendResponse, res, 'Failed to get UserProfile  ' + userId));
+
+            })
+    }
+}
+
 exports.saveOrUpdateUserProfileREST = saveOrUpdateUserProfileREST;
 exports.getUserProfileREST = getUserProfileREST;
+exports.checkAndGetUserProfileREST = checkAndGetUserProfileREST;

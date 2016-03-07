@@ -12,22 +12,25 @@ var mongoUtils = require('../../mongoUtils.js');
 var Consts = require('./../../shared/consts.js');
 var broadcastNoHTTP = require('../../services/notificationService.js').broadcastNoHTTP;
 
-
+/**
+ * Invoked by the Mailgun service
+ */
 var process = function (req, res) {
     res.send(200, 'Request received successfully.');
     var defer = jQuery.Deferred();
-    var parser = new MailParser();
 
-    parser
-        ._getAllKnownClaimIds()
-        .then(function(){
-            var mailEntry = parser.parseRequest(req);
-            if (parser.errors.length > 0) {
+    var parser = new MailParser();
+    jQuery.when(parser._getAllKnownClaims(), parser._getAllKnownUserIds())
+        .then(function (allKnownClaims, allKnownUserIds) {
+
+            var mailEntry = parser.parseRequest(req, allKnownClaims, allKnownUserIds);
+
+            if (mailEntry.errors.length > 0) {
                 notifyFailure(mailEntry);
                 defer.reject(mailEntry);
             } else {
                 mongoUtils.connect()
-                    .then(_.partial(checkClaim, mailEntry))
+                    .then(_.partial(linkToParentClaim, mailEntry))
                     .then(saveAttachments)
                     .then(saveEntry)
                     .then(notifySuccess, notifyFailure)
@@ -38,49 +41,52 @@ var process = function (req, res) {
     return defer;
 };
 
-var checkClaim = function (mailEntry, db) {
+var linkToParentClaim = function (mailEntry, db) {
     var defer = jQuery.Deferred();
-    var updateId = function (claimId) {
-        mailEntry.claimId = claimId;
-        defer.resolve(mailEntry);
-    }
-    var error = function (msg) {
-        mailEntry.error = msg;
-        defer.reject(mailEntry);
-    }
 
-    findParentClaimId(mailEntry.claimId, db)
-        .then(updateId, error);
+    findParentClaim(mailEntry.claimId, db)
+        .then(function onSuccess(claim) {
+            mailEntry.claimId = claim._id;
+            mailEntry.owner = claim.owner;
+            defer.resolve(mailEntry);
+        }, function onError(msg) {
+            mailEntry.error = msg;
+            defer.reject(mailEntry);
+        });
     return defer;
 }
 
-var findParentClaimId = function (insuranceId, db) {
+var findParentClaim = function (insuranceId, db) {
     var r = jQuery.Deferred();
-    var _getId = function (claims) {
-        if (claims.length < 1) {
-            r.reject('No Claim found with Insurance Id ' + insuranceId);
-        }
-        //else if (claims.length > 1){
-        //r.reject('Oh! more than one Claim found with Insurance Id' + insuranceId);
-        //}
-        else {
-            r.resolve(claims[0]._id);
-        }
-    };
+
     findParentClaims(insuranceId, db)
-        .then(_getId);
+        .then(function (claims) {
+            if (claims.length < 1) {
+                r.reject('No Claim found with Insurance Id ' + insuranceId);
+            }
+            // TODO
+            //else if (claims.length > 1){
+            //r.reject('Oh! more than one Claim found with Insurance Id' + insuranceId);
+            //}
+            else {
+                r.resolve(claims[0]);
+            }
+        });
     return r;
 };
 
 var findParentClaims = function (insuranceId, db) {
-    return mongoUtils.findEntities(mongoUtils.CLAIMS_COL_NAME,
+    return mongoUtils.findEntities(
+        mongoUtils.CLAIMS_COL_NAME,
         {insuranceCompanyFileNum: insuranceId},
-        db);
+        db,
+        false);
 };
 
 var saveEntry = function (mailEntry) {
     entry = constructClaimEntry(mailEntry);
     attachments = mailEntry.attachments;
+
     for (var i = 0; i < attachments.length; i++) {
         var metadata = {
             id: attachments[i].id,
@@ -130,10 +136,11 @@ var saveAttachments = function (mailEntry) {
 
 var notifySuccess = function (mailEntry) {
     broadcastNoHTTP(
-            Consts.NotificationName.NEW_MSG,
-            Consts.NotificationType.INFO,
-            'Email processed. ' + mailEntry.mail.subject + '  <a href="#/claimEntry/' + mailEntry.claimId + '/' + mailEntry._id + '">Goto task</a>')
-        .always(function doit() {
+        Consts.NotificationName.NEW_MSG,
+        Consts.NotificationType.INFO,
+        'Email processed. ' + mailEntry.mail.subject + '  <a href="#/claimEntry/' + mailEntry.claimId + '/' + mailEntry._id + '">Goto task</a>',
+        mailEntry.owner)
+        .always(function email() {
             var body = 'Email processed successfully!';
             body += '\n\n' + JSON.stringify(mailEntry);
             sendEmail(mailEntry.mail.from, mailEntry.mail.subject, body);
@@ -143,14 +150,21 @@ var notifySuccess = function (mailEntry) {
 
 var notifyFailure = function (mailEntry) {
     var err = 'ERROR processing email:';
-    var body = err + mailEntry.mail.subject + '<br/>Details: ' + JSON.stringify(mailEntry.error[0]);
-    broadcastNoHTTP(
-        Consts.NotificationName.NEW_MSG,
-        Consts.NotificationType.ERROR,
-        body)
-        .always(function doit() {
-            sendEmail(mailEntry.mail.from, mailEntry.mail.subject, body);
-        });
+    var body = err + mailEntry.mail.subject + '<br/>Details: ' + JSON.stringify(mailEntry.errors[0]);
+
+    var notifyFn = _.partial(broadcastNoHTTP,
+                        Consts.NotificationName.NEW_MSG,
+                        Consts.NotificationType.ERROR,
+                        body,
+                        mailEntry.owner);
+
+    var sendMailFn = _.partial(sendEmail,
+                            mailEntry.mail.from,
+                            mailEntry.mail.subject,
+                            body);
+    mailEntry.owner
+        ? notifyFn().then(sendMailFn)
+        : sendMailFn();
     return mailEntry;
 };
 
@@ -165,6 +179,7 @@ function constructClaimEntry(data) {
     entry.claimId = data.claimId;
     entry.tag = data.tags || [];
     entry.tag.push('email');
+    entry.owner = data.owner;
 
     entry.billingItem = new BillingItem();
     return entry;
@@ -182,7 +197,7 @@ function sendEmail(recipient, subject, body) {
     mailgun.messages().send(data, function (error, body) {
         console.log(data);
         if (error) {
-            concole.log(error);
+            console.log(error);
             throw error;
         }
         else console.log('Mail sent successfully: ' + JSON.stringify(body));

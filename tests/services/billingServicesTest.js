@@ -18,8 +18,9 @@ describe('billingServices', function () {
     var bi_2 = new BillingItem('task_id');
     bi_2.billId = bill._id;
 
+
     it('saveOrUpdateBillingItemsREST ok', function (done) {
-        var req = {body: [bi_1, bi_2]};
+        var req = {body: [{summary: 'bi_1'}, {summary: 'bi_2'}], headers: {userid: 'TestUser'}};
         var res = {};
         res.json = function (data) {
             assert(data);
@@ -32,7 +33,7 @@ describe('billingServices', function () {
     });
 
     it('saveOrUpdateBillingItemsREST single ok', function (done) {
-        var req = {body: [bi_1]};
+        var req = {body: [bi_1], headers: {userid: 'TestUser'}};
         var res = {};
         res.json = function (data) {
             assert(data);
@@ -48,7 +49,7 @@ describe('billingServices', function () {
     });
 
     it('saveOrUpdateBillREST ok', function (done) {
-        var req = {body: bill};
+        var req = {body: bill, headers: {userid: 'TestUser'}};
         var res = {};
         res.json = function (data) {
             assert(data);
@@ -59,7 +60,7 @@ describe('billingServices', function () {
     });
 
     it('getBillsREST ok', function (done) {
-        var req = {body: {_id: bill._id}};
+        var req = {body: {_id: bill._id}, headers: {userid: 'TestUser'}};
         var res = {};
         res.json = function (data) {
             console.log('getBillsREST: ' + JSON.stringify(data));
@@ -80,7 +81,7 @@ describe('billingServices', function () {
     });
 
     if ('getBillingItemsREST ok', function (done) {
-        var req = {params: {search: {claimEntryId: 'task_id'}}};
+        var req = {params: {search: {claimEntryId: 'task_id'}}, headers: {userid: 'TestUser'}};
         var res = {};
         res.json = function (data) {
             console.log('*****************');

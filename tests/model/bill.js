@@ -34,6 +34,6 @@ describe('Bill', function(){
         assert.equal(bill.billingItems[0].billId, 'bill_id');
         done();
       };
-      db.then(_.partial(billingServices.getBillObjects, {_id: 'bill_id'})).then(test);
+      db.then(_.partial(billingServices.getBillObjects, {_id: 'bill_id', owner: 'TestUser'})).then(test);
     });
 });

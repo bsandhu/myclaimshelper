@@ -10,6 +10,7 @@ describe('Contact Service', function () {
     testContact.email = 'Test Email';
     testContact.phone = 'Test Phone';
     testContact.cell = 'Test Cell';
+    testContact.owner = 'TestUser';
 
     after(function(done) {
         assert.ok(testContact._id);
@@ -20,7 +21,7 @@ describe('Contact Service', function () {
     });
 
     it('Add Contact', function (done) {
-        var req = {body: testContact};
+        var req = {body: testContact, headers: {userid: 'TestUser'}};
         var res = {};
 
         res.json = function (data) {
@@ -42,7 +43,7 @@ describe('Contact Service', function () {
     });
 
     it('List All Contacts', function (done) {
-        var req = {};
+        var req = {headers: {userid: 'TestUser'}};
         var res = {};
         res.json = function (data) {
             assert(data);

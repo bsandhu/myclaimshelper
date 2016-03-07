@@ -45,7 +45,7 @@ describe('Claims Service', function () {
     });
 
     it('Save claim', function (done) {
-        var req = {body: testClaim};
+        var req = {body: testClaim, headers: {userid: 'TestUser'}};
         var res = {};
         res.json = function (data) {
             assert(data);
@@ -53,6 +53,7 @@ describe('Claims Service', function () {
 
             var claim = data.data;
             assert.ok(claim._id);
+            assert.ok(claim.owner);
             testClaim._id = claim._id;
 
             // Contact ref
@@ -73,19 +74,21 @@ describe('Claims Service', function () {
 
     it('Save claim entry', function (done) {
         testEntry.claimId = testClaim._id;
-        var req = {body: testEntry};
+        var req = {body: testEntry, headers: {userid: 'TestUser'}};
         var res = {};
 
         res.json = function (data) {
             assert(data);
             assert.equal(data.status, 'Success');
             assert.ok(data.data._id);
+            assert.ok(data.data.owner);
             assert.equal(data.data.description, '<b>Bill</b> has a hat. He is going to catch up with <b>Elnora Ragan</b> on wed morning.');
 
             assert.ok(data.data.billingItem._id, 'BillingItem should be saved and returned');
             assert.ok(data.data.billingItem.claimEntryId, 'BillingItem should hold ref to ClaimEntry');
             assert.equal(data.data.billingItem.mileage, 100);
             assert.equal(data.data.billingItem.time, 20);
+            assert.ok(data.data.claimId);
             done();
         };
         claimsService.saveOrUpdateClaimEntry(req, res);
@@ -93,7 +96,7 @@ describe('Claims Service', function () {
 
     it('Modify claim entry', function (done) {
         testEntry.claimId = testClaim._id;
-        var req = {body: {_id: testClaim._id, attrsAsJson: {state: States.Pending}}};
+        var req = {body: {_id: testClaim._id, attrsAsJson: {state: States.Pending}}, headers: {userid: 'TestUser'}};
         var res = {};
 
         res.json = function (data) {
@@ -109,6 +112,7 @@ describe('Claims Service', function () {
         testEntry.entryDate = new Date(2014, 2, 1);
         testEntry.dueDate = new Date(2014, 2, 10);
         testEntry.summary = "I am test Task too";
+        testEntry.owner = "TestUser";
 
         claimsService
             .saveOrUpdateClaimEntryObject(testEntry)
@@ -125,12 +129,13 @@ describe('Claims Service', function () {
 
         // Mimic the input from the browser
         testClaim._id = testClaim._id.toString();
-        var req = {body: testClaim};
+        var req = {body: testClaim, headers: {userid: 'TestUser'}};
         var res = {};
         res.json = function (data) {
             assert(data);
             assert.equal(data.status, 'Success');
             assert.ok(testClaim._id);
+            assert.ok(data.data.owner);
             assert.equal(testClaim.description, 'Test claim update');
             done();
         };
@@ -138,7 +143,7 @@ describe('Claims Service', function () {
     });
 
     it('Get a Claim', function (done) {
-        var req = {params: {id : testClaim._id}};
+        var req = {params: {id : testClaim._id}, headers: {userid: 'TestUser'}};
         var res = {};
 
         res.json = function (data) {
@@ -158,7 +163,7 @@ describe('Claims Service', function () {
     });
 
     it('Get a Claim Entry', function (done) {
-        var req = {params: {id : testEntry._id}};
+        var req = {params: {id : testEntry._id}, headers: {userid: 'TestUser'}};
         var res = {};
 
         res.json = function (data) {
@@ -177,7 +182,7 @@ describe('Claims Service', function () {
     });
 
     it('Get all entries for a Claim', function (done) {
-        var req = {params: {id : testClaim._id}};
+        var req = {params: {id : testClaim._id}, headers: {userid: 'TestUser'}};
         var res = {};
 
         res.json = function (data) {
@@ -193,7 +198,7 @@ describe('Claims Service', function () {
     });
 
     it('Get all claims', function (done) {
-        var req = {params: {id : testClaim._id}};
+        var req = {params: {id : testClaim._id}, headers: {userid: 'TestUser'}};
         var res = {};
 
         res.json = function (data) {
@@ -209,7 +214,7 @@ describe('Claims Service', function () {
     });
 
     it('Search through claims', function(done) {
-        var req = {params: {search : '{"state":"open"}'}};
+        var req = {params: {search : '{"state":"open"}'}, headers: {userid: 'TestUser'}};
         var res = {};
 
         res.json = function (data) {
@@ -224,7 +229,7 @@ describe('Claims Service', function () {
     });
 
     it('Search through claim entries', function(done) {
-        var req = {};
+        var req = {headers: {userid: 'TestUser'}};
         var res = {};
         req.body = {query: {"state":"open"},
                     options: {"sort": ["state", "asc"]}};

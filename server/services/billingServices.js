@@ -158,6 +158,7 @@ function saveOrUpdateBillingItemsREST(req, res) {
         // Add owner attr to items
         items = _.map(items, function (item) {
             item.owner = req.headers.userid;
+            return item;
         });
         var promises = _.map(items, _saveOrUpdateBillingItems);
         jQuery.when.apply(jQuery, promises)

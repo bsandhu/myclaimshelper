@@ -27,6 +27,9 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'Auth0Lock', 'app/utils/events
             return amplify.store.sessionStorage(SessionKeys.USER_ID);
         };
 
+        /**
+         * Note: Server will create a copy of default profile for new users
+         */
         UserProfileComponent.prototype.loadUserProfile = function (userProfileId) {
             return $.getJSON('/userProfile/' + userProfileId)
                 .done(function (resp) {
