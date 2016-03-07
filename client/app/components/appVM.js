@@ -13,6 +13,8 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
             this.claimPanelState = undefined;
             this.claimEntryPanelState = undefined;
             this.unreadMsgCount = ko.observable(0);
+            this.showApp = ko.observable(false);
+            this.userName = ko.observable('Login');
 
             // Model
             this.stateChoice = ko.observable();
@@ -95,6 +97,16 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
             amplify.subscribe(Events.UPDATE_UNREAD_MSGS_COUNT, this, function (count) {
                 console.log('AppVM - UPDATE_UNREAD_MSGS_COUNT ev');
                 this.unreadMsgCount(count);
+            });
+            amplify.subscribe(Events.LOGIN, this, function (count) {
+                console.log('AppVM - LOGIN ev');
+                this.showApp(true);
+                this.userName(Session.getCurrentUserId());
+            });
+            amplify.subscribe(Events.LOGOFF, this, function (count) {
+                console.log('AppVM - LOGIN ev');
+                this.showApp(false);
+                location.reload();
             });
         };
 

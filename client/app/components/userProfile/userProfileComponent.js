@@ -10,8 +10,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'Auth0Lock', 'app/utils/events
             this.setupEvListeners();
 
             // Load and set in SessionStorage
-            this.loadUserProfile(Session.getCurrentUserId());
-            this.checkAndSetUserAuthProfile();
+            this.checkAndSetUserAuthProfile(this.loadUserProfile.bind(this));
         }
 
         UserProfileComponent.prototype.setupEvListeners = function () {
@@ -30,19 +29,22 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'Auth0Lock', 'app/utils/events
         /**
          * Note: Server will create a copy of default profile for new users
          */
-        UserProfileComponent.prototype.loadUserProfile = function (userProfileId) {
+        UserProfileComponent.prototype.loadUserProfile = function () {
+            var userProfileId = Session.getCurrentUserId();
+
             return $.getJSON('/userProfile/' + userProfileId)
                 .done(function (resp) {
                     console.debug('Loaded UserProfile ' + JSON.stringify(resp.data).substr(0, 100));
                     KOMap.fromJS(resp.data, {}, this.userProfile);
                     Session.setCurrentUserProfile(resp.data);
+                    amplify.publish(Events.LOGIN);
                 }.bind(this))
                 .fail(function (resp) {
                     console.error('Failed to load UserProfile ' + JSON.stringify(resp));
                 });
         };
 
-        UserProfileComponent.prototype.checkAndSetUserAuthProfile = function () {
+        UserProfileComponent.prototype.checkAndSetUserAuthProfile = function (onDone) {
             if (!Session.getCurrentUserAuthProfile()) {
                 // Delegate to Auth0 service
                 var lock = new Auth0Lock('KD77kbmhe7n3rtQq0ZYHTlkH2ooBu2Rq', 'myclaimshelper.auth0.com');
@@ -53,12 +55,16 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'Auth0Lock', 'app/utils/events
                         Session.setCurrentUserAuthProfile(null);
                         Session.setCurrentUserAuthToken(null);
                         Session.setCurrentUserId(null);
+                        Session.setCurrentUserProfile(null);
                     } else {
                         Session.setCurrentUserAuthProfile(profile);
                         Session.setCurrentUserAuthToken(token);
                         Session.setCurrentUserId(profile.nickname);
+                        onDone();
                     }
                 });
+            } else {
+                onDone();
             }
         };
 
@@ -68,6 +74,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'Auth0Lock', 'app/utils/events
             Session.setCurrentUserAuthToken(null);
             Session.setCurrentUserId(null);
             Session.setCurrentUserProfile(null);
+            amplify.publish(Events.LOGOFF);
         };
 
         return {viewModel: UserProfileComponent, template: viewHtml};

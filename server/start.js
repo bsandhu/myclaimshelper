@@ -16,13 +16,14 @@ var Consts = require('./shared/consts.js');
 var serviceUtils = require('./serviceUtils.js');
 var os = require('os');
 var jwt = require('jsonwebtoken');
+var assert = require('assert');
 
 // Auto0 keys
 var JWT_SECRET = 'L3_qew5xG1FsXL6PVGpwP-YLnb1ev9I8ZmRe6BmP_hSwEVwzJsG93E9LizLP7E1j';
 var DECODED_JWT_SECRET = new Buffer(JWT_SECRET, 'base64');
 
 // Testing hooks
-var DISABLE_AUTH = true;
+var DISABLE_AUTH = false;
 var TEST_USER = 'baljeet.mail';
 
 // Restify server

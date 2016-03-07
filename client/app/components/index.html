@@ -69,7 +69,7 @@
             </li>
             <li><a href="" data-bind="click: router.showProfilePopup">
                 <i class="fa fa-user"></i>
-                <span data-bind="text: Session.getCurrentUserId()"
+                <span data-bind="text: userName"
                       style="font-size: 70%"></span></a>
             </li>
             <li class="navbar-right">
@@ -84,8 +84,11 @@
 </nav>
 <!-- End navigation header -->
 
+<!-- User profile -->
+<div data-bind="component: 'user-profile-component'"></div>
+
 <!-- #MAIN PANEL -->
-<div id="main" role="main">
+<div id="main" role="main" data-bind="if: showApp">
 
     <!-- Msgs component -->
     <admin-component></admin-component>
@@ -95,9 +98,6 @@
 
     <!-- Notifications -->
     <div data-bind="component: 'notifier-component'"></div>
-
-    <!-- User profile -->
-    <div data-bind="component: 'user-profile-component'"></div>
 
     <!-- **** Dashboard **** -->
     <div id="dashboardPanel" class="slidingContainer dashboardPanel">
