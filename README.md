@@ -51,5 +51,5 @@ NO additional 'schema'setup is required
 
 **Webstorm is pretty good**
 You can setup a run config to launch using the Supevisor <br/>
-See: http://stackoverflow.com/questions/12170755/webstorm-using-node-supervisor-so-do-not-have-to-restart-after-each-code-chang
+See: http://stackoverflow.com/questions/12170755/webstorm-using-node-supervisor-so-do-not-have-to-restart-after-each-code-change
 
