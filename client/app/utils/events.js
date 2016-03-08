@@ -45,6 +45,7 @@ define([], function(){
         MEDIUM_OR_BIGGER_DEVICE : 'MEDIUM_OR_BIGGER_DEVICE',
 
         LOGIN : 'LOGIN',
-        LOGOFF : 'LOGOFF'
+        LOGOFF : 'LOGOFF',
+        SHOW_LOGIN: 'SHOW_LOGIN'
     };
 });

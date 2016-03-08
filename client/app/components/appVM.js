@@ -14,7 +14,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
             this.claimEntryPanelState = undefined;
             this.unreadMsgCount = ko.observable(0);
             this.showApp = ko.observable(false);
-            this.userName = ko.observable('Login');
+            this.userName = ko.observable('');
 
             // Model
             this.stateChoice = ko.observable();
@@ -102,10 +102,12 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
                 console.log('AppVM - LOGIN ev');
                 this.showApp(true);
                 this.userName(Session.getCurrentUserId());
+                this.startRouter();
             });
             amplify.subscribe(Events.LOGOFF, this, function (count) {
                 console.log('AppVM - LOGIN ev');
                 this.showApp(false);
+                this.userName('');
                 location.reload();
             });
         };
@@ -177,6 +179,10 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
 
         AppVM.prototype.onAddNewClaim = function () {
             Router.routeToNewClaim();
+        };
+
+        AppVM.prototype.onLogin = function () {
+            amplify.publish(Events.SHOW_LOGIN);
         };
 
         /*************************************************/

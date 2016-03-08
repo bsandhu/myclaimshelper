@@ -9,12 +9,12 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'Auth0Lock', 'app/utils/events
             this.userProfile = KOMap.fromJS(new UserProfile());
             this.setupEvListeners();
 
-            // Load and set in SessionStorage
-            this.checkAndSetUserAuthProfile(this.loadUserProfile.bind(this));
+            this.login();
         }
 
         UserProfileComponent.prototype.setupEvListeners = function () {
             amplify.subscribe(Events.SHOW_USER_PROFILE, this, this.onShowUserProfile);
+            amplify.subscribe(Events.SHOW_LOGIN, this, this.login);
         };
 
         UserProfileComponent.prototype.onShowUserProfile = function (evData) {
@@ -25,6 +25,11 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'Auth0Lock', 'app/utils/events
         UserProfileComponent.prototype.getCurrentUserId = function () {
             return amplify.store.sessionStorage(SessionKeys.USER_ID);
         };
+
+        UserProfileComponent.prototype.login = function () {
+            // Load and set in SessionStorage
+            this.checkAndSetUserAuthProfile(this.loadUserProfile.bind(this));
+        }
 
         /**
          * Note: Server will create a copy of default profile for new users

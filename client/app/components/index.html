@@ -67,10 +67,19 @@
                           data-bind="text: unreadMsgCount"></span>
                 <i class="fa fa-bell"></i></a>
             </li>
-            <li><a href="" data-bind="click: router.showProfilePopup">
-                <i class="fa fa-user"></i>
-                <span data-bind="text: userName"
-                      style="font-size: 70%"></span></a>
+            <li>
+                <!-- ko if: showApp -->
+                <a href="" data-bind="click: router.showProfilePopup">
+                    <i class="fa fa-user"></i>
+                    <span data-bind="text: userName"
+                          style="font-size: 70%"></span></a>
+                <!-- /ko -->
+
+                <!-- ko ifnot: showApp -->
+                <a href="">
+                    <span data-bind="text: 'Login', click: onLogin"
+                          style="font-size: 70%"></span></a>
+                <!-- /ko -->
             </li>
             <li class="navbar-right">
                 <a style="cursor: pointer"
@@ -160,8 +169,7 @@
     <div id="claimPanel" class="slidingContainer claimPanel" style="width: 0%;">
         <!-- Note: Still using module for the afterRender fn -->
         <div data-bind="module: {name: 'app/components/claim/claimVM',
-                                        template: 'app/components/claim/claim',
-                                        afterRender: startRouter}"></div>
+                                        template: 'app/components/claim/claim'}"></div>
     </div>
 
     <!-- **** Task edit/entry module **** -->

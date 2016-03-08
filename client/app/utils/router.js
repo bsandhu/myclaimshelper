@@ -26,6 +26,14 @@ define(['Path', 'amplify', 'app/utils/events'],
                 amplify.publish(Events.SHOW_DASHBOARD);
             });
 
+            Path.map("#/login").to(function () {
+                amplify.publish(Events.SHOW_LOGIN);
+            });
+
+            Path.map("#/logoff").to(function () {
+                amplify.publish(Events.LOGOFF);
+            });
+
             Path.map("#/travel").to(function () {
                 amplify.publish(Events.SHOW_TRAVEL);
             });
