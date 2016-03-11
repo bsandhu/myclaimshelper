@@ -20,9 +20,17 @@ var process = function (req, res, sendEmail) {
 
     var sendEmail = (sendEmail != null || sendEmail != undefined) ? sendEmail : true;
     var from = req.params.From.toUpperCase();
+
+    // Filter msgs accrding to ENV
     if (config.env === config.ENV_TEST
         && (from != 'TESTUSER1' || from != 'TESTUSER2')) {
         console.log('TEST env will only process test users. Skipping.');
+        return;
+    }
+    else if (config.env === config.ENV_PROD
+        && (from == 'TESTUSER1' || from == 'TESTUSER2')) {
+        console.log('PROD env will only process test users. Skipping.');
+        return;
     }
 
     var defer = jQuery.Deferred();
@@ -162,15 +170,15 @@ var notifyFailure = function (sendEmail, mailEntry) {
     var body = err + mailEntry.mail.subject + '<br/>Details: ' + JSON.stringify(mailEntry.errors[0]);
 
     var notifyFn = _.partial(broadcastNoHTTP,
-                            Consts.NotificationName.NEW_MSG,
-                            Consts.NotificationType.ERROR,
-                            body,
-                            mailEntry.owner);
+        Consts.NotificationName.NEW_MSG,
+        Consts.NotificationType.ERROR,
+        body,
+        mailEntry.owner);
 
     var sendMailFn = _.partial(sendEmail,
-                                mailEntry.mail.From,
-                                mailEntry.mail.subject,
-                                body);
+        mailEntry.mail.From,
+        mailEntry.mail.subject,
+        body);
     if (mailEntry.owner) {
         notifyFn();
     }

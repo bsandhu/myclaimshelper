@@ -40,11 +40,11 @@
                 </div>-->
                 <p class="stats-counter-text">Billing</p>
                 Paid <span class="text-muted text-nowrap text-right"
-                           data-bind="text: '$' + billByBillingStatus()['Paid']"></span><br/>
+                           data-bind="text: NumberUtils.niceCCY(billByBillingStatus()['Paid'])"></span><br/>
                 Submitted <span class="text-muted text-nowrap"
-                                data-bind="text: '$' + billByBillingStatus()['Submitted']"></span><br/>
+                                data-bind="text: NumberUtils.niceCCY(billByBillingStatus()['Submitted'])"></span><br/>
                 Not Submitted <span class="text-muted text-nowrap"
-                                    data-bind="text: '$' + billByBillingStatus()['Not Submitted']"></span>
+                                    data-bind="text: NumberUtils.niceCCY(billByBillingStatus()['Not Submitted'])"></span>
             </div>
             <div class="col-md-4 col-lg-3" style="padding-top: 5px">
                 <i class="fa fa-usd fa-4x" style="color: darkgrey; opacity: .5"></i>

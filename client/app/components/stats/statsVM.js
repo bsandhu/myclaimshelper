@@ -1,6 +1,7 @@
-define(['jquery', 'underscore', 'chartjs', 'knockout', 'KOMap', 'amplify', 'app/utils/events',
+define(['jquery', 'underscore', 'chartjs', 'knockout', 'KOMap', 'amplify',
+        'app/utils/events', 'shared/NumberUtils',
         'text!app/components/stats/stats.tmpl.html'],
-    function ($, _, Chart, ko, KOMap, amplify, Events, statsView) {
+    function ($, _, Chart, ko, KOMap, amplify, Events, NumberUtils, statsView) {
 
         var N = Number;
 
@@ -8,7 +9,7 @@ define(['jquery', 'underscore', 'chartjs', 'knockout', 'KOMap', 'amplify', 'app/
             console.log('Init Stats');
             this.loadStats();
             this.stats = ko.observable();
-
+            this.NumberUtils = NumberUtils;
 
             // Tasks stats
             this.tasksDoneToday = ko.computed(function () {

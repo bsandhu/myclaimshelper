@@ -28,6 +28,10 @@ define(['jquery', 'knockout', 'amplify',
             this.getUnreadMsgCount();
         }
 
+        AdminVM.prototype.closeModal = function () {
+            $('#msgs-modal').modal('hide');
+        }
+
         AdminVM.prototype.onMarkAllAsRead = function () {
             var _this = this;
             var unreadCount = this.msgs().length;
@@ -39,6 +43,7 @@ define(['jquery', 'knockout', 'amplify',
                     amplify.publish(Events.SHOW_MSGS);
                     _this.getUnreadMsgCount();
                     amplify.publish(Events.SUCCESS_NOTIFICATION, {msg: 'Marked ' + unreadCount + ' msgs as read'});
+                    _this.closeModal();
                 });
         }
 
