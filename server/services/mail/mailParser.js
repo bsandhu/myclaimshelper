@@ -95,6 +95,10 @@ MailParser.prototype._getAllKnownUserIds = function () {
 MailParser.prototype._getUserId = function (senderEmail, allUserIds) {
     var incomingUserId = senderEmail.split('@')[0];
 
+    // Remove any spurious quotes around email addr
+    incomingUserId = incomingUserId.replace('"', '');
+    incomingUserId = incomingUserId.replace("'", '');
+
     return _.find(allUserIds, function (userId) {
         return userId.toUpperCase() === incomingUserId.toUpperCase();
     });

@@ -45,7 +45,7 @@ describe('mailHandler', function(){
         };
 
         setupClaim();
-        ms.process(req, res).then(assertSuccess);
+        ms.process(req, res, false).then(assertSuccess);
     });
     
     it('fails to save attachments', function(done){
@@ -55,7 +55,7 @@ describe('mailHandler', function(){
         done();
       }; 
       req.files['attachment-1'].path = 'nonsense'
-      ms.process(req, res).fail(assertFailure);
+      ms.process(req, res, false).fail(assertFailure);
 
     });
     
@@ -67,7 +67,7 @@ describe('mailHandler', function(){
       }; 
 
       req.params.subject = "the subject claim id:AAA"
-      ms.process(req, res).fail(assertFailure);
+      ms.process(req, res, false).fail(assertFailure);
     });
 
 });

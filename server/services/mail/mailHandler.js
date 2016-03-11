@@ -15,10 +15,17 @@ var broadcastNoHTTP = require('../../services/notificationService.js').broadcast
 /**
  * Invoked by the Mailgun service
  */
-var process = function (req, res) {
+var process = function (req, res, sendEmail) {
     res.send(200, 'Request received successfully.');
-    var defer = jQuery.Deferred();
 
+    var sendEmail = (sendEmail != null || sendEmail != undefined) ? sendEmail : true;
+    var from = req.params.From.toUpperCase();
+    if (config.env === config.ENV_TEST
+        && (from != 'TESTUSER1' || from != 'TESTUSER2')) {
+        console.log('TEST env will only process test users. Skipping.');
+    }
+
+    var defer = jQuery.Deferred();
     var parser = new MailParser();
     jQuery.when(parser._getAllKnownClaims(), parser._getAllKnownUserIds())
         .then(function (allKnownClaims, allKnownUserIds) {
@@ -26,14 +33,14 @@ var process = function (req, res) {
             var mailEntry = parser.parseRequest(req, allKnownClaims, allKnownUserIds);
 
             if (mailEntry.errors.length > 0) {
-                notifyFailure(mailEntry);
+                notifyFailure(sendEmail, mailEntry);
                 defer.reject(mailEntry);
             } else {
                 mongoUtils.connect()
                     .then(_.partial(linkToParentClaim, mailEntry))
                     .then(saveAttachments)
                     .then(saveEntry)
-                    .then(notifySuccess, notifyFailure)
+                    .then(_.partial(notifySuccess, sendEmail), _.partial(notifyFailure, sendEmail))
                     .then(_.partial(defer.resolve))
                     .fail(_.partial(defer.reject));
             }
@@ -134,37 +141,42 @@ var saveAttachments = function (mailEntry) {
     return x.then(_success, _failure);
 };
 
-var notifySuccess = function (mailEntry) {
+var notifySuccess = function (sendEmail, mailEntry) {
     broadcastNoHTTP(
         Consts.NotificationName.NEW_MSG,
         Consts.NotificationType.INFO,
-        'Email processed. ' + mailEntry.mail.subject + '  <a href="#/claimEntry/' + mailEntry.claimId + '/' + mailEntry._id + '">Goto task</a>',
+            'Email processed. ' + mailEntry.mail.subject + '  <a href="#/claimEntry/' + mailEntry.claimId + '/' + mailEntry._id + '">Goto task</a>',
         mailEntry.owner)
         .always(function email() {
-            var body = 'Email processed successfully!';
-            body += '\n\n' + JSON.stringify(mailEntry);
-            sendEmail(mailEntry.mail.from, mailEntry.mail.subject, body);
+            if (sendEmail) {
+                var body = 'Email processed successfully!';
+                body += '\n\n' + JSON.stringify(mailEntry);
+                sendEmail(mailEntry.mail.from, mailEntry.mail.subject, body);
+            }
         });
     return mailEntry;
 };
 
-var notifyFailure = function (mailEntry) {
+var notifyFailure = function (sendEmail, mailEntry) {
     var err = 'ERROR processing email:';
     var body = err + mailEntry.mail.subject + '<br/>Details: ' + JSON.stringify(mailEntry.errors[0]);
 
     var notifyFn = _.partial(broadcastNoHTTP,
-                        Consts.NotificationName.NEW_MSG,
-                        Consts.NotificationType.ERROR,
-                        body,
-                        mailEntry.owner);
+                            Consts.NotificationName.NEW_MSG,
+                            Consts.NotificationType.ERROR,
+                            body,
+                            mailEntry.owner);
 
     var sendMailFn = _.partial(sendEmail,
-                            mailEntry.mail.from,
-                            mailEntry.mail.subject,
-                            body);
-    mailEntry.owner
-        ? notifyFn().then(sendMailFn)
-        : sendMailFn();
+                                mailEntry.mail.From,
+                                mailEntry.mail.subject,
+                                body);
+    if (mailEntry.owner) {
+        notifyFn();
+    }
+    if (sendEmail) {
+        sendMailFn();
+    }
     return mailEntry;
 };
 
@@ -186,10 +198,16 @@ function constructClaimEntry(data) {
 }
 
 function sendEmail(recipient, subject, body) {
-    var mailgun = new Mailgun({apiKey: config.mailgun.api_key,
+    if (config.ev === config.ENV_LOCAL) {
+        console.log('')
+        return;
+    }
+
+    var mailgun = new Mailgun({
+        apiKey: config.mailgun.api_key,
         domain: config.mailgun.domain});
     var data = {
-        from: 'Agent 007 <no-reply@007.com>',
+        from: 'MyClaimsHelper <no-reply@myclaimshelper.com>',
         to: recipient,
         subject: subject,
         text: body
