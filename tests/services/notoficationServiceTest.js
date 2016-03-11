@@ -12,7 +12,7 @@ describe('NotificationService', function () {
     testNotification.type = 'info';
     testNotification.read = false;
     testNotification.summary = '';
-    testNotification.body = '';
+    testNotification.body = 'Test body';
     testNotification.data = {};
 
     after(function (done) {
@@ -24,7 +24,7 @@ describe('NotificationService', function () {
     });
 
     it('Add Notification', function (done) {
-        var req = {body: testNotification, headers: {userid: 'TestUser'}};
+        var req = {body: {msg: 'Hello'}, headers: {userid: 'TestUser'}};
         var res = {};
         res.json = function (data) {
             assert(data);

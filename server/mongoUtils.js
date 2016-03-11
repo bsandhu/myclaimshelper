@@ -32,6 +32,7 @@ function hydrate(type, objects) {
 
 function initConnPool() {
     var deferred = jQuery.Deferred();
+    console.log('**** DB **** ' + config.db);
     MongoClient.connect(config.db, function (err, db) {
         if (!err) {
             console.log("Connected");

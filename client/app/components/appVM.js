@@ -28,7 +28,6 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
             // View state
             this.router = Router;
             this.setupEvListeners();
-            this.getUnreadMsgCount();
 
             $(window).on('hashchange', this.setNavBarHighlight);
             this.setNavBarHighlight();
@@ -184,18 +183,6 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
         AppVM.prototype.onLogin = function () {
             amplify.publish(Events.SHOW_LOGIN);
         };
-
-        /*************************************************/
-        /* WS subscribtion                                */
-        /*************************************************/
-
-        AppVM.prototype.getUnreadMsgCount = function () {
-            $.getJSON('notification/unreadMsgCount')
-                .done(function (resp) {
-                    console.log('Unread msg count: ' + resp);
-                    this.unreadMsgCount(resp.data);
-                }.bind(this));
-        }
 
         /*************************************************/
         /* Panels animation                              */

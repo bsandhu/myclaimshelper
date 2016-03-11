@@ -52,22 +52,31 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'Auth0Lock', 'app/utils/events
         UserProfileComponent.prototype.checkAndSetUserAuthProfile = function (onDone) {
             if (!Session.getCurrentUserAuthProfile()) {
                 // Delegate to Auth0 service
-                var lock = new Auth0Lock('KD77kbmhe7n3rtQq0ZYHTlkH2ooBu2Rq', 'myclaimshelper.auth0.com');
 
-                lock.show(function (err, profile, token) {
-                    if (err) {
-                        alert('There was an error logging you in');
-                        Session.setCurrentUserAuthProfile(null);
-                        Session.setCurrentUserAuthToken(null);
-                        Session.setCurrentUserId(null);
-                        Session.setCurrentUserProfile(null);
-                    } else {
-                        Session.setCurrentUserAuthProfile(profile);
-                        Session.setCurrentUserAuthToken(token);
-                        Session.setCurrentUserId(profile.nickname);
-                        onDone();
-                    }
-                });
+                $.getJSON('/config')
+                    .then(function (resp) {
+                        return resp.data.Auth0;
+                    })
+                    .then(function (auth0Config) {
+                        var lock = new Auth0Lock(auth0Config.id, auth0Config.domain);
+                        lock.show(function (err, profile, token) {
+                            if (err) {
+                                alert('There was an error logging you in');
+                                Session.setCurrentUserAuthProfile(null);
+                                Session.setCurrentUserAuthToken(null);
+                                Session.setCurrentUserId(null);
+                                Session.setCurrentUserProfile(null);
+                            } else {
+                                Session.setCurrentUserAuthProfile(profile);
+                                Session.setCurrentUserAuthToken(token);
+                                Session.setCurrentUserId(profile.nickname);
+                                onDone();
+                            }
+                        })
+                    })
+                    .fail(function (resp) {
+                        console.error('Failed to load Config' + JSON.stringify(resp));
+                    });
             } else {
                 onDone();
             }
@@ -83,4 +92,5 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'Auth0Lock', 'app/utils/events
         };
 
         return {viewModel: UserProfileComponent, template: viewHtml};
-    });
+    })
+;

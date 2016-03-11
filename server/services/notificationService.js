@@ -36,15 +36,17 @@ function getUnreadMsgCount(req, res) {
 /****************************************************/
 
 function broadcastNoHTTP(name, type, body, owner) {
-    assert(owner, 'owner must be specified');
     assert(name,  'name must be specified');
     assert(type,  'type must be specified');
+    assert(body,  'body must be specified');
+    assert(owner, 'owner must be specified');
     var defer = jQuery.Deferred();
 
     var notification = new Notification();
     notification.name = name;
     notification.type = type;
     notification.owner = owner;
+    notification.body = body;
 
     // Persist and broadcast
     // Broadcast event picked up by the start.js module

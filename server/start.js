@@ -2,6 +2,7 @@ var restify = require('restify');
 var socketio = require('socket.io');
 var config = require('./config.js');
 var EventEmitter = require('events').EventEmitter;
+
 var claimsService = require('./services/claimsService.js');
 var billingServices = require('./services/billingServices.js');
 var contactService = require('./services/contactService.js');
@@ -10,6 +11,8 @@ var uploadService = require('./services/uploadService.js');
 var entityExtractionService = require('./services/entityExtractionService.js');
 var notificationService = require('./services/notificationService.js');
 var statsService = require('./services/statsService');
+var configservice = require('./services/configService');
+
 var processMail = require('./services/mail/mailHandler.js').process;
 var mongoUtils = require('./mongoUtils.js');
 var Consts = require('./shared/consts.js');
@@ -18,12 +21,13 @@ var os = require('os');
 var jwt = require('jsonwebtoken');
 var assert = require('assert');
 
+
 // Auto0 keys
-var JWT_SECRET = 'L3_qew5xG1FsXL6PVGpwP-YLnb1ev9I8ZmRe6BmP_hSwEVwzJsG93E9LizLP7E1j';
+var JWT_SECRET = config.auth0_client_secret;
 var DECODED_JWT_SECRET = new Buffer(JWT_SECRET, 'base64');
 
 // Testing hooks
-var DISABLE_AUTH = false;
+var DISABLE_AUTH = config.disable_auth;
 var TEST_USER = 'baljeet.mail';
 
 // Restify server
@@ -66,6 +70,10 @@ function setupStatsRoutes() {
 
 function setupMailServiceRoutes() {
     server.post('/mailman', processMail);
+}
+
+function setupConfigServiceRoutes() {
+    server.get('/config', configservice.getConfigREST);
 }
 
 function setupNotificationRoutes() {
@@ -195,6 +203,7 @@ function startServer() {
 }
 
 init();
+setupConfigServiceRoutes();
 setupStatsRoutes();
 setupMailServiceRoutes();
 setupBillingServiceRoutes();
