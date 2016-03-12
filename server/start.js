@@ -96,7 +96,9 @@ function authenticate(req, res, next) {
             function onDecode(err, decoded) {
                 if (err) {
                     console.log('Auth error: ' + err);
-                    res.send(401);
+                    res.statusMessage = err.name ? err.name : err;
+                    res.statusCode = 401;
+                    res.end();
                 } else {
                     console.log('Authenticated: ' + decoded.sub);
                     return next();
