@@ -195,11 +195,15 @@ div {
 }
 
 .color-dark-grey {
-    color: rgb(85, 85, 85);
+    color: rgb(85, 85, 85); !important;
 }
 
 .color-dark-green {
     color: darkgreen);
+}
+
+#claimListTable .text-success {
+    color: darkgreen;
 }
 
 /**********************************************************/
