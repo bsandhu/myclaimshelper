@@ -28,7 +28,8 @@ require.config({
         'circliful': 'lib/jquery.circliful.min',
         'underscore': 'lib/underscore.min',
         'chartjs': 'lib/Chart',
-        'Auth0Lock': 'lib/lock-8.2.min'
+        'Auth0Lock': 'lib/lock-8.2.min',
+        'bootstrapTableCustom': 'lib/bootstrap.table.customization'
     },
     shim: {
         'Auth0Lock': {
@@ -57,7 +58,7 @@ require.config({
             deps: ['jquery', 'jqueryBase64']
         },
         'tableExport': {
-            deps: ['jquery', 'bootstrapTable', 'kayalshriTableExport']
+            deps: ['jquery', 'bootstrapTableCustom', 'bootstrapTable', 'kayalshriTableExport']
         },
         'bootstrap': {
             deps: ['jquery']

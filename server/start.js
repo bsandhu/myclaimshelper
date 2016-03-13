@@ -112,7 +112,7 @@ function setupClaimsServiceRoutes() {
     server.get('/claim/:id', authenticate, claimsService.getClaim);
     server.get('/claim/:id/entries', authenticate, claimsService.getAllEntriesForClaim);
     server.post('/claim', authenticate, claimsService.saveOrUpdateClaim);
-    server.get('/claim/search/:search', authenticate, claimsService.searchClaims);
+    server.post('/claim/search', authenticate, claimsService.searchClaims);
 
     server.get('/claimEntry/:id', authenticate, claimsService.getClaimEntry);
     server.post('/claimEntry', authenticate, claimsService.saveOrUpdateClaimEntry);

@@ -198,27 +198,28 @@ function claimEntriesCollection(db) {
 /* Claims - Read API                                    */
 /********************************************************/
 
+function populateContactRef(entityId, contactId, callback) {
+    var defer = jQuery.Deferred();
+    contactService.getContactObject(contactId, entityId)
+        .done(function (result) {
+            var contactObj = result.status.toLowerCase() === 'success' ? result.data : new Contact();
+            defer.resolve(contactObj);
+        });
+
+    var chainedDefer = jQuery.Deferred();
+    defer.done(function (contactObj) {
+        callback(contactObj);
+        chainedDefer.resolve();
+    });
+    return chainedDefer;
+}
+
 function getClaim(req, res) {
     assert.ok(req.params.id, 'Expecting ClaimId as a parameter');
     var entityId = req.params.id;
+    var owner = req.headers.userid;
 
-    function populateContactRef(contactId, callback) {
-        var defer = jQuery.Deferred();
-        contactService.getContactObject(contactId, req.headers.userid)
-            .done(function (result) {
-                var contactObj = result.status.toLowerCase() === 'success' ? result.data : new Contact();
-                defer.resolve(contactObj);
-            });
-
-        var chainedDefer = jQuery.Deferred();
-        defer.done(function (contactObj) {
-            callback(contactObj);
-            chainedDefer.resolve();
-        });
-        return chainedDefer;
-    }
-
-    mongoUtils.getEntityById(entityId, mongoUtils.CLAIMS_COL_NAME, req.headers.userid)
+    mongoUtils.getEntityById(entityId, mongoUtils.CLAIMS_COL_NAME, owner)
         .always(function (err, results) {
             if (err) {
                 sendResponse(res, err, results);
@@ -230,19 +231,19 @@ function getClaim(req, res) {
                 // Create Dynamic callbacks for saving all the contact objects
                 var requests = [];
                 requests.push(
-                    populateContactRef(claim.insuredContactId, function (contactObj) {
+                    populateContactRef(owner, claim.insuredContactId, function (contactObj) {
                         claim.insuredContact = contactObj;
                     }),
-                    populateContactRef(claim.insuredAttorneyContactId, function (contactObj) {
+                    populateContactRef(owner, claim.insuredAttorneyContactId, function (contactObj) {
                         claim.insuredAttorneyContact = contactObj;
                     }),
-                    populateContactRef(claim.claimantContactId, function (contactObj) {
+                    populateContactRef(owner, claim.claimantContactId, function (contactObj) {
                         claim.claimantContact = contactObj;
                     }),
-                    populateContactRef(claim.claimantsAttorneyContactId, function (contactObj) {
+                    populateContactRef(owner, claim.claimantsAttorneyContactId, function (contactObj) {
                         claim.claimantsAttorneyContact = contactObj;
                     }),
-                    populateContactRef(claim.insuranceCoContactId, function (contactObj) {
+                    populateContactRef(owner, claim.insuranceCoContactId, function (contactObj) {
                         claim.insuranceCoContact = contactObj;
                     })
                 );
@@ -286,20 +287,40 @@ function getAllClaims(req, res) {
 }
 
 function searchClaims(req, res) {
-    assert.ok(req.params.search, 'Expecting Search as a parameter');
-    var search = req.params.search;
-    var query = JSON.parse(search);
-    query.owner = req.headers.userid;
+    var query = req.body.query;
+    var owner = req.headers.userid;
+    query.owner = owner;
 
-    console.log('Searching for Claim with query: ' + search);
+    console.log('Searching for Claim with query: ' + query);
     mongoUtils.run(function (db) {
         claimsCollection(db).find(query).toArray(onResults);
 
-        function onResults(err, items) {
-            var resData = (items.length === 0)
-                ? 'No claims match this search ' + search
-                : _.extend(new Claim(), items);
-            sendResponse(res, err, resData);
+        function onResults(err, claims) {
+            if (err || claims.length == 0) {
+                console.log('Error: ' + err);
+                sendResponse(res, err, []);
+            } else if (claims.length == 0) {
+                console.log('No claims match this search ' + query);
+                sendResponse(res, err, []);
+            } else {
+                // Aggregate the contactLookups for the contact details
+                var contactLookups = [];
+                _.each(claims, function(claim){
+                    contactLookups.push(
+                        populateContactRef(owner, claim.insuredContactId, function (contactObj) {
+                            claim.insuredContact = contactObj;
+                        }),
+                        populateContactRef(owner, claim.claimantContactId, function (contactObj) {
+                            claim.claimantContact = contactObj;
+                        })
+                    );
+                });
+
+                jQuery.when.apply(jQuery, contactLookups)
+                    .done(function () {
+                        sendResponse(res, err, claims);
+                    });
+            }
         }
     });
 }

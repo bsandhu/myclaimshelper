@@ -9,7 +9,7 @@ var States= require("./../../server/model/states.js");
 var jQuery = require('jquery-deferred');
 
 
-describe('Claims Service', function () {
+describe('ClaimsService', function () {
 
     var testClaim = new Claim();
     testClaim.description = 'Test claim';
@@ -214,7 +214,7 @@ describe('Claims Service', function () {
     });
 
     it('Search through claims', function(done) {
-        var req = {params: {search : '{"state":"open"}'}, headers: {userid: 'TestUser'}};
+        var req = {body: {query : {"state":"open"}}, headers: {userid: 'TestUser'}};
         var res = {};
 
         res.json = function (data) {
@@ -223,6 +223,8 @@ describe('Claims Service', function () {
 
             var claim = data.data[0];
             assert.equal(claim.state, testClaim.state);
+            assert.ok(claim.claimantContact);
+            assert.ok(claim.insuredContact);
             done();
         };
         claimsService.searchClaims(req, res);
