@@ -13,10 +13,10 @@ require.config({
         'text': 'lib/require.text',            // Require plugin for html templates
         'Path': 'lib/path',
         'bootstrap': 'lib/bootstrap.min',
-        'bootstrapTable' : 'lib/bootstrap.table',
-        'bootbox' : 'lib/bootbox.min',
+        'bootstrapTable': 'lib/bootstrap.table',
+        'bootbox': 'lib/bootbox.min',
         'tableExport': 'lib/bootstrap.table.export',
-        'kayalshriTableExport' : 'lib/kayalshri.table.export',
+        'kayalshriTableExport': 'lib/kayalshri.table.export',
         'wysiwyg': 'lib/bootstrap.wysiwyg',
         'async': 'lib/async',
         'datetimepicker': 'lib/jquery.datetimepicker',
@@ -35,6 +35,10 @@ require.config({
         'Auth0Lock': {
             deps: ['jquery'],
             exports: 'Auth0Lock'
+        },
+        'chartjs': {
+            deps: ['jquery'],
+            exports: 'Chart'
         },
         'circliful': {
             deps: ['jquery']
