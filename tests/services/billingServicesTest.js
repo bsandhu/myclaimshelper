@@ -20,7 +20,10 @@ describe('billingServices', function () {
 
 
     it('saveOrUpdateBillingItemsREST ok', function (done) {
-        var req = {body: [{summary: 'bi_1'}, {summary: 'bi_2'}], headers: {userid: 'TestUser'}};
+        var req = {body: [
+            {summary: 'bi_1'},
+            {summary: 'bi_2'}
+        ], headers: {userid: 'TestUser'}};
         var res = {};
         res.json = function (data) {
             assert(data);
@@ -60,7 +63,13 @@ describe('billingServices', function () {
     });
 
     it('getBillsREST ok', function (done) {
-        var req = {body: {_id: bill._id}, headers: {userid: 'TestUser'}};
+        var req = {
+            body: {
+                search: {_id: bill._id},
+                includeClosedClaims: false
+            },
+            headers: {userid: 'TestUser'}
+        };
         var res = {};
         res.json = function (data) {
             console.log('getBillsREST: ' + JSON.stringify(data));

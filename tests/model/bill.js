@@ -10,7 +10,7 @@ mongoUtils.initConnPool();
 var db = mongoUtils.dbConn;
 
 
-describe('Bill', function(){
+describe('Bill', function () {
     var bill = new Bill();
     bill.claimId = 'abc';
     bill._id = 'bill_id';
@@ -19,21 +19,24 @@ describe('Bill', function(){
     bill.billingItems = [bi_1];
 
     it('claimId is good', function (done) {
-      assert.equal(bill.claimId, 'abc');
-      assert.ok(bill);
-      done()
+        assert.equal(bill.claimId, 'abc');
+        assert.ok(bill);
+        done()
     });
 
-    it('gets with billingItems', function(done){
-      var db = mongoUtils.connect(config.db);
-      
-      var test = function(ret){
-        console.log(ret);
-        var bill = ret[0];
-        assert.equal(bill._id, 'bill_id');
-        assert.equal(bill.billingItems[0].billId, 'bill_id');
-        done();
-      };
-      db.then(_.partial(billingServices.getBillObjects, {_id: 'bill_id', owner: 'TestUser'})).then(test);
+    it('gets with billingItems', function (done) {
+        var db = mongoUtils.connect(config.db);
+
+        var test = function (ret) {
+            console.log(ret);
+            var bill = ret[0];
+            assert.equal(bill._id, 'bill_id');
+            assert.equal(bill.billingItems[0].billId, 'bill_id');
+            done();
+        };
+        db.then(_.partial(billingServices.getBillObjects,
+            {_id: 'bill_id', owner: 'TestUser'},
+            false))
+          .then(test);
     });
 });
