@@ -20,20 +20,22 @@ var process = function (req, res, sendEmail) {
 
     var sendEmail = (sendEmail != null || sendEmail != undefined) ? sendEmail : true;
     var from = req.params.From.toUpperCase();
+    var defer = jQuery.Deferred();
+
+    var isTestUser = ['TESTUSER1', 'TESTUSER2'].indexOf(from) >= 0;
 
     // Filter msgs accrding to ENV
-    if (config.env === config.ENV_TEST
-        && (from != 'TESTUSER1' || from != 'TESTUSER2')) {
+    if (config.env === config.ENV_TEST && !isTestUser) {
         console.log('TEST env will only process test users. Skipping.');
-        return;
+        defer.reject();
+        return defer;
     }
-    else if (config.env === config.ENV_PROD
-        && (from == 'TESTUSER1' || from == 'TESTUSER2')) {
-        console.log('PROD env will only process test users. Skipping.');
-        return;
+    else if (config.env === config.ENV_PROD && isTestUser) {
+        console.log('PROD env will NOT process test users. Skipping.');
+        defer.reject();
+        return defer;
     }
 
-    var defer = jQuery.Deferred();
     var parser = new MailParser();
     jQuery.when(parser._getAllKnownClaims(), parser._getAllKnownUserIds())
         .then(function (allKnownClaims, allKnownUserIds) {

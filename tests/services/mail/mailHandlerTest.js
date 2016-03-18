@@ -34,7 +34,7 @@ describe('mailHandler', function(){
             assert.ok(data.attachments);
             assert.equal(data.mail.subject, 'the subject claim id: 123');
             assert.equal(data.mail['body-plain'], 'the body\r\n#tag1\r\n#tag2');
-            assert.equal(data.mail.From, 'plato@nonsense.foo');
+            assert.equal(data.mail.From, 'TESTUSER1');
 
             var ce = mongoUtils.getEntityById(data._id, 'ClaimEntries', 'TestUser');
             ce.then(function (entry) {
@@ -45,6 +45,7 @@ describe('mailHandler', function(){
         };
 
         setupClaim();
+        req.params.From = 'TESTUSER1';
         ms.process(req, res, false).then(assertSuccess);
     });
     
