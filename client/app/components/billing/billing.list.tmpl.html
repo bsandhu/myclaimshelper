@@ -10,7 +10,7 @@
     <div class="panel-body" data-bind="if: bills().length > 0">
 
         <!-- Filtered msg. -->
-        <div class="row bottomMargin5" data-bind="if: Boolean(claimId)">
+        <div class="row bottomMargin5" data-bind="if: Boolean(claimId())">
             <div class="col-lg-6 col-md-6 col-lg-offset-3 col-md-offset-3 col-sm-12 col-xs-12">
                 <div class="alert alert-info" role="alert">
                     Showing bills for Claim
@@ -22,10 +22,13 @@
 
         <!-- Buttons -->
         <div class="row bottomMargin5">
-            <div class="col-lg-10 col-md-10 col-sm-12 col-xs-12">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <!--
+                NOTE: This has to wait till we have something to ask for the claim to Bill
+
                 <div class="col-lg-5 col-md-4 col-sm-2 col-xs-2">
                     <div class="btn-group">
-                        <a class="btn btn-sm btn-info" data-bind="attr: {href: '#/claim/' + claimId + '/newbill'}">
+                        <a class="btn btn-sm btn-info" data-bind="attr: {href: '#/claim/' + claimId() + '/newbill'}">
                             <i class="fa fa-plus"></i> New Invoice
                         </a>
                     </div>
@@ -36,8 +39,13 @@
                         <span>Show Closed Claims</span>
                     </div>
                 </div>
-                <div class="col-lg-2 col-md-3 col-sm-4 col-xs-4">
-                    <div class="form-group rightBorderSolid inline">
+                -->
+                <div class="col-lg-2 col-md-2 col-sm-3 col-xs-3 inline pull-right" style="padding: 0px;">
+                    <input class="form-control no-border" id="prepend"
+                           placeholder="Start typing Claim file num" type="text"/>
+                </div>
+                <div class="col-lg-2 col-md-2 col-sm-3 col-xs-3 inline pull-right" style="padding: 0px;">
+                    <div class="form-group rightBorderSolid inline rightMargin5">
                         <!-- Group selection -->
                         <div class="inline">Status</div>
                         <div class="inline">
@@ -45,20 +53,14 @@
                                     data-bind="value: groupBy,
                                                options: groupByOptions"></select></div>
                     </div>
-                </div>
-                <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1" style="padding: 0px;">
                     <div class="glyphicon glyphicon-search inline"
                          style="font-size: initial; padding-top: 10px;"
                          aria-hidden="true"></div>
                 </div>
-                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 inline" style="padding: 0px;">
-                    <input class="form-control no-border" id="prepend"
-                           placeholder="Start typing Claim file num" type="text"/>
-                </div>
             </div>
         </div>
         <div class="row">
-            <div class="col-lg-11 col-md-11 col-sm-12 col-xs-12">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <!-- Sorting is enabled via koSortableBinding -->
                 <table id="billingListTable"
                        data-sortable
@@ -84,6 +86,7 @@
                         <td data-bind="text: bill._id,
                                        click: $parent.router.routeToBill"></td>
                         <td>
+                            <!-- ko ifnot: bill.isClaimClosed -->
                             <div class="btn-group">
                                 <button class="btn btn-md dropdown-toggle"
                                         data-toggle="dropdown"
@@ -105,6 +108,10 @@
                                     </li>
                                 </ul>
                             </div>
+                            <!-- /ko -->
+                            <!-- ko if: bill.isClaimClosed -->
+                                <span data-bind="text: bill.status"></span>
+                            <!-- /ko -->
                         </td>
                         <td data-bind="text: bill.submissionDate ? $parent.DateUtils.niceDate(bill.submissionDate, false, '-') : '-',
                                        click: $parent.router.routeToBill"></td>
@@ -158,6 +165,6 @@
 
     <div class="panel-body" data-bind="if: bills().length <= 0">
         No Bills submitted for this claim yet.
-        <a data-bind="attr: {href: '#/claim/' + claimId + '/newbill'}">Create New?</a>
+        <a data-bind="attr: {href: '#/claim/' + claimId() + '/newbill'}">Create New?</a>
     </div>
 </div>

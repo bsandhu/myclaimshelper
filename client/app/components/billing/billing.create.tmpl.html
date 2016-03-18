@@ -1,9 +1,16 @@
 <div class="panel panel-default" id="billPanel">
 
 <div class="panel-heading" style="background-color: #FAFAFA">
-    <div class="pull-right">
-        <i class="fa fa-print" style="cursor: pointer"
-           data-bind="click: printBill"> Print</i>
+    <div class="row">
+        <div class="col-lg-11 col-md-11 col-sm-10 col-xs-10">
+            <h3 class="panel-title" data-bind="text: bill().claimInsuranceCompanyFileNum"></h3>
+        </div>
+        <div class="col-lg-1 col-md-1 col-sm-2 col-xs-2">
+            <a href="javascript:void(0);" class="btn btn-labeled btn-default"
+               data-bind="click: printBill">
+                <span class="btn-label"><i class="fa fa-print"></i></span>  Print
+            </a>
+        </div>
     </div>
 </div>
 
@@ -30,15 +37,23 @@
     <div data-bind="ifnot: isBillEditable" class="row">
         <div class="col-sm-12">
             <div class="well well-sm bg-color-greenLighter txt-color-green text-center">
-                <i class="fa fa-check-circle"></i>
-                <span data-bind="if: isBillSubmitted">
-                    <strong>Invoice submitted.</strong> Sent on <span
-                        data-bind="text: DateUtils.niceDate(bill().submissionDate())"></span>
-                </span>
-                <span data-bind="if: isBillPaid">
-                    <strong>Invoice Paid.</strong>
-                        <span data-bind="text: DateUtils.niceDate(bill().paidDate())"></span>
-                </span>
+                <!-- Open -->
+                <div data-bind="ifnot: isClaimClosed">
+                    <i class="fa fa-check-circle"></i>
+                    <span data-bind="if: isBillSubmitted">
+                        <strong>Invoice submitted.</strong> Sent on <span
+                            data-bind="text: DateUtils.niceDate(bill().submissionDate())"></span>
+                    </span>
+                    <span data-bind="if: isBillPaid">
+                        <strong>Invoice Paid.</strong>
+                            <span data-bind="text: DateUtils.niceDate(bill().paidDate())"></span>
+                    </span>
+                </div>
+                <!-- Closed -->
+                <div data-bind="if: isClaimClosed">
+                    <i class="fa fa-lock"></i>
+                    <span>Claim is closed</span>
+                </div>
             </div>
         </div>
     </div>
@@ -118,7 +133,7 @@
                 <th>Mileage|Code</th>
                 <th>Expense|Code</th>
                 <th>Amount</th>
-                <th data-bind="if: isBillEditable">&nbsp;</th>
+                <th data-bind="if: isBillEditable">XX&nbsp;</th>
             </tr>
             </thead>
             <tbody>
