@@ -201,28 +201,6 @@
             </ul>
         </div>
 
-        <!-- Billing Button -->
-        <div data-bind="ifnot: inEditMode && isPartiallyCollapsed" class="inline pull-right rightMargin5">
-            <!-- ko ifnot: isClaimClosed -->
-            <div class="btn-group">
-                <a class="btn btn-default inline btn-info"
-                   data-bind="attr: {href: '#/billing/history/' + claim()._id()}">
-                    <i class="fa fa-fw fa-lg fa-credit-card"></i> Billing
-                </a>
-            </div>
-            <!-- /ko -->
-        </div>
-
-        <!-- Edit claim button -->
-        <div data-bind="ifnot: inEditMode && isPartiallyCollapsed" class="inline pull-right rightMargin5">
-            <!-- ko ifnot: isClaimClosed -->
-            <div class="btn btn-default inline btn-info"
-                 data-bind="click: onEditModeClick.bind($data)">
-                <i class="fa fa-pencil"></i>
-                Edit claim
-            </div>
-            <!-- /ko -->
-        </div>
 
         <!-- `Close claim` button -->
         <div data-bind="ifnot: inEditMode && isPartiallyCollapsed" class="inline pull-right rightMargin5">
@@ -240,6 +218,45 @@
                 Re-open claim
             </div>
             <!-- /ko -->
+        </div>
+
+        <!-- Edit claim button -->
+        <div data-bind="ifnot: inEditMode && isPartiallyCollapsed" class="inline pull-right rightMargin5">
+            <!-- ko ifnot: isClaimClosed -->
+            <div class="btn btn-default inline btn-info"
+                 data-bind="click: onEditModeClick.bind($data)">
+                <i class="fa fa-pencil"></i>
+                Edit claim
+            </div>
+            <!-- /ko -->
+        </div>
+
+        <!-- Billing Button -->
+        <div data-bind="ifnot: inEditMode && isPartiallyCollapsed" class="inline pull-right rightMargin5">
+            <div class="btn-group inline leftMargin5">
+                <button type="button"
+                        class="btn btn-default dropdown-toggle btn-info"
+                        data-toggle="dropdown">
+                    <span class="fa fa-fw fa-credit-card"></span>
+                    Billing <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" role="menu">
+                    <!-- ko ifnot: isClaimClosed -->
+                    <li>
+                        <a data-bind="attr: {href: '#/claim/' + claim()._id() + '/newbill'}">
+                            <span class="fa fa-plus"></span>
+                            <span class="leftMargin5">New</span>
+                        </a>
+                    </li>
+                    <!-- /ko -->
+                    <li>
+                        <a data-bind="attr: {href: '#/billing/history/' + claim()._id()}">
+                            <span class="fa fa-history"></span>
+                            <span class="leftMargin5">History</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
         </div>
 
     </div>
