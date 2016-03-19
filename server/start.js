@@ -96,7 +96,9 @@ function authenticate(req, res, next) {
             function onDecode(err, decoded) {
                 if (err) {
                     console.log('Auth error: ' + err);
-                    res.send(401);
+                    res.statusMessage = err.name ? err.name : err;
+                    res.statusCode = 401;
+                    res.end();
                 } else {
                     console.log('Authenticated: ' + decoded.sub);
                     return next();
@@ -110,7 +112,7 @@ function setupClaimsServiceRoutes() {
     server.get('/claim/:id', authenticate, claimsService.getClaim);
     server.get('/claim/:id/entries', authenticate, claimsService.getAllEntriesForClaim);
     server.post('/claim', authenticate, claimsService.saveOrUpdateClaim);
-    server.get('/claim/search/:search', authenticate, claimsService.searchClaims);
+    server.post('/claim/search', authenticate, claimsService.searchClaims);
 
     server.get('/claimEntry/:id', authenticate, claimsService.getClaimEntry);
     server.post('/claimEntry', authenticate, claimsService.saveOrUpdateClaimEntry);

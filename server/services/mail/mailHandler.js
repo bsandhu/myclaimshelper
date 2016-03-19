@@ -19,13 +19,24 @@ var process = function (req, res, sendEmail) {
     res.send(200, 'Request received successfully.');
 
     var sendEmail = (sendEmail != null || sendEmail != undefined) ? sendEmail : true;
-    var from = req.params.From.toUpperCase();
-    if (config.env === config.ENV_TEST
-        && (from != 'TESTUSER1' || from != 'TESTUSER2')) {
+    var from = req.params.To.toUpperCase().split('@')[0];
+    var defer = jQuery.Deferred();
+
+    var isTestUser = ['TESTUSER1', 'TESTUSER2'].indexOf(from) >= 0;
+    console.log('Incoming req to MailHandler: ' + JSON.stringify(req.params));
+
+    // Filter msgs accrding to ENV
+    if (config.env === config.ENV_TEST && !isTestUser) {
         console.log('TEST env will only process test users. Skipping.');
+        defer.reject();
+        return defer;
+    }
+    else if (config.env === config.ENV_PROD && isTestUser) {
+        console.log('PROD env will NOT process test users. Skipping.');
+        defer.reject();
+        return defer;
     }
 
-    var defer = jQuery.Deferred();
     var parser = new MailParser();
     jQuery.when(parser._getAllKnownClaims(), parser._getAllKnownUserIds())
         .then(function (allKnownClaims, allKnownUserIds) {
@@ -162,15 +173,15 @@ var notifyFailure = function (sendEmail, mailEntry) {
     var body = err + mailEntry.mail.subject + '<br/>Details: ' + JSON.stringify(mailEntry.errors[0]);
 
     var notifyFn = _.partial(broadcastNoHTTP,
-                            Consts.NotificationName.NEW_MSG,
-                            Consts.NotificationType.ERROR,
-                            body,
-                            mailEntry.owner);
+        Consts.NotificationName.NEW_MSG,
+        Consts.NotificationType.ERROR,
+        body,
+        mailEntry.owner);
 
     var sendMailFn = _.partial(sendEmail,
-                                mailEntry.mail.From,
-                                mailEntry.mail.subject,
-                                body);
+        mailEntry.mail.From,
+        mailEntry.mail.subject,
+        body);
     if (mailEntry.owner) {
         notifyFn();
     }

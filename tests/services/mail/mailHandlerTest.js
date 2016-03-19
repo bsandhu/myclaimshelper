@@ -8,7 +8,7 @@ var claimsService = require("../../../server/services/claimsService.js");
 var setupClaim = function(){
     var testClaim = new Claim();
     testClaim.insuranceCompanyFileNum = "123";
-    var req = {body: testClaim, headers: {userid: 'DefaultUser'}};
+    var req = {body: testClaim, headers: {userid: 'testuser1'}};
     var res = {};
     res.json = function (data) {
         assert(data);
@@ -45,6 +45,7 @@ describe('mailHandler', function(){
         };
 
         setupClaim();
+        req.params.To = 'TESTUSER1@foo.com';
         ms.process(req, res, false).then(assertSuccess);
     });
     

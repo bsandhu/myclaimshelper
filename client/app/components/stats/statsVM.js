@@ -1,6 +1,7 @@
-define(['jquery', 'underscore', 'chartjs', 'knockout', 'KOMap', 'amplify', 'app/utils/events',
-        'text!app/components/stats/stats.tmpl.html'],
-    function ($, _, Chart, ko, KOMap, amplify, Events, statsView) {
+define(['jquery', 'underscore', 'knockout', 'KOMap', 'amplify',
+        'app/utils/events', 'shared/NumberUtils',
+        'text!app/components/stats/stats.tmpl.html', 'chartjs'],
+    function ($, _, ko, KOMap, amplify, Events, NumberUtils, statsView, Chart) {
 
         var N = Number;
 
@@ -8,9 +9,10 @@ define(['jquery', 'underscore', 'chartjs', 'knockout', 'KOMap', 'amplify', 'app/
             console.log('Init Stats');
             this.loadStats();
             this.stats = ko.observable();
+            this.NumberUtils = NumberUtils;
 
 
-            // Tasks stats
+            //  **** Tasks stats ****
             this.tasksDoneToday = ko.computed(function () {
                 return this.nullSafeStats("['TasksDoneToday'][0]['total']");
             }, this);
@@ -29,11 +31,17 @@ define(['jquery', 'underscore', 'chartjs', 'knockout', 'KOMap', 'amplify', 'app/
             this.tasksByCategory = ko.computed(function () {
                 return this.stats()
                     ? _.zip(
-                            _.map(this.stats()['TaskByCategory'], function(i){return capitalizeFirstLetter(i._id[0])}),
-                            _.map(this.stats()['TaskByCategory'], function(i){return i.total}))
+                    _.map(this.stats()['TaskByCategory'], function (i) {
+                        return capitalizeFirstLetter(i._id[0])
+                    }),
+                    _.map(this.stats()['TaskByCategory'], function (i) {
+                        return i.total
+                    }))
                     : ''
             }, this);
-            // Billing
+
+
+            // **** Billing ****
             // Example - "BillsByBillingStatus":[{"_id":"Submitted","total":16.24}]}
             this.billByBillingStatus = ko.computed(function () {
                 var result = {'Submitted': 0, 'Paid': 0, 'Not Submitted': 0};
@@ -45,6 +53,18 @@ define(['jquery', 'underscore', 'chartjs', 'knockout', 'KOMap', 'amplify', 'app/
                         });
                 }
                 return result;
+            }, this);
+
+
+            //  **** Claims ****
+            this.openClaimsCount = ko.computed(function () {
+                return this.nullSafeStats("['OpenClaims'][0]['total']");
+            }, this);
+            this.closedClaimsData = ko.computed(function () {
+                return this.nullSafeStats("['ClosedClaims']");
+            }, this);
+            this.showClosedClaimsChart = ko.computed(function () {
+                return !_.isEmpty(this.closedClaimsData());
             }, this);
 
             this.setupEvListeners();
@@ -65,6 +85,7 @@ define(['jquery', 'underscore', 'chartjs', 'knockout', 'KOMap', 'amplify', 'app/
         }
 
         StatsVM.prototype.setupEvListeners = function () {
+            amplify.subscribe(Events.SAVED_CLAIM, this, this.loadStats);
             amplify.subscribe(Events.SAVED_CLAIM_ENTRY, this, this.loadStats);
             amplify.subscribe(Events.SAVED_BILL, this, this.loadStats);
             amplify.subscribe(Events.SAVED_CLAIM_ENTRY, this, this.onTasksStatsTemplRender);
@@ -84,29 +105,64 @@ define(['jquery', 'underscore', 'chartjs', 'knockout', 'KOMap', 'amplify', 'app/
                 .data('text', this.percentTasksDone() + '%')
                 .circliful();
 
-           /* var ctx = document.getElementById("tasksStatsByType").getContext("2d");
-            var data = [
-                {
-                    value: 300,
-                    color:"#F7464A",
-                    highlight: "#FF5A5E",
-                    label: "Visit"
+            /* var ctx = document.getElementById("tasksStatsByType").getContext("2d");
+             var data = [
+             {
+             value: 300,
+             color:"#F7464A",
+             highlight: "#FF5A5E",
+             label: "Visit"
+             },
+             {
+             value: 50,
+             color: "#46BFBD",
+             highlight: "#5AD3D1",
+             label: "Photos"
+             },
+             {
+             value: 100,
+             color: "#FDB45C",
+             highlight: "#FFC870",
+             label: "Phone"
+             }
+             ];
+             var options = {animateScale: false, animation: false}
+             var myChart = new Chart(ctx).Pie(data, options);*/
+
+
+        }
+
+        StatsVM.prototype.onclosedClaimsStatsTemplRender = function () {
+            console.log('Rendering closed claims Stats');
+            // Destroy on re-render
+            $('#closedClaimsChart').remove(); // this is my <canvas> element
+            $('#closedClaimsChartDiv').append('<canvas id="closedClaimsChart"></canvas>');
+
+            var ctx = $("#closedClaimsChart");
+            var labels = _.keys(this.closedClaimsData());
+            var dataPoints = _.values(this.closedClaimsData());
+            var myChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Closed',
+                            data: dataPoints
+                        }
+                    ]
                 },
-                {
-                    value: 50,
-                    color: "#46BFBD",
-                    highlight: "#5AD3D1",
-                    label: "Photos"
-                },
-                {
-                    value: 100,
-                    color: "#FDB45C",
-                    highlight: "#FFC870",
-                    label: "Phone"
+                options: {
+                    scales: {
+                        xAxes: [
+                            {display: false, gridLines: {drawOnChartArea: false}}
+                        ],
+                        yAxes: [
+                            {display: false, gridLines: {drawOnChartArea: false}}
+                        ]
+                    }
                 }
-            ];
-            var options = {animateScale: false, animation: false}
-            var myChart = new Chart(ctx).Pie(data, options);*/
+            });
         }
 
         StatsVM.prototype.onBillStatsTemplRender = function () {
@@ -116,12 +172,14 @@ define(['jquery', 'underscore', 'chartjs', 'knockout', 'KOMap', 'amplify', 'app/
 
         StatsVM.prototype.loadStats = function () {
             console.log('Loading All Stats');
-            return $.getJSON('/stats/all')
+            $.getJSON('/stats/all')
                 .done(function (resp) {
                     console.debug('Loaded Stats ' + JSON.stringify(resp.data));
                     this.stats(resp.data);
+
                     // Handle first load
                     this.onTasksStatsTemplRender();
+                    this.onclosedClaimsStatsTemplRender();
                 }.bind(this))
                 .fail(function (resp) {
                     console.error('Failed to load Stats ' + JSON.stringify(resp));

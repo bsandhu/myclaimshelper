@@ -39,9 +39,6 @@ var _decomposeBill = function (obj) {
 // :: [Obj] -> Promise
 var _saveOrUpdateBillingItems = _.partial(mongoUtils.saveOrUpdateEntity, _, BILLING_ITEMS_COL_NAME);
 
-// :: Obj -> Promse
-var _saveOrUpdateBill = _.partial(mongoUtils.saveOrUpdateEntity, _, BILL_COL_NAME);
-
 // :: Dict -> DB -> Promise
 var _getBills = function (search, db) {
     var result = jQuery.Deferred();
@@ -76,7 +73,7 @@ var _getClaimsIgnoringOwnership = function (search, db) {
 }
 
 // :: Dict -> DB -> Promise
-var getBillObjects = function (search, db) {
+var getBillObjects = function (search, includeClosedClaims, db) {
     var result = jQuery.Deferred();
 
     jQuery
@@ -106,7 +103,13 @@ var getBillObjects = function (search, db) {
                         bill.claimInsuranceCompanyFileNum = correspondingClaim ? correspondingClaim.insuranceCompanyFileNum : 'None';
                         bill.claimInsuranceCompanyName = correspondingClaim ? correspondingClaim.insuranceCompanyName : 'None';
                     })
-                    result.resolve(bills);
+                    // Filter out closed claims
+                    result.resolve(
+                        _.filter(bills, function (bill) {
+                            return (includeClosedClaims == false && bill.isClaimClosed == true)
+                                ? false
+                                : true;
+                        }));
                 });
         });
 
@@ -129,10 +132,11 @@ var getBillObjects = function (search, db) {
 function getBillsREST(req, res) {
     assert.ok(req.body, 'Expecting Mongo query as a parameter');
     var db = mongoUtils.connect();
-    var query = req.body;
+    var query = req.body.search;
+    var includeClosedClaims = req.body.includeClosedClaims;
     query.owner = req.headers.userid;
 
-    db.then(_.partial(getBillObjects, query))
+    db.then(_.partial(getBillObjects, query, includeClosedClaims))
         .then(_.partial(sendResponse, res, null),
         _.partial(sendResponse, res, 'Failed to get Bill for query ' + query));
 }
@@ -186,13 +190,20 @@ function saveOrUpdateBillREST(req, res) {
     var bill = req.body;
     bill.owner = req.headers.userid;
 
+    // Saved in a separate API call
     delete bill.billingItems;
 
-    _saveOrUpdateBill(bill)
+    console.log('Scrub convenience attrs from bill');
+    delete bill.isClaimClosed;
+    delete bill.claimDescription;
+    delete bill.claimInsuranceCompanyName;
+    delete bill.claimInsuranceCompanyFileNum;
+
+    mongoUtils.saveOrUpdateEntity(bill, BILL_COL_NAME)
         .then(function () {
             sendResponse(res, null, bill)
-        },
-        _.partial(sendResponse, res, 'Failled to save ' + bill));
+        })
+        .fail(_.partial(sendResponse, res, 'Failled to save ' + bill));
 }
 
 

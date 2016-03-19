@@ -13,10 +13,10 @@ require.config({
         'text': 'lib/require.text',            // Require plugin for html templates
         'Path': 'lib/path',
         'bootstrap': 'lib/bootstrap.min',
-        'bootstrapTable' : 'lib/bootstrap.table',
-        'bootbox' : 'lib/bootbox.min',
+        'bootstrapTable': 'lib/bootstrap.table',
+        'bootbox': 'lib/bootbox.min',
         'tableExport': 'lib/bootstrap.table.export',
-        'kayalshriTableExport' : 'lib/kayalshri.table.export',
+        'kayalshriTableExport': 'lib/kayalshri.table.export',
         'wysiwyg': 'lib/bootstrap.wysiwyg',
         'async': 'lib/async',
         'datetimepicker': 'lib/jquery.datetimepicker',
@@ -28,12 +28,17 @@ require.config({
         'circliful': 'lib/jquery.circliful.min',
         'underscore': 'lib/underscore.min',
         'chartjs': 'lib/Chart',
-        'Auth0Lock': 'lib/lock-8.2.min'
+        'Auth0Lock': 'lib/lock-8.2.min',
+        'bootstrapTableCustom': 'lib/bootstrap.table.customization'
     },
     shim: {
         'Auth0Lock': {
             deps: ['jquery'],
             exports: 'Auth0Lock'
+        },
+        'chartjs': {
+            deps: ['jquery'],
+            exports: 'Chart'
         },
         'circliful': {
             deps: ['jquery']
@@ -57,7 +62,7 @@ require.config({
             deps: ['jquery', 'jqueryBase64']
         },
         'tableExport': {
-            deps: ['jquery', 'bootstrapTable', 'kayalshriTableExport']
+            deps: ['jquery', 'bootstrapTableCustom', 'bootstrapTable', 'kayalshriTableExport']
         },
         'bootstrap': {
             deps: ['jquery']

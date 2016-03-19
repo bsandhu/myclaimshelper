@@ -17,8 +17,7 @@ function BillingProfile() {
 define(['./contact'], function (Contact) {
 
   function UserProfile(){
-    this.userName = undefined; 
-
+    this._id = undefined;
     this.contactInfo = new Contact();
     this.billingProfile = new BillingProfile();
   }

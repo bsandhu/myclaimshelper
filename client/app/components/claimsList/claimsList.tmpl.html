@@ -9,6 +9,7 @@
             <span class="fa fa-plus"></span>
             New Claim
         </button>
+
     </div>
     <!-- Note: Div container is managed by parent -->
     <div class="panel-body" style="padding-top: 0">
@@ -26,21 +27,23 @@
                data-sortable="true"
                data-sort-name="date1"
                data-sort-order="desc"
-               data-show-export="true"
-               data-pagination="true"
+               data-pagination="false"
                data-show-pagination-switch="false"
                data-maintain-selected="true"
                data-smart-display="false"
+               data-show-export="true"
                data-export-types="['excel']"
                data-bind="event: {'click-row.bs.table': onClaimSelect}"
                data-toolbar="#claims-list-toolbar">
             <thead>
-            <th data-field="claimId" data-sortable="true" data-visible="false">Claim Id.</th>
-            <th data-field="fileNo" data-sortable="true" data-visible="true">Insurance Co. File No.</th>
+            <th data-field="fileNo" class="text-success" data-sortable="true" data-visible="true">File No.</th>
+            <th data-field="insuranceCo" data-sortable="true" data-visible="true">Insurance Co.</th>
             <th data-field="desc" data-sortable="true">Description</th>
-            <th data-field="insuranceCo" data-sortable="true">Insurance Company</th>
-            <th data-field="date1" data-sortable="true">Date Received</th>
-            <th data-field="dateDue" data-sortable="true">Due Date</th>
+            <th data-field="claimant" data-sortable="true">Claimant</th>
+            <th data-field="insured" data-sortable="true">Insured</th>
+            <th data-field="dateDue" data-sortable="true">Due</th>
+            <th data-field="age" data-sortable="true">Age</th>
+            <th data-field="claimId" data-sortable="true" data-visible="false">Id</th>
             </thead>
 
             <!-- Rows appended by Bootstrap table in VM -->

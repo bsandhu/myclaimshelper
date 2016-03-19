@@ -4,6 +4,7 @@ define([], function(){
         // Event names
         CLAIMS_GRID_SELCTION : 'GridSelection',
         SHOW_CLAIMS_LIST     : 'ShowClaimsList',
+        CLAIMS_LIST_STATUS_CHANGE : 'CLAIMS_LIST_STATUS_CHANGE',
         SHOW_DASHBOARD       : 'ShowDashboard',
 
         SHOW_CONTACT         : 'SHOW_CONTACT',

@@ -276,7 +276,15 @@
                 excelFile += "</html>";
 
                 var base64data = "base64," + $.base64.encode(excelFile);
-                window.open('data:application/vnd.ms-'+defaults.type+';filename=exportData.doc;' + base64data);
+
+                // **** Note - changed from original lib ****
+                // This works in Chrome
+                var link = document.createElement('a');
+                link.download = 'claims.xls';
+                link.href = 'data:application/vnd.ms-excel;' + base64data;
+                link.click();
+                // This works in FF
+                //window.location.href = 'data:application/vnd.ms-'+defaults.type+';filename=exportData.xls;' + base64data;
 
             }else if(defaults.type == 'png'){
                 html2canvas($(el), {

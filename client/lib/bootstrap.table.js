@@ -378,7 +378,7 @@
         events: undefined,
         sorter: undefined,
         sortName: undefined,
-        cellStyle: undefined,
+        cellStyle: cellStyleFn,
         searchable: true,
         cardVisible: true
     };
@@ -892,10 +892,11 @@
             });
         }
 
+        // **** NOTE custom mods on original lib ****
         if (this.options.search) {
             html = [];
             html.push(
-                    '<div class="pull-right search">',
+                    '<div class="pull-right search" style="width:20%">',
                 sprintf(
                         '<input '
                             + 'class="form-control no-border" '
@@ -923,6 +924,22 @@
                 }, that.options.searchTimeOut);
             }
         }
+
+        // **********************************************************
+        // **** NOTE Status filter - custom mods on original lib ****
+        // **********************************************************
+
+        html = [];
+        html.push(
+        '<div class="pull-right search" style="padding-right: 10px; padding-top: 10px">',
+            '<div class="form-group rightBorderSolid inline">' +
+                '<div class="inline">Status</div>' +
+                '<div class="inline">' +
+                '<select class="form-control input-sm summaryGroupSelector" data-bind="value: groupBy, options: groupByOptions"></select></div>' +
+            '</div>' +
+        '</div>');
+        this.$toolbar.append(html.join(''));
+
     };
 
     BootstrapTable.prototype.onSearch = function (event) {

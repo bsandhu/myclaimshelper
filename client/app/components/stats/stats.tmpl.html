@@ -11,9 +11,14 @@
                                                     afterRender: onTasksStatsTemplRender.bind($data) }'></div>
                     </div>
                     <!-- Billing --->
-                    <div class="col-xs-4 col-sm-4 col-md-3 col-lg-2" style="padding-left: 1px">
+                    <div class="col-xs-4 col-sm-4 col-md-3 col-lg-2" style="padding-left: 1px; padding-right: 1px">
                         <div data-bind='template: { name: "billStatsTemplate",
                                                     afterRender: onBillStatsTemplRender }'></div>
+                    </div>
+                    <!-- Closed claims --->
+                    <div class="col-xs-4 col-sm-4 col-md-3 col-lg-2" style="padding-left: 1px">
+                        <div data-bind='template: { name: "closedClaimsStatsTemplate",
+                                                    afterRender: onclosedClaimsStatsTemplRender.bind($data) }'></div>
                     </div>
                 </div>
             </div>
@@ -40,14 +45,14 @@
                 </div>-->
                 <p class="stats-counter-text">Billing</p>
                 Paid <span class="text-muted text-nowrap text-right"
-                           data-bind="text: '$' + billByBillingStatus()['Paid']"></span><br/>
+                           data-bind="text: NumberUtils.niceCCY(billByBillingStatus()['Paid'])"></span><br/>
                 Submitted <span class="text-muted text-nowrap"
-                                data-bind="text: '$' + billByBillingStatus()['Submitted']"></span><br/>
+                                data-bind="text: NumberUtils.niceCCY(billByBillingStatus()['Submitted'])"></span><br/>
                 Not Submitted <span class="text-muted text-nowrap"
-                                    data-bind="text: '$' + billByBillingStatus()['Not Submitted']"></span>
+                                    data-bind="text: NumberUtils.niceCCY(billByBillingStatus()['Not Submitted'])"></span>
             </div>
             <div class="col-md-4 col-lg-3" style="padding-top: 5px">
-                <i class="fa fa-usd fa-4x" style="color: darkgrey; opacity: .5"></i>
+                <i class="fa fa-usd fa-4x color-dark-grey" style="opacity: .5"></i>
             </div>
         </div>
     </div>
@@ -71,10 +76,35 @@
             </div>
             <div class="col-xs-6 col-sm-6 col-md-4 col-lg-4">
                 <!-- ko foreach: tasksByCategory -->
-                    <span class="text-muted text-nowrap text-right" data-bind="text: $data[0]"></span>
-                    <span class="text-muted text-nowrap text-right" data-bind="text: $data[1]"></span>
-                    <br/>
+                <span class="text-muted text-nowrap text-right" data-bind="text: $data[0]"></span>
+                <span class="text-muted text-nowrap text-right" data-bind="text: $data[1]"></span>
+                <br/>
                 <!-- /ko -->
+            </div>
+        </div>
+    </div>
+</script>
+
+<!-- Closed Claims -->
+<script type="text/html" id="closedClaimsStatsTemplate">
+    <div class="well stats-well text-left">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+                    <span class="stats-counter-text">Claims</span>
+                    <span class="stats-counter-main-text" data-bind="text: openClaimsCount"></span>
+                </div>
+                <div id="closedClaimsChartDiv" class="col-xs-9 col-sm-9 col-md-9 col-lg-9">
+                    <canvas id="closedClaimsChart"></canvas>
+                </div>
+            </div>
+            <div class="row color-dark-grey" style="position:relative; top: -12px;">
+                <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+                    Open
+                </div>
+                <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9 text-center">
+                    Closed/month
+                </div>
             </div>
         </div>
     </div>

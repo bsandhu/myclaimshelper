@@ -36,6 +36,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'Auth0Lock', 'app/utils/events
          */
         UserProfileComponent.prototype.loadUserProfile = function () {
             var userProfileId = Session.getCurrentUserId();
+            var _this = this;
 
             return $.getJSON('/userProfile/' + userProfileId)
                 .done(function (resp) {
@@ -46,6 +47,11 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'Auth0Lock', 'app/utils/events
                 }.bind(this))
                 .fail(function (resp) {
                     console.error('Failed to load UserProfile ' + JSON.stringify(resp));
+                    if (resp.status = 401 && resp.statusText === 'TokenExpiredError') {
+                        console.log('Token expired - resetting');
+                        _this.login();
+                        _this.onLogoff();
+                    }
                 });
         };
 

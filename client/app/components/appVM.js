@@ -79,6 +79,10 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
                 console.log('AppVM - NEW_CLAIM ev');
                 this.transitionToClaim(this);
             });
+            amplify.subscribe(Events.CREATE_NEW_BILL, this, function () {
+                console.log('AppVM - CREATE_NEW_BILL ev');
+                this.transitionToBilling(this);
+            });
             amplify.subscribe(Events.SHOW_CLAIM_ENTRY, this, function () {
                 console.log('AppVM - SHOW_CLAIM_ENTRY ev');
                 this.transitionToClaimEntry(this);
