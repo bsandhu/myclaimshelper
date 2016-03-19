@@ -19,10 +19,11 @@ var process = function (req, res, sendEmail) {
     res.send(200, 'Request received successfully.');
 
     var sendEmail = (sendEmail != null || sendEmail != undefined) ? sendEmail : true;
-    var from = req.params.From.toUpperCase();
+    var from = req.params.To.toUpperCase().split('@')[0];
     var defer = jQuery.Deferred();
 
     var isTestUser = ['TESTUSER1', 'TESTUSER2'].indexOf(from) >= 0;
+    console.log('Incoming req to MailHandler: ' + JSON.stringify(req.params));
 
     // Filter msgs accrding to ENV
     if (config.env === config.ENV_TEST && !isTestUser) {

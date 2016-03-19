@@ -8,7 +8,7 @@ var claimsService = require("../../../server/services/claimsService.js");
 var setupClaim = function(){
     var testClaim = new Claim();
     testClaim.insuranceCompanyFileNum = "123";
-    var req = {body: testClaim, headers: {userid: 'DefaultUser'}};
+    var req = {body: testClaim, headers: {userid: 'testuser1'}};
     var res = {};
     res.json = function (data) {
         assert(data);
@@ -34,7 +34,7 @@ describe('mailHandler', function(){
             assert.ok(data.attachments);
             assert.equal(data.mail.subject, 'the subject claim id: 123');
             assert.equal(data.mail['body-plain'], 'the body\r\n#tag1\r\n#tag2');
-            assert.equal(data.mail.From, 'TESTUSER1');
+            assert.equal(data.mail.From, 'plato@nonsense.foo');
 
             var ce = mongoUtils.getEntityById(data._id, 'ClaimEntries', 'TestUser');
             ce.then(function (entry) {
@@ -45,7 +45,7 @@ describe('mailHandler', function(){
         };
 
         setupClaim();
-        req.params.From = 'TESTUSER1';
+        req.params.To = 'TESTUSER1@foo.com';
         ms.process(req, res, false).then(assertSuccess);
     });
     
