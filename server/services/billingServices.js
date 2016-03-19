@@ -190,8 +190,10 @@ function saveOrUpdateBillREST(req, res) {
     var bill = req.body;
     bill.owner = req.headers.userid;
 
-    console.log('Scrub convenience attrs from bill');
+    // Saved in a separate API call
     delete bill.billingItems;
+
+    console.log('Scrub convenience attrs from bill');
     delete bill.isClaimClosed;
     delete bill.claimDescription;
     delete bill.claimInsuranceCompanyName;

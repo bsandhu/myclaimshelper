@@ -30,6 +30,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox', 'underscore',
             this.activeClaim = undefined;
             // Active Bill - new or unsubmitted
             this.bill = ko.observable(this.newEmptyBill());
+            this.removedBillingItems = [];
             // All bills associated with this Claim - for Overview
             this.bills = ko.observableArray([]);
             // Filtered by Status
@@ -76,7 +77,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox', 'underscore',
                 var ev = arguments[1];
                 var rowNode = $(ev.target).parent().parent();
                 var itemClickedJSON = KOMap.toJSON(itemClicked);
-                var undoTimer = 4000;
+                var undoTimer = 3000;
 
                 if (itemClicked.removeOrUndoLabel() === 'Undo') {
                     console.log('Cancelled remove BillingItem: ' + itemClickedJSON);
@@ -92,6 +93,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox', 'underscore',
                             console.log('Remove BillingItem: ' + itemClickedJSON);
                             rowNode.fadeTo('slow', .1, function () {
                                 self.bill().billingItems.remove(itemClicked);
+                                self.removedBillingItems.push(itemClicked);
                                 self.calcAll();
                             });
                         }.bind(self),
@@ -195,7 +197,21 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox', 'underscore',
             console.log('BillingVM > onCreateNewBill');
             console.assert(evData.claimId, 'Expecting ev to carry claimId');
             this.claimId(evData.claimId);
-            this.mode(Consts.BILLING_TAB_CREATE_MODE);
+
+            // Check if an unsubmitted bill exists for claim
+            var _this = this;
+            _this.getBillsForClaim(
+                function onDone() {
+                    var unsubmittedBill = _.find(_this.bills(), function (bill) {
+                        return bill.status === BillingStatus.NOT_SUBMITTED;
+                    });
+                    if (unsubmittedBill){
+                        amplify.publish(Events.INFO_NOTIFICATION, {msg: 'An un-submitted bill is present for this Claim. Opening.'})
+                        router.routeToBill.bind({claimId: evData.claimId, _id: unsubmittedBill._id})()
+                    } else {
+                        _this.mode(Consts.BILLING_TAB_CREATE_MODE);
+                    }
+                });
         }
 
         BillingVM.prototype.onShowBill = function (evData) {
@@ -458,8 +474,8 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox', 'underscore',
                     if (response.data[0]) {
                         var billJS = response.data[0];
                         billJS.billRecipient = billJS.billRecipient || new Contact();
-                        _.each(billJS.billingItems, function(billingItem){
-                           billingItem.removeOrUndoLabel = 'Remove';
+                        _.each(billJS.billingItems, function (billingItem) {
+                            billingItem.removeOrUndoLabel = 'Remove';
                         });
                         this.bill(KOMap.fromJS(billJS))
                         this.billRecipient(this.bill().billRecipient);
@@ -477,21 +493,22 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox', 'underscore',
             $('[data-toggle="tooltip"]').tooltip();
         };
 
-        BillingVM.prototype.getBillsForClaim = function () {
+        BillingVM.prototype.getBillsForClaim = function (onDoneCB) {
             console.log('Get bills for claim ' + this.claimId());
             var id = (this.claimId() == null || this.claimId() == 'null' || this.claimId() == 'undefined')
                 ? undefined
                 : this.claimId();
             var includeClosed = Boolean(id) ? true : false;
+            var onDoneCB = onDoneCB || $.noop;
 
-            ajaxUtils.post(
+            return ajaxUtils.post(
                 '/bill/search',
                 JSON.stringify({search: {claimId: id}, includeClosedClaims: includeClosed}),
                 function onSuccess(response) {
                     console.log('getBillsForClaim: ' + JSON.stringify(response).substr(0, 100));
                     this.bills(_.sortBy(response.data, '_id').reverse());
-                }.bind(this)
-            );
+                    onDoneCB();
+                }.bind(this));
         };
 
         BillingVM.prototype.cancelBillCreation = function () {
@@ -551,7 +568,17 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox', 'underscore',
          * Associate the BillingItems to Bill
          */
         BillingVM.prototype.submitBillingItems = function (status, onDone) {
-            var billingItems = $.map(this.bill().billingItems(),
+            var removedItems = $.map(this.removedBillingItems,
+                function unLink(entry) {
+                    var billingItem = entry;
+                    billingItem.billId(null);
+                    billingItem.status(BillingStatus.NOT_SUBMITTED);
+                    delete billingItem.removeOrUndoLabel;
+                    delete billingItem.timeoutId;
+                    return billingItem;
+                }.bind(this));
+
+            var activeItems = $.map(this.bill().billingItems(),
                 function (entry) {
                     var billingItem = entry;
                     billingItem.billId(this.bill()._id());
@@ -560,10 +587,13 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox', 'underscore',
                     delete billingItem.timeoutId;
                     return billingItem;
                 }.bind(this));
-            console.log('Saving BillingItems: ' + KOMap.toJSON(billingItems));
+
+            var allItems = _.union(removedItems, activeItems);
+            console.log('Saving BillingItems: ' + KOMap.toJSON(allItems));
+
             return ajaxUtils.post(
                 '/billingItem',
-                KOMap.toJSON(billingItems),
+                KOMap.toJSON(allItems),
                 function onSuccess(response) {
                     console.log('Saved Billing Items: ' + JSON.stringify(response));
                     onDone();
