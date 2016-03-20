@@ -119,13 +119,15 @@ describe('ClaimsService', function () {
             .done(function(data) {
                 assert(data);
                 assert.equal(data.status, 'Success');
+                assert.equal(data.data.isClosed, false);
                 assert.ok(data.data._id);
                 done();
             });
     });
 
-    it('Update claim', function (done) {
+    it('Update claim - mark closed', function (done) {
         testClaim.description = 'Test claim update';
+        testClaim.isClosed = true;
 
         // Mimic the input from the browser
         testClaim._id = testClaim._id.toString();
@@ -172,6 +174,8 @@ describe('ClaimsService', function () {
 
             var savedClaimEntry = data.data[0];
             assert.ok(savedClaimEntry.claimId);
+            // Claim closed in previous step
+            assert.equal(savedClaimEntry.isClosed, true);
             assert.equal(savedClaimEntry.summary, 'I am test Task too');
             assert.ok(savedClaimEntry.billingItem);
             assert.ok(savedClaimEntry.billingItem._id);

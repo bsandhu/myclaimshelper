@@ -33,6 +33,7 @@ function deleteClaim(claimId) {
 
 function saveOrUpdateClaim(req, res) {
 
+    // Invoke Contact service to update the Contact object
     function setReferenceToContactObj(contactJSON, callBack) {
         var defer = jQuery.Deferred();
         var contactObj = _.extend(new Contact(), contactJSON);
@@ -62,11 +63,20 @@ function saveOrUpdateClaim(req, res) {
         return chainedDefer;
     }
 
+    // Update related claim entries
+    function updateClaimEntryClosedStatus(claimId, newStatus){
+        return mongoUtils.modifyAttr(
+            mongoUtils.CLAIM_ENTRIES_COL_NAME,
+            {isClosed: newStatus},
+            {claimId: claimId});
+    }
+
     var claim = req.body;
     claim = _.extend(new Claim(), claim);
 
-    var requests = [];
-    requests.push(
+    // Aggregate contact update calls
+    var contactUpdateRequests = [];
+    contactUpdateRequests.push(
         setReferenceToContactObj(claim.insuredContact, function (contactId) {
             claim.insuredContactId = contactId;
         }),
@@ -88,8 +98,12 @@ function saveOrUpdateClaim(req, res) {
             claim.otherContactIds[index] = contactId;
         });
     });
+    // Update related entries for existing claim
+    if (claim._id) {
+        contactUpdateRequests.push(updateClaimEntryClosedStatus(claim._id, claim.isClosed));
+    }
 
-    jQuery.when.apply(jQuery, requests)
+    jQuery.when.apply(jQuery, contactUpdateRequests)
         .then(function () {
             delete claim.insuredContact;
             delete claim.insuredAttorneyContact;

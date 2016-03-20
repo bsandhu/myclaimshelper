@@ -63,7 +63,7 @@ describe('DateUtils', function () {
         assert.equal(dateUtils.niceLocaleDate(null), 'None');
         assert.equal(dateUtils.niceLocaleDate(null, 'Foo'), 'Foo');
         assert.equal(dateUtils.niceLocaleDate(new Date(0)), 'None');
-        assert.equal(dateUtils.niceLocaleDate(new Date(2015, 2, 1)), '2/1/2015');
+        assert.equal(dateUtils.niceLocaleDate(new Date(2015, 2, 1)), '3/1/2015');
     });
 
 });

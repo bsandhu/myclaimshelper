@@ -69,9 +69,9 @@ function populateClaims() {
 }
 
 function populateUserProfiles() {
-    _.each(testUserProfile.data, function (claim) {
-        claim.owner = TEST_USER_ID;
-        mongoUtils.saveOrUpdateEntity(claim, mongoUtils.USERPROFILE_COL_NAME, TEST_USER_ID)
+    _.each(testUserProfile.data, function (data) {
+        data.owner = "DefaultUser";
+        mongoUtils.saveOrUpdateEntity(data, mongoUtils.USERPROFILE_COL_NAME, "DefaultUser")
             .always(function (err) {
                 console.info(!err ? 'Saved UserProfile' : err);
             });
@@ -85,7 +85,7 @@ function populateUserProfiles() {
 // Run one fn at a time, in the order below
 
 //nukeDB();
-//populateUserProfiles();
+populateUserProfiles();
 //populateContacts()
 //populateClaimEntries();
 //populateBillingItems();

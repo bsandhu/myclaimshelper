@@ -119,8 +119,8 @@ function setupClaimsServiceRoutes() {
     server.post('/claimEntry/modify', authenticate, claimsService.modifyClaimEntry);
     server.post('/claimEntry/search', authenticate, claimsService.searchClaimEntries);
 
-    server.post('/upload', authenticate, uploadService.uploadFile);
-    server.get('/download', authenticate, uploadService.downloadFile);
+    server.post('/upload', uploadService.uploadFile);
+    server.get('/download', uploadService.downloadFile);
 
     server.post('/extract/entity', authenticate, entityExtractionService.extract);
 }
@@ -141,7 +141,6 @@ function setupBillingServiceRoutes() {
 function setupProfileServiceRoutes() {
     server.post('/userProfile', authenticate, profileService.saveOrUpdateUserProfileREST);
     server.get('/userProfile/:id', authenticate, profileService.checkAndGetUserProfileREST);
-    console.log('setingup userProfile');
 }
 
 function setupStaticRoutes() {

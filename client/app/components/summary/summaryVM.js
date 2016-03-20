@@ -195,14 +195,16 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
         };
 
         SummaryVM.prototype.setupClaimEntryListener = function () {
+            amplify.subscribe(Events.SAVED_CLAIM, this, this.searchClaimEntries);
             amplify.subscribe(Events.NEW_CLAIM_ENTRY, this, this.searchClaimEntries);
             amplify.subscribe(Events.SAVED_CLAIM_ENTRY, this, this.searchClaimEntries);
             amplify.subscribe(Events.UPDATE_CLAIM_ENTRY_STATUS, this, this.searchClaimEntries);
         };
 
         SummaryVM.prototype.searchClaimEntries = function () {
-            var postReq = { query: {dueDate: this.dueDateFilter().query,
-                            state: this.statusFilter().query},
+            var postReq = { query: {isClosed: false,
+                                    dueDate: this.dueDateFilter().query,
+                                    state: this.statusFilter().query},
                             options: {sort: [[this.groupBy().group, 'asc']]}};
             console.log('Searching for claim entries: ' + postReq);
 

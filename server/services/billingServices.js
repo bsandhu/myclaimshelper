@@ -100,8 +100,8 @@ var getBillObjects = function (search, includeClosedClaims, db) {
                         });
                         bill.isClaimClosed = correspondingClaim ? correspondingClaim.isClosed : false;
                         bill.claimDescription = correspondingClaim ? correspondingClaim.description : 'None';
-                        bill.claimInsuranceCompanyFileNum = correspondingClaim ? correspondingClaim.insuranceCompanyFileNum : 'None';
-                        bill.claimInsuranceCompanyName = correspondingClaim ? correspondingClaim.insuranceCompanyName : 'None';
+                        bill.claimInsuranceCompanyFileNum = correspondingClaim ? (correspondingClaim.insuranceCompanyFileNum || '') : 'None';
+                        bill.claimInsuranceCompanyName = correspondingClaim ? (correspondingClaim.insuranceCompanyName || '') : 'None';
                     })
                     // Filter out closed claims
                     result.resolve(
