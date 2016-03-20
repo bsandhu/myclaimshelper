@@ -7,8 +7,6 @@ var claimsService = require("../../../server/services/claimsService.js");
 var jQuery = require('jquery-deferred');
 
 
-
-
 describe('mailHandler', function(){
 
     var file = __dirname + '/data/sent-mail.json';

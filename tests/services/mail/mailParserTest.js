@@ -3,11 +3,41 @@ var fs = require('fs');
 var ms = require('../../../server/services/mail/mailParser.js');
 var _ = require('underscore');
 var jQuery = require('jquery-deferred');
+var Claim = require("../../../server/model/claim.js");
+var claimsService = require("../../../server/services/claimsService.js");
+var mongoUtils = require('../../../server/mongoUtils.js');
 
 
 describe('mailParser', function () {
 
     var file = __dirname + '/data/sent-mail.json';
+
+    var testClaim = new Claim();
+    testClaim.description = 'Test claim';
+    testClaim.entryDate = new Date(2014, 1, 1);
+    testClaim.dueDate = new Date(2014, 1, 10);
+    testClaim.summary = "I am test entry";
+    testClaim.state = 'open';
+    testClaim.insuredContact = {name: 'TestFist', city: 'TestCity', zip: 11010};
+    testClaim.insuranceCompanyFileNum = "123";
+    testClaim.owner = "DefaultUser";
+
+    before(function (done) {
+        var req = {body: testClaim, headers: {userid: 'DefaultUser'}};
+        var res = {};
+        res.json = function (data) {
+            assert(data);
+            assert.equal(data.status, 'Success');
+            done();
+        };
+        claimsService.saveOrUpdateClaim(req, res);
+    });
+
+    after(function(done) {
+        jQuery.when(mongoUtils.deleteEntity({insuranceCompanyFileNum: "123"}, mongoUtils.CLAIMS_COL_NAME))
+            .done(done)
+            .fail('Failed to cleanup test data');
+    });
 
     it('ParseRequest - gets key mail attributes', function (done) {
         var req = JSON.parse(fs.readFileSync(file, 'utf8'));
@@ -83,9 +113,11 @@ describe('mailParser', function () {
     it('_get claim id', function (done) {
         var mailParser = new ms.MailParser();
         var claimId = mailParser._getClaimId(
-                'FW: abc |claim id: X100',
-                [{insuranceCompanyFileNum: 'X100', owner: 'TestUser'}],
-                'TestUser');
+            'FW: abc |claim id: X100',
+            [
+                {insuranceCompanyFileNum: 'X100', owner: 'TestUser'}
+            ],
+            'TestUser');
         assert.equal(claimId, 'X100');
         done();
     });
@@ -94,7 +126,9 @@ describe('mailParser', function () {
         var mailParser = new ms.MailParser();
         var claimId = mailParser._getClaimId(
             'FW: abc |claim id: XXX',
-            [{insuranceCompanyFileNum: 'X100', owner: 'TestUser'}],
+            [
+                {insuranceCompanyFileNum: 'X100', owner: 'TestUser'}
+            ],
             'TestUser')
         assert.equal(claimId, null);
     });
