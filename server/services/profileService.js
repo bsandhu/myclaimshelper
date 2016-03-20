@@ -71,6 +71,10 @@ function checkAndGetUserProfileREST(req, res) {
 
             .then(function copyDefaultProfile(err, defaultProfile) {
                 console.log('Creating new profile for: ' + userId);
+                if (err) {
+                    sendResponse(res, 'Error while setting up user: ' + err.message, null);
+                    return;
+                }
                 defaultProfile._id = userId;
                 defaultProfile.owner = userId;
 
