@@ -192,7 +192,7 @@ function getEntityById(entityId, colName, owner) {
 
     run(function (db) {
         var entityCol = db.collection(colName);
-        entityCol.findOne({'_id': {'$eq': entityId}, 'owner': {'$eq': owner}}, onResults);
+        entityCol.findOne({'_id': entityId, 'owner': owner}, onResults);
 
         function onResults(err, item) {
             if (err) {

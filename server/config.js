@@ -17,8 +17,6 @@ config.disable_auth = process.env.DISABLE_AUTH || false;
 
 // **** Heroku ****
 config.heroku = {};
-config.heroku.user = 'baljeet.mail@gmail.com';
-config.heroku.password = 'the1the1';
 
 
 // **** Modulous ****
@@ -69,8 +67,6 @@ config.auth0_client_secret = config[config.env]['auth0_client_secret'];
 
 // **** DNSSimple ****
 config.dnssimple = {};
-config.dnssimple.user = 'baljeet.mail@gmail.com';
-config.dnssimple.password = 'the1the1';
 
 
 module.exports = config;
