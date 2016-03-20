@@ -563,6 +563,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox', 'underscore',
                             amplify.publish(Events.SUCCESS_NOTIFICATION, {msg: 'Saved Bill'})
                             amplify.publish(Events.SAVED_BILL, {billId: this.bill()._id()})
                             defer.resolve();
+                            this.removedBillingItems = [];
                             this.routeToBillingOverview();
                             this.getBillsForClaim();
                         }.bind(this));

@@ -20,7 +20,8 @@ function nukeDB() {
         mongoUtils.deleteEntity({}, mongoUtils.CLAIMS_COL_NAME),
         mongoUtils.deleteEntity({}, mongoUtils.BILL_COL_NAME),
         mongoUtils.deleteEntity({}, mongoUtils.BILLING_ITEMS_COL_NAME),
-        mongoUtils.deleteEntity({}, mongoUtils.USERPROFILE_COL_NAME))
+        mongoUtils.deleteEntity({}, mongoUtils.USERPROFILE_COL_NAME),
+        mongoUtils.deleteEntity({}, mongoUtils.NOTIFICATIONS_COL_NAME))
         .then(function () {
             defer.resolve();
             console.log('FINISHED NUKING DB');
@@ -85,7 +86,7 @@ function populateUserProfiles() {
 // Run one fn at a time, in the order below
 
 //nukeDB();
-populateUserProfiles();
+//populateUserProfiles();
 //populateContacts()
 //populateClaimEntries();
 //populateBillingItems();

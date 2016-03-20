@@ -29,7 +29,6 @@ define(['underscore', 'jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', '
 
         TaskEntryVM.prototype.newEmptyClaimEntry = function (tag) {
             var jsEntryObject = new ClaimEntry();
-            jsEntryObject.isClosed = false;
 
             var entryObjWithObserAttrs = KOMap.fromJS(jsEntryObject);
             if (entryObjWithObserAttrs.billingItem && ko.isObservable(entryObjWithObserAttrs.billingItem)) {

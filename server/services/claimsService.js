@@ -131,8 +131,6 @@ function saveOrUpdateClaimEntry(req, res) {
 
     // Added by the search
     delete entity.claimFileNumber;
-    // Added to track locking
-    delete entity.isClosed;
 
     entityExtractionService.extractEntities(description)
         .then(function (people) {
@@ -383,7 +381,6 @@ function searchClaimEntries(req, res) {
                     var claim = _.first(claims);
                     if (claim) {
                         item.claimFileNumber = claim.insuranceCompanyFileNum || 'None';
-                        item.isClosed = claim.isClosed || false;
                     }
                     defer.resolve();
                 })
