@@ -12,7 +12,7 @@ define(['jquery', 'knockout', 'amplify',
 
             amplify.subscribe(Events.SHOW_MSGS, this, this.onShowMsgs);
 
-            var host = "http://"+window.location.hostname;
+            var host = window.location.protocol + "//" + window.location.hostname;
             var socket = io(host);
             socket.on('broadcast', function (msg) {
                 console.log('WS broadcast: ' + JSON.stringify(msg));
