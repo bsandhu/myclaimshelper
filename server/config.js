@@ -21,7 +21,7 @@ config.heroku = {};
 
 // **** Modulous ****
 config.LOCAL.db = 'mongodb://localhost:9090/AgentDb';
-config.TEST.db = 'mongodb://test:notforproduction@proximus.modulusmongo.net:27017/tuM8inys';
+config.TEST.db = 'mongodb://TEST:PASSWORD@jello.modulusmongo.net:27017/esuDub7a';
 config.PROD.db = 'mongodb://test:notforproduction@novus.modulusmongo.net:27017/yXa6vihy'
 config.db = config[config.env]['db'];
 

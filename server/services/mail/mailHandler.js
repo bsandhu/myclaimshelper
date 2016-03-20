@@ -65,6 +65,7 @@ var linkToParentClaim = function (mailEntry, db) {
 
     findParentClaim(mailEntry.claimId, db)
         .then(function onSuccess(claim) {
+            console.log('Matched to parent claimId ' + claim._id);
             mailEntry.claimId = claim._id;
             mailEntry.owner = claim.owner;
             defer.resolve(mailEntry);
