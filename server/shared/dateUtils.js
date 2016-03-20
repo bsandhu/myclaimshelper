@@ -109,7 +109,7 @@ define([],
             if (date === undefined || date === null || date === '' || date.getTime() == 0) {
                 return displayIfInvalidDate;
             }
-            return date.getMonth() + '/' + date.getDate() + '/' + date.getFullYear() ;
+            return date.getMonth()+1 + '/' + date.getDate() + '/' + date.getFullYear() ;
         }
 
         function isThisWeek(date) {

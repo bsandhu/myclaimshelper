@@ -4,6 +4,7 @@ var data = [
     {
         "_id": "1036",
         "claimId": "490",
+        "isClosed": false,
         "tag": [
             "phone"
         ],
@@ -17,6 +18,7 @@ var data = [
     {
         "_id": "1037",
         "claimId": "490",
+        "isClosed": false,
         "tag": [
             "phone"
         ],
@@ -30,6 +32,7 @@ var data = [
     {
         "_id": "1038",
         "claimId": "490",
+        "isClosed": false,
         "tag": [
             "other"
         ],
@@ -43,6 +46,7 @@ var data = [
     {
         "_id": "1039",
         "claimId": "490",
+        "isClosed": false,
         "tag": [
             "other"
         ],
@@ -56,6 +60,7 @@ var data = [
     {
         "_id": "1045",
         "claimId": "490",
+        "isClosed": false,
         "tag": [
             "other"
         ],
@@ -69,6 +74,7 @@ var data = [
     {
         "_id": "1050",
         "claimId": "490",
+        "isClosed": false,
         "tag": [
             "visit"
         ],
@@ -81,6 +87,7 @@ var data = [
     {
         "_id": "1052",
         "claimId": "490",
+        "isClosed": false,
         "tag": [
             "visit"
         ],
@@ -93,6 +100,7 @@ var data = [
     {
         "_id": "1056",
         "claimId": "490",
+        "isClosed": false,
         "tag": [
             "phone"
         ],
@@ -106,6 +114,7 @@ var data = [
     {
         "_id": "1057",
         "claimId": "490",
+        "isClosed": false,
         "tag": [
             "phone"
         ],
@@ -119,6 +128,7 @@ var data = [
     {
         "_id": "1065",
         "claimId": "490",
+        "isClosed": false,
         "tag": [
             "phone"
         ],
@@ -132,6 +142,7 @@ var data = [
     {
         "_id": "1066",
         "claimId": "490",
+        "isClosed": false,
         "tag": [
             "other"
         ],

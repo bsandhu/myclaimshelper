@@ -62,7 +62,8 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
                             dateDue: DateUtils.niceDate(claim.dateDue, false),
                             claimant: ObjectUtils.nullSafe.bind(claim, 'this.claimantContact.name', 'None')(),
                             insured: ObjectUtils.nullSafe.bind(claim, 'this.insuredContact.name', 'None')(),
-                            age: ageText
+                            ageText: ageText,
+                            age: age
                         });
                     });
                     $('#claimListTable').bootstrapTable('load', tempArray);

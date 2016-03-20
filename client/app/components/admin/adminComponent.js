@@ -22,6 +22,7 @@ define(['jquery', 'knockout', 'amplify',
                 }
                 if (msg.name == 'NewMsg') {
                     this.msgs.push(msg);
+                    amplify.publish(Events.SAVED_CLAIM_ENTRY, {});
                 }
             }.bind(this));
 
@@ -30,6 +31,7 @@ define(['jquery', 'knockout', 'amplify',
 
         AdminVM.prototype.closeModal = function () {
             $('#msgs-modal').modal('hide');
+            return true;
         }
 
         AdminVM.prototype.onMarkAllAsRead = function () {

@@ -52,7 +52,6 @@ define(['jquery', 'knockout', 'KOMap', 'amplify',
         ClaimVM.prototype.setupEvListeners = function () {
             amplify.subscribe(Events.SHOW_CLAIM, this, this.onShowClaim);
             amplify.subscribe(Events.NEW_CLAIM, this, this.onNewClaim);
-            amplify.subscribe(Events.NEW_CLAIM_ENTRY, this, this.onNewClaimEntry);
             amplify.subscribe(Events.SHOW_CLAIM_ENTRY, this, this.onShowClaimEntry);
             amplify.subscribe(Events.SAVED_CLAIM_ENTRY, this, this.refreshClaimEntriesListing);
             amplify.subscribe(Events.EXPAND_CLAIM_PANEL, this, function(){this.isPartiallyCollapsed(false)});
@@ -99,14 +98,6 @@ define(['jquery', 'knockout', 'KOMap', 'amplify',
             this.claimEntries([]);
             this.inEditMode(true);
             this.selectClaimTab();
-        };
-
-        ClaimVM.prototype.onNewClaimEntry = function () {
-            console.log('ClaimVM - NEW_CLAIM_ENTRY ev');
-            if (!this.claim()._id()) {
-                console.log('Adding entry to unsaved claim. Saving.');
-                this.onSave();
-            }
         };
 
         ClaimVM.prototype.onShowClaimEntry = function (evData) {

@@ -2,6 +2,12 @@ var data = [
     {
         "_id": "DefaultUser",
         "owner": "DefaultUser",
+        "contactInfo": {
+            "businessName": "Business name",
+            "streetAddress": "Street name",
+            "city": "City",
+            "zip": "110011"
+        },
         "billingProfile": {
             "timeUnit": "hour",
             "distanceUnit": "mile",

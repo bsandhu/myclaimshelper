@@ -20,7 +20,8 @@ function nukeDB() {
         mongoUtils.deleteEntity({}, mongoUtils.CLAIMS_COL_NAME),
         mongoUtils.deleteEntity({}, mongoUtils.BILL_COL_NAME),
         mongoUtils.deleteEntity({}, mongoUtils.BILLING_ITEMS_COL_NAME),
-        mongoUtils.deleteEntity({}, mongoUtils.USERPROFILE_COL_NAME))
+        mongoUtils.deleteEntity({}, mongoUtils.USERPROFILE_COL_NAME),
+        mongoUtils.deleteEntity({}, mongoUtils.NOTIFICATIONS_COL_NAME))
         .then(function () {
             defer.resolve();
             console.log('FINISHED NUKING DB');
@@ -69,9 +70,9 @@ function populateClaims() {
 }
 
 function populateUserProfiles() {
-    _.each(testUserProfile.data, function (claim) {
-        claim.owner = TEST_USER_ID;
-        mongoUtils.saveOrUpdateEntity(claim, mongoUtils.USERPROFILE_COL_NAME, TEST_USER_ID)
+    _.each(testUserProfile.data, function (data) {
+        data.owner = "DefaultUser";
+        mongoUtils.saveOrUpdateEntity(data, mongoUtils.USERPROFILE_COL_NAME, "DefaultUser")
             .always(function (err) {
                 console.info(!err ? 'Saved UserProfile' : err);
             });

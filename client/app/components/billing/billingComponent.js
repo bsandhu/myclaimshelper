@@ -16,6 +16,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox', 'underscore',
             this.NumberUtils = NumberUtils;
             this.router = router;
             this.billingStatus = KOMap.fromJS(BillingStatus);
+            this.userProfile = undefined;
             this.mode = ko.observable();
             this.showClosedClaims = ko.observable(false);
             this.billRecipient = ko.observable(KOMap.fromJS(new Contact()));
@@ -172,6 +173,10 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox', 'underscore',
         }
 
         BillingVM.prototype.loadBillingProfileFromSession = function (evData) {
+            this.userProfile = Session.getCurrentUserProfile();
+            if (!this.userProfile) {
+                console.error('Could not retrieve User profile from session');
+            }
             this.billingProfile = Session.getCurrentUserProfile().billingProfile;
             if (!this.billingProfile) {
                 console.error('Could not retrieve bililng profile from session');
@@ -205,7 +210,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox', 'underscore',
                     var unsubmittedBill = _.find(_this.bills(), function (bill) {
                         return bill.status === BillingStatus.NOT_SUBMITTED;
                     });
-                    if (unsubmittedBill){
+                    if (unsubmittedBill) {
                         amplify.publish(Events.INFO_NOTIFICATION, {msg: 'An un-submitted bill is present for this Claim. Opening.'})
                         router.routeToBill.bind({claimId: evData.claimId, _id: unsubmittedBill._id})()
                     } else {
@@ -247,6 +252,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox', 'underscore',
                                                 className: "btn-info",
                                                 callback: function () {
                                                     _this.bill().billingItems(allEligibleItems);
+                                                    _this.calcAll();
                                                 }
                                             }
                                         }
@@ -557,6 +563,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox', 'underscore',
                             amplify.publish(Events.SUCCESS_NOTIFICATION, {msg: 'Saved Bill'})
                             amplify.publish(Events.SAVED_BILL, {billId: this.bill()._id()})
                             defer.resolve();
+                            this.removedBillingItems = [];
                             this.routeToBillingOverview();
                             this.getBillsForClaim();
                         }.bind(this));
@@ -611,25 +618,28 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox', 'underscore',
 
             // Split out line item for each type
             _.each(KOMap.toJS(this.bill().billingItems()), function (item, index) {
-                mileageItem = _.clone(item);
-                mileageItem.code = item.mileageCode;
-                mileageItem.time = 0;
-                mileageItem.expenseAmount = 0;
-
-                timeItem = _.clone(item);
-                timeItem.code = item.timeCode;
-                timeItem.mileage = 0;
-                timeItem.expenseAmount = 0;
-
-                expenseItem = _.clone(item);
-                expenseItem.code = item.expenseCode;
-                expenseItem.time = 0;
-                expenseItem.mileage = 0;
-                expenseItem.expenseAmount = '$' + Number(expenseItem.expenseAmount).toFixed(2);
-
-                _this.groupedByCode.push(mileageItem);
-                _this.groupedByCode.push(timeItem);
-                _this.groupedByCode.push(expenseItem);
+                if (item.mileage != 0) {
+                    mileageItem = _.clone(item);
+                    mileageItem.code = item.mileageCode;
+                    mileageItem.time = 0;
+                    mileageItem.expenseAmount = 0;
+                    _this.groupedByCode.push(mileageItem);
+                }
+                if (item.expenseAmount != 0) {
+                    expenseItem = _.clone(item);
+                    expenseItem.code = item.expenseCode;
+                    expenseItem.time = 0;
+                    expenseItem.mileage = 0;
+                    expenseItem.expenseAmount = '$' + Number(expenseItem.expenseAmount).toFixed(2);
+                    _this.groupedByCode.push(expenseItem);
+                }
+                if (item.time != 0) {
+                    timeItem = _.clone(item);
+                    timeItem.code = item.timeCode;
+                    timeItem.mileage = 0;
+                    timeItem.expenseAmount = 0;
+                    _this.groupedByCode.push(timeItem);
+                }
             });
 
             ko.renderTemplate(

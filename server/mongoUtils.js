@@ -21,7 +21,6 @@ function _onResult(result, err, ok) {
 // :: f -> Dict -> [Obj]
 // convert a dict into an Object with dot-accessible attributes
 function hydrate(type, objects) {
-    console.info('Hydrating ' + type.name);
     var objs = _.isArray(objects) ? objects : [objects];
     var fn = function (obj) {
         return _.extend(new type(), obj)

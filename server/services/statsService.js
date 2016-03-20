@@ -15,6 +15,7 @@ function aggregations(userid) {
         'TasksDoneToday': {
             colName: mongoUtils.CLAIM_ENTRIES_COL_NAME,
             query: [
+                {$match: {isClosed: false }},
                 {$match: {dueDate: { $gt: sod} }},
                 {$match: {dueDate: { $lt: eod} }},
                 {$match: {state: "Complete"}},
@@ -24,6 +25,7 @@ function aggregations(userid) {
         'TasksDueToday': {
             colName: mongoUtils.CLAIM_ENTRIES_COL_NAME,
             query: [
+                {$match: {isClosed: false }},
                 {$match: {dueDate: { $gt: sod} }},
                 {$match: {dueDate: { $lt: eod} }},
                 {$match: {owner: userid}},
@@ -32,6 +34,7 @@ function aggregations(userid) {
         'TaskByCategory': {
             colName: mongoUtils.CLAIM_ENTRIES_COL_NAME,
             query: [
+                {$match: {isClosed: false }},
                 {$match: {dueDate: { $gt: sod} }},
                 {$match: {dueDate: { $lt: eod} }},
                 {$match: {owner: userid}},

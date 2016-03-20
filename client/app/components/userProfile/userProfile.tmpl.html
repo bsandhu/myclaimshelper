@@ -11,32 +11,58 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
                 <h4 class="modal-title" id="userProfileModalLabel">
-                    <i class="fa fa-user"></i>&nbsp;
-                    <span data-bind="text: userProfile._id() + '\'s profile'"></span></h4>
+                    <span data-bind="text: userProfile._id"></span></h4>
             </div>
 
             <!-- Body -->
             <div class="modal-body">
                 <div class="container-fluid">
                     <form class="form-horizontal">
-
+                        <fieldset>
+                            <div class="row bottomMargin5">
+                                <div class="col-md-2 col-sm-4 col-xs-4">
+                                    <div class="pull-right">
+                                        <i class="fa fa-user fa-4x"></i>
+                                    </div>
+                                </div>
+                                <div class="col-md-10 col-sm-8 col-xs-8">
+                                    <div data-bind="text: userProfile.contactInfo.businessName"></div>
+                                    <div data-bind="text: userProfile.contactInfo.streetAddress"></div>
+                                    <div data-bind="text: userProfile.contactInfo.city() + ' ' + userProfile.contactInfo.zip()"></div>
+                                </div>
+                            </div>
+                        </fieldset>
                         <fieldset>
                             <legend>Billing Profile</legend>
                             <div class="row bottomMargin5">
-                                <div class="col-md-3">Track time in</div>
-                                <div class="col-md-4" data-bind="text: userProfile.billingProfile.timeUnit"></div>
+                                <div class="col-md-4 col-sm-6 col-xs-8"><span class="pull-right">Tax rate</span></div>
+                                <div class="col-md-8 col-sm-6 col-xs-4" data-bind="text: userProfile.billingProfile.taxRate"></div>
                             </div>
                             <div class="row bottomMargin5">
-                                <div class="col-md-3" data-bind="text: 'Rate/' + userProfile.billingProfile.timeUnit()"></div>
-                                <div class="col-md-4" data-bind="text: '$ ' + userProfile.billingProfile.timeRate()"></div>
+                                <div class="col-md-4 col-sm-6 col-xs-8"><span class="pull-right">Track time in</span></div>
+                                <div class="col-md-8 col-sm-6 col-xs-4" data-bind="text: userProfile.billingProfile.timeUnit"></div>
                             </div>
                             <div class="row bottomMargin5">
-                                <div class="col-md-3">Track distance in</div>
-                                <div class="col-md-4" data-bind="text: userProfile.billingProfile.distanceUnit"></div>
+                                <div class="col-md-4 col-sm-6 col-xs-8">
+                                    <span class="pull-right"
+                                          data-bind="text: 'Rate/' + userProfile.billingProfile.timeUnit()"></span>
+                                </div>
+                                <div class="col-md-8 col-sm-6 col-xs-4"
+                                     data-bind="text: '$ ' + userProfile.billingProfile.timeRate()"></div>
                             </div>
                             <div class="row bottomMargin5">
-                                <div class="col-md-3" data-bind="text: 'Rate/' + userProfile.billingProfile.distanceUnit()">/</div>
-                                <div class="col-md-4" data-bind="text: '$ ' + userProfile.billingProfile.distanceRate()"></div>
+                                <div class="col-md-4 col-sm-6 col-xs-8">
+                                    <span class="pull-right">Track distance in</span>
+                                </div>
+                                <div class="col-md-8 col-sm-6 col-xs-4" data-bind="text: userProfile.billingProfile.distanceUnit"></div>
+                            </div>
+                            <div class="row bottomMargin5">
+                                <div class="col-md-4 col-sm-6 col-xs-8">
+                                    <span class="pull-right"
+                                          data-bind="text: 'Rate/' + userProfile.billingProfile.distanceUnit()"></span>
+                                </div>
+                                <div class="col-md-8 col-sm-6 col-xs-4"
+                                     data-bind="text: '$ ' + userProfile.billingProfile.distanceRate()"></div>
                             </div>
 
                         </fieldset>
@@ -61,7 +87,8 @@
             <!-- Footer -->
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-default" data-dismiss="modal" data-bind="click: onLogoff">Logoff</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal" data-bind="click: onLogoff">Logoff
+                </button>
             </div>
 
         </div>

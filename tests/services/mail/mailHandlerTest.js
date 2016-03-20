@@ -4,18 +4,8 @@ var ms = require('../../../server/services/mail/mailHandler.js');
 var mongoUtils = require('../../../server/mongoUtils.js');
 var Claim = require("../../../server/model/claim.js");
 var claimsService = require("../../../server/services/claimsService.js");
+var jQuery = require('jquery-deferred');
 
-var setupClaim = function(){
-    var testClaim = new Claim();
-    testClaim.insuranceCompanyFileNum = "123";
-    var req = {body: testClaim, headers: {userid: 'testuser1'}};
-    var res = {};
-    res.json = function (data) {
-        assert(data);
-        assert.equal(data.status, 'Success');
-    };
-    claimsService.saveOrUpdateClaim(req, res);
-};
 
 describe('mailHandler', function(){
 
@@ -24,6 +14,24 @@ describe('mailHandler', function(){
     var res = {'send':function(){}};
     fs.writeFileSync('/tmp/67e8f84cf7851523cb5f8635cf7208ed', 'whatever');
 
+    before(function(done){
+        var testClaim = new Claim();
+        testClaim.insuranceCompanyFileNum = "123";
+        var req = {body: testClaim, headers: {userid: 'testuser1'}};
+        var res = {};
+        res.json = function (data) {
+            assert(data);
+            assert.equal(data.status, 'Success');
+            done();
+        };
+        claimsService.saveOrUpdateClaim(req, res);
+    });
+
+    after(function(done) {
+        jQuery.when(mongoUtils.deleteEntity({insuranceCompanyFileNum: "123"}, mongoUtils.CLAIMS_COL_NAME))
+            .done(done)
+            .fail('Failed to cleanup test data');
+    });
 
     it('processRequest succeeds', function (done) {
         var assertSuccess = function (data) {
@@ -44,7 +52,6 @@ describe('mailHandler', function(){
             done();
         };
 
-        setupClaim();
         req.params.To = 'TESTUSER1@foo.com';
         ms.process(req, res, false).then(assertSuccess);
     });

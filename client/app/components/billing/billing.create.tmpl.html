@@ -63,14 +63,9 @@
 <div data-bind="if: haveBillableTasks" id="invoice-body" class="yes-print">
     <div class="pull-left">
         <address>
-            <br>
-            <strong>SmartAdmin, Inc.</strong>
-            <br>
-            231 Ajax Rd,
-            <br>
-            Detroit MI - 48212, USA
-            <br>
-            <abbr title="Phone">P:</abbr> (123) 456-7890
+            <strong><span data-bind="text: userProfile.contactInfo.businessName"></span></strong><br>
+            <span data-bind="text: userProfile.contactInfo.streetAddress"></span><br>
+            <span data-bind="text: userProfile.contactInfo.city + ' ' + userProfile.contactInfo.zip"></span><br>
         </address>
     </div>
 
@@ -126,14 +121,14 @@
         <table class="table table-hover" data-bind="sortable" id="billingCreateTable" data-sortable>
             <thead>
             <tr>
-                <th data-sortable="true" data-sorted="true" data-sorted-direction="ascending">DATE</th>
+                <th data-sortable="true" data-sorted="true" data-sorted-direction="ascending">Date</th>
                 <th>Task</th>
                 <th>Description</th>
                 <th>Time|Code</th>
                 <th>Mileage|Code</th>
                 <th>Expense|Code</th>
                 <th>Amount</th>
-                <th data-bind="if: isBillEditable">XX&nbsp;</th>
+                <th data-bind="if: isBillEditable">&nbsp;</th>
             </tr>
             </thead>
             <tbody>
@@ -204,6 +199,7 @@
                 <td><strong data-bind="text: bill().totalTime() + ' Hrs'"></strong></td>
                 <td><strong data-bind="text: bill().totalMileage() + ' Miles'"></strong></td>
                 <td><strong data-bind="text: NumberUtils.niceCCY(bill().totalExpenseAmount())"></strong></td>
+                <td colspan="2"></td>
             </tr>
             </tbody>
         </table>

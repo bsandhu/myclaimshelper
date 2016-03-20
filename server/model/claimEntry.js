@@ -11,6 +11,7 @@ define([], function () {
         this._id = undefined;
         this.claimId = undefined;
         this.tag = [];
+        this.isClosed = false;
 
         this.entryDate = undefined;
         this.dueDate = undefined;

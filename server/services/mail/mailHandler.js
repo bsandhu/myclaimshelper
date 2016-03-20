@@ -6,6 +6,7 @@ var config = require('../../config.js');
 var claimsService = require("../../services/claimsService.js");
 var ClaimEntry = require("../../model/claimEntry.js");
 var BillingItem = require('../../model/billingItem.js');
+var States = require('../../model/states.js');
 var MailParser = require('./mailParser.js').MailParser;
 var saveToDB = require('../uploadService.js').saveToDB;
 var mongoUtils = require('../../mongoUtils.js');
@@ -196,14 +197,18 @@ var notifyFailure = function (sendEmail, mailEntry) {
 function constructClaimEntry(data) {
     var entry = new ClaimEntry();
     entry.entryDate = (new Date()).getTime();
+    entry.dueDate = (new Date()).getTime();
+    entry.updateDate = (new Date()).getTime();
     entry.summary = data.mail.subject;
     entry.from = data.mail.from;
     entry.description = data.mail['body-plain'];
     entry.claimId = data.claimId;
     entry.tag = data.tags || [];
     entry.tag.push('email');
+    entry.state = States.TODO;
     entry.owner = data.owner;
 
+    // Service does the linking to the ClaimEntry
     entry.billingItem = new BillingItem();
     return entry;
 }
