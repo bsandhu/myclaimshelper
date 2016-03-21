@@ -18,6 +18,7 @@ MailParser.prototype.parseRequest = function (req, allKnownClaims, allKnownUserI
 
         // Match user
         var userId = this._getUserId(req.params.To, allKnownUserIds);
+        console.log('Incoming useerId: ' + userId);
         if (!userId) {
             errors.push('User ' + req.params.To.split('@')[0] + ' is not registered with the MyClaimsHelper.com');
         }
@@ -25,6 +26,7 @@ MailParser.prototype.parseRequest = function (req, allKnownClaims, allKnownUserI
         // Match claim
         if (userId) {
             var claimId = this._getClaimId(req.params.subject, allKnownClaims, userId);
+            console.log('Matched to claim file number: ' + claimId);
             if (!claimId) {
                 errors.push('Could not find a matching claim. Plase ensure that the subject line of the email has the Claim file number');
             }
@@ -111,7 +113,7 @@ MailParser.prototype._getClaimId = function (subject, allClaimsByOwner, owner) {
 
     _.each(tokens, function (token) {
         _.each(allClaimsByOwner, function (claimByOwner) {
-            if (claimByOwner.insuranceCompanyFileNum == token && claimByOwner.owner == owner) {
+            if (claimByOwner.insuranceCompanyFileNum == token && claimByOwner.owner.toUpperCase() == owner.toUpperCase()) {
                 claimId = token;
             }
         })
