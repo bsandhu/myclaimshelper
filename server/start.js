@@ -42,7 +42,9 @@ function init() {
     io = socketio.listen(server);
 
     server.use(function httpsRedirect(req, res, next) {
-        if (USE_SSL === false || req.secure) {
+        var securityNotNeeded = USE_SSL === false;
+        var isSecure = req.isSecure();
+        if (securityNotNeeded || isSecure) {
             next();
         } else {
             res.writeHead(302, {'Location': 'https://' + req.headers.host + req.url});
