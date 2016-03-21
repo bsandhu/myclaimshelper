@@ -28,6 +28,7 @@ var DECODED_JWT_SECRET = new Buffer(JWT_SECRET, 'base64');
 
 // Testing hooks
 var DISABLE_AUTH = config.disable_auth;
+var USE_SSL = config.use_ssl;
 var TEST_USER = 'baljeet.mail';
 
 // Restify server
@@ -39,6 +40,15 @@ function init() {
     server = restify.createServer();
     // Wrap with socket io instance
     io = socketio.listen(server);
+
+    server.use(function httpsRedirect(req, res, next) {
+        if (USE_SSL === false || req.secure) {
+            next();
+        } else {
+            res.writeHead(302, {'Location': 'https://' + req.headers.host + req.url});
+            res.end();
+        }
+    });
 
     // Attach handlers to Server
     server.use(restify.acceptParser(server.acceptable));
