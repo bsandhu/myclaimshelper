@@ -13,6 +13,7 @@ config.ENV_PROD = 'PROD';
 config.port = process.env.PORT || 8080;
 config.env = process.env.ENV || 'LOCAL';
 config.disable_auth = process.env.DISABLE_AUTH || false;
+
 config.LOCAL.use_ssl = false;
 config.TEST.use_ssl = true;
 config.PROD.use_ssl = true;
