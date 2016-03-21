@@ -113,7 +113,7 @@ MailParser.prototype._getClaimId = function (subject, allClaimsByOwner, owner) {
 
     _.each(tokens, function (token) {
         _.each(allClaimsByOwner, function (claimByOwner) {
-            if (claimByOwner.insuranceCompanyFileNum == token && claimByOwner.owner == owner) {
+            if (claimByOwner.insuranceCompanyFileNum == token && claimByOwner.owner.toUpperCase() == owner.toUpperCase()) {
                 claimId = token;
             }
         })
