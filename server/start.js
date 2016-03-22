@@ -43,7 +43,7 @@ function init() {
 
     server.use(function httpsRedirect(req, res, next) {
         var securityNotNeeded = USE_SSL === false;
-        var isSecure = req.isSecure() === true;
+        var isSecure = req.isSecure() === true || req.headers['x-forwarded-proto'] == 'https';
         if (securityNotNeeded || isSecure) {
             next();
         } else {
