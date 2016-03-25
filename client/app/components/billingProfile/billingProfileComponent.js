@@ -1,5 +1,5 @@
 define(['jquery', 'knockout', 'KOMap', 'amplify', 'app/utils/events', 'app/utils/session', 'app/utils/ajaxUtils',
-        'text!app/components/billingProfile/billingProfile.tmpl.html', 'model/BillingProfile'],
+        'text!app/components/billingProfile/billingProfile.tmpl.html', 'model/billingProfile'],
 
     function ($, ko, KOMap, amplify, Events, Session, AjaxUtils, viewHtml, BillingProfile) {
         'use strict';
