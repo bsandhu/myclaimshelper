@@ -46,10 +46,13 @@ describe('BillingProfile Service', function () {
             assert.equal(data.data.owner, 'TestUser');
             // Updated value
             assert.equal(data.data.distanceRate, 0.55);
+            assert.equal(data.data.taxRate, 5.25);
             assert.equal(data.data.distanceUnit, 'mile');
             done();
         };
+        // Update
         testBillingProfile.distanceRate = 0.55;
+        testBillingProfile.taxRate = '5.25';
         billingProfileService.saveOrUpdateREST(req, res);
     });
 

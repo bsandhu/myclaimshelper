@@ -84,9 +84,9 @@ function checkAndGetBillingProfileForClaimREST(req, res) {
                 newProfile.owner = userId;
                 newProfile.timeUnit = defaultProfile.billingProfile.timeUnit; // e.g., .1 hour.
                 newProfile.distanceUnit = defaultProfile.billingProfile.distanceUnit;
-                newProfile.timeRate = defaultProfile.billingProfile.timeRate; // $ per unit.
-                newProfile.distanceRate = defaultProfile.billingProfile.distanceRate;
-                newProfile.taxRate = defaultProfile.billingProfile.taxRate;
+                newProfile.timeRate = Number(defaultProfile.billingProfile.timeRate); // $ per unit.
+                newProfile.distanceRate = Number(defaultProfile.billingProfile.distanceRate);
+                newProfile.taxRate = Number(defaultProfile.billingProfile.taxRate);
 
                 saveOrUpdateEntityObject(newProfile)
                     .always(function (result) {

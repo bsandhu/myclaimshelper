@@ -426,9 +426,9 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox', 'underscore',
         };
 
         BillingVM.prototype.refreshRatesOnBillingItem = function (billingItem) {
-            billingItem.timeRate = this.billingProfile.timeRate;
-            billingItem.distanceRate = this.billingProfile.distanceRate;
-            billingItem.taxRate = this.billingProfile.taxRate;
+            billingItem.timeRate = Number(this.billingProfile.timeRate);
+            billingItem.distanceRate = Number(this.billingProfile.distanceRate);
+            billingItem.taxRate = Number(this.billingProfile.taxRate);
             billingItem.timeUnit = this.billingProfile.timeUnit;
             billingItem.distanceUnit = this.billingProfile.distanceUnit;
         }
