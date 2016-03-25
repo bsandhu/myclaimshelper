@@ -5,7 +5,7 @@ if (typeof define !== 'function') {
     var define = require('amdefine')(module)
 }
 
-define(['./contact', './BillingProfile'], function (Contact, BillingProfile) {
+define(['./contact', './billingProfile'], function (Contact, BillingProfile) {
 
   function UserProfile(){
     this._id = undefined;
