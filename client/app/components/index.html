@@ -101,6 +101,9 @@
 <!-- User profile -->
 <div data-bind="component: 'user-profile-component'"></div>
 
+<!-- Billing profile -->
+<div data-bind="component: 'billing-profile-component'"></div>
+
 <!-- #MAIN PANEL -->
 <div id="main" role="main" data-bind="if: showApp">
 
@@ -241,6 +244,7 @@
                 ko.components.register('admin-component', {require: 'app/components/admin/adminComponent'});
                 ko.components.register('billing-component', {require: 'app/components/billing/billingComponent'});
                 ko.components.register('billing-item-component', {require: 'app/components/billingItem/billingItemComponent'});
+                ko.components.register('billing-profile-component', {require: 'app/components/billingProfile/billingProfileComponent'});
 
                 // Knockout bindings init
                 ko.applyBindings(new AppVM());

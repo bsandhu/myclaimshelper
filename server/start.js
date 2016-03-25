@@ -5,6 +5,7 @@ var EventEmitter = require('events').EventEmitter;
 
 var claimsService = require('./services/claimsService.js');
 var billingServices = require('./services/billingServices.js');
+var billingProfileService = require('./services/billingProfileService.js');
 var contactService = require('./services/contactService.js');
 var profileService = require('./services/profileService.js');
 var uploadService = require('./services/uploadService.js');
@@ -148,6 +149,8 @@ function setupBillingServiceRoutes() {
     server.post('/bill', authenticate, billingServices.saveOrUpdateBillREST);
     server.get('/billingItem/search/:search', authenticate, billingServices.getBillingItemsREST);
     server.post('/billingItem', authenticate, billingServices.saveOrUpdateBillingItemsREST);
+    server.get('/billing/profile/:claimId', authenticate, billingProfileService.checkAndGetBillingProfileForClaimREST);
+    server.post('/billing/profile', authenticate, billingProfileService.saveOrUpdateREST);
 }
 
 function setupProfileServiceRoutes() {
