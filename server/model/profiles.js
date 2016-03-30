@@ -5,20 +5,13 @@ if (typeof define !== 'function') {
     var define = require('amdefine')(module)
 }
 
-function BillingProfile() {
-  this.timeUnit = undefined; // e.g., .1 hour.
-  this.distanceUnit = undefined;
-  this.timeRate = undefined; // $ per unit.
-  this.distanceRate = undefined;
-  this.taxRate = undefined;
-  this.billingTypes = {}; // billing codes or custom types
-}
-
-define(['./contact'], function (Contact) {
+define(['./contact', './billingProfile'], function (Contact, BillingProfile) {
 
   function UserProfile(){
     this._id = undefined;
     this.contactInfo = new Contact();
+
+    // Default profile
     this.billingProfile = new BillingProfile();
   }
 

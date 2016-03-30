@@ -89,3 +89,4 @@ function checkAndGetUserProfileREST(req, res) {
 exports.saveOrUpdateUserProfileREST = saveOrUpdateUserProfileREST;
 exports.getUserProfileREST = getUserProfileREST;
 exports.checkAndGetUserProfileREST = checkAndGetUserProfileREST;
+exports.DEFAULT_USER = DEFAULT_USER;

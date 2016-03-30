@@ -138,6 +138,11 @@ div {
     box-shadow: none;
 }
 
+.boxShadow {
+    border: 1px solid darkgrey;
+    box-shadow: 2px 2px 2px lightgray;
+}
+
 .clear {
     clear: both;
 }
@@ -323,6 +328,11 @@ div {
 .billSubTotal {
     font-size: 1.1em;
     font-weight: 500
+}
+
+.centered {
+    left: 50%;
+    transform: translateX(-50%);
 }
 
 /**********************************************************/

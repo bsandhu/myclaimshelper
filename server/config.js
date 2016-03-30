@@ -14,9 +14,16 @@ config.port = process.env.PORT || 8080;
 config.env = process.env.ENV || 'LOCAL';
 config.disable_auth = process.env.DISABLE_AUTH || false;
 
+config.LOCAL.use_ssl = false;
+config.TEST.use_ssl = true;
+config.PROD.use_ssl = true;
+config.use_ssl = config[config.env]['use_ssl'];
+
 
 // **** Heroku ****
 config.heroku = {};
+config.heroku.user = 'baljeet.mail@gmail.com';
+config.heroku.password = 'starWAR$1';
 
 
 // **** Modulous ****
@@ -67,6 +74,14 @@ config.auth0_client_secret = config[config.env]['auth0_client_secret'];
 
 // **** DNSSimple ****
 config.dnssimple = {};
+config.dnssimple.user = 'baljeet.mail@gmail.com';
+config.dnssimple.password = 'starWAR$1';
+
+
+// **** Modulous ****
+config.modulous = {};
+config.modulous.user = 'baljeet.mail@gmail.com';
+config.modulous.password = 'starWAR$1';
 
 
 module.exports = config;

@@ -191,11 +191,17 @@
                         <span class="leftMargin5">Photos</span>
                     </a>
                 </li>
-                <li class="divider"></li>
                 <li>
                     <a href="#/claimEntry/new/other">
                         <span class="fa fa-tag"></span>
                         <span class="leftMargin5">Other</span>
+                    </a>
+                </li>
+                <li class="divider"></li>
+                <li>
+                    <a href="#/claimEntry/new/other" data-toggle="modal" data-target="#emailTaskTypeModal">
+                        <span class="fa fa-mail-forward"></span>
+                        <span class="leftMargin5">From Email</span>
                     </a>
                 </li>
             </ul>
@@ -255,6 +261,12 @@
                             <span class="leftMargin5">History</span>
                         </a>
                     </li>
+                    <li>
+                        <a data-bind="click: onBillingProfileClick">
+                            <span class="fa fa-cogs"></span>
+                            <span class="leftMargin5">Rates</span>
+                        </a>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -274,4 +286,55 @@
 <!-- *** Claim Panel - end -->
 </div>
 
+<!-- *** Modal with the email instructions *** -->
+<div class="modal modal-lg fade centered" role="dialog" tabindex="-1" id="emailTaskTypeModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">Create Tasks from Emails</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="h6 col-md-10 bottomMargin5">
+                        Forward or send emails to <i>MyClaimsHelper</i> to be added as tasks.
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-10">
+                        <ol>
+                            <li>Send email to
+                                <a data-bind="attr: {href: 'mailto:' + Session.getCurrentUserId() + '@myclaimshelper.com'}"
+                                   target="_blank">
+                                    <span data-bind="text: Session.getCurrentUserId() + '@myclaimshelper.com'"></span>
+                                </a>
+                            </li>
+                            <li>Mention Claim file number in the Subject line</li>
+                        </ol>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-offset-1 col-md-10">
+                        <img class="topMargin5" src="/img/EmailMsg.png"/>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="h6 col-md-10">
+                        The email will appear as a Task under the relevant claim
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-offset-1 col-md-10">
+                        <img class="topMargin5 boxShadow" src="/img/EmailTask.png"/>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div><!-- /.modal -->
 

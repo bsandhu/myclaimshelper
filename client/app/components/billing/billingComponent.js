@@ -13,10 +13,12 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox', 'underscore',
             this.vmId = new Date().getTime();
             this.Consts = Consts;
             this.DateUtils = DateUtils;
+            this.BillingStatus = BillingStatus;
             this.NumberUtils = NumberUtils;
             this.router = router;
             this.billingStatus = KOMap.fromJS(BillingStatus);
             this.userProfile = undefined;
+            this.billingProfile = undefined;
             this.mode = ko.observable();
             this.showClosedClaims = ko.observable(false);
             this.billRecipient = ko.observable(KOMap.fromJS(new Contact()));
@@ -121,7 +123,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox', 'underscore',
                 return this.bill().billingItems().length > 0;
             }, this);
 
-            this.loadBillingProfileFromSession();
+            this.loadUserProfileFromSession();
         }
 
         BillingVM.prototype.newEmptyBill = function () {
@@ -172,19 +174,33 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox', 'underscore',
             $('#bililngCreateMsg').fadeOut(8000);
         }
 
-        BillingVM.prototype.loadBillingProfileFromSession = function (evData) {
+
+        BillingVM.prototype.loadUserProfileFromSession = function (evData) {
             this.userProfile = Session.getCurrentUserProfile();
             if (!this.userProfile) {
                 console.error('Could not retrieve User profile from session');
             }
-            this.billingProfile = Session.getCurrentUserProfile().billingProfile;
-            if (!this.billingProfile) {
-                console.error('Could not retrieve bililng profile from session');
-            }
         }
 
-        BillingVM.prototype.onUserProfileClick = function () {
-            router.showProfilePopup();
+        BillingVM.prototype.loadBillingProfile = function (claimId) {
+            var _this = this;
+            var defer = $.Deferred();
+
+            $.getJSON('/billing/profile/' + claimId)
+                .then(function (resp) {
+                    console.log('Loaded BillingProfile for Claim ' + claimId);
+                    _this.billingProfile = resp.data;
+                    defer.resolve();
+                });
+            return defer;
+        }
+
+        BillingVM.prototype.onBillingProfileClick = function () {
+            if (this.claimId()) {
+                router.routeToBillingProfile(this.claimId());
+            } else {
+                console.error('No claim associated with Bill');
+            }
         };
 
         BillingVM.prototype.onUpdateBillStatus = function (newStatus, bill) {
@@ -205,30 +221,37 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox', 'underscore',
 
             // Check if an unsubmitted bill exists for claim
             var _this = this;
-            _this.getBillsForClaim(
-                function onDone() {
-                    var unsubmittedBill = _.find(_this.bills(), function (bill) {
-                        return bill.status === BillingStatus.NOT_SUBMITTED;
-                    });
-                    if (unsubmittedBill) {
-                        amplify.publish(Events.INFO_NOTIFICATION, {msg: 'An un-submitted bill is present for this Claim. Opening.'})
-                        router.routeToBill.bind({claimId: evData.claimId, _id: unsubmittedBill._id})()
-                    } else {
-                        _this.mode(Consts.BILLING_TAB_CREATE_MODE);
-                    }
+            _this.loadBillingProfile(evData.claimId)
+                .then(function () {
+                    _this.getBillsForClaim(
+                        function onDone() {
+                            var unsubmittedBill = _.find(_this.bills(), function (bill) {
+                                return bill.status === BillingStatus.NOT_SUBMITTED;
+                            });
+                            if (unsubmittedBill) {
+                                amplify.publish(Events.INFO_NOTIFICATION, {msg: 'An un-submitted bill is present for this Claim. Opening.'})
+                                router.routeToBill.bind({claimId: evData.claimId, _id: unsubmittedBill._id})()
+                            } else {
+                                _this.mode(Consts.BILLING_TAB_CREATE_MODE);
+                            }
+                        });
                 });
         }
 
         BillingVM.prototype.onShowBill = function (evData) {
             var _this = this;
-
             console.log('BillingVM > onShowBilll ' + this.vmId);
             console.assert(evData.claimId, 'Expecting ev to carry claimId');
             console.assert(evData.billId, 'Expecting ev to billId');
             this.claimId(evData.claimId);
 
-            this.loadBill(evData.billId)
-                .then(_this.calcAll())
+            _this.loadBillingProfile(evData.claimId)
+                .then(function () {
+                    return _this.loadBill(evData.billId);
+                })
+                .then(function () {
+                    _this.calcAll();
+                })
                 .then(function checkForNewEligibleTasks() {
                     if (_this.bill().status() === BillingStatus.NOT_SUBMITTED) {
                         _this.getEligibleBillingItemsForClaim(evData.claimId)
@@ -370,6 +393,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox', 'underscore',
 
         BillingVM.prototype.getEligibleBillingItemsForClaim = function (claimId) {
             var defer = $.Deferred();
+
             $.getJSON('/claim/' + claimId + '/entries')
                 .done(function (resp) {
                     console.log('Loaded claim entries' + JSON.prettyPrint(resp.data));
@@ -386,8 +410,9 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox', 'underscore',
                             entry.billingItem.entryDate = entry.entryDate;
                             entry.billingItem.tag = entry.tag;
                             entry.billingItem.summary = entry.summary;
-                            entry.billingItem.timeRate = this.billingProfile.timeRate;
-                            entry.billingItem.distanceRate = this.billingProfile.distanceRate;
+
+                            // Capture a sanpshot of rates - they might change post bill submission
+                            this.refreshRatesOnBillingItem(entry.billingItem);
                             entry.billingItem.removeOrUndoLabel = 'Remove';
 
                             var observableItem = KOMap.fromJS(entry.billingItem);
@@ -399,6 +424,14 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox', 'underscore',
                 }.bind(this));
             return defer;
         };
+
+        BillingVM.prototype.refreshRatesOnBillingItem = function (billingItem) {
+            billingItem.timeRate = Number(this.billingProfile.timeRate);
+            billingItem.distanceRate = Number(this.billingProfile.distanceRate);
+            billingItem.taxRate = Number(this.billingProfile.taxRate);
+            billingItem.timeUnit = this.billingProfile.timeUnit;
+            billingItem.distanceUnit = this.billingProfile.distanceUnit;
+        }
 
         /***********************************************************/
         /* Calculations                                            */
@@ -472,26 +505,34 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox', 'underscore',
         BillingVM.prototype.loadBill = function (billId) {
             console.log('Load bill' + billId);
             var defer = $.Deferred();
+            var _this = this;
+
             ajaxUtils.post(
                 '/bill/search',
                 JSON.stringify({search: {_id: billId}, includeClosedClaims: true}),
+
                 function onSuccess(response) {
                     console.debug('Loaded blll for claim: ' + JSON.stringify(response));
                     if (response.data[0]) {
                         var billJS = response.data[0];
                         billJS.billRecipient = billJS.billRecipient || new Contact();
+
                         _.each(billJS.billingItems, function (billingItem) {
                             billingItem.removeOrUndoLabel = 'Remove';
+
+                            // If the BIll is NOT_SUBMITTED, we need to pick any changes in rates
+                            if (billJS.status === BillingStatus.NOT_SUBMITTED) {
+                                _this.refreshRatesOnBillingItem(billingItem);
+                            }
                         });
-                        this.bill(KOMap.fromJS(billJS))
-                        this.billRecipient(this.bill().billRecipient);
+                        _this.bill(KOMap.fromJS(billJS))
+                        _this.billRecipient(_this.bill().billRecipient);
                         defer.resolve();
                     } else {
                         console.warn('No bill found for Id: ' + billId);
                         defer.reject();
                     }
-                }.bind(this)
-            );
+                });
             return defer;
         };
 

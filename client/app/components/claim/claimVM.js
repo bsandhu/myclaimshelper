@@ -78,6 +78,15 @@ define(['jquery', 'knockout', 'KOMap', 'amplify',
             this.onSave();
         };
 
+        ClaimVM.prototype.onBillingProfileClick = function () {
+            console.log('ClaimVM - BillingProfile for claim');
+            if (this.claim()._id()){
+                this.Router.routeToBillingProfile(this.claim()._id());
+            } else {
+                amplify.publish(Events.INFO_NOTIFICATION, {msg: 'Please save the Claim before modiying Billing rates'})
+            }
+        };
+
         ClaimVM.prototype.onShowClaim = function (evData) {
             console.log('ClaimVM - SHOW_CLAIM ev' + JSON.stringify(evData));
             console.assert(evData.claimId, 'Expecting claim Id on event data');

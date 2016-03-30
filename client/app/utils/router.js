@@ -79,6 +79,10 @@ define(['Path', 'amplify', 'app/utils/events'],
             window.location.hash = '#/home';
         };
 
+        Router.prototype.routeToBillingProfile = function (claimId) {
+            amplify.publish(Events.SHOW_BILLING_PROFILE, {claimId: claimId});
+        };
+
         Router.prototype.routeToNewClaim = function () {
             window.location.hash = '#/claim/new';
         };

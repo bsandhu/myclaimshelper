@@ -1,0 +1,94 @@
+<div id="billingProfileModal"
+     class="modal fade" role="dialog" aria-labelledby="userProfileModalLabel" aria-hidden="true"
+     style="width: 50%; right: 25%; left: 25%; top:25%">
+
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <!-- Header -->
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">
+                    <span>Billing rates for this Claim</span>
+                </h4>
+            </div>
+
+            <!-- Body -->
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <form class="form-horizontal">
+
+                        <fieldset class="form-group">
+                            <div class="row bottomMargin5">
+                                <div class="col-md-4 col-sm-6 col-xs-8"><span class="pull-right">Tax rate</span></div>
+                                <div class="col-md-4 col-sm-6 col-xs-4">
+                                    <div class="input-group">
+                                    <input type="text" class="form-control input-sm"
+                                           data-bind="value: billingProfile.taxRate"/>
+                                        <div class="input-group-addon">%</div>
+                                        </div>
+                                </div>
+                            </div>
+                            <div class="row bottomMargin5">
+                                <div class="col-md-4 col-sm-6 col-xs-8"><span class="pull-right">Track time in</span>
+                                </div>
+                                <div class="col-md-4 col-sm-6 col-xs-4">
+                                    <input type="text" class="form-control input-sm"
+                                           data-bind="value: billingProfile.timeUnit"/>
+                                </div>
+                            </div>
+                            <div class="row bottomMargin5">
+                                <div class="col-md-4 col-sm-6 col-xs-8">
+                                    <span class="pull-right"
+                                          data-bind="text: 'Rate/' + billingProfile.timeUnit()"></span>
+                                </div>
+                                <div class="col-md-4 col-sm-6 col-xs-4">
+                                    <div class="input-group">
+                                        <div class="input-group-addon">$</div>
+                                        <input type="number" class="form-control input-sm"
+                                               data-bind="value: billingProfile.timeRate"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row bottomMargin5">
+                                <div class="col-md-4 col-sm-6 col-xs-8">
+                                    <span class="pull-right">Track distance in</span>
+                                </div>
+                                <div class="col-md-4 col-sm-6 col-xs-4">
+                                    <input type="text" class="form-control input-sm"
+                                           data-bind="value: billingProfile.distanceUnit"/>
+                                </div>
+                            </div>
+                            <div class="row bottomMargin5">
+                                <div class="col-md-4 col-sm-6 col-xs-8">
+                                    <span class="pull-right"
+                                          data-bind="text: 'Rate/' + billingProfile.distanceUnit()"></span>
+                                </div>
+                                <div class="col-md-4 col-sm-6 col-xs-4">
+                                    <div class="input-group">
+                                        <div class="input-group-addon">$</div>
+                                        <input type="number" class="form-control input-sm"
+                                               data-bind="value: billingProfile.distanceRate"/>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="modal-footer">
+                <span class="pull-left" style="color: palevioletred">* Changes apply to un-submitted bills only</span>
+                <button type="button" class="btn btn-default" data-dismiss="modal" data-bind="click: onSave">Save</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+
+        </div>
+        <!-- modal-content -->
+    </div>
+    <!-- modal-dialog -->
+</div>

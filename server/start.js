@@ -5,6 +5,7 @@ var EventEmitter = require('events').EventEmitter;
 
 var claimsService = require('./services/claimsService.js');
 var billingServices = require('./services/billingServices.js');
+var billingProfileService = require('./services/billingProfileService.js');
 var contactService = require('./services/contactService.js');
 var profileService = require('./services/profileService.js');
 var uploadService = require('./services/uploadService.js');
@@ -28,6 +29,7 @@ var DECODED_JWT_SECRET = new Buffer(JWT_SECRET, 'base64');
 
 // Testing hooks
 var DISABLE_AUTH = config.disable_auth;
+var USE_SSL = config.use_ssl;
 var TEST_USER = 'baljeet.mail';
 
 // Restify server
@@ -39,6 +41,17 @@ function init() {
     server = restify.createServer();
     // Wrap with socket io instance
     io = socketio.listen(server);
+
+    server.use(function httpsRedirect(req, res, next) {
+        var securityNotNeeded = USE_SSL === false;
+        var isSecure = req.isSecure() === true || req.headers['x-forwarded-proto'] == 'https';
+        if (securityNotNeeded || isSecure) {
+            next();
+        } else {
+            res.writeHead(302, {'Location': 'https://' + req.headers.host + req.url});
+            res.end();
+        }
+    });
 
     // Attach handlers to Server
     server.use(restify.acceptParser(server.acceptable));
@@ -136,6 +149,8 @@ function setupBillingServiceRoutes() {
     server.post('/bill', authenticate, billingServices.saveOrUpdateBillREST);
     server.get('/billingItem/search/:search', authenticate, billingServices.getBillingItemsREST);
     server.post('/billingItem', authenticate, billingServices.saveOrUpdateBillingItemsREST);
+    server.get('/billing/profile/:claimId', authenticate, billingProfileService.checkAndGetBillingProfileForClaimREST);
+    server.post('/billing/profile', authenticate, billingProfileService.saveOrUpdateREST);
 }
 
 function setupProfileServiceRoutes() {

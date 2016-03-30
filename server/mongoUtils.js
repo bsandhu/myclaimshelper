@@ -260,6 +260,7 @@ var findEntities = function (collectionName, search, db, checkOwnerAttr) {
 function initCollections() {
     initCollection('Bills');
     initCollection('BillingItems');
+    initCollection('BillingProfiles');
     initCollection('Claims');
     initCollection('ClaimEntries');
     initCollection('Contacts');
@@ -287,5 +288,6 @@ exports.CLAIM_ENTRIES_COL_NAME = 'ClaimEntries';
 exports.CONTACTS_COL_NAME = 'Contacts';
 exports.BILL_COL_NAME = 'Bills';
 exports.BILLING_ITEMS_COL_NAME = 'BillingItems';
+exports.BILLING_PROFILE_COL_NAME = 'BillingProfiles';
 exports.USERPROFILE_COL_NAME = 'UserProfiles';
 exports.NOTIFICATIONS_COL_NAME = 'Notifications';
