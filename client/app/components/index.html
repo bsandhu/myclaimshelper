@@ -56,6 +56,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
         </button>
         <a class="navbar-brand" href="#/home" style="font-size: 26px">
             Claims Helper
@@ -68,6 +69,7 @@
             <li><a fixed-width href="#/claim/list">Claims</a></li>
             <li><a fixed-width href="#/billing">Billing</a></li>
             <li><a fixed-width href="#/travel">Travel</a></li>
+            <li><a fixed-width href="#/contacts">Contacts</a></li>
             <li><a href="" data-bind="click: router.showMsgsPopup">
                     <span class="badge badge-important pull-right navbar-msg-count"
                           data-bind="text: unreadMsgCount"></span>
@@ -130,6 +132,7 @@
                 </div>
             </div>
         </div>
+        <!--
         <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                 <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4s">
@@ -137,6 +140,7 @@
                 </div>
             </div>
         </div>
+        -->
         <!--
             <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
                 <div data-bind="component: 'quick-add-component'"></div>
@@ -160,6 +164,15 @@
         <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                 <div data-bind="component: 'maps-dash-component'"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- **** Contacts **** -->
+    <div id="contactsPanel" class="slidingContainer contactsPane">
+        <div class="row">
+            <div class="col-xs-8 col-sm-8 col-md-4 col-lg-4">
+                <div data-bind="component: 'contact-widget-component'"></div>
             </div>
         </div>
     </div>
