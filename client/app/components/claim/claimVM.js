@@ -177,9 +177,9 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore',
             var elem = $(elemId);
 
             if (elem.is(':visible')){
-                elem.velocity("slideUp", { duration: 500 });
+                elem.velocity("slideUp", { duration: 300 });
             } else {
-                elem.velocity("slideDown", { duration: 500 });
+                elem.velocity("slideDown", { duration: 300 });
             }
         }
 
