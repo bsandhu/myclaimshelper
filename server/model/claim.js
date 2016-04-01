@@ -9,6 +9,7 @@ define([], function () {
 
     function Claim() {
         this._id = undefined;
+        this.fileNum = undefined;
 
         this.description = undefined;
         this.isClosed = false;

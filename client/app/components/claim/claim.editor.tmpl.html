@@ -2,125 +2,156 @@
 <!-- Claim entry form -->
 <!-- ************************************************ -->
 
-<div class="fadeIn"
+<div class="fadeIn col-md-11 col-sm-11 col-xs-12"
      data-bind="if: inEditMode,
                 css: { 'panel-body' : inEditMode()}">
 
-    <div><h6>Description</h6></div>
-    <div class="inline bottomMargin" style="width: 80%;">
-        <div class="inline">
-            <div class="inline narrow fieldLabel">.</div>
-            <div class="inline" data-bind="style: {'min-width': $(window).width() * .5 + 'px'}">
+
+    <form class="form-horizontal">
+        <div class="form-group">
+            <label class="col-sm-2 control-label">File num.</label>
+
+            <div class="col-sm-3">
+                <input type="text" class="form-control input-sm"
+                       data-bind="value: claim().fileNum">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">Description</label>
+
+            <div class="col-sm-6">
                 <textarea style="display: table-cell;"
-                          class="form-control" rows="7" id="claimEntry-textArea"
+                          class="form-control" rows="4" id="claimEntry-textArea"
                           data-bind="value: claim().description"
                           placeholder="Note"></textarea>
             </div>
         </div>
-    </div>
 
-    <div class="topBorderSolid"><h6>Insurance Company</h6></div>
-    <div class="inline bottomMargin">
-        <div class="inline">
-            <div class="inline narrow fieldLabel">Name</div>
-            <div class="inline wider">
-                <input type="text" class="form-control input-sm"
-                       data-bind="value: claim().insuranceCompanyName"
-                       autocomplete="on">
-            </div>
-            <div class="inline narrow fieldLabel">File num.</div>
-            <div class="inline narrow">
-                <input type="text" class="form-control input-sm"
-                       data-bind="value: claim().insuranceCompanyFileNum">
-            </div>
-        </div>
-    </div>
+        <!-- **** Insurance Co **** -->
+        <form class="form-inline">
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Insurance Co.</label>
 
-    <div class="topBorderSolid"><h6>Important dates</h6></div>
-    <div class="bottomMargin">
-        <div class="inline">
-            <div class="inline narrow fieldLabel">Date Received</div>
-            <div class="inline normal">
-                <input type="text" class="form-control input-sm"
-                       data-bind="datetimePicker: {
+                <div class="col-sm-3">
+                    <input type="text" class="form-control input-sm"
+                           data-bind="value: claim().insuranceCompanyName"
+                           placeholder="Name"
+                           autocomplete="on">
+                </div>
+                <div class="col-sm-3">
+                    <input type="text" class="form-control input-sm"
+                           data-bind="value: claim().insuranceCompanyFileNum"
+                           placeholder="Claim number"
+                           autocomplete="on">
+                </div>
+            </div>
+        </form>
+
+        <!-- **** Important Dates **** -->
+        <form class="form-horizontal">
+            <form class="form-inline">
+                <div class=""><h5 class="color-dark-grey"></h5></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Date Received</label>
+
+                    <div class="col-sm-2">
+                        <input type="text" class="form-control input-sm"
+                               data-bind="datetimePicker: {
                                               datepicker: true,
-                                              timepicker: true,
+                                                timepicker: true,
                                               dateValue: claim().dateReceived}"/>
-            </div>
-        </div>
-        <div class="inline">
-            <div class="inline narrow fieldLabel">Date Due</div>
-            <div class="inline normal">
-                <input type="text" class="form-control input-sm"
-                       data-bind="datetimePicker: {
+                    </div>
+
+                    <label class="col-sm-1 control-label">Date Due</label>
+
+                    <div class="col-sm-2">
+                        <input type="text" class="form-control input-sm" id="dateDueInput"
+                               data-bind="datetimePicker: {
                                               datepicker: true,
                                               timepicker: true,
                                               dateValue: claim().dateDue}"/>
-            </div>
-        </div>
-        <div class="inline">
-            <div class="inline narrow fieldLabel">Date of Loss</div>
-            <div class="inline normal">
-                <input type="text" class="form-control input-sm"
-                       data-bind="datetimePicker: {
+                    </div>
+
+                    <label class="col-sm-1 control-label">Date of Loss</label>
+
+                    <div class="col-sm-2">
+                        <input type="text" class="form-control input-sm" id="dateOfLossInput"
+                               data-bind="datetimePicker: {
                                               datepicker: true,
                                               timepicker: true,
                                               dateValue: claim().dateOfLoss}"/>
-            </div>
-        </div>
-    </div>
+                    </div>
+                </div>
+            </form>
+        </form>
 
-    <!-- **** Insured **** -->
-    <div class="topBorderSolid"><h6>Insured</h6></div>
+        <!-- **** Insured **** -->
+        <form class="form-horizontal">
+            <form class="form-inline">
+                <div class=""><h5 class="color-dark-grey"></h5></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Insured</label>
 
-    <div class="bottomMargin">
-        <div class="narrow fieldLabel tableCell" style="display: table-cell">Attorney</div>
-        <div style="display: table-cell">
-            <contact-component params="contact : claim().insuredAttorneyContact,
-                                                   idSuffix: 'claim-insuredAttny',
-                                                    isBusinessOptionApplicable: true"></contact-component>
-        </div>
-    </div>
-
-    <div class="bottomMargin">
-        <div class="narrow fieldLabel tableCell" style="display: table-cell">Contact</div>
-        <div style="display: table-cell">
-            <contact-component params="contact : claim().insuredContact,
+                    <div class="col-sm-4" style="display: table-cell">
+                        <contact-component params="contact : claim().insuredContact,
                                                    idSuffix: 'claim-insuredContact',
                                                    isBusinessOptionApplicable: false"></contact-component>
-        </div>
-    </div>
-
-    <!-- **** Claimant **** -->
-    <div class="topBorderSolid"><h6>Claimant</h6></div>
-
-    <div class="bottomMargin">
-        <div class="narrow fieldLabel" style="display: table-cell">Attorney</div>
-        <div style="display: table-cell">
-            <contact-component params="contact : claim().claimantsAttorneyContact,
-                                                   idSuffix: 'claim-claimantAttny',
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="bottomMargin5">
+                            <a href=""
+                               data-bind="click: onToggleAtty.bind(this, '#insuredAttorneyContact')"
+                               class="bottomMargin5"><strong>+</strong> Insured attorney</a>
+                        </div>
+                        <div id="insuredAttorneyContact"
+                             data-bind="style: { display: Number(claim().insuredAttorneyContactId()) > 0 ? '' : 'none'}">
+                            <contact-component params="contact : claim().insuredAttorneyContact,
+                                                   idSuffix: 'claim-insuredAttny',
                                                    isBusinessOptionApplicable: true"></contact-component>
-        </div>
-    </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </form>
 
-    <div class="bottomMargin">
-        <div class="narrow fieldLabel" style="display: table-cell">Contact</div>
-        <div style="display: table-cell">
-            <contact-component params="contact : claim().claimantContact,
+        <!-- **** Claimant **** -->
+        <form class="form-horizontal">
+            <form class="form-inline">
+                <div class=""><h5 class="color-dark-grey"></h5></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Claimant</label>
+
+                    <div class="col-sm-4" style="display: table-cell">
+                        <contact-component params="contact : claim().claimantContact,
                                                    idSuffix: 'claim-claimantContact',
                                                    isBusinessOptionApplicable: false"></contact-component>
-        </div>
-    </div>
-
-    <div class="topBorderSolid bottomMargin"></div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="bottomMargin5">
+                            <a href=""
+                               data-bind="click: onToggleAtty.bind(this, '#claimantAttorneyContact')"
+                               class="bottomMargin5"><strong>+</strong> Claimant attorney</a>
+                        </div>
+                        <div id="claimantAttorneyContact"
+                             data-bind="style: { display: Number(claim().claimantsAttorneyContactId()) > 0 ? '' : 'none'}">
+                            <contact-component params="contact : claim().claimantsAttorneyContact,
+                                                       idSuffix: 'claim-claimantAttny',
+                                                       isBusinessOptionApplicable: true"></contact-component>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </form>
+    </form>
 
     <div class="topMargin"/>
 
-    <!-- Save/cancel buttons -->
+    <!-- **** Save/cancel buttons **** -->
     <div class="topMargin5 clear">
-        <div class="inline topMargin5">
+        <div class="col-md-offset-9 col-sm-offset-9 col-xs-offset-11">
             <button type="button" class="btn btn-info" data-bind="click: onSave">Save</button>
             <button type="button" class="btn btn-default" data-bind="click: onCancel">Cancel</button>
         </div>
     </div>
+
 </div>

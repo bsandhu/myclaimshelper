@@ -55,6 +55,10 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
                 console.log('AppVM - SHOW_TRAVEL ev');
                 this.transitionToTravel();
             });
+            amplify.subscribe(Events.SHOW_CONTACTS, this, function () {
+                console.log('AppVM - SHOW_CONTACTS ev');
+                this.transitionToContacts();
+            });
             amplify.subscribe(Events.SHOW_BILLING, this, function () {
                 console.log('AppVM - SHOW_BILLING ev');
                 this.transitionToBilling();
@@ -132,6 +136,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
             this.collapseClaimsListPanel();
             this.collapseTravelPanel();
             this.collapseBillingPanel();
+            this.collapseContactsPanel();
             this.expandDashboardPanel();
         };
 
@@ -141,7 +146,18 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
             this.collapseClaimsListPanel();
             this.collapseDashboardPanel();
             this.collapseBillingPanel();
+            this.collapseContactsPanel();
             this.expandTravelPanel();
+        };
+
+        AppVM.prototype.transitionToContacts = function () {
+            this.collapseClaimPanel();
+            this.collapseClaimEntryPanel();
+            this.collapseClaimsListPanel();
+            this.collapseDashboardPanel();
+            this.collapseBillingPanel();
+            this.collapseTravelPanel();
+            this.expandContactsPanel();
         };
 
         AppVM.prototype.transitionToBilling = function () {
@@ -150,6 +166,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
             this.collapseClaimsListPanel();
             this.collapseDashboardPanel();
             this.collapseTravelPanel();
+            this.collapseContactsPanel();
             this.expandBillingPanel();
         };
 
@@ -159,6 +176,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
             this.collapseDashboardPanel();
             this.collapseTravelPanel();
             this.collapseBillingPanel();
+            this.collapseContactsPanel();
             this.expandClaimsListPanel();
         };
 
@@ -167,6 +185,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
             this.collapseDashboardPanel();
             this.collapseTravelPanel();
             this.collapseBillingPanel();
+            this.collapseContactsPanel();
             this.partiallyCollapseClaimPanel();
             this.expandClaimEntryPanel();
         };
@@ -177,6 +196,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
             this.collapseClaimEntryPanel();
             this.collapseTravelPanel();
             this.collapseBillingPanel();
+            this.collapseContactsPanel();
             this.expandClaimPanel();
         };
 
@@ -200,6 +220,10 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
 
         AppVM.prototype.expandTravelPanel = function () {
             this._expandPanel('travelPanel');
+        }
+
+        AppVM.prototype.expandContactsPanel = function () {
+            this._expandPanel('contactsPanel');
         }
 
         AppVM.prototype.expandBillingPanel = function () {
@@ -233,6 +257,10 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
 
         AppVM.prototype.collapseTravelPanel = function () {
             this._collapsePanel('travelPanel');
+        }
+
+        AppVM.prototype.collapseContactsPanel = function () {
+            this._collapsePanel('contactsPanel');
         }
 
         AppVM.prototype.collapseBillingPanel = function () {

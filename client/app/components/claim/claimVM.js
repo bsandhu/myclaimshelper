@@ -1,9 +1,9 @@
-define(['jquery', 'knockout', 'KOMap', 'amplify',
+define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore',
         'model/claim', 'model/claimEntry', 'model/contact', 'model/states',
         'app/utils/ajaxUtils', 'app/utils/events', 'app/utils/consts', 'app/utils/router',
         'app/utils/sessionKeys', 'app/utils/session', 'app/components/contact/contactClient',
         'shared/dateUtils', 'text!app/components/claim/claim.tmpl.html'],
-    function ($, ko, KOMap, amplify, Claim, ClaimEntry, Contact, States,
+    function ($, ko, KOMap, amplify, _, Claim, ClaimEntry, Contact, States,
               ajaxUtils, Events, Consts, Router, SessionKeys, Session, ContactClient,
               DateUtils, viewHtml) {
 
@@ -11,6 +11,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify',
             console.log('Init ClaimVM');
 
             // Model
+            this._ = _;
             this.States = States;
             this.Consts = Consts;
             this.DateUtils = DateUtils;
@@ -170,6 +171,16 @@ define(['jquery', 'knockout', 'KOMap', 'amplify',
 
         ClaimVM.prototype.onCloseClaim = function (contact) {
             Router.routeToHome();
+        }
+
+        ClaimVM.prototype.onToggleAtty = function (elemId) {
+            var elem = $(elemId);
+
+            if (elem.is(':visible')){
+                elem.velocity("slideUp", { duration: 300 });
+            } else {
+                elem.velocity("slideDown", { duration: 300 });
+            }
         }
 
         /***********************************************************/

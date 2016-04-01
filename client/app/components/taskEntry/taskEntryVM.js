@@ -151,6 +151,7 @@ define(['underscore', 'jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', '
                     amplify.publish(Events.SAVED_CLAIM_ENTRY, {claimId: activeClaimId, claimEntryId: response.data._id});
 
                     this.startStateTracking();
+                    Router.routeToClaim(Session.getActiveClaimId());
                     defer.resolve();
                 }.bind(this));
             return defer;

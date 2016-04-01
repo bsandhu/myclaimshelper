@@ -38,6 +38,10 @@ define(['Path', 'amplify', 'app/utils/events'],
                 amplify.publish(Events.SHOW_TRAVEL);
             });
 
+            Path.map("#/contacts").to(function () {
+                amplify.publish(Events.SHOW_CONTACTS);
+            });
+
             Path.map("#/claim/list").to(function () {
                 amplify.publish(Events.SHOW_CLAIMS_LIST);
             });

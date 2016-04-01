@@ -9,12 +9,12 @@ define([],
         'use strict';
 
         /**
-         * See ClaimListVM for usage
+         * See ClaimListVM for usage - binds 'this' so we eval in the right context
          */
         function nullsafe(expr, defaultVal) {
             defaultVal = defaultVal || '';
             try {
-                return eval(expr);
+                return eval(expr) || defaultVal;
             } catch (e) {
                 return defaultVal;
             }

@@ -8,6 +8,7 @@ define([], function(){
         SHOW_DASHBOARD       : 'ShowDashboard',
 
         SHOW_CONTACT         : 'SHOW_CONTACT',
+        SHOW_CONTACTS        : 'SHOW_CONTACTS',
         ADD_CONTACT          : 'ADD_CONTACT',
         ADDED_CONTACT        : 'ADDED_CONTACT',
 
