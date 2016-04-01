@@ -60,11 +60,11 @@
     </tr>
     <tr>
         <td colspan="3"><strong>Clmnt: </strong><span data-bind="text: activeClaim.claimantContact ? activeClaim.claimantContact.name : 'None'"/></td>
-        <td colspan="4"><strong>Adjuster: </strong><span data-bind="text: 'Bill B.'"/></td>
+        <td colspan="4"><strong>Adjuster: </strong><span data-bind="text: userProfile.contactInfo.businessName"/></td>
     </tr>
     <tr>
-        <td colspan="3"><strong>Client file:</strong></td>
-        <td colspan="4"><strong>Mark file:</strong></td>
+        <td colspan="3"><strong>Client file: </strong><span data-bind="text: activeClaim.insuranceCompanyFileNum"/></td>
+        <td colspan="4"><strong>Mark file: </strong><span data-bind="text: activeClaim.fileNum"/></td>
     </tr>
     </tbody>
 </table>

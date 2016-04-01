@@ -1,11 +1,9 @@
-define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore',
+define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore', 'bootbox',
         'model/claim', 'model/claimEntry', 'model/contact', 'model/states',
         'app/utils/ajaxUtils', 'app/utils/events', 'app/utils/consts', 'app/utils/router',
         'app/utils/sessionKeys', 'app/utils/session', 'app/components/contact/contactClient',
         'shared/dateUtils', 'text!app/components/claim/claim.tmpl.html'],
-    function ($, ko, KOMap, amplify, _, Claim, ClaimEntry, Contact, States,
-              ajaxUtils, Events, Consts, Router, SessionKeys, Session, ContactClient,
-              DateUtils, viewHtml) {
+    function ($, ko, KOMap, amplify, _, bootbox, Claim, ClaimEntry, Contact, States, ajaxUtils, Events, Consts, Router, SessionKeys, Session, ContactClient, DateUtils, viewHtml) {
 
         function ClaimVM() {
             console.log('Init ClaimVM');
@@ -24,7 +22,9 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore',
             this.isPartiallyCollapsed = ko.observable(false);
 
             // View state
-            this.isClaimClosed = ko.computed(function(){return this.claim().isClosed();}, this);
+            this.isClaimClosed = ko.computed(function () {
+                return this.claim().isClosed();
+            }, this);
             this.screenHeight = ko.observable($(window).height() - 215);
             this.inEditMode = ko.observable(false);
             this.showStatusForEntryId = ko.observable();
@@ -55,9 +55,15 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore',
             amplify.subscribe(Events.NEW_CLAIM, this, this.onNewClaim);
             amplify.subscribe(Events.SHOW_CLAIM_ENTRY, this, this.onShowClaimEntry);
             amplify.subscribe(Events.SAVED_CLAIM_ENTRY, this, this.refreshClaimEntriesListing);
-            amplify.subscribe(Events.EXPAND_CLAIM_PANEL, this, function(){this.isPartiallyCollapsed(false)});
-            amplify.subscribe(Events.COLLAPSE_CLAIM_PANEL, this, function(){this.isPartiallyCollapsed(false)});
-            amplify.subscribe(Events.PARTIALLY_COLlAPSE_CLAIM_PANEL, this, function(){this.isPartiallyCollapsed(true)});
+            amplify.subscribe(Events.EXPAND_CLAIM_PANEL, this, function () {
+                this.isPartiallyCollapsed(false)
+            });
+            amplify.subscribe(Events.COLLAPSE_CLAIM_PANEL, this, function () {
+                this.isPartiallyCollapsed(false)
+            });
+            amplify.subscribe(Events.PARTIALLY_COLlAPSE_CLAIM_PANEL, this, function () {
+                this.isPartiallyCollapsed(true)
+            });
 
             window.onclick = this.onDismissStatus.bind(this);
         };
@@ -68,9 +74,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore',
 
         ClaimVM.prototype.onCloseClaimClick = function () {
             console.log('ClaimVM - Closing claim');
-            this.claim().isClosed(true);
-            this.claim().dateClosed(new Date());
-            this.onSave();
+            this.onClose(false);
         };
 
         ClaimVM.prototype.onReOpenClaimClick = function () {
@@ -81,7 +85,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore',
 
         ClaimVM.prototype.onBillingProfileClick = function () {
             console.log('ClaimVM - BillingProfile for claim');
-            if (this.claim()._id()){
+            if (this.claim()._id()) {
                 this.Router.routeToBillingProfile(this.claim()._id());
             } else {
                 amplify.publish(Events.INFO_NOTIFICATION, {msg: 'Please save the Claim before modiying Billing rates'})
@@ -117,7 +121,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore',
 
         ClaimVM.prototype.onShowContact = function (contactObservable) {
             console.log('ClaimVM - SHOW_CONTACT ev ' + JSON.stringify(KOMap.toJS(contactObservable)));
-            if (!Boolean(contactObservable._id())){
+            if (!Boolean(contactObservable._id())) {
                 this.inEditMode(true);
                 amplify.publish(Events.INFO_NOTIFICATION, {msg: 'Please add contact information'})
             } else {
@@ -176,7 +180,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore',
         ClaimVM.prototype.onToggleAtty = function (elemId) {
             var elem = $(elemId);
 
-            if (elem.is(':visible')){
+            if (elem.is(':visible')) {
                 elem.velocity("slideUp", { duration: 300 });
             } else {
                 elem.velocity("slideDown", { duration: 300 });
@@ -193,8 +197,8 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore',
         };
 
         ClaimVM.prototype.showTasksCollapsed = function () {
-            $(window).resize(function(){
-                if ($(window).width() < 768){
+            $(window).resize(function () {
+                if ($(window).width() < 768) {
                     amplify.publish()
                 }
             });
@@ -238,6 +242,35 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore',
         /***********************************************************/
         /* Server calls                                            */
         /***********************************************************/
+
+        ClaimVM.prototype.onClose = function (ignoreUnsubmittedBills) {
+            console.log('Closing Claim: ' + KOMap.toJSON(this.claim));
+
+            ajaxUtils.post(
+                '/claim/close',
+                KOMap.toJSON({claimId: this.claim()._id(), ignoreUnsubmittedBills: ignoreUnsubmittedBills}),
+                function onSuccess(response) {
+                    if (response.status == 'Success') {
+                        this.claim().isClosed(true);
+                        this.claim().dateClosed(new Date());
+
+                        amplify.publish(Events.SUCCESS_NOTIFICATION, {msg: 'Updated Claim ' + this.claim().insuranceCompanyFileNum()});
+                        amplify.publish(Events.SAVED_CLAIM, {'claim': KOMap.toJS(this.claim())});
+                        console.log('Closed claim');
+
+                        this.storeInSession(this.claim()._id(), KOMap.toJS(this.claim()));
+                        this.inEditMode(false);
+                    } else {
+                        bootbox.dialog({
+                            title: "Claim has an un-submitted bill",
+                            message: "Close anyway?",
+                            size: "small",
+                            buttons: {
+                                no: { label: "No", className: "btn-danger", callback: $.noop },
+                                yes: { label: "Yes", className: "btn-info", callback: this.onClose.bind(this, true)}}});
+                        };
+                    }.bind(this));
+        };
 
         ClaimVM.prototype.onSave = function () {
             console.log('Saving Claim: ' + KOMap.toJSON(this.claim));

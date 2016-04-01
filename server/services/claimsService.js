@@ -2,6 +2,7 @@ var Claim = require('./../model/claim.js');
 var Contact = require('./../model/contact.js');
 var ClaimEntry = require('./../model/claimEntry.js');
 var BillingItem = require('./../model/billingItem.js');
+var BillingStatus = require('../model/billingStatus.js');
 var mongoUtils = require('./../mongoUtils.js');
 var serviceUtils = require('./../serviceUtils.js');
 var contactService = require('./contactService.js');
@@ -180,6 +181,32 @@ function modifyClaim(req, res) {
         .always(function (err, results) {
             sendResponse(res, err, results);
         });
+}
+
+function closeClaim(req, res) {
+    var search = {};
+    var ignoreUnsubmittedBills = req.body.ignoreUnsubmittedBills;
+    search.owner = req.headers.userid;
+    search.claimId = req.body.claimId;
+    search.status = BillingStatus.NOT_SUBMITTED;
+
+    mongoUtils.connect()
+        .then(function(db){
+            mongoUtils.findEntities(mongoUtils.BILL_COL_NAME, search, db)
+                .then(function(bills){
+                    if (!ignoreUnsubmittedBills && bills.length > 0) {
+                        res.json({'Status': 'Fail', 'Details': 'Unsubmitted bills'});
+                    } else {
+                        mongoUtils.modifyEntityAttr(
+                                search.claimId,
+                                mongoUtils.CLAIMS_COL_NAME,
+                                {isClosed: true, dateClosed: new Date().getTime()})
+                            .always(function (err, results) {
+                                sendResponse(res, err, results);
+                            });
+                    }
+                })
+        })
 }
 
 /**
@@ -436,6 +463,7 @@ function sendResponse(res, err, jsonData) {
 }
 
 
+exports.closeClaim = closeClaim;
 exports.saveOrUpdateClaim = saveOrUpdateClaim;
 exports.saveOrUpdateClaimEntry = saveOrUpdateClaimEntry;
 exports.modifyClaimEntry = modifyClaimEntry;

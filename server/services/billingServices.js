@@ -101,6 +101,7 @@ var getBillObjects = function (search, includeClosedClaims, db) {
                         bill.isClaimClosed = correspondingClaim ? correspondingClaim.isClosed : false;
                         bill.claimDescription = correspondingClaim ? correspondingClaim.description : 'None';
                         bill.claimInsuranceCompanyFileNum = correspondingClaim ? (correspondingClaim.insuranceCompanyFileNum || '') : 'None';
+                        bill.claimFileNum = correspondingClaim ? (correspondingClaim.fileNum || '') : 'None';
                         bill.claimInsuranceCompanyName = correspondingClaim ? (correspondingClaim.insuranceCompanyName || '') : 'None';
                     })
                     // Filter out closed claims
@@ -197,7 +198,8 @@ function saveOrUpdateBillREST(req, res) {
     delete bill.isClaimClosed;
     delete bill.claimDescription;
     delete bill.claimInsuranceCompanyName;
-    delete bill.claimInsuranceCompanyFileNum;
+    delete bill.claimInsuranceCompanyName;
+    delete bill.claimFileNum;
 
     mongoUtils.saveOrUpdateEntity(bill, BILL_COL_NAME)
         .then(function () {
