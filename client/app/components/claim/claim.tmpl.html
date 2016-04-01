@@ -5,7 +5,7 @@
     <h3 class="panel-title">
         <span>Claim</span>
         <span class="color-grey"
-              data-bind="text: (claim().insuranceCompanyFileNum() || '')"></span>
+              data-bind="text: (claim().fileNum() || '')"></span>
     </h3>
 </div>
 
@@ -49,8 +49,9 @@
                 </div>
                 <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
                     <strong>Insurance co.</strong>
-
-                    <div data-bind="text: claim().insuranceCompanyName ? claim().insuranceCompanyName() : ''"></div>
+                    <div class="clear"></div>
+                    <div class="inline" data-bind="text: claim().insuranceCompanyFileNum ? claim().insuranceCompanyFileNum() : ''"></div>/
+                    <div class="inline" data-bind="text: claim().insuranceCompanyName ? claim().insuranceCompanyName() : ''"></div>
                 </div>
             </div>
 
