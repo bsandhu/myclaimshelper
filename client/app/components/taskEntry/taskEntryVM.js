@@ -1,9 +1,10 @@
-define(['underscore', 'jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEntry', 'model/billingItem', 'model/states',
+define(['underscore', 'jquery', 'knockout', 'KOMap', 'amplify',
+        'model/claim', 'model/claimEntry', 'model/billingItem', 'model/billingStatus', 'model/states',
         'app/utils/ajaxUtils', 'app/utils/events', 'app/utils/router',
         'app/utils/sessionKeys', 'app/utils/session',
         'shared/dateUtils',
         'text!app/components/taskEntry/taskEntry.tmpl.html', 'bootbox'],
-    function (_, $, ko, KOMap, amplify, Claim, ClaimEntry, BillingItem, States, ajaxUtils, Events, Router, SessionKeys, Session, DateUtils, taskEntryView, bootbox) {
+    function (_, $, ko, KOMap, amplify, Claim, ClaimEntry, BillingItem, BillingStatus, States, ajaxUtils, Events, Router, SessionKeys, Session, DateUtils, taskEntryView, bootbox) {
         'use strict';
 
         function TaskEntryVM() {
@@ -21,7 +22,18 @@ define(['underscore', 'jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', '
             // View state
             this.inEditMode = ko.observable(true);
             this.stateChange = ko.observable(false);
-            this.isClosed = ko.computed(function () { return this.claimEntry().isClosed(); }, this);
+            this.isClosed = ko.computed(function () {
+                return this.claimEntry().isClosed();
+            }, this);
+            this.isSaved = ko.computed(function () {
+                return Number(this.claimEntry()._id()) > 0;
+            }, this);
+            this.isBilled = ko.computed(function () {
+                return this.claimEntry().billingItem().status() != BillingStatus.NOT_SUBMITTED;
+            }, this);
+            this.isNotBilled = ko.computed(function () {
+                return !this.isBilled();
+            }, this);
 
             this.setupEvListeners();
             this.startStateTracking();
@@ -123,6 +135,29 @@ define(['underscore', 'jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', '
         /* Server calls                                            */
         /***********************************************************/
 
+        TaskEntryVM.prototype.onDelete = function () {
+            var _this = this;
+            var activeClaimId = Session.getActiveClaimId();
+            var claimEntryId = _this.claimEntry()._id();
+            var claimEntrySummary = _this.claimEntry().summary();
+
+            ajaxUtils.post(
+                '/claimEntry/delete',
+                KOMap.toJSON({claimEntryId: claimEntryId}),
+                function onSuccess(response) {
+                    if (response.status == 'Success') {
+                        console.log('Deleted ClaimEntry: ' + JSON.stringify(response));
+                        amplify.publish(Events.SUCCESS_NOTIFICATION, {msg: 'Deleted <strong>' + claimEntrySummary + '</strong> and related billing'});
+                        amplify.publish(Events.SAVED_CLAIM_ENTRY, {claimId: activeClaimId, claimEntryId: claimEntryId});
+
+                        _this.startStateTracking();
+                        Router.routeToClaim(Session.getActiveClaimId());
+                    } else {
+                        amplify.publish(Events.FAILURE_NOTIFICATION, {msg: 'Could not delete task'});
+                    }
+                });
+        }
+
         TaskEntryVM.prototype.onSave = function () {
             var defer = $.Deferred();
             this.stopStateTracking();
@@ -178,8 +213,7 @@ define(['underscore', 'jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', '
                         txtArea.height(60);
                         var scrollHeight = txtArea[0].scrollHeight;
                         txtArea.height(scrollHeight > 500 ? 500 : scrollHeight);
-                    }, 1);
-
+                    }, 3);
                 }.bind(this));
         };
 
