@@ -69,6 +69,32 @@
                 -->
             </div>
 
+            <div class="row">
+                <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
+                    <span>Claimant</span>
+                </div>
+                <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
+                    <a data-bind="click: function(){onShowContact(claim().claimantContact)}" class="cursor-pointer">
+                        <span data-bind="text: niceName(claim().claimantContact)"></span>
+                    </a>
+                </div>
+                <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
+                    <span data-bind="text: claim().claimantContact.phone"></span>
+                </div>
+                <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
+                    <span>Claimant Attorney</span>
+                </div>
+                <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
+                    <a data-bind="click: function(){onShowContact(claim().claimantsAttorneyContact)}"
+                       class="cursor-pointer">
+                        <span data-bind="text: niceName(claim().claimantsAttorneyContact)"></span>
+                    </a>
+                </div>
+                <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
+                    <span data-bind="text: claim().claimantsAttorneyContact.phone"></span>
+                </div>
+            </div>
+
             <div class="row ">
                 <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
                     <span>Insured</span>
@@ -96,31 +122,22 @@
                 </div>
             </div>
 
-            <div class="row">
+            <div class="row ">
                 <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                    <span>Claimant</span>
+                    <span>Insurance co. contact</span>
                 </div>
                 <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                    <a data-bind="click: function(){onShowContact(claim().claimantContact)}" class="cursor-pointer">
-                        <span data-bind="text: niceName(claim().claimantContact)"></span>
-                    </a>
-                </div>
-                <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                    <span data-bind="text: claim().claimantContact.phone"></span>
-                </div>
-                <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                    <span>Claimant Attorney</span>
-                </div>
-                <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                    <a data-bind="click: function(){onShowContact(claim().claimantsAttorneyContact)}"
+                    <a data-bind="click: function(){onShowContact(claim().insuranceCoContact)}"
                        class="cursor-pointer">
-                        <span data-bind="text: niceName(claim().claimantsAttorneyContact)"></span>
+                        <span data-bind="text: niceName(claim().insuranceCoContact)"></span>
                     </a>
                 </div>
                 <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                    <span data-bind="text: claim().claimantsAttorneyContact.phone"></span>
+                    <span data-bind="text: claim().insuranceCoContact.phone"></span>
                 </div>
             </div>
+
+
 
             <!-- Other contacts -->
             <div data-bind="foreach: claim().otherContacts()">
