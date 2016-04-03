@@ -109,23 +109,48 @@
         <!-- Buttons -->
         <footer>
             <div class="form-actions row">
-                <div class="col-lg-4">
-                    <span class="color-dark-grey"><strong>Last updated</strong></span>
-                    <span class="color-dark-grey" data-bind="text : DateUtils.niceDate(claimEntry().updateDate())"></span>
-                </div>
-                <div class="col-lg-8 pull-right text-left">
+                <div class="col-lg-7">
                     <!-- ko ifnot: isClosed -->
-                    <button type="button" class="btn btn"
-                            data-bind="click: onSave,
-                                   css: { 'btn-info' : stateChange(),
-                                          'btn-default' : !stateChange()}">Save
-                    </button>
+                        <!-- ko if: isSaved -->
+                        <button type="button"
+                                data-toggle="tooltip" data-placement="top"
+                                data-bind="click: onDelete,
+                                           enable: isNotBilled,
+                                           css: isBilled() ? 'btn btn-default' : 'btn btn-danger'">
+                            <i class="fa fa-trash-o"></i>
+                            Delete
+                        </button>
+                        <!-- /ko -->
                     <!-- /ko -->
-                    <button type="button" class="btn btn-default" data-bind="click: onCancel">Close</button>
+
+                    <!-- ko if: isBilled -->
+                    <div class="inline leftMargin2pc">
+                        <span class="color-dark-grey">Can't delete since it has been billed already.</span>
+                    </div>
+                    <!-- /ko -->
+                    <!-- ko if: isNotBilled -->
+                    <div class="inline leftMargin2pc">
+                        <span class="color-dark-grey"><strong>Last updated</strong></span>
+                        <span class="color-dark-grey" data-bind="text : DateUtils.niceDate(claimEntry().updateDate())"></span>
+                    </div>
+                    <!-- /ko -->
+
+                </div>
+                <div class="col-lg-5">
+                    <button type="button" class="btn btn-default pull-right" data-bind="click: onCancel">Close</button>
+
                     <!-- ko if: isClosed -->
                     <span class="text-primary leftMargin5">
                         <i class="fa fa-lock">   Claim is closed</i>
                     </span>
+                    <!-- /ko -->
+
+                    <!-- ko ifnot: isClosed -->
+                    <button type="button" class="btn pull-right leftMargin2pc rightMargin5"
+                            data-bind="click: onSave,
+                                   css: { 'btn-info' : stateChange(),
+                                          'btn-default' : !stateChange()}">Save
+                    </button>
                     <!-- /ko -->
                 </div>
             </div>

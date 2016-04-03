@@ -210,6 +210,7 @@ function getEntityById(entityId, colName, owner) {
 // :: Object -> String -> Promise
 function deleteEntity(predicate, colName) {
     var defer = jQuery.Deferred();
+    console.log('Delete ' + JSON.stringify(predicate) + ' . Col: ' + colName);
 
     run(function remove(db) {
         var entityCol = db.collection(colName);
@@ -219,6 +220,7 @@ function deleteEntity(predicate, colName) {
                 if (err) {
                     defer.reject(err);
                 } else {
+                    console.log('Deleted');
                     defer.resolve();
                 }
             });

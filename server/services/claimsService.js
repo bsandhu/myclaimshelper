@@ -2,6 +2,7 @@ var Claim = require('./../model/claim.js');
 var Contact = require('./../model/contact.js');
 var ClaimEntry = require('./../model/claimEntry.js');
 var BillingItem = require('./../model/billingItem.js');
+var BillingStatus = require('../model/billingStatus.js');
 var mongoUtils = require('./../mongoUtils.js');
 var serviceUtils = require('./../serviceUtils.js');
 var contactService = require('./contactService.js');
@@ -21,10 +22,27 @@ function deleteClaim(claimId) {
 
     jQuery.when(
         mongoUtils.deleteEntity({_id: claimId}, mongoUtils.CLAIMS_COL_NAME),
-        mongoUtils.deleteEntity({claimId: claimId}, 'ClaimEntries'))
+        mongoUtils.deleteEntity({claimId: claimId}, mongoUtils.CLAIM_ENTRIES_COL_NAME))
         .then(defer.resolve())
         .fail(defer.reject());
     return defer;
+}
+
+function deleteClaimEntryREST(req, res) {
+    console.log('Delete ClaimEntry');
+    var claimEntryId = req.body.claimEntryId;
+    assert.ok(claimEntryId, 'Expecting claimEntryId in req body');
+
+    jQuery.when(
+        mongoUtils.deleteEntity({_id: claimEntryId}, mongoUtils.CLAIM_ENTRIES_COL_NAME),
+        mongoUtils.deleteEntity({claimEntryId: claimEntryId}, mongoUtils.BILLING_ITEMS_COL_NAME))
+        .then(function () {
+            console.log('Deleted ClaimEntry ' + claimEntryId);
+            sendResponse(res, null, {});
+        })
+        .fail(function (err) {
+            sendResponse(res, err, {});
+        });
 }
 
 /********************************************************/
@@ -64,7 +82,7 @@ function saveOrUpdateClaim(req, res) {
     }
 
     // Update related claim entries
-    function updateClaimEntryClosedStatus(claimId, newStatus){
+    function updateClaimEntryClosedStatus(claimId, newStatus) {
         return mongoUtils.modifyAttr(
             mongoUtils.CLAIM_ENTRIES_COL_NAME,
             {isClosed: newStatus},
@@ -180,6 +198,34 @@ function modifyClaim(req, res) {
         .always(function (err, results) {
             sendResponse(res, err, results);
         });
+}
+
+function closeClaim(req, res) {
+    var search = {};
+    var ignoreUnsubmittedBills = req.body.ignoreUnsubmittedBills;
+    search.owner = req.headers.userid;
+    search.claimId = req.body.claimId;
+    search.status = BillingStatus.NOT_SUBMITTED;
+
+    mongoUtils.connect()
+        .then(function (db) {
+            // Check un-submitted bills
+            mongoUtils.findEntities(mongoUtils.BILL_COL_NAME, search, db)
+                .then(function (bills) {
+                    if (!ignoreUnsubmittedBills && bills.length > 0) {
+                        res.json({'Status': 'Fail', 'Details': 'Unsubmitted bills'});
+                    } else {
+                        // Update claim
+                        mongoUtils.modifyEntityAttr(
+                            search.claimId,
+                            mongoUtils.CLAIMS_COL_NAME,
+                            {isClosed: true, dateClosed: new Date().getTime()})
+                            .always(function (err, results) {
+                                sendResponse(res, err, results);
+                            });
+                    }
+                })
+        })
 }
 
 /**
@@ -317,7 +363,7 @@ function searchClaims(req, res) {
             } else {
                 // Aggregate the contactLookups for the contact details
                 var contactLookups = [];
-                _.each(claims, function(claim){
+                _.each(claims, function (claim) {
                     contactLookups.push(
                         populateContactRef(owner, claim.insuredContactId, function (contactObj) {
                             claim.insuredContact = contactObj;
@@ -436,9 +482,11 @@ function sendResponse(res, err, jsonData) {
 }
 
 
+exports.closeClaim = closeClaim;
 exports.saveOrUpdateClaim = saveOrUpdateClaim;
 exports.saveOrUpdateClaimEntry = saveOrUpdateClaimEntry;
 exports.modifyClaimEntry = modifyClaimEntry;
+exports.deleteClaimEntryREST = deleteClaimEntryREST;
 exports.modifyClaim = modifyClaim;
 exports.saveOrUpdateClaimEntryObject = saveOrUpdateClaimEntryObject;
 exports.getClaim = getClaim;

@@ -73,7 +73,6 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox', 'underscore',
                 }, 0)
             });
 
-
             self.removeBillingItem = function (ev) {
                 console.log('Toggle remove BillingItem timer');
                 var itemClicked = this;
@@ -174,7 +173,6 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox', 'underscore',
             $('#bililngCreateMsg').fadeOut(8000);
         }
 
-
         BillingVM.prototype.loadUserProfileFromSession = function (evData) {
             this.userProfile = Session.getCurrentUserProfile();
             if (!this.userProfile) {
@@ -253,35 +251,40 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox', 'underscore',
                     _this.calcAll();
                 })
                 .then(function checkForNewEligibleTasks() {
-                    if (_this.bill().status() === BillingStatus.NOT_SUBMITTED) {
-                        _this.getEligibleBillingItemsForClaim(evData.claimId)
-                            .done(function showDialog(allEligibleItems) {
-                                if (allEligibleItems.length > _this.bill().billingItems().length) {
-                                    bootbox.dialog({
-                                        size: 'small',
-                                        backdrop: 'true',
-                                        title: "New tasks",
-                                        message: "New tasks have been added since the last draft was saved. Add these?",
-                                        buttons: {
-                                            no: {
-                                                label: "No",
-                                                className: "btn-danger",
-                                                callback: function () {
-                                                    // No-op
-                                                }
-                                            },
-                                            yes: {
-                                                label: "Yes",
-                                                className: "btn-info",
-                                                callback: function () {
-                                                    _this.bill().billingItems(allEligibleItems);
-                                                    _this.calcAll();
-                                                }
-                                            }
-                                        }
-                                    });
-                                }
+                    _this.getEligibleBillingItemsForClaim(evData.claimId)
+                        .done(function (allEligibleItems) {
+
+                            // Refresh all saved items
+                            var savedItems = _this.bill().billingItems();
+                            var savedItemIds = _.map(savedItems, function (item) { return item._id() });
+                            var savedItemsRefreshed = _.filter(allEligibleItems, function (item) {
+                                return _.contains(savedItemIds, item._id());
                             });
+                            var newItemsSet = [];
+
+                            if (allEligibleItems.length > savedItems.length) {
+                                bootbox.dialog({
+                                    size: 'small', backdrop: 'true', title: "New tasks",
+                                    message: "New tasks have been added since the last draft was saved. Add these?",
+                                    buttons: {
+                                        no: {
+                                            label: "No", className: "btn-danger",
+                                            callback: _.partial(refresh, savedItemsRefreshed)
+                                        },
+                                        yes: {
+                                            label: "Yes", className: "btn-info",
+                                            callback: _.partial(refresh, allEligibleItems)
+                                        }
+                                    }
+                                });
+                            } else {
+                                refresh(savedItemsRefreshed);
+                            }
+                        });
+
+                    function refresh(savedItemsRefreshed) {
+                        _this.bill().billingItems(savedItemsRefreshed);
+                        _this.calcAll();
                     }
                 })
                 .then(function () {
@@ -407,7 +410,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox', 'underscore',
                             // TODO Item not billable?
                             entry.billingItem = entry.billingItem || new BillingItem();
                             entry.billingItem.claimEntryId = entry._id;
-                            entry.billingItem.entryDate = entry.entryDate;
+                            entry.billingItem.entryDate = entry.dueDate;
                             entry.billingItem.tag = entry.tag;
                             entry.billingItem.summary = entry.summary;
 

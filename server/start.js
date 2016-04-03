@@ -126,11 +126,13 @@ function setupClaimsServiceRoutes() {
     server.get('/claim/:id/entries', authenticate, claimsService.getAllEntriesForClaim);
     server.post('/claim', authenticate, claimsService.saveOrUpdateClaim);
     server.post('/claim/search', authenticate, claimsService.searchClaims);
+    server.post('/claim/close', authenticate, claimsService.closeClaim);
 
     server.get('/claimEntry/:id', authenticate, claimsService.getClaimEntry);
     server.post('/claimEntry', authenticate, claimsService.saveOrUpdateClaimEntry);
     server.post('/claimEntry/modify', authenticate, claimsService.modifyClaimEntry);
     server.post('/claimEntry/search', authenticate, claimsService.searchClaimEntries);
+    server.post('/claimEntry/delete', authenticate, claimsService.deleteClaimEntryREST);
 
     server.post('/upload', uploadService.uploadFile);
     server.get('/download', uploadService.downloadFile);

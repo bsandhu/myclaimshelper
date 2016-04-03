@@ -68,7 +68,7 @@
                        class="table table-hover table-responsive">
                     <thead>
                     <tr>
-                        <th data-field="claimInsuranceCompanyFileNum" data-sortable="true">Claim</th>
+                        <th data-field="claimInsuranceCompanyFileNum" data-sortable="true">File num. / Insurance co. num.</th>
                         <th data-field="id" data-sortable="true">Bill Id</th>
                         <th>Bill status</th>
                         <th data-field="submissionDate" data-sortable="true">Submitted on</th>
@@ -81,7 +81,12 @@
                     </thead>
                     <tbody data-bind="foreach: { data: filteredBills, as: 'bill' }">
                     <tr>
-                        <td data-bind="html: '<span class=\'color-dark-grey\'>' + bill.claimInsuranceCompanyFileNum + '</span><br/>' + bill.claimInsuranceCompanyName,
+                        <td data-bind="html: '<span class=\'color-dark-grey\'>' +
+                                        bill.claimInsuranceCompanyFileNum +
+                                        ' / ' +
+                                        bill.claimFileNum +
+                                        '</span><br/>' +
+                                        bill.claimInsuranceCompanyName,
                                        click: $parent.router.routeToBill"></td>
                         <td data-bind="text: bill._id,
                                        click: $parent.router.routeToBill"></td>

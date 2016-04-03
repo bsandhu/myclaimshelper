@@ -3,9 +3,11 @@ var mongoUtils = require("./../../server/mongoUtils.js");
 var claimsService = require("./../../server/services/claimsService.js");
 var contactService = require('./../../server/services/contactService.js');
 var Claim = require("./../../server/model/claim.js");
+var Bill = require("./../../server/model/bill.js");
 var BillingItem = require("./../../server/model/billingItem.js");
+var BillingStatus = require("./../../server/model/billingStatus.js");
 var ClaimEntry = require("./../../server/model/claimEntry.js");
-var States= require("./../../server/model/states.js");
+var States = require("./../../server/model/states.js");
 var jQuery = require('jquery-deferred');
 
 
@@ -33,15 +35,16 @@ describe('ClaimsService', function () {
     testEntry.description = 'Bill has a hat. He is going to catch up with Elnora Ragan on wed morning.';
     testEntry.billingItem = testBillingItem;
 
-    after(function(done) {
+    after(function (done) {
         assert.ok(testClaim._id);
 
         jQuery.when(
             claimsService.deleteClaim(testClaim._id),
             mongoUtils.deleteEntity({name: {$eq: "TestFist"}}, mongoUtils.CONTACTS_COL_NAME),
-            mongoUtils.deleteEntity({_id: testBillingItem._id}, mongoUtils.BILLING_ITEMS_COL_NAME))
-                .done(done)
-                .fail('Failed to cleanup test data');
+            mongoUtils.deleteEntity({_id: testBillingItem._id}, mongoUtils.BILLING_ITEMS_COL_NAME),
+            mongoUtils.deleteEntity({_id: 'claimservice_bill_id'}, mongoUtils.BILL_COL_NAME))
+            .done(done)
+            .fail('Failed to cleanup test data');
     });
 
     it('Save claim', function (done) {
@@ -116,7 +119,7 @@ describe('ClaimsService', function () {
 
         claimsService
             .saveOrUpdateClaimEntryObject(testEntry)
-            .done(function(data) {
+            .done(function (data) {
                 assert(data);
                 assert.equal(data.status, 'Success');
                 assert.equal(data.data.isClosed, false);
@@ -145,7 +148,7 @@ describe('ClaimsService', function () {
     });
 
     it('Get a Claim', function (done) {
-        var req = {params: {id : testClaim._id}, headers: {userid: 'TestUser'}};
+        var req = {params: {id: testClaim._id}, headers: {userid: 'TestUser'}};
         var res = {};
 
         res.json = function (data) {
@@ -165,7 +168,7 @@ describe('ClaimsService', function () {
     });
 
     it('Get a Claim Entry', function (done) {
-        var req = {params: {id : testEntry._id}, headers: {userid: 'TestUser'}};
+        var req = {params: {id: testEntry._id}, headers: {userid: 'TestUser'}};
         var res = {};
 
         res.json = function (data) {
@@ -186,7 +189,7 @@ describe('ClaimsService', function () {
     });
 
     it('Get all entries for a Claim', function (done) {
-        var req = {params: {id : testClaim._id}, headers: {userid: 'TestUser'}};
+        var req = {params: {id: testClaim._id}, headers: {userid: 'TestUser'}};
         var res = {};
 
         res.json = function (data) {
@@ -202,7 +205,7 @@ describe('ClaimsService', function () {
     });
 
     it('Get all claims', function (done) {
-        var req = {params: {id : testClaim._id}, headers: {userid: 'TestUser'}};
+        var req = {params: {id: testClaim._id}, headers: {userid: 'TestUser'}};
         var res = {};
 
         res.json = function (data) {
@@ -217,8 +220,8 @@ describe('ClaimsService', function () {
         claimsService.getAllClaims(req, res);
     });
 
-    it('Search through claims', function(done) {
-        var req = {body: {query : {"state":"open"}}, headers: {userid: 'TestUser'}};
+    it('Search through claims', function (done) {
+        var req = {body: {query: {"state": "open"}}, headers: {userid: 'TestUser'}};
         var res = {};
 
         res.json = function (data) {
@@ -234,11 +237,11 @@ describe('ClaimsService', function () {
         claimsService.searchClaims(req, res);
     });
 
-    it('Search through claim entries', function(done) {
+    it('Search through claim entries', function (done) {
         var req = {headers: {userid: 'TestUser'}};
         var res = {};
-        req.body = {query: {"state":"open"},
-                    options: {"sort": ["state", "asc"]}};
+        req.body = {query: {"state": "open"},
+            options: {"sort": ["state", "asc"]}};
 
         res.json = function (data) {
             assert(data);
@@ -250,6 +253,44 @@ describe('ClaimsService', function () {
             done();
         };
         claimsService.searchClaimEntries(req, res);
+    });
+
+    it('Close claim with no bills', function (done) {
+        var req = {headers: {userid: 'TestUser'}};
+        var res = {};
+        req.body = {claimId: testClaim._id, ignoreUnsubmittedBills: false};
+
+        res.json = function (data) {
+            assert(data);
+            assert.equal(data.status, 'Success');
+            done();
+        };
+        claimsService.closeClaim(req, res);
+    });
+
+    it('Close claim with bills', function (done) {
+        var req = {headers: {userid: 'TestUser'}};
+        var res = {};
+        req.body = {claimId: testClaim._id, ignoreUnsubmittedBills: false};
+
+        var bill = new Bill();
+        bill.claimId = testClaim._id;
+        bill._id = 'claimservice_bill_id';
+        bill.owner = 'TestUser';
+        bill.status = BillingStatus.NOT_SUBMITTED;
+
+        mongoUtils
+            .saveOrUpdateEntity(bill, mongoUtils.BILL_COL_NAME, 'TestUser')
+            .then(function () {
+                claimsService.closeClaim(req, res);
+            })
+
+        res.json = function (data) {
+            assert(data);
+            assert.equal(data.Status, 'Fail');
+            assert.equal(data.Details, 'Unsubmitted bills');
+            done();
+        };
     });
 
 });
