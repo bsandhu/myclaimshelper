@@ -72,8 +72,22 @@
         <!--Phone-->
         <div>
             <div class="inline bottomMargin">
-                <input type="tel" class="form-control normal input-sm" placeholder="Phone"
-                       data-bind="value: contact().phone"/>
+                <div class="inline bottomMargin">
+                    <input type="tel" class="form-control normal input-sm" placeholder="Phone"
+                           data-bind="value: contact().phone"/>
+                </div>
+                <div class="inline bottomMargin">
+                    <input type="tel" class="form-control normal input-sm" placeholder="Cell"
+                           data-bind="value: contact().cell"/>
+                </div>
+            </div>
+        </div>
+
+        <!--Email-->
+        <div>
+            <div class="inline bottomMargin">
+                <input type="tel" class="form-control wide input-sm" placeholder="Email"
+                       data-bind="value: contact().email"/>
             </div>
         </div>
     </div>

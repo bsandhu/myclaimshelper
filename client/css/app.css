@@ -211,6 +211,10 @@ div {
     color: darkgreen);
 }
 
+.color-red {
+    color: red);
+}
+
 #claimListTable .text-success {
     color: darkgreen;
 }
@@ -379,6 +383,11 @@ div {
 .summaryGroupSubHeader {
     color: #045FB4;
     font-weight: 300;
+}
+
+.summaryGroupSubHeaderOverDue {
+    color: #E57373;
+    font-weight: 600;
 }
 
 .summaryGroupDrag {

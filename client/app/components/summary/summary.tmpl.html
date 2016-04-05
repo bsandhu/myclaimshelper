@@ -56,7 +56,8 @@
                         <table class="table table-hover table-responsive summaryTable">
                             <thead>
                             <th>&nbsp;</th>
-                            <th>Claim</th>
+                            <th>Claim file num.</th>
+                            <th>Insurance co. file num.</th>
                             <th>Task</th>
                             <th>Entry Date</th>
                             <th>Due Date</th>
@@ -71,7 +72,8 @@
                                                   data-bind="text: $parent.groupBy().description"></span>
                                     <span class="paddingRight5"></span>
                                             <span class="summaryGroupSubHeader"
-                                                  data-bind="text: groupKey"></span>
+                                                  data-bind="text: groupKey,
+                                                             css: {'summaryGroupSubHeaderOverDue': groupKey == 'Over Due'}"></span>
                                             <span class="summaryGroupSubHeader"
                                                   data-bind="text: '(' + ($parent.claimEntriesGrouped()[groupKey].length) + ')'"></span>
                                 </td>
@@ -90,7 +92,10 @@
                                     <span class="fa fa-ellipsis-v"></span>
                                 </td>
                                 <td>
-                                    <span data-bind="text: $data.claimFileNumber"></span>
+                                    <span data-bind="text: $data.fileNum"></span>
+                                </td>
+                                <td>
+                                    <span data-bind="text: $data.insuranceCompanyFileNum"></span>
                                 </td>
                                 <td data-bind="text: $data.summary"></td>
                                 <td class="summaryGroupCell">

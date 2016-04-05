@@ -249,7 +249,8 @@ describe('ClaimsService', function () {
 
             var entry = data.data[0];
             assert.equal(entry.state, testClaim.state);
-            assert.equal(entry.claimFileNumber, testClaim.insuranceCompanyFileNum);
+            assert.equal(entry.fileNum, 'None');
+            assert.equal(entry.insuranceCoFileNum, testClaim.insuranceCoFileNum);
             done();
         };
         claimsService.searchClaimEntries(req, res);
