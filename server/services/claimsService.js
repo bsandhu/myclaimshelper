@@ -81,7 +81,7 @@ function saveOrUpdateClaim(req, res) {
         return chainedDefer;
     }
 
-    // Update related claim entries
+    // Update 'closed' status on related claim entries
     function updateClaimEntryClosedStatus(claimId, newStatus) {
         return mongoUtils.modifyAttr(
             mongoUtils.CLAIM_ENTRIES_COL_NAME,
@@ -147,8 +147,9 @@ function saveOrUpdateClaimEntry(req, res) {
     // Persisted separately
     delete entity.billingItem;
 
-    // Added by the search
-    delete entity.claimFileNumber;
+    // Added by the searchClaimEntries fn
+    delete entity.fileNum;
+    delete entity.insuranceCompanyFileNum;
 
     entityExtractionService.extractEntities(description)
         .then(function (people) {
@@ -215,17 +216,30 @@ function closeClaim(req, res) {
                     if (!ignoreUnsubmittedBills && bills.length > 0) {
                         res.json({'Status': 'Fail', 'Details': 'Unsubmitted bills'});
                     } else {
-                        // Update claim
-                        mongoUtils.modifyEntityAttr(
-                            search.claimId,
-                            mongoUtils.CLAIMS_COL_NAME,
-                            {isClosed: true, dateClosed: new Date().getTime()})
+                        // Update claim and related entries
+                        jQuery.when()
+                            .then(closeClaimEntry)
+                            .then(closeClaim)
                             .always(function (err, results) {
                                 sendResponse(res, err, results);
                             });
                     }
                 })
-        })
+        });
+
+    function closeClaim() {
+        return mongoUtils.modifyEntityAttr(
+                search.claimId,
+                mongoUtils.CLAIMS_COL_NAME,
+                {isClosed: true, dateClosed: new Date().getTime()});
+    }
+
+    function closeClaimEntry() {
+        return mongoUtils.modifyAttr(
+                mongoUtils.CLAIM_ENTRIES_COL_NAME,
+                {isClosed: true},
+                {claimId: search.claimId});
+    }
 }
 
 /**
@@ -426,7 +440,8 @@ function searchClaimEntries(req, res) {
                     // ClaimEntry has only one Claim
                     var claim = _.first(claims);
                     if (claim) {
-                        item.claimFileNumber = claim.insuranceCompanyFileNum || 'None';
+                        item.fileNum = claim.fileNum || 'None';
+                        item.insuranceCompanyFileNum = claim.insuranceCompanyFileNum || 'None';
                     }
                     defer.resolve();
                 })

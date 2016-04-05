@@ -202,9 +202,14 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
         };
 
         SummaryVM.prototype.searchClaimEntries = function () {
+            // Matches Filter or is Overdue
             var postReq = { query: {isClosed: false,
-                                    dueDate: this.dueDateFilter().query,
-                                    state: this.statusFilter().query},
+                                   '$or' : [
+                                        {'$and': [{dueDate: this.dueDateFilter().query},
+                                                 {state: this.statusFilter().query}]},
+                                        {'$and': [ { dueDate: {'$lte': DateUtils.startOfToday().getTime()}},
+                                                   { $or: [{state: {'$eq': States.TODO}}, {state: {'$eq': States.PENDING}}]} ]}
+                                    ]},
                             options: {sort: [[this.groupBy().group, 'asc']]}};
             console.log('Searching for claim entries: ' + postReq);
 
