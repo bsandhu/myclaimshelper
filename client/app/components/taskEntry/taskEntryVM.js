@@ -99,6 +99,10 @@ define(['underscore', 'jquery', 'knockout', 'KOMap', 'amplify',
             console.log('TaskEntryVM - NEW_CLAIM_ENTRY ev ' + JSON.stringify(evData));
             var tag = Boolean(evData.entryType) ? evData.entryType : 'other';
             this.claimEntry(this.newEmptyClaimEntry(tag));
+
+            // Re-size editor
+            var txtArea = $("#claimEntry-desc");
+            txtArea.height(100);
             console.log('Adding new claim entry. Tag:' + tag);
         };
 
@@ -194,6 +198,7 @@ define(['underscore', 'jquery', 'knockout', 'KOMap', 'amplify',
 
         TaskEntryVM.prototype.loadClaimEntry = function (claimEntryId) {
             this.stopStateTracking();
+            $("#claimEntry-desc").height(100);
 
             $.getJSON('/claimEntry/' + claimEntryId)
                 .done(function (resp) {
@@ -208,9 +213,8 @@ define(['underscore', 'jquery', 'knockout', 'KOMap', 'amplify',
                     this.storeInSession(this.claimEntry()._id());
                     this.startStateTracking();
 
-                    window.setTimeout(function setT() {
+                    window.setTimeout(function reSizeEditor() {
                         var txtArea = $("#claimEntry-desc");
-                        txtArea.height(60);
                         var scrollHeight = txtArea[0].scrollHeight;
                         txtArea.height(scrollHeight > 500 ? 500 : scrollHeight);
                     }, 3);
