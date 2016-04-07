@@ -1,6 +1,6 @@
-define(['jquery', 'knockout', 'KOMap', 'shared/dateUtils', 'select2'],
+define(['jquery', 'knockout', 'underscore', 'KOMap', 'shared/dateUtils', 'select2'],
 
-    function ($, ko, KOMap, DateUtils) {
+    function ($, ko, _, KOMap, DateUtils) {
         'use strict';
 
         /*
@@ -9,12 +9,28 @@ define(['jquery', 'knockout', 'KOMap', 'shared/dateUtils', 'select2'],
         ko.bindingHandlers.select2 = {
 
             init: function (element, valueAccessor, allBindings, viewModel, bindingContext) {
-                var data = allBindings.get('myoptions');
+                var data = allBindings.get('myoptions')
 
                 // Init jQuery
                 var select2Elem = $(element).select2({
                     data: data,
-                    templateResult: format
+                    templateResult: format,
+                    matcher: function(term, text) {
+                        if (term && term.term && term.term.length > 0) {
+                            // Match on Id or Text
+                            // Return matching items
+                            var matches = _.filter(text.children, function(option){
+                                return (option.id.indexOf(term.term) >=0) ||
+                                        (option.text.indexOf(term.term) >=0);
+                            });
+                            var result = _.extend({}, text);
+                            result.children = matches;
+                            return result;
+                        } else {
+                            return text;
+
+                        }
+                    }
                 });
                 $.data(element, 'select2Instance', select2Elem);
 
