@@ -150,6 +150,9 @@ function saveOrUpdateClaimEntry(req, res) {
     // Added by the searchClaimEntries fn
     delete entity.fileNum;
     delete entity.insuranceCompanyFileNum;
+    delete entity.insuranceCompanyName;
+    delete entity.claimantContact;
+    delete entity.insuredContact;
 
     entityExtractionService.extractEntities(description)
         .then(function (people) {
@@ -432,37 +435,6 @@ function searchClaimEntries(req, res) {
             .find(query, options)
             .toArray(onResults);
 
-        function populateClaimFileNumber(item) {
-            var defer = jQuery.Deferred();
-            mongoUtils
-                .findEntities(mongoUtils.CLAIMS_COL_NAME, {_id: item.claimId, owner: req.headers.userid}, db)
-                .then(function (claims) {
-                    // ClaimEntry has only one Claim
-                    var claim = _.first(claims);
-                    if (claim) {
-                        item.fileNum = claim.fileNum || 'None';
-                        item.insuranceCompanyFileNum = claim.insuranceCompanyFileNum || 'None';
-                    }
-                    defer.resolve();
-                })
-            return defer;
-        }
-
-        function populateBillingItem(item) {
-            var defer = jQuery.Deferred();
-            mongoUtils
-                .findEntities(mongoUtils.BILLING_ITEMS_COL_NAME, {claimEntryId: item._id, owner: req.headers.userid}, db)
-                .then(function (billingItems) {
-                    // ClaimEntry has only one BilingItem
-                    var billingItem = _.first(billingItems);
-                    if (billingItem) {
-                        item.billingItem = mongoUtils.hydrate(BillingItem, billingItem)[0];
-                    }
-                    defer.resolve();
-                })
-            return defer;
-        }
-
         function onResults(err, items) {
             var defereds = [];
             _.each(items, function (item) {
@@ -478,6 +450,88 @@ function searchClaimEntries(req, res) {
 
         function convertToModel(item) {
             return _.extend(new ClaimEntry(), item);
+        }
+
+        // Helper functions to populate Claima and BillingItem attributes
+
+        function populateContact(contactId, owner) {
+            var defer = jQuery.Deferred();
+            if (contactId == null || contactId === undefined) {
+                defer.resolve(new Contact());
+            } else {
+                contactService.getContactObject(contactId, owner)
+                    .done(function (result) {
+                        var contactObj = result.status.toLowerCase() === 'success' ? result.data : new Contact();
+                        defer.resolve(contactObj);
+                    });
+            }
+            return defer;
+        }
+
+        var claimsCache = {};
+        function populateClaimFileNumber(claimEntry) {
+            var defer = jQuery.Deferred();
+
+            // Set defaults
+            claimEntry.fileNum = '-';
+            claimEntry.insuranceCompanyFileNum = '-';
+            claimEntry.insuranceCompanyName = '-';
+            claimEntry.insuredContact = new Contact();
+            claimEntry.claimantContact = new Contact();
+
+            // Try to get from cache
+            var cacheEntry = claimsCache[claimEntry.claimId];
+            if (cacheEntry != undefined) {
+                claimEntry.fileNum = cacheEntry[0];
+                claimEntry.insuranceCompanyFileNum = cacheEntry[1];
+                claimEntry.insuredContact = cacheEntry[2];
+                claimEntry.claimantContact = cacheEntry[3];
+                defer.resolve();
+                return defer;
+            }
+
+            // Get from DB
+            mongoUtils
+                .findEntities(mongoUtils.CLAIMS_COL_NAME, {_id: claimEntry.claimId, owner: req.headers.userid}, db)
+                .then(function (claims) {
+                    // ClaimEntry has only one Claim
+                    var claim = _.first(claims);
+                    if (claim) {
+                        // Note: remember to delete these on ClaimEntry save
+                        claimEntry.fileNum = claim.fileNum;
+                        claimEntry.insuranceCompanyFileNum = claim.insuranceCompanyFileNum;
+                        claimEntry.insuranceCompanyName = claim.insuranceCompanyName;
+
+                        jQuery.when(
+                            populateContact(claim.insuredContactId, claim.owner),
+                            populateContact(claim.claimantContactId, claim.owner))
+                            .then(function(insured, claimant){
+                                claimEntry.insuredContact = insured;
+                                claimEntry.claimantContact = claimant;
+                                // Cache
+                                claimsCache[claimEntry.claimId] = [claimEntry.fileNum, claimEntry.insuranceCompanyFileNum, insured, claimant];
+                                defer.resolve();
+                            });
+                    } else {
+                        defer.resolve();
+                    }
+                });
+            return defer;
+        }
+
+        function populateBillingItem(claimEntry) {
+            var defer = jQuery.Deferred();
+            mongoUtils
+                .findEntities(mongoUtils.BILLING_ITEMS_COL_NAME, {claimEntryId: claimEntry._id, owner: req.headers.userid}, db)
+                .then(function (billingItems) {
+                    // ClaimEntry has only one BilingItem
+                    var billingItem = _.first(billingItems);
+                    if (billingItem) {
+                        claimEntry.billingItem = mongoUtils.hydrate(BillingItem, billingItem)[0];
+                    }
+                    defer.resolve();
+                })
+            return defer;
         }
     });
 }
