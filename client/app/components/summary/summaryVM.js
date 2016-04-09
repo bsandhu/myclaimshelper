@@ -1,4 +1,4 @@
-define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEntry', 'model/states', 'app/utils/events',
+define(['jquery', 'knockout', 'underscore', 'KOMap', 'amplify', 'model/claim', 'model/claimEntry', 'model/states', 'app/utils/events',
         'app/utils/router', 'shared/dateUtils', 'app/utils/ajaxUtils',
         'text!app/components/summary/summary.tmpl.html'],
     function ($, ko, KOMap, amplify, Claim, ClaimEntry, States, Events, Router, DateUtils, AjaxUtils, summaryView) {
@@ -229,6 +229,11 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
         /************************************************************/
         /* Drag n drop                                              */
         /************************************************************/
+
+        SummaryVM.prototype.onSummaryHeaderClick = function (groupKey, ev) {
+            $('.summaryRow' + groupKey.replace(' ', '')).fadeToggle(500);
+            $(ev.currentTarget.childNodes[1]).toggleClass('rotate90')
+        }
 
         SummaryVM.prototype.onSummaryRowDragOver = function (entry, ev) {
             // No-op - needed for Chrome to auto create nice drag icon

@@ -64,10 +64,11 @@
                             <th>Status</th>
                             </thead>
 
-                            <tbody data-bind="foreach : {data: arrangeByKeys, as: 'groupKey'}">
-                            <tr>
-                                <td colspan="7">
-                                    <span class="fa fa-angle-double-right"></span>
+                            <tbody data-bind="foreach : {data: arrangeByKeys, as: 'groupKey'}"
+                                   class="summaryGroupTableBody">
+                            <tr class="summaryGroupHeaderRow">
+                                <td colspan="7" data-bind="click: $parent.onSummaryHeaderClick">
+                                    <span class="fa fa-angle-double-down" style="font-size: 1.4em"></span>
                                             <span class="summaryGroupHeader"
                                                   data-bind="text: $parent.groupBy().description"></span>
                                     <span class="paddingRight5"></span>
@@ -85,8 +86,10 @@
                                                    dragenter: $parents[1].onSummaryRowDragEnter.bind($parents[1]),
                                                    dragover:  $parents[1].onSummaryRowDragOver.bind($parents[1]),
                                                    dragleave: $parents[1].onSummaryRowDragLeave.bind($parents[1])},
+                                           css: 'summaryRow' + groupKey.replace(' ', ''),
                                            attr: {'data-entryId': $data._id},
                                            click: $parents[1].onClaimEntrySelect">
+
                                 <td class="summaryGroupDrag" title="Click and Drag to reorder">
                                     <span class="fa fa-ellipsis-v"></span>
                                     <span class="fa fa-ellipsis-v"></span>
@@ -108,7 +111,7 @@
                                 </td>
                                 <td class="summaryGroupCell">
                                     <status-editor-component params="'statusValue': $data.state,
-                                                                     'entryId': $data._id">
+                                                                         'entryId': $data._id">
                                     </status-editor-component>
                                 </td>
                             </tr>
