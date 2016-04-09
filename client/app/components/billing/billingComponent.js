@@ -30,7 +30,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox', 'underscore',
 
             // Updated via Claim lifecycle events
             this.claimId = ko.observable();
-            this.activeClaim = undefined;
+
             // Active Bill - new or unsubmitted
             this.bill = ko.observable(this.newEmptyBill());
             this.removedBillingItems = [];
@@ -42,7 +42,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox', 'underscore',
             this.setupEvListeners();
             this.setupModeListener();
 
-            this.mode.extend({ notify: 'always' });
+            this.mode.extend({notify: 'always'});
             this.mode(Consts.BILLING_TAB_HISTORY_MODE);
 
             var self = this;
@@ -256,7 +256,9 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox', 'underscore',
 
                             // Refresh all saved items
                             var savedItems = _this.bill().billingItems();
-                            var savedItemIds = _.map(savedItems, function (item) { return item._id() });
+                            var savedItemIds = _.map(savedItems, function (item) {
+                                return item._id()
+                            });
                             var savedItemsRefreshed = _.filter(allEligibleItems, function (item) {
                                 return _.contains(savedItemIds, item._id());
                             });
@@ -323,10 +325,12 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox', 'underscore',
                 this.onNavigateAwayFromUnsavedBill();
             } else {
                 $('#billPanel').velocity("fadeOut",
-                    { duration: 200,
+                    {
+                        duration: 200,
                         complete: function () {
                             router.routeToBillingOverview(self.claimId());
-                        }})
+                        }
+                    })
             }
         };
 
@@ -388,7 +392,10 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox', 'underscore',
                     console.log('Saved Billing Items: ' + JSON.stringify(response));
                     billingItemObservable._id(response.data._id);
                     amplify.publish(Events.SUCCESS_NOTIFICATION, {msg: 'Updated billing item'})
-                    amplify.publish(Events.SAVED_CLAIM_ENTRY, {claimId: _this.claimId(), claimEntryId: billingItemJS.claimEntryId});
+                    amplify.publish(Events.SAVED_CLAIM_ENTRY, {
+                        claimId: _this.claimId(),
+                        claimEntryId: billingItemJS.claimEntryId
+                    });
                     _this.getBillsForClaim();
                 }
             );
@@ -496,9 +503,9 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox', 'underscore',
             }
             var N = Number;
             billingItem.totalAmount(Number(
-                    N(billingItem.time() * billingItem.timeRate()) +
-                    N(billingItem.mileage() * billingItem.distanceRate()) +
-                    N(billingItem.expenseAmount())).toFixed(2));
+                N(billingItem.time() * billingItem.timeRate()) +
+                N(billingItem.mileage() * billingItem.distanceRate()) +
+                N(billingItem.expenseAmount())).toFixed(2));
         };
 
         BillingVM.prototype.clearBill = function () {
@@ -660,58 +667,78 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox', 'underscore',
             _this.activeClaim = Session.getActiveClaim();
             _this.groupedByCode([]);
 
-            // Split out line item for each type
-            _.each(KOMap.toJS(this.bill().billingItems()), function (item, index) {
-                if (item.mileage != 0) {
-                    mileageItem = _.clone(item);
-                    mileageItem.code = item.mileageCode;
-                    mileageItem.time = 0;
-                    mileageItem.expenseAmount = 0;
-                    _this.groupedByCode.push(mileageItem);
-                }
-                if (item.expenseAmount != 0) {
-                    expenseItem = _.clone(item);
-                    expenseItem.code = item.expenseCode;
-                    expenseItem.time = 0;
-                    expenseItem.mileage = 0;
-                    expenseItem.expenseAmount = '$' + Number(expenseItem.expenseAmount).toFixed(2);
-                    _this.groupedByCode.push(expenseItem);
-                }
-                if (item.time != 0) {
-                    timeItem = _.clone(item);
-                    timeItem.code = item.timeCode;
-                    timeItem.mileage = 0;
-                    timeItem.expenseAmount = 0;
-                    _this.groupedByCode.push(timeItem);
-                }
-            });
+            // Load associated Claim
+            // If the app loads straight to the Billing tab an active claim might not be present in Session
+            var claimLoaded = $.Deferred();
 
-            ko.renderTemplate(
-                "print-template",
-                _this,
-                {
-                    afterRender: function print() {
-                        console.log(container.innerHTML);
+            if (Session.getActiveClaimId() != _this.claimId()) {
+                $.getJSON('/claim/' + _this.claimId())
+                    .done(function (resp) {
+                        console.log('Loaded claim ' + JSON.stringify(resp.data).substr(0, 100));
+                        _this.activeClaim = resp.data;
+                        claimLoaded.resolve();
+                    });
+            } else {
+                _this.activeClaim = Session.getActiveClaim();
+                claimLoaded.resolve();
+            }
 
-                        // Add frame
-                        var frame = document.createElement('iframe');
-                        document.body.appendChild(frame);
+            claimLoaded.then(function(){
 
-                        // Print
-                        var frameContent = frame.contentWindow;
-                        frameContent.document.open();
-                        frameContent.document.write('<head><link rel=stylesheet href=../../css/print.css type=text/css ></head>');
-                        frameContent.document.write(container.innerHTML);
-                        frameContent.document.close();
-                        setTimeout(function afterFrameRender() {
-                            frameContent.focus();
-                            frameContent.print();
-                            document.body.removeChild(frame);
-                        }, 500);
+                // Split out line item for each type
+                _.each(KOMap.toJS(_this.bill().billingItems()), function (item, index) {
+                    if (item.mileage != 0) {
+                        mileageItem = _.clone(item);
+                        mileageItem.code = item.mileageCode;
+                        mileageItem.time = 0;
+                        mileageItem.expenseAmount = 0;
+                        _this.groupedByCode.push(mileageItem);
                     }
-                },
-                container
-            );
+                    if (item.expenseAmount != 0) {
+                        expenseItem = _.clone(item);
+                        expenseItem.code = item.expenseCode;
+                        expenseItem.time = 0;
+                        expenseItem.mileage = 0;
+                        expenseItem.expenseAmount = '$' + Number(expenseItem.expenseAmount).toFixed(2);
+                        _this.groupedByCode.push(expenseItem);
+                    }
+                    if (item.time != 0) {
+                        timeItem = _.clone(item);
+                        timeItem.code = item.timeCode;
+                        timeItem.mileage = 0;
+                        timeItem.expenseAmount = 0;
+                        _this.groupedByCode.push(timeItem);
+                    }
+                });
+
+                // Render the print
+                ko.renderTemplate(
+                    "print-template",
+                    _this,
+                    {
+                        afterRender: function print() {
+                            console.log(container.innerHTML);
+
+                            // Add frame
+                            var frame = document.createElement('iframe');
+                            document.body.appendChild(frame);
+
+                            // Print
+                            var frameContent = frame.contentWindow;
+                            frameContent.document.open();
+                            frameContent.document.write('<head><link rel=stylesheet href=../../css/print.css type=text/css ></head>');
+                            frameContent.document.write(container.innerHTML);
+                            frameContent.document.close();
+                            setTimeout(function afterFrameRender() {
+                                frameContent.focus();
+                                frameContent.print();
+                                document.body.removeChild(frame);
+                            }, 500);
+                        }
+                    },
+                    container
+                );
+            });
         };
 
         return {viewModel: BillingVM, template: viewHtml};
