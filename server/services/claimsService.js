@@ -498,9 +498,9 @@ function searchClaimEntries(req, res) {
                     var claim = _.first(claims);
                     if (claim) {
                         // Note: remember to delete these on ClaimEntry save
-                        claimEntry.fileNum = claim.fileNum;
-                        claimEntry.insuranceCompanyFileNum = claim.insuranceCompanyFileNum;
-                        claimEntry.insuranceCompanyName = claim.insuranceCompanyName;
+                        claimEntry.fileNum = claim.fileNum || claimEntry.fileNum;
+                        claimEntry.insuranceCompanyFileNum = claim.insuranceCompanyFileNum || claimEntry.insuranceCompanyFileNum;
+                        claimEntry.insuranceCompanyName = claim.insuranceCompanyName || claimEntry.insuranceCompanyName;
 
                         jQuery.when(
                             populateContact(claim.insuredContactId, claim.owner),

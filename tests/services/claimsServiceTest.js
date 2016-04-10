@@ -251,7 +251,7 @@ describe('ClaimsService', function () {
 
             var entry = data.data[0];
             assert.equal(entry.state, testClaim.state);
-            assert.equal(entry.fileNum, 'None');
+            assert.equal(entry.fileNum, '-');
             assert.equal(entry.insuranceCoFileNum, testClaim.insuranceCoFileNum);
             done();
         };
@@ -270,7 +270,7 @@ describe('ClaimsService', function () {
 
             var entry = data.data[0];
             assert.equal(entry.state, testClaim.state);
-            assert.equal(entry.fileNum, 'None');
+            assert.equal(entry.fileNum, '-');
             assert.equal(entry.insuranceCoFileNum, testClaim.insuranceCoFileNum);
             assert.ok(entry.insuredContact);
             assert.equal(entry.insuredContact.name, 'TestFist');
