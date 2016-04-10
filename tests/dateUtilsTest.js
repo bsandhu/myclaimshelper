@@ -1,7 +1,8 @@
 var assert = require('assert');
 var dateUtils = require('./../server/shared/dateUtils.js');
 
-var toStr = dateUtils.toDatetimePickerFormat;
+var toStr = dateUtils.toDatePickerFormat;
+var toTimeStr = dateUtils.toTimePickerFormat;
 var toDate = dateUtils.fromDatetimePickerFormat;
 
 
@@ -9,14 +10,20 @@ describe('DateUtils', function () {
 
     it('Must convert to DatePicker toStr', function () {
         // JS month is 0 indexed
-        assert.equal(toStr(new Date(2014, 8, 22)), '09/22/2014 00:00');
-        assert.equal(toStr(new Date(2014, 8, 22)), '09/22/2014 00:00');
-        assert.equal(toStr(new Date(2014, 0, 1)), '01/01/2014 00:00');
-        assert.equal(toStr(new Date(2014, 11, 1)), '12/01/2014 00:00');
+        assert.equal(toStr(new Date(2014, 8, 22)), '09/22/2014');
+        assert.equal(toStr(new Date(2014, 8, 22)), '09/22/2014');
+        assert.equal(toStr(new Date(2014, 0, 1)), '01/01/2014');
+        assert.equal(toStr(new Date(2014, 11, 1)), '12/01/2014');
 
-        assert.equal(toStr(new Date(2014, 8, 22, 10, 10)), '09/22/2014 10:10');
-        assert.equal(toStr(new Date(2014, 8, 22, 15, 50)), '09/22/2014 15:50');
-        assert.equal(toStr(new Date(2014, 0, 1, 12, 32)), '01/01/2014 12:32');
+        assert.equal(toStr(new Date(2014, 8, 22, 10, 10)), '09/22/2014');
+        assert.equal(toStr(new Date(2014, 8, 22, 15, 50)), '09/22/2014');
+        assert.equal(toStr(new Date(2014, 0, 1, 12, 32)), '01/01/2014');
+    });
+
+    it('Must convert to TimePicker toStr', function () {
+        assert.equal(toTimeStr(new Date(2014, 8, 22, 10, 10)), '10:10');
+        assert.equal(toTimeStr(new Date(2014, 8, 22, 15, 50)), '15:50');
+        assert.equal(toTimeStr(new Date(2014, 0, 1, 12, 32)), '12:32');
     });
 
     it('Must convert FROM DatePicker toStr', function () {

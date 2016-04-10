@@ -230,6 +230,11 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
         /* Drag n drop                                              */
         /************************************************************/
 
+        SummaryVM.prototype.onSummaryHeaderClick = function (groupKey, ev) {
+            $('.summaryRow' + groupKey.replace(' ', '')).fadeToggle(500);
+            $(ev.currentTarget.childNodes[1]).toggleClass('rotate90')
+        }
+
         SummaryVM.prototype.onSummaryRowDragOver = function (entry, ev) {
             // No-op - needed for Chrome to auto create nice drag icon
         };

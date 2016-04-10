@@ -11,14 +11,20 @@ define([],
         var millisInADay = 86400000;
         var daysInWeek = 6;
 
-        function toDatetimePickerFormat(jsDate) {
+        function toDatePickerFormat(jsDate) {
             if (!jsDate instanceof Date) {
                 throw 'Expecting JS Date. Got: ' + jsDate;
             }
             return prefixZero(jsDate.getMonth() + 1) + '/' +
                 prefixZero(jsDate.getDate()) + '/' +
-                jsDate.getFullYear() + ' ' +
-                prefixZero(jsDate.getHours()) + ':' +
+                jsDate.getFullYear();
+        }
+
+        function toTimePickerFormat(jsDate) {
+            if (!jsDate instanceof Date) {
+                throw 'Expecting JS Date. Got: ' + jsDate;
+            }
+            return prefixZero(jsDate.getHours()) + ':' +
                 prefixZero(jsDate.getMinutes());
         }
 
@@ -156,10 +162,13 @@ define([],
         return {
             'niceDate': niceDate,
             'niceLocaleDate': niceLocaleDate,
-            'toDatetimePickerFormat': toDatetimePickerFormat,
+            'toDatePickerFormat': toDatePickerFormat,
+            'toTimePickerFormat': toTimePickerFormat,
             'fromDatetimePickerFormat': fromDatetimePickerFormat,
             'enableJSONDateHandling': enableJSONDateHandling,
-            'DATETIME_PICKER_FORMAT': 'm/d/Y H:i',
+            'DATE_PICKER_FORMAT': 'm/d/Y',
+            'TIME_PICKER_FORMAT'    : 'H:i',
+            'DEFAULT_TIME_VALUE'    : '09:00',
             'MILLIS_IN_A_DAY'       : millisInADay,
             'isYesterdayOrBefore'   : isYesterdayOrBefore,
             'startOfToday'          : startOfToday,

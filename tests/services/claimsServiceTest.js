@@ -3,6 +3,7 @@ var mongoUtils = require("./../../server/mongoUtils.js");
 var claimsService = require("./../../server/services/claimsService.js");
 var contactService = require('./../../server/services/contactService.js');
 var Claim = require("./../../server/model/claim.js");
+var Contact = require("./../../server/model/contact.js");
 var Bill = require("./../../server/model/bill.js");
 var BillingItem = require("./../../server/model/billingItem.js");
 var BillingStatus = require("./../../server/model/billingStatus.js");
@@ -58,6 +59,7 @@ describe('ClaimsService', function () {
             assert.ok(claim._id);
             assert.ok(claim.owner);
             testClaim._id = claim._id;
+            testClaim.owner = claim.owner;
 
             // Contact ref
             assert.ok(claim.insuredContactId);
@@ -249,8 +251,29 @@ describe('ClaimsService', function () {
 
             var entry = data.data[0];
             assert.equal(entry.state, testClaim.state);
-            assert.equal(entry.fileNum, 'None');
+            assert.equal(entry.fileNum, '-');
             assert.equal(entry.insuranceCoFileNum, testClaim.insuranceCoFileNum);
+            done();
+        };
+        claimsService.searchClaimEntries(req, res);
+    });
+
+    it('Search through claim entries - pick up contacts', function (done) {
+        var req = {headers: {userid: 'TestUser'}};
+        var res = {};
+        req.body = {query: {"claimId": testClaim._id},
+            options: {"sort": ["state", "asc"]}};
+
+        res.json = function (data) {
+            assert(data);
+            assert.equal(data.status, 'Success');
+
+            var entry = data.data[0];
+            assert.equal(entry.state, testClaim.state);
+            assert.equal(entry.fileNum, '-');
+            assert.equal(entry.insuranceCoFileNum, testClaim.insuranceCoFileNum);
+            assert.ok(entry.insuredContact);
+            assert.equal(entry.insuredContact.name, 'TestFist');
             done();
         };
         claimsService.searchClaimEntries(req, res);

@@ -24,6 +24,16 @@ div {
 
 /**** Width Dimensions ****/
 
+.narrowest {
+    width: 60px;
+    min-width: 60px;
+}
+
+.narrower {
+    width: 80px;
+    min-width: 80px;
+}
+
 .narrow {
     width: 100px;
     min-width: 100px;
@@ -359,6 +369,22 @@ div {
 /**********************************************************/
 /**** Task Summary panel ****/
 /**********************************************************/
+
+.rotate90 {
+    -moz-transition: 0.5s ease-in-out;
+    -webkit-transition: 0.5s ease-in-out;
+    transition: 0.5s ease-in-out;
+
+    -ms-transform-origin: 50% 50%;
+    -webkit-transform-origin: 50% 50%;
+    -moz-transform-origin: 50% 50%;
+    transform-origin: 50% 50%;
+    transform: rotate(-90deg);
+    -moz-transform: rotate(-90deg);
+    -webkit-transform: rotate(-90deg);
+    -o-transform: rotate(-90deg);
+    -ms-transform: rotate(-90deg);
+}
 
 /* First column color */
 .summaryRow td:nth-child(2) {
