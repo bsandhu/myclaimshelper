@@ -12,13 +12,13 @@
         <form class="form-horizontal" role="form">
             <div class="form-group">
                 <label for="claimEntry-dueDate" class="col-sm-2 control-label">Due on</label>
-                <div class="col-sm-4">
+                <div class="col-sm-10 inline">
                     <input type="text" class="form-control normal input-sm" id="claimEntry-dueDate"
                            data-bind="
                            disable: isClosed,
                            datetimePicker: {
                               datepicker: true,
-                              timepicker: true,
+                              timepicker: false,
                               dateValue: myDueDate}"/></div>
             </div>
 

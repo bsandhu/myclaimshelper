@@ -24,6 +24,16 @@ div {
 
 /**** Width Dimensions ****/
 
+.narrowest {
+    width: 60px;
+    min-width: 60px;
+}
+
+.narrower {
+    width: 80px;
+    min-width: 80px;
+}
+
 .narrow {
     width: 100px;
     min-width: 100px;
