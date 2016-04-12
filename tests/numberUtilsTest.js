@@ -1,5 +1,5 @@
 var assert = require('assert');
-var numberUtils = require('./../server/shared/numberUtils.js');
+var numberUtils = require('./../server/shared/NumberUtils.js');
 
 describe('NumberUtils', function () {
 
