@@ -15,8 +15,16 @@ define([],
             return '$' + Number(ccy).toLocaleString('en-US');
         }
 
+        function nice(ccy){
+            if (Number(ccy) === NaN) {
+                return '';
+            }
+            return Number(ccy).toLocaleString('en-US');
+        }
+
         return {
             'niceCCY': niceCCY,
+            'nice': nice
         }
     }
 )

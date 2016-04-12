@@ -14,7 +14,7 @@ define(['./billingStatus'], function (BillingStatus) {
         this.claimEntryId = null;
 
         // Overlap with ClaimEntry - so we can reproduce bill accurately
-        this.entryDate = null;
+        this.entryDate = null; // Is the DueDate of the ClaimEntry
         this.tag = null;
         this.summary = null;
 

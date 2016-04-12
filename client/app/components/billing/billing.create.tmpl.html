@@ -204,8 +204,8 @@
             <!-- /ko -->
             <tr>
                 <td colspan="3"><strong>Sub-total</strong></td>
-                <td><strong data-bind="text: bill().totalTime() + ' Hrs'"></strong></td>
-                <td><strong data-bind="text: bill().totalMileage() + ' Miles'"></strong></td>
+                <td><strong data-bind="text: NumberUtils.nice(bill().totalTime()) + ' Hrs'"></strong></td>
+                <td><strong data-bind="text: NumberUtils.nice(bill().totalMileage()) + ' Miles'"></strong></td>
                 <td><strong data-bind="text: NumberUtils.niceCCY(bill().totalExpenseAmount())"></strong></td>
                 <td colspan="2"></td>
             </tr>

@@ -26,7 +26,9 @@
         <td colspan="2"></td>
         <td>
             <strong>Total Hours:</strong>
-            <span data-bind="text: bill().totalTime() + ' Hrs'"></span>
+            <span data-bind="text: NumberUtils.nice(bill().totalTime()) + ' hrs x '"></span>
+            <span data-bind="text: '$' + Number(billingProfile.timeRate) + '/hr = '"></span>
+            <span data-bind="text: NumberUtils.niceCCY(bill().totalTimeInDollars())"></span>
         </td>
         <td colspan="4"></td>
     </tr>
@@ -34,7 +36,9 @@
         <td colspan="2"></td>
         <td>
             <strong>Total Mileage:</strong>
-            <span data-bind="text: bill().totalMileage() + ' Miles'"></span>
+            <span data-bind="text: NumberUtils.nice(bill().totalMileage()) + ' Miles x '"></span>
+            <span data-bind="text: '$' + Number(billingProfile.distanceRate) + '/mile = '"></span>
+            <span data-bind="text: NumberUtils.niceCCY(bill().totalMileageInDollars())"></span>
         </td>
         <td colspan="4"></td>
     </tr>
@@ -42,7 +46,7 @@
         <td colspan="2"></td>
         <td>
             <strong>Total Expenses:</strong>
-            <span data-bind="text: '$' + bill().totalExpenseAmount()"></span>
+            <span data-bind="text: NumberUtils.niceCCY(bill().totalExpenseAmount())"></span>
         </td>
         <td colspan="4"></td>
     </tr>
