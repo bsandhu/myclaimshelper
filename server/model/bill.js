@@ -31,6 +31,9 @@ define(['./billingStatus'], function (BillingStatus) {
         this.totalMileage = 0;
         this.totalExpenseAmount = 0;
 
+        this.totalTimeInDollars = 0;
+        this.totalMileageInDollars = 0;
+
         this.status = BillingStatus.NOT_SUBMITTED;
 
         // Note:

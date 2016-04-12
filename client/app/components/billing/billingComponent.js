@@ -251,6 +251,10 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox', 'underscore',
                     _this.calcAll();
                 })
                 .then(function checkForNewEligibleTasks() {
+                    if (!_this.isBillEditable()){
+                        return;
+                        console.log('Bill in Submitted/Paid. Skip refresh')
+                    }
                     _this.getEligibleBillingItemsForClaim(evData.claimId)
                         .done(function (allEligibleItems) {
 
@@ -408,6 +412,8 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox', 'underscore',
                 .done(function (resp) {
                     console.log('Loaded claim entries' + JSON.prettyPrint(resp.data));
                     var claimEntries = resp.data;
+                    // Sort
+                    claimEntries = _.sortBy(claimEntries, 'dueDate');
                     var billingItems = [];
 
                     $.each(claimEntries, function (index, entry) {
@@ -421,7 +427,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox', 'underscore',
                             entry.billingItem.tag = entry.tag;
                             entry.billingItem.summary = entry.summary;
 
-                            // Capture a sanpshot of rates - they might change post bill submission
+                            // Capture a snapshot of rates - they might change post bill submission
                             this.refreshRatesOnBillingItem(entry.billingItem);
                             entry.billingItem.removeOrUndoLabel = 'Remove';
 
@@ -479,6 +485,9 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox', 'underscore',
             bill.totalTime(totalTime);
             bill.totalMileage(totalMileage);
             bill.totalExpenseAmount(totalExpense);
+
+            bill.totalTimeInDollars(N(totalTime) * N(this.billingProfile.timeRate));
+            bill.totalMileageInDollars(N(totalMileage) * N(this.billingProfile.distanceRate));
         };
 
         BillingVM.prototype.calcTax = function () {
@@ -526,6 +535,9 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox', 'underscore',
                     if (response.data[0]) {
                         var billJS = response.data[0];
                         billJS.billRecipient = billJS.billRecipient || new Contact();
+
+                        // Sort
+                        billJS.billingItems = _.sortBy(billJS.billingItems, 'entryDate');
 
                         _.each(billJS.billingItems, function (billingItem) {
                             billingItem.removeOrUndoLabel = 'Remove';
@@ -660,7 +672,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox', 'underscore',
         };
 
         BillingVM.prototype.printBill = function () {
-            // Poulate the print template with AMD content
+            // Populate the print template with AMD content
             $('#print-template').html(printHtml);
             var container = document.createElement("div");
             var _this = this;
@@ -684,7 +696,6 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox', 'underscore',
             }
 
             claimLoaded.then(function(){
-
                 // Split out line item for each type
                 _.each(KOMap.toJS(_this.bill().billingItems()), function (item, index) {
                     if (item.mileage != 0) {
