@@ -20,9 +20,9 @@ describe('NumberUtils', function () {
         assert.equal(numberUtils.nice(100.25), '100.25');
         assert.equal(numberUtils.nice(100.257), '100.26');
         assert.equal(numberUtils.nice(100.2575), '100.26');
-        // Doesn't work on Node / Webkit ?
-        // assert.equal(numberUtils.nice(2.4000000000000004), '2.4');
-        // assert.equal(numberUtils.nice(.4000000000000004), '0.4');
-        // assert.equal(numberUtils.nice(.4254), '0.425');
+        assert.equal(numberUtils.nice(2.4000000000000004), '2.4');
+        assert.equal(numberUtils.nice(.4000000000000004), '0.4');
+        assert.equal(numberUtils.nice(.415450000000004), '0.42');
+        assert.equal(numberUtils.nice(.4254), '0.43');
     });
 });
