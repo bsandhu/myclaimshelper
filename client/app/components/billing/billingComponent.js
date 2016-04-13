@@ -1,11 +1,12 @@
 define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox', 'underscore',
-        'shared/dateUtils', 'shared/NumberUtils', 'app/utils/ajaxUtils', 'app/utils/events', 'app/utils/consts', 'app/utils/router',
+        'shared/dateUtils', 'shared/NumberUtils', 'shared/objectUtils', 'app/utils/ajaxUtils', 'app/utils/events', 'app/utils/consts', 'app/utils/router',
         'app/utils/session', 'app/utils/sessionKeys',
         'model/bill', 'model/billingItem', 'model/billingStatus', 'model/contact',
         'text!app/components/billing/billing.tmpl.html',
         'text!app/components/billing/billing.print.tmpl.html'
     ],
-    function ($, ko, KOMap, amplify, bootbox, _, DateUtils, NumberUtils, ajaxUtils, Events, Consts, router, Session, SessionKeys, Bill, BillingItem, BillingStatus, Contact, viewHtml, printHtml) {
+    function ($, ko, KOMap, amplify, bootbox, _, DateUtils, NumberUtils, ObjectUtils, ajaxUtils, Events,
+              Consts, router, Session, SessionKeys, Bill, BillingItem, BillingStatus, Contact, viewHtml, printHtml) {
 
         function BillingVM() {
             console.log('Init BillingVM.');
@@ -15,6 +16,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox', 'underscore',
             this.DateUtils = DateUtils;
             this.BillingStatus = BillingStatus;
             this.NumberUtils = NumberUtils;
+            this.ObjectUtils = ObjectUtils;
             this.router = router;
             this.billingStatus = KOMap.fromJS(BillingStatus);
             this.userProfile = undefined;

@@ -85,11 +85,6 @@
                                 </span>
                             </span>
                         </li>
-                        <a data-bind="click: $parent.onEntryStatusUpdate.bind($parent, $parent.States.TODO)"
-                           class="list-group-item" href="#">
-                            <span class="glyphicon glyphicon-inbox"></span>
-                            <span class="leftMargin">To Do</span>
-                        </a>
                         <a data-bind="click: $parent.onEntryStatusUpdate.bind($parent, $parent.States.Complete)"
                            href="#" class="list-group-item">
                             <span class="glyphicon glyphicon-ok"></span>
@@ -99,6 +94,11 @@
                            href="#" class="list-group-item">
                             <span class="glyphicon glyphicon-time"></span>
                             <span class="leftMargin">Pending</span>
+                        </a>
+                        <a data-bind="click: $parent.onEntryStatusUpdate.bind($parent, $parent.States.TODO)"
+                           class="list-group-item" href="#">
+                            <span class="glyphicon glyphicon-inbox"></span>
+                            <span class="leftMargin">To Do</span>
                         </a>
                         <a data-bind="click: $parent.onEntryStatusUpdate.bind($parent, $parent.States.None)"
                            href="#" class="list-group-item">
