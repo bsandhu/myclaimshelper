@@ -24,21 +24,18 @@
         <span>&nbsp;</span>
     </a>
 
-    <a data-bind="click: onUpdate.bind($data, States.TODO)"
-       class="list-group-item glyphicon glyphicon-inbox" href="#">
-        To Do
-    </a>
-
     <a data-bind="click: onUpdate.bind($data, States.Complete)"
        href="#" class="list-group-item glyphicon glyphicon-ok">
         Complete
     </a>
-
     <a data-bind="click: onUpdate.bind($data, States.Pending)"
        href="#" class="list-group-item glyphicon glyphicon-time">
         Pending
     </a>
-
+    <a data-bind="click: onUpdate.bind($data, States.TODO)"
+       class="list-group-item glyphicon glyphicon-inbox" href="#">
+        To Do
+    </a>
     <a data-bind="click: onUpdate.bind($data, States.None)"
        href="#" class="list-group-item glyphicon glyphicon-unchecked">
         Clear

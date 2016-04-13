@@ -20,8 +20,14 @@ define([],
             }
         }
 
+        function capitalize(expr) {
+            expr = expr || '';
+            expr = String(expr);
+            return expr.charAt(0).toUpperCase() + expr.substr(1);
+        }
         return {
             'nullSafe': nullsafe,
+            'capitalize': capitalize
         }
     }
 )
