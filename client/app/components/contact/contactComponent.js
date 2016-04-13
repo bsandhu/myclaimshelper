@@ -1,6 +1,6 @@
-define(['knockout', 'text!app/components/contact/contactComponent.tmpl.html', 'model/contact'],
+define(['knockout', 'maskedInput', 'text!app/components/contact/contactComponent.tmpl.html', 'model/contact'],
 
-    function (ko, viewHtml, Contact) {
+    function (ko, maskedInput, viewHtml, Contact) {
         'use strict';
 
         function ContactComponentVM(params) {
@@ -22,6 +22,10 @@ define(['knockout', 'text!app/components/contact/contactComponent.tmpl.html', 'm
 
             this.isBusinessOptionApplicable = ko.observable();
             this.setupBusinessTypeOption(params.isBusinessOptionApplicable);
+
+            $().ready(function maskTelFields(){
+                $('input[type=tel]').mask("999-999-9999");
+            });
         }
 
         ContactComponentVM.prototype.setupBusinessTypeOption = function(bizTypeApplicable) {
