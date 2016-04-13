@@ -29,7 +29,8 @@ require.config({
         'underscore': 'lib/underscore.min',
         'chartjs': 'lib/Chart',
         'Auth0Lock': 'lib/lock-8.2.min',
-        'bootstrapTableCustom': 'lib/bootstrap.table.customization'
+        'bootstrapTableCustom': 'lib/bootstrap.table.customization',
+        'maskedInput': 'lib/jquery.maskedinput.min'
     },
     shim: {
         'Auth0Lock': {
