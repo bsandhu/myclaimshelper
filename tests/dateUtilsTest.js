@@ -84,7 +84,9 @@ describe('DateUtils', function () {
 
     it('startOfToday', function () {
         assert.ok(dateUtils.startOfToday() instanceof Date);
-        assert.ok(dateUtils.startOfToday().toLocaleString().indexOf('12:00:00 AM') > 0);
+        assert.equal(dateUtils.startOfToday().getHours(), 0);
+        assert.equal(dateUtils.startOfToday().getMinutes(), 0);
+        assert.equal(dateUtils.startOfToday().getSeconds(), 0);
     })
 
 });
