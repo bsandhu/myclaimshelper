@@ -3,10 +3,11 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox', 'underscore',
         'app/utils/session', 'app/utils/sessionKeys',
         'model/bill', 'model/billingItem', 'model/billingStatus', 'model/contact',
         'text!app/components/billing/billing.tmpl.html',
-        'text!app/components/billing/billing.print.tmpl.html'
+        'text!app/components/billing/billing.print.tmpl.html',
+        'app/utils/audit'
     ],
     function ($, ko, KOMap, amplify, bootbox, _, DateUtils, NumberUtils, ObjectUtils, ajaxUtils, Events,
-              Consts, router, Session, SessionKeys, Bill, BillingItem, BillingStatus, Contact, viewHtml, printHtml) {
+              Consts, router, Session, SessionKeys, Bill, BillingItem, BillingStatus, Contact, viewHtml, printHtml, Audit) {
 
         function BillingVM() {
             console.log('Init BillingVM.');
@@ -297,6 +298,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox', 'underscore',
                 })
                 .then(function () {
                     _this.mode(Consts.BILLING_TAB_VIEW_MODE);
+                    Audit.info('ViewBill', {_id: _this.bill()._id()});
                 })
         }
 
@@ -751,6 +753,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox', 'underscore',
                     },
                     container
                 );
+                Audit.info('PrintBill', {_id: _this.bill()._id()});
             });
         };
 

@@ -2,8 +2,10 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore', 'bootbox',
         'model/claim', 'model/claimEntry', 'model/contact', 'model/states',
         'app/utils/ajaxUtils', 'app/utils/events', 'app/utils/consts', 'app/utils/router',
         'app/utils/sessionKeys', 'app/utils/session', 'app/components/contact/contactClient',
-        'shared/dateUtils', 'text!app/components/claim/claim.tmpl.html'],
-    function ($, ko, KOMap, amplify, _, bootbox, Claim, ClaimEntry, Contact, States, ajaxUtils, Events, Consts, Router, SessionKeys, Session, ContactClient, DateUtils, viewHtml) {
+        'shared/dateUtils', 'text!app/components/claim/claim.tmpl.html', 'app/utils/audit'],
+    function ($, ko, KOMap, amplify, _, bootbox, Claim, ClaimEntry, Contact, States, ajaxUtils,
+              Events, Consts, Router, SessionKeys, Session, ContactClient, DateUtils, viewHtml,
+              Audit) {
 
         function ClaimVM() {
             console.log('Init ClaimVM');
@@ -301,6 +303,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore', 'bootbox',
 
                     this.storeInSession(this.claim()._id(), KOMap.toJS(this.claim()));
                     this.inEditMode(false);
+                    Audit.info('SavedClaim', {_id: this.claim()._id(), fileNum: this.claim().fileNum()});
                 }.bind(this));
         };
 
@@ -310,6 +313,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore', 'bootbox',
                     console.log('Loaded claim ' + JSON.stringify(resp.data).substr(0, 100));
                     KOMap.fromJS(resp.data, {}, this.claim);
                     this.storeInSession(claimId, resp.data);
+                    Audit.info('ViewClaim', {_id: this.claim()._id(), fileNum: this.claim().fileNum()});
                 }.bind(this));
         };
 

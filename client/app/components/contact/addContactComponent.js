@@ -1,7 +1,8 @@
 define(['knockout', 'KOMap', 'text!app/components/contact/addContactComponent.tmpl.html', 'model/contact',
-        'app/utils/ajaxUtils', 'amplify', 'app/utils/events', 'app/components/contact/contactClient'],
+        'app/utils/ajaxUtils', 'amplify', 'app/utils/events', 'app/components/contact/contactClient',
+        'app/utils/audit'],
 
-    function (ko, KOMap, viewHtml, Contact, AjaxUtils, amplify, Events, ContactClient) {
+    function (ko, KOMap, viewHtml, Contact, AjaxUtils, amplify, Events, ContactClient, Audit) {
         'use strict';
 
         function AddContactComponentVM(params) {
@@ -23,12 +24,14 @@ define(['knockout', 'KOMap', 'text!app/components/contact/addContactComponent.tm
             console.log('AddContactComponentVM - SHOW_CONTACT ev ' + JSON.stringify(evData));
             this.popupTitle('Contact details');
             this.loadContact(evData.contactId);
+            Audit.info('ViewContact', {_id: evData.contactId});
         };
 
         AddContactComponentVM.prototype.onAddContact = function () {
             console.log('AddContactComponentVM - ADD_CONTACT ev ');
             this.popupTitle('Add new contact');
             this.addContact();
+            Audit.info('AddContact');
         };
 
         AddContactComponentVM.prototype.addContact = function () {

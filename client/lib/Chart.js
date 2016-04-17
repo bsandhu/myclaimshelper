@@ -859,9 +859,13 @@
             return h;
         },
         getStyle = helpers.getStyle = function(el, property) {
-            return el.currentStyle ?
-                el.currentStyle[property] :
-                document.defaultView.getComputedStyle(el, null).getPropertyValue(property);
+            try {
+                return el.currentStyle ?
+                    el.currentStyle[property] :
+                    document.defaultView.getComputedStyle(el, null).getPropertyValue(property);
+            } catch (e) {
+                return 0;
+            }
         },
         getMaximumSize = helpers.getMaximumSize = helpers.getMaximumWidth, // legacy support
         retinaScale = helpers.retinaScale = function(chart) {
