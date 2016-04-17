@@ -94,6 +94,7 @@ describe('ClaimsService', function () {
             assert.equal(data.data.billingItem.mileage, 100);
             assert.equal(data.data.billingItem.time, 20);
             assert.ok(data.data.claimId);
+            assert.equal(data.data.displayOrder, data.data._id);
             done();
         };
         claimsService.saveOrUpdateClaimEntry(req, res);

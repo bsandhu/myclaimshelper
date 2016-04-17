@@ -49,7 +49,7 @@ define(['underscore', 'jquery', 'knockout', 'KOMap', 'amplify',
                 entryObjWithObserAttrs.billingItem = ko.observable(KOMap.fromJS(new BillingItem()));
             }
             entryObjWithObserAttrs.tag([tag || 'other']);
-            entryObjWithObserAttrs.dueDate(new Date());
+            entryObjWithObserAttrs.dueDate(DateUtils.startOfToday());
             entryObjWithObserAttrs.entryDate(new Date());
             entryObjWithObserAttrs.updateDate(new Date());
             entryObjWithObserAttrs.state(States.TODO);

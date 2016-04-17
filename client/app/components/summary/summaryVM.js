@@ -1,7 +1,7 @@
-define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEntry', 'model/states', 'app/utils/events',
+define(['jquery', 'knockout', 'underscore', 'KOMap', 'amplify', 'model/claim', 'model/claimEntry', 'model/states', 'app/utils/events',
         'app/utils/router', 'shared/dateUtils', 'app/utils/ajaxUtils',
         'text!app/components/summary/summary.tmpl.html'],
-    function ($, ko, KOMap, amplify, Claim, ClaimEntry, States, Events, Router, DateUtils, AjaxUtils, summaryView) {
+    function ($, ko, _, KOMap, amplify, Claim, ClaimEntry, States, Events, Router, DateUtils, AjaxUtils, summaryView) {
         'use strict';
 
         function SummaryVM() {
@@ -23,6 +23,12 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
             // Entry which was dropped on to
             // The drag ev carries the Entry being moved
             this.summaryDropTargetEntryId = ko.observable();
+            this.summaryDropSourceEntryId = ko.observable();
+
+            this.summaryDropSourceGroup = ko.observable();
+            this.summaryDropTargetGroup = ko.observable();
+
+            this.summaryDropSourceDOMElement = undefined;
             this.summaryDropTargetDOMElement = undefined;
 
             this.setupGroupByListener();
@@ -51,15 +57,15 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
                         return date1InMillis - date2InMillis;
                     }
                 },
-                {description: 'Date Created',
-                    group: 'entryDate',
-                    groupingFn: this.getEntryDateGroupName,
-                    sortFn: function (entry1, entry2) {
-                        var date1InMillis = entry1.entryDate ? entry1.entryDate().getTime() : '';
-                        var date2InMillis = entry2.entryDate ? entry2.entryDate().getTime() : '';
-                        return date1InMillis - date2InMillis;
-                    }
-                },
+                // {description: 'Date Created',
+                //     group: 'entryDate',
+                //     groupingFn: this.getEntryDateGroupName,
+                //     sortFn: function (entry1, entry2) {
+                //         var date1InMillis = entry1.entryDate ? entry1.entryDate().getTime() : '';
+                //         var date2InMillis = entry2.entryDate ? entry2.entryDate().getTime() : '';
+                //         return date1InMillis - date2InMillis;
+                //     }
+                // },
                 {description: 'Task Status',
                     group: 'state',
                     groupingFn: this.getStatusGroupName,
@@ -83,6 +89,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
         };
 
         SummaryVM.prototype.setupGrouping = function () {
+            // {'Over Due':[...], 'Today': [...]}
             this.claimEntriesGrouped = ko.computed(function () {
                 var dimensionMetaData = this.groupBy();
                 var group = dimensionMetaData.group;
@@ -101,6 +108,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
                 return groups;
             }, this);
 
+            // ['Over Due', 'Today']
             this.arrangeByKeys = ko.computed(function () {
                 var keys = [];
                 $.each(this.claimEntriesGrouped(), function (group) {
@@ -162,7 +170,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
 
         SummaryVM.prototype.setupFilterVisibility = function () {
             this.showDueDateDaysFilter = ko.computed(function () {
-                return this.groupBy().group === 'dueDate' && this.dueDateFilter().description === 'within next';
+                return this.dueDateFilter().description === 'within next';
             }, this);
         };
 
@@ -206,18 +214,18 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
             var postReq = { query: {isClosed: false,
                                    '$or' : [
                                         {'$and': [{dueDate: this.dueDateFilter().query},
-                                                 {state: this.statusFilter().query}]},
-                                        {'$and': [ { dueDate: {'$lte': DateUtils.startOfToday().getTime()}},
-                                                   { $or: [{state: {'$eq': States.TODO}}, {state: {'$eq': States.PENDING}}]} ]}
+                                                  {state: this.statusFilter().query}]},
+                                         {'$and': [ { dueDate: {'$lte': DateUtils.startOfToday().getTime()}},
+                                                   { $or: [{state: {'$eq': States.TODO}}, {state: {'$eq': States.Pending}}]} ]}
                                     ]},
-                            options: {sort: [[this.groupBy().group, 'asc']]}};
-            console.log('Searching for claim entries: ' + postReq);
+                            options: {sort: [['displayOrder', 'asc']]}};
+            console.log('Searching for claim entries: ' + JSON.stringify(postReq));
 
             AjaxUtils.post(
                 '/claimEntry/search',
                 JSON.stringify(postReq),
                 function onSuccess(res) {
-                    console.log(JSON.stringify(res.data));
+                    console.log(JSON.prettyPrint(res.data));
 
                     var tempArray = $.map(res.data, function (claimEntry) {
                         return KOMap.fromJS(claimEntry, {}, new ClaimEntry());
@@ -230,56 +238,141 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
         /* Drag n drop                                              */
         /************************************************************/
 
+        SummaryVM.prototype.onAfterRender = function () {
+            // Restore collapse state
+            var settings = amplify.store.sessionStorage('SUMMARY_GROUPS_VISIBILITY') || {};
+            _.mapObject(settings, function(isCollapsed, rowClass){
+                if (isCollapsed) {
+                    $(rowClass).fadeOut(1);
+                    $(rowClass + 'Arrow').addClass('rotate90');
+                } else {
+                    $(rowClass).fadeIn(1);
+                }
+            });
+        }
+
         SummaryVM.prototype.onSummaryHeaderClick = function (groupKey, ev) {
-            $('.summaryRow' + groupKey.replace(' ', '')).fadeToggle(500);
-            $(ev.currentTarget.childNodes[1]).toggleClass('rotate90')
+            var rowsByClass = '.summaryRow' + groupKey.replace(' ', '');
+            var arrowIconNode = $(ev.currentTarget.childNodes[1]);
+
+            // Row visibility/icon rotation
+            $(rowsByClass).fadeToggle(500);
+            arrowIconNode.toggleClass('rotate90')
+
+            // Store is session so we can 'remember'
+            var settings = amplify.store.sessionStorage('SUMMARY_GROUPS_VISIBILITY') || {};
+            settings[rowsByClass] = arrowIconNode.hasClass('rotate90');
+            amplify.store.sessionStorage('SUMMARY_GROUPS_VISIBILITY', settings);
         }
 
         SummaryVM.prototype.onSummaryRowDragOver = function (entry, ev) {
             // No-op - needed for Chrome to auto create nice drag icon
         };
 
-        SummaryVM.prototype.onSummaryRowDragEnd = function (entry, ev) {
-            console.log('Drag end, Source: ' + JSON.stringify(KOMap.toJS(entry)));
-            var rowToMove = $(ev.currentTarget).detach();
-            $(this.summaryDropTargetDOMElement).after(rowToMove);
-            $('.summaryRow').removeClass('summaryRowDragOver');
-            this.updateSrcDimensionWithDropTargetValue(entry);
-        };
-
+        /**
+         * Fired when the user starts dragging an element or text selection
+         */
+        SummaryVM.prototype.onSummaryRowDragStart = function (entry, ev) {
+            this.summaryDropSourceEntryId(ev.currentTarget.dataset.entryid);
+            this.summaryDropSourceGroup(ev.currentTarget.dataset.group);
+            this.summaryDropSourceDOMElement = ev.currentTarget;
+            console.log('Drag start: ' + this.summaryDropSourceEntryId() + ' ,' + this.summaryDropSourceGroup());
+            return true;
+        }
+        
+        /**
+         * Fired when a dragged element or text selection enters a valid drop target
+         */
         SummaryVM.prototype.onSummaryRowDragEnter = function (entry, ev) {
             console.log('Drag enter. Entry Id: ' + ev.currentTarget.dataset.entryid);
 
+            // Start tracking the destination
+            // Source entry is provided by KO ev binding via param
             this.summaryDropTargetEntryId(ev.currentTarget.dataset.entryid);
+            this.summaryDropTargetGroup(ev.currentTarget.dataset.group);
             this.summaryDropTargetDOMElement = ev.currentTarget;
             $(ev.currentTarget).addClass('summaryRowDragOver');
         };
 
+        /**
+         * Fired when a dragged element or text selection leaves a valid drop target.
+         */
         SummaryVM.prototype.onSummaryRowDragLeave = function (entry, ev) {
-            console.log('Drag leave. Entry Id: ' + ev.currentTarget.dataset.entryid);
-
-            this.summaryDropTargetEntryId(ev.currentTarget.dataset.entryid);
-            this.summaryDropTargetDOMElement = ev.currentTarget;
             $(ev.currentTarget).removeClass('summaryRowDragOver');
         };
 
-        SummaryVM.prototype.updateSrcDimensionWithDropTargetValue = function (sourceEntry) {
+        /**
+         * Fired when a drag operation is being ended
+         */
+        SummaryVM.prototype.onSummaryRowDragEnd = function (entry, ev) {
+            console.log('Drag end, Source: ' + JSON.stringify(KOMap.toJS(entry)));
+
+            // Move the source row to be after the target row DOM element
+            var sourceRow = $(this.summaryDropSourceDOMElement).fadeOut('slow').detach();
+            $(this.summaryDropTargetDOMElement).after(sourceRow);
+            sourceRow.fadeIn('slow');
+            $('.summaryRow').removeClass('summaryRowDragOver');
+
+            // Ajax update
+            this.updateSrcDimensionWithDropTargetValue();
+        };
+
+        SummaryVM.prototype.updateSrcDimensionWithDropTargetValue = function () {
             // This is what we are dropping on to
-            // Copy the 'Dimension' value for this entry
             var targetEntry = $.grep(this.claimEntries(),
                 function findMatch(entry) {
                     return entry._id() === this.summaryDropTargetEntryId();
+                }.bind(this))[0];
+
+            // This is what is being dragged
+            var sourceEntry = $.grep(this.claimEntries(),
+                function findMatch(entry) {
+                    return entry._id() === this.summaryDropSourceEntryId();
                 }.bind(this))[0];
 
             var entryIdToUpdate = sourceEntry._id();
             var dimensionToUpdate = this.groupBy().group;
             var targetDimensionVal = targetEntry[dimensionToUpdate] ? targetEntry[dimensionToUpdate]() : undefined;
 
-            var dimensionLabel = this.groupBy().description;
-            var successMsg = 'Updated ' + dimensionLabel + ' to ' + this.DateUtils.niceDate(targetDimensionVal);
+            // Target entry
+            // -------  <--- Moving source here
+            // Target + 1 entry
+            // ------
+            // ------
+            // Source entry
+            //
+            // Adjust the new displayOrder of the sourceEntry to be between Target and TargetPlus1
+            // So the order is maintained
+            var sourceEntryDisplayOrder = sourceEntry.displayOrder();
+            var targetEntryDisplayOrder = targetEntry.displayOrder();
 
-            var attrsToUpdate = {};
-            attrsToUpdate[dimensionToUpdate] = targetDimensionVal;
+            var targetPlus1Entry = $(this.summaryDropSourceDOMElement).next()[0];
+            // If dragged past the last row ... pretend that targetPlus1 is target + 100
+            var targetPlus1EntryDisplayOrder = targetPlus1Entry ? targetPlus1Entry.dataset.displayorder : targetEntryDisplayOrder + 100;
+
+            console.log('summaryDropSourceGroup: ' + this.summaryDropSourceGroup());
+            console.log('summaryDropTargetGroup: ' + this.summaryDropTargetGroup());
+            console.log('sourceEntryDisplayOrder: ' + sourceEntryDisplayOrder);
+            console.log('targetEntryDisplayOrder: ' + targetEntryDisplayOrder);
+            console.log('targetPlus1EntryDisplayOrder: ' + targetPlus1EntryDisplayOrder);
+
+            // Not dragged across groups - just re-order within same group
+            if (this.summaryDropTargetGroup() === this.summaryDropSourceGroup()) {
+                console.log('Drop within same group. Update display order');
+                var successMsg = 'Re-ordered';
+                var attrsToUpdate = {};
+                var N = Number
+                attrsToUpdate['displayOrder'] = (N(targetEntryDisplayOrder) + N(targetPlus1EntryDisplayOrder))/2;
+
+            } else {
+                // Dragged across groups
+                var dimensionLabel = this.groupBy().description;
+                var successMsg = 'Updated ' + dimensionLabel + ' to ' + this.DateUtils.niceDate(targetDimensionVal);
+
+                var attrsToUpdate = {};
+                attrsToUpdate[dimensionToUpdate] = targetDimensionVal;
+            }
+            console.log('Updating: ' + JSON.stringify(attrsToUpdate));
 
             AjaxUtils.post(
                 '/claimEntry/modify',
@@ -290,11 +383,16 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
                 function onSuccess(response) {
                     console.log('Saved ClaimEntry: ' + JSON.stringify(response));
                     amplify.publish(Events.SUCCESS_NOTIFICATION, {msg: successMsg});
-                    amplify.publish(Events.SAVED_CLAIM_ENTRY, {claimId: sourceEntry.claimId(), claimEntryId: entryIdToUpdate});
+                    //amplify.publish(Events.SAVED_CLAIM_ENTRY, {claimId: sourceEntry.claimId(), claimEntryId: entryIdToUpdate});
                     this.searchClaimEntries();
                 }.bind(this)
             );
         };
+
+        function reduceByTen(sourceValue, targetValue) {
+            targetValue = targetValue - 10;
+
+        }
 
         return {viewModel: SummaryVM, template: summaryView};
     }

@@ -13,6 +13,7 @@ config.ENV_PROD = 'PROD';
 config.port = process.env.PORT || 8080;
 config.env = process.env.ENV || 'LOCAL';
 config.disable_auth = process.env.DISABLE_AUTH || false;
+config.test_user = process.env.TEST_USER || 'testuser1';
 
 config.LOCAL.use_ssl = false;
 config.TEST.use_ssl = true;
@@ -82,6 +83,11 @@ config.dnssimple.password = 'starWAR$1';
 config.modulous = {};
 config.modulous.user = 'baljeet.mail@gmail.com';
 config.modulous.password = 'starWAR$1';
+
+// **** DigitalOcean ****
+config.digitalOcean = {};
+config.digitalOcean.user = 'baljeet.mail@gmail.com';
+config.digitalOcean.password = 'starWAR$1';
 
 
 module.exports = config;

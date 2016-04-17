@@ -1,10 +1,12 @@
-function cellStyleFn(value, row, index) {
+define(['shared/dateUtils'], function (DateUtils) {
 
-    // Apply darkening logic to the 'Age' column
-    if (String(value).endsWith('days')) {
-        return {
-            css: {'color': 'darkblue', 'font-weight': Number(row.age) * 20}
+    window.cellStyleFn = function (value, row, index) {
+        // Apply darkening logic to the 'Age' column
+        if (String(value).endsWith('days')) {
+            return {
+                css: {'color': 'darkblue', 'font-weight': Number(row.age) * 20}
+            }
         }
+        return {classes: ''}
     }
-    return {classes: ''}
-}
+});

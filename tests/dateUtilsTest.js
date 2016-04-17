@@ -21,6 +21,8 @@ describe('DateUtils', function () {
     });
 
     it('Must convert to TimePicker toStr', function () {
+        assert.equal(toTimeStr(new Date(2014, 8, 22, 8, 5)), '08:05');
+        assert.equal(toTimeStr(new Date(2014, 8, 22, 0, 0)), '00:00');
         assert.equal(toTimeStr(new Date(2014, 8, 22, 10, 10)), '10:10');
         assert.equal(toTimeStr(new Date(2014, 8, 22, 15, 50)), '15:50');
         assert.equal(toTimeStr(new Date(2014, 0, 1, 12, 32)), '12:32');
@@ -53,12 +55,19 @@ describe('DateUtils', function () {
     it('Make nice date', function () {
         assert.equal(dateUtils.niceDate(new Date(2016, 0, 2, 10, 10)), 'Jan 2  10:10');
         assert.equal(dateUtils.niceDate(new Date(2016, 8, 20, 10, 10)), 'Sep 20  10:10');
+        assert.equal(dateUtils.niceDate(new Date(2014, 8, 20, 10, 10)), 'Sep 20 2014 10:10');
         assert.equal(dateUtils.niceDate(undefined), 'None');
         assert.equal(dateUtils.niceDate(null), 'None');
         assert.equal(dateUtils.niceDate(new Date(0)), 'None');
 
         var today = dateUtils.niceDate(new Date());
         assert.ok(today.toLowerCase().search('today') >= 0);
+    });
+
+    it('Make nice date without time', function () {
+        assert.equal(dateUtils.niceDate(new Date(2015, 0, 2, 0, 0)), 'Jan 2 2015');
+        assert.equal(dateUtils.niceDate(new Date(2016, 0, 2, 0, 0)), 'Jan 2');
+        assert.equal(dateUtils.niceDate(new Date(2016, 8, 20, 0, 0)), 'Sep 20');
     });
 
     it('IsYesterdayOrBefore', function () {
@@ -72,5 +81,12 @@ describe('DateUtils', function () {
         assert.equal(dateUtils.niceLocaleDate(new Date(0)), 'None');
         assert.equal(dateUtils.niceLocaleDate(new Date(2015, 2, 1)), '3/1/2015');
     });
+
+    it('startOfToday', function () {
+        assert.ok(dateUtils.startOfToday() instanceof Date);
+        assert.equal(dateUtils.startOfToday().getHours(), 0);
+        assert.equal(dateUtils.startOfToday().getMinutes(), 0);
+        assert.equal(dateUtils.startOfToday().getSeconds(), 0);
+    })
 
 });

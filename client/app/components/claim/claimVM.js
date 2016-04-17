@@ -38,9 +38,9 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore', 'bootbox',
             jsClaimObject.insuredAttorneyContact = new Contact();
             jsClaimObject.insuredContact = new Contact();
             jsClaimObject.insuranceCoContact = new Contact();
-            jsClaimObject.dateOfLoss = new Date();
-            jsClaimObject.dateDue = new Date();
-            jsClaimObject.dateReceived = new Date();
+            jsClaimObject.dateOfLoss = DateUtils.startOfToday();
+            jsClaimObject.dateDue = DateUtils.startOfToday();
+            jsClaimObject.dateReceived = DateUtils.startOfToday();
 
             var claimObjWithObservableAttributes = KOMap.fromJS(jsClaimObject);
             return claimObjWithObservableAttributes;

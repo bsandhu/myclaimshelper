@@ -10,6 +10,7 @@ var States = require('../../model/states.js');
 var MailParser = require('./mailParser.js').MailParser;
 var saveToDB = require('../uploadService.js').saveToDB;
 var mongoUtils = require('../../mongoUtils.js');
+var DateUtils = require('../../shared/dateUtils.js');
 var Consts = require('./../../shared/consts.js');
 var broadcastNoHTTP = require('../../services/notificationService.js').broadcastNoHTTP;
 
@@ -198,7 +199,7 @@ var notifyFailure = function (sendEmail, mailEntry) {
 function constructClaimEntry(data) {
     var entry = new ClaimEntry();
     entry.entryDate = (new Date()).getTime();
-    entry.dueDate = (new Date()).getTime();
+    entry.dueDate = (DateUtils.startOfToday()).getTime();
     entry.updateDate = (new Date()).getTime();
     entry.summary = data.mail.subject;
     entry.from = data.mail.from;

@@ -98,15 +98,22 @@ define([],
             var year = date.getFullYear() === new Date().getFullYear() ? '' : date.getFullYear();
             var time = date.getHours() + ':' + prefixZero(date.getMinutes());
 
+            // Drop time if 0:00
+            includeTime = (time === '00:00' || time === '0:00') ? false : includeTime;
+            var result = '';
+
             if (isToday(date)) {
-                return includeTime ? 'Today ' + time : 'Today';
+                result = includeTime ? 'Today ' + time : 'Today';
             } else if(isThisWeek(date)) {
-                return includeTime ?  dayName + ' ' + time : dayName;
+                result = includeTime ?  dayName + ' ' + time : dayName;
             } else if (includeTime) {
-                return month + ' ' + day + ' ' + year + ' ' + time;
+                result = month + ' ' + day + ' ' + year + ' ' + time;
             } else {
-                return month + ' ' + day + ' ' + year;
+                result = String(year).length > 0
+                            ? month + ' ' + day + ' ' + year
+                            : month + ' ' + day;
             }
+            return result;
         }
 
         function niceLocaleDate(date, displayIfInvalidDate) {

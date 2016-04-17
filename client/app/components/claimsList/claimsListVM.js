@@ -83,10 +83,12 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore', 'model/claim', '
                             fileNo: claim.fileNum,
                             desc: claimDesc.length > 40 ? claimDesc.substr(0, 40) + '...' : claimDesc,
                             insuranceCo: "<span class='text-success'>" + insuranceCompanyFileNum + "</span><br/>" + insuranceCoName,
-                            dateReceived: DateUtils.niceDate(claim.dateReceived, false),
                             dateDue: DateUtils.niceDate(claim.dateDue, false),
+                            dueTime: claim.dateDue.getTime(),
                             claimant: claimant,
+                            claimantSort: claimantName,
                             insured: insured,
+                            insuredSort: insuredName,
                             ageText: ageText,
                             age: age
                         });

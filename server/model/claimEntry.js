@@ -13,6 +13,9 @@ define([], function () {
         this.tag = [];
         this.isClosed = false;
 
+        // Tie breaker field for user ordered tasks
+        this.displayOrder;
+
         this.entryDate = undefined;
         this.dueDate = undefined;
         this.updateDate = undefined;
