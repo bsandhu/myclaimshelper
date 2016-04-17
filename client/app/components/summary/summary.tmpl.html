@@ -104,12 +104,17 @@
                                         <span data-bind="text: $data.fileNum"></span>
                                     </td>
                                     <td>
-                                        <span data-bind="text: $data.insuredContact.name || '-'"></span>
+                                        <span data-bind="textTruncate: $data.insuredContact.name, maxLength: 20"></span>
                                     </td>
                                     <td>
-                                        <span data-bind="text: $data.claimantContact.name || '-'"></span>
+                                        <span data-bind="textTruncate: $data.claimantContact.name, maxLength: 20"></span>
                                     </td>
-                                    <td data-bind="text: $data.summary"></td>
+                                    <td>
+                                        <span>
+                                            <span class="rightMargin5"><i data-bind="taskEntryTag: $data.tag"></i></span>
+                                            <span data-bind="textTruncate: $data.summary, maxLength: 50"></span>
+                                        </span>
+                                    </td>
                                     <td class="summaryGroupCell">
                                         <span data-bind="text: $parents[1].DateUtils.niceDate($data.dueDate ? $data.dueDate() : '')"></span>
                                         <!--<span class="fa fa-pencil"></span>-->

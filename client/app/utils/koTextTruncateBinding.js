@@ -15,7 +15,7 @@ define(['jquery', 'knockout'],
         };
 
         function setValue(element, allBindings) {
-            var content = allBindings.get('textTruncate')()|| '';
+            var content = allBindings.get('textTruncate')()|| '-';
             var maxLength = allBindings.get('maxLength') || 10;
             var truncatedContent = content.length > maxLength ? content.substr(0, maxLength) + '...' : content;
             $(element).html(truncatedContent);
