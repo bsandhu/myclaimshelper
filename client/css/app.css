@@ -218,11 +218,11 @@ div {
 }
 
 .color-dark-green {
-    color: darkgreen);
+    color: darkgreen;
 }
 
 .color-red {
-    color: red);
+    color: red;
 }
 
 #claimListTable .text-success {
@@ -438,9 +438,9 @@ div {
 }
 
 .summaryRowDragOver {
-    border-top-style: solid;
-    border-top-width: 2px;
-    border-top-color: #2b669a;
+    border-bottom-style: solid;
+    border-bottom-width: 2px;
+    border-bottom-color: #2b669a;
 }
 
 .summaryGroupCell span:last-child {

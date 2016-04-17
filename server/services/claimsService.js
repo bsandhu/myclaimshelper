@@ -165,6 +165,7 @@ function saveOrUpdateClaimEntry(req, res) {
             // Save Claim Entry
             mongoUtils.saveOrUpdateEntity(entity, mongoUtils.CLAIM_ENTRIES_COL_NAME)
                 .then(function (err, results) {
+                    var defer = jQuery.Deferred();
 
                     // Save BillingItem
                     if (billingItem && !err) {
@@ -181,13 +182,35 @@ function saveOrUpdateClaimEntry(req, res) {
                             .always(function (itemErr, itemResults) {
                                 assert.ok(itemResults._id);
                                 results.billingItem = itemResults;
-                                sendResponse(res, itemErr, results);
+                                defer.resolve(itemErr, results);
                             });
                     } else {
-                        sendResponse(res, err, results);
+                        defer.reject(err, results);
                     }
+                    return defer;
+                })
+                .then(function (err, results) {
+                    var defer = jQuery.Deferred();
+                    if (!err) {
+                        // Set display order to be same as _id
+                        if (!Boolean(entity.displayOrder)) {
+                            entity.displayOrder = Number(entity._id);
+                            mongoUtils.saveOrUpdateEntity(entity, mongoUtils.CLAIM_ENTRIES_COL_NAME)
+                                .always(function (entryErr, itemResults) {
+                                    defer.resolve(entryErr, results);
+                                });
+                        } else {
+                            defer.resolve(err, results);
+                        }
+                    } else {
+                        defer.reject(err, results);
+                    }
+                    return defer;
+                })
+                .then(function (err, results) {
+                    sendResponse(res, err, results);
                 });
-        })
+        });
 }
 
 function modifyClaimEntry(req, res) {
@@ -232,16 +255,16 @@ function closeClaim(req, res) {
 
     function closeClaim() {
         return mongoUtils.modifyEntityAttr(
-                search.claimId,
-                mongoUtils.CLAIMS_COL_NAME,
-                {isClosed: true, dateClosed: new Date().getTime()});
+            search.claimId,
+            mongoUtils.CLAIMS_COL_NAME,
+            {isClosed: true, dateClosed: new Date().getTime()});
     }
 
     function closeClaimEntry() {
         return mongoUtils.modifyAttr(
-                mongoUtils.CLAIM_ENTRIES_COL_NAME,
-                {isClosed: true},
-                {claimId: search.claimId});
+            mongoUtils.CLAIM_ENTRIES_COL_NAME,
+            {isClosed: true},
+            {claimId: search.claimId});
     }
 }
 
@@ -469,6 +492,7 @@ function searchClaimEntries(req, res) {
         }
 
         var claimsCache = {};
+
         function populateClaimFileNumber(claimEntry) {
             var defer = jQuery.Deferred();
 
@@ -505,7 +529,7 @@ function searchClaimEntries(req, res) {
                         jQuery.when(
                             populateContact(claim.insuredContactId, claim.owner),
                             populateContact(claim.claimantContactId, claim.owner))
-                            .then(function(insured, claimant){
+                            .then(function (insured, claimant) {
                                 claimEntry.insuredContact = insured;
                                 claimEntry.claimantContact = claimant;
                                 // Cache
@@ -522,7 +546,10 @@ function searchClaimEntries(req, res) {
         function populateBillingItem(claimEntry) {
             var defer = jQuery.Deferred();
             mongoUtils
-                .findEntities(mongoUtils.BILLING_ITEMS_COL_NAME, {claimEntryId: claimEntry._id, owner: req.headers.userid}, db)
+                .findEntities(mongoUtils.BILLING_ITEMS_COL_NAME, {
+                    claimEntryId: claimEntry._id,
+                    owner: req.headers.userid
+                }, db)
                 .then(function (billingItems) {
                     // ClaimEntry has only one BilingItem
                     var billingItem = _.first(billingItems);

@@ -8,7 +8,7 @@ var moment = require('moment');
 
 
 function aggregations(userid) {
-    var sod = dateUtils.startOfToday().getTime();
+    var sod = dateUtils.startOfToday().getTime() - 1;
     var eod = dateUtils.endOfToday().getTime();
 
     return {
