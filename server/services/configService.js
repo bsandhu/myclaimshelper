@@ -8,9 +8,16 @@ function getConfigREST(req, res) {
 
     res.json({
         'status': 'Success',
-        'data': {'Auth0': {
-            'id': config.auth0_client_id,
-            'domain': config.auth0_hostname }}
+        'data': {
+            'Auth0': {
+                'id': config.auth0_client_id,
+                'domain': config.auth0_hostname
+            },
+            'Env': config.env,
+            'Loggly': {
+                'key': config.loggly.key
+            }
+        }
     });
 }
 

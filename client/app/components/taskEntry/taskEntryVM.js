@@ -2,9 +2,10 @@ define(['underscore', 'jquery', 'knockout', 'KOMap', 'amplify',
         'model/claim', 'model/claimEntry', 'model/billingItem', 'model/billingStatus', 'model/states',
         'app/utils/ajaxUtils', 'app/utils/events', 'app/utils/router',
         'app/utils/sessionKeys', 'app/utils/session',
-        'shared/dateUtils',
+        'shared/dateUtils', 'app/utils/audit',
         'text!app/components/taskEntry/taskEntry.tmpl.html', 'bootbox'],
-    function (_, $, ko, KOMap, amplify, Claim, ClaimEntry, BillingItem, BillingStatus, States, ajaxUtils, Events, Router, SessionKeys, Session, DateUtils, taskEntryView, bootbox) {
+    function (_, $, ko, KOMap, amplify, Claim, ClaimEntry, BillingItem, BillingStatus, States, ajaxUtils, Events,
+              Router, SessionKeys, Session, DateUtils, Audit, taskEntryView, bootbox) {
         'use strict';
 
         function TaskEntryVM() {
@@ -191,6 +192,7 @@ define(['underscore', 'jquery', 'knockout', 'KOMap', 'amplify',
 
                     this.startStateTracking();
                     Router.routeToClaim(Session.getActiveClaimId());
+                    Audit.info('SavedTask', {_id: this.claimEntry()._id(), summary: this.claimEntry().claimId()});
                     defer.resolve();
                 }.bind(this));
             return defer;
@@ -218,6 +220,7 @@ define(['underscore', 'jquery', 'knockout', 'KOMap', 'amplify',
                         var scrollHeight = txtArea[0].scrollHeight;
                         txtArea.height(scrollHeight > 500 ? 500 : scrollHeight);
                     }, 3);
+                    Audit.info('ViewTask', {_id: this.claimEntry()._id(), summary: this.claimEntry().claimId()});
                 }.bind(this));
         };
 

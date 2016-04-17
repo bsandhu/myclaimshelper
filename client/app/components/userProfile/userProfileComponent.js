@@ -1,7 +1,7 @@
 define(['jquery', 'knockout', 'KOMap', 'amplify', 'Auth0Lock', 'app/utils/events', 'app/utils/session',
-        'text!app/components/userProfile/userProfile.tmpl.html', 'model/profiles'],
+        'text!app/components/userProfile/userProfile.tmpl.html', 'model/profiles', 'app/utils/audit'],
 
-    function ($, ko, KOMap, amplify, Auth0Lock, Events, Session, viewHtml, UserProfile) {
+    function ($, ko, KOMap, amplify, Auth0Lock, Events, Session, viewHtml, UserProfile, Audit) {
         'use strict';
 
         function UserProfileComponent(params) {
@@ -47,6 +47,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'Auth0Lock', 'app/utils/events
                 }.bind(this))
                 .fail(function (resp) {
                     console.error('Failed to load UserProfile ' + JSON.stringify(resp));
+                    Audit.error('ProfileLoadingError', {resp: JSON.stringify(resp)});
                     if (resp.status = 401 && resp.statusText === 'TokenExpiredError') {
                         console.log('Token expired - resetting');
                         _this.login();
@@ -72,10 +73,12 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'Auth0Lock', 'app/utils/events
                                 Session.setCurrentUserAuthToken(null);
                                 Session.setCurrentUserId(null);
                                 Session.setCurrentUserProfile(null);
+                                Audit.warn('LoginError', err);
                             } else {
                                 Session.setCurrentUserAuthProfile(profile);
                                 Session.setCurrentUserAuthToken(token);
                                 Session.setCurrentUserId(profile.nickname);
+                                Audit.info('Login');
                                 onDone();
                             }
                         })

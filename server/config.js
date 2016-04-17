@@ -89,5 +89,11 @@ config.digitalOcean = {};
 config.digitalOcean.user = 'baljeet.mail@gmail.com';
 config.digitalOcean.password = 'starWAR$1';
 
+// **** Loggly ****
+config.loggly = {};
+config.loggly.key = '4fb882fa-2aed-47fd-b0a4-e62331cb1ca1';
+config.loggly.user = 'myclaimshelper';
+config.loggly.password = 'starWAR$1';
+
 
 module.exports = config;

@@ -30,9 +30,13 @@ require.config({
         'chartjs': 'lib/Chart',
         'Auth0Lock': 'lib/lock-8.2.min',
         'bootstrapTableCustom': 'lib/bootstrap.table.customization',
-        'maskedInput': 'lib/jquery.maskedinput.min'
+        'maskedInput': 'lib/jquery.maskedinput.min',
+        'loggly': 'lib/loggly.tracker-2.1.min'
     },
     shim: {
+        'loggly': {
+            exports: '_LTracker'
+        },
         'Auth0Lock': {
             deps: ['jquery'],
             exports: 'Auth0Lock'
