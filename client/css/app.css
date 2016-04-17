@@ -524,7 +524,7 @@ nav ul {
 
 /* Un-selected menu item */
 .navbar-default .navbar-nav > li > a {
-    font-size: 16pt;
+    font-size: 14pt;
     font-family: 'Open sans';
     height: 90px;
     line-height: 60px;
@@ -534,7 +534,7 @@ nav ul {
 }
 
 .navbar-default .navbar-nav > li > a[fixed-width] {
-    width: 140px;
+    min-width: 100px;
 }
 
 /* Hover/Selected menu item */
