@@ -378,7 +378,7 @@
         events: undefined,
         sorter: undefined,
         sortName: undefined,
-        cellStyle: cellStyleFn,
+        cellStyle: undefined,
         searchable: true,
         cardVisible: true
     };

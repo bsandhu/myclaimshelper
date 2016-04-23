@@ -74,7 +74,7 @@ require.config({
             deps: ['jquery']
         },
         'bootstrapTable': {
-            deps: ['jquery', 'bootstrap']
+            deps: ['jquery', 'bootstrap', 'bootstrapTableCustom']
         },
         'sortable': {
             deps: ['jquery']

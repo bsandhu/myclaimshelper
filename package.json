@@ -6,14 +6,15 @@
   "dependencies": {
     "amdefine": "0.1.0",
     "jquery-deferred": "0.3.0",
+    "jsonwebtoken": "^5.7.0",
     "mailgun-js": "*",
     "mailparser": "0.4.5",
+    "moment": "^2.12.0",
     "mongodb": "1.4.*",
+    "requirejs": "^2.2.0",
     "restify": "2.8.1",
     "socket.io": "^1.3.7",
-    "underscore": "1.8.*",
-    "jsonwebtoken": "^5.7.0",
-    "moment": "^2.12.0"
+    "underscore": "1.8.*"
   },
   "devDependencies": {
     "mocha": "1.21.4"
