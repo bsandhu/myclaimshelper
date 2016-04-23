@@ -104,10 +104,11 @@
                                         <span data-bind="text: $data.fileNum"></span>
                                     </td>
                                     <td>
-                                        <span data-bind="textTruncate: $data.insuredContact.name, maxLength: 20"></span>
+                                        
+                                        <span data-bind="text: $data.insuredContact.name || '-'"></span>
                                     </td>
                                     <td>
-                                        <span data-bind="textTruncate: $data.claimantContact.name, maxLength: 20"></span>
+                                        <span data-bind="text: $data.claimantContact.name || '-'"></span>
                                     </td>
                                     <td>
                                         <span>
