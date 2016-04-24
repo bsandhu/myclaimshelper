@@ -1,4 +1,6 @@
 var restify = require('restify');
+var serveStaticWith304 = require('./static');
+
 var socketio = require('socket.io');
 var config = require('./config.js');
 var EventEmitter = require('events').EventEmitter;
@@ -75,6 +77,7 @@ function init() {
         }
         next();
     });
+    server.use(restify.conditionalRequest());
 }
 
 function setupStatsRoutes() {
@@ -169,24 +172,30 @@ function setupStaticRoutes() {
         directory: 'server'
     }));
 
-    server.get(/\/app\/.*/, restify.serveStatic({
-        directory: 'client'
+    server.get(/\/app\/.*/, serveStaticWith304({
+        directory: 'client',
+        maxAge: 60 * 60 * 24
     }));
-    server.get(/\/lib\/.*/, restify.serveStatic({
-        directory: 'client'
+    server.get(/\/lib\/.*/, serveStaticWith304({
+            directory: 'client',
+            maxAge: 60 * 60 * 24
+        }));
+    server.get(/\/css\/.*/, serveStaticWith304({
+        directory: 'client',
+        maxAge: 60 * 60 * 24
     }));
-    server.get(/\/css\/.*/, restify.serveStatic({
-        directory: 'client'
+    server.get(/\/img\/.*/, serveStaticWith304({
+        directory: 'client',
+        maxAge: 60 * 60 * 24
     }));
-    server.get(/\/img\/.*/, restify.serveStatic({
-        directory: 'client'
+    server.get(/\/help\/.*/, serveStaticWith304({
+        directory: 'client',
+        maxAge: 60 * 60 * 24
     }));
-    server.get(/\/help\/.*/, restify.serveStatic({
-        directory: 'client'
-    }));
-    server.get('/.*/ ', restify.serveStatic({
+    server.get('/.*/ ', serveStaticWith304({
         'directory': 'client',
-        'default': '/app/components/index.html'
+        'default': '/app/components/index.html',
+        maxAge: 60 * 60 * 24
     }));
 }
 

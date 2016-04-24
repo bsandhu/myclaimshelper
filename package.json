@@ -5,16 +5,20 @@
   "main": "./server/start.js",
   "dependencies": {
     "amdefine": "0.1.0",
+    "assert-plus": "^1.0.0",
+    "escape-regexp-component": "^1.0.2",
     "jquery-deferred": "0.3.0",
     "jsonwebtoken": "^5.7.0",
     "mailgun-js": "*",
     "mailparser": "0.4.5",
+    "mime": "^1.3.4",
     "moment": "^2.12.0",
     "mongodb": "1.4.*",
     "requirejs": "^2.2.0",
     "restify": "2.8.1",
     "socket.io": "^1.3.7",
-    "underscore": "1.8.*"
+    "underscore": "1.8.*",
+    "verror": "^1.6.1"
   },
   "devDependencies": {
     "mocha": "1.21.4"
