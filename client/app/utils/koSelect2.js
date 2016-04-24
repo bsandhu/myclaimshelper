@@ -15,6 +15,7 @@ define(['jquery', 'knockout', 'underscore', 'KOMap', 'shared/dateUtils', 'select
                 var select2Elem = $(element).select2({
                     data: data,
                     templateResult: format,
+                    selectOnClose: true,
                     matcher: function(term, text) {
                         if (term && term.term && term.term.length > 0) {
                             // Match on Id or Text
