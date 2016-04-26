@@ -128,10 +128,10 @@
                                   data-bind="text: $parent.NumberUtils.niceCCY(bill.total),
                                              click: $parent.router.routeToBill"></span></td>
 
-                        <td><span data-bind="text: $parent.NumberUtils.niceCCY(bill.totalTime),
+                        <td><span data-bind="text: $parent.NumberUtils.nice(bill.totalTime),
                                              click: $parent.router.routeToBill"></span></td>
 
-                        <td><span data-bind="text: $parent.NumberUtils.niceCCY(bill.totalMileage),
+                        <td><span data-bind="text: $parent.NumberUtils.nice(bill.totalMileage),
                                              click: $parent.router.routeToBill"></span></td>
 
                         <td><span data-bind="text: $parent.NumberUtils.niceCCY(bill.totalExpenseAmount),
@@ -150,11 +150,11 @@
                         </td>
                         <td class="topBorderSubTotal">
                             <span class="text-success billSubTotal"
-                                  data-bind="text: NumberUtils.niceCCY(filteredTotalTime())"></span>
+                                  data-bind="text: NumberUtils.nice(filteredTotalTime()) + ' Hrs'"></span>
                         </td>
                         <td class="topBorderSubTotal">
                             <span class="text-success billSubTotal"
-                                  data-bind="text: NumberUtils.niceCCY(filteredTotalMileage())"></span>
+                                  data-bind="text: NumberUtils.nice(filteredTotalMileage()) + ' Miles'"></span>
 
                         </td>
                         <td class="topBorderSubTotal">

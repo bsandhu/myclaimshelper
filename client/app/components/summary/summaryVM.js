@@ -165,7 +165,8 @@ define(['jquery', 'knockout', 'underscore', 'KOMap', 'amplify', 'model/claim', '
                 {description: States.Complete, query: States.Complete},
                 {description: States.None, query: States.None}
             ]);
-            this.statusFilter = ko.observable(this.statusFilters()[0]);
+            // Default filter to 'ToDo'
+            this.statusFilter = ko.observable(this.statusFilters()[1]);
         };
 
         SummaryVM.prototype.setupFilterVisibility = function () {
