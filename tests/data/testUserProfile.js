@@ -41,8 +41,9 @@ var data = [
                     '122': 'Photo Miscellaneous',
                     '123': 'Requested Medical Records',
                     '124': '',
-                    '126': 'Inspect/Photo Vehicle',
-                    '127': 'Postal Check for Address',
+                    '125': 'Inspect/Photo Vehicle',
+                    '126': 'Postal Check for address',
+                    '127': 'Wait Time for Interview',
                     '128': 'Cold Call w/travel',
                     '129': 'Travel to Loss location',
                     '130': 'Scope the loss'
