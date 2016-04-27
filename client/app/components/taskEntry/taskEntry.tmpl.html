@@ -101,7 +101,7 @@
                 <div class="col-lg-10">
                     <!-- Billing item component -->
                     <billing-item-component params="'billingItem': claimEntry().billingItem,
-                                                    'disable'    : claimEntry().isClosed"></billing-item-component>
+                                                    'disable'    : claimEntry().isClosed() || isBilled() "></billing-item-component>
                 </div>
             </div>
         </form>
