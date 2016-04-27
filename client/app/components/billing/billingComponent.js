@@ -207,6 +207,8 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox', 'underscore',
         BillingVM.prototype.onUpdateBillStatus = function (newStatus, bill) {
             console.log('BillingVM > onUpdateBillStatus: ' + newStatus);
             bill.status = newStatus;
+            // If the user clicks straight from the billing tab, this might not be populated
+            this.claimId(bill.claimId);
             this.bill(this.newEmptyBill());
             this.bill(KOMap.fromJS(bill));
             this._persistBill(newStatus);
