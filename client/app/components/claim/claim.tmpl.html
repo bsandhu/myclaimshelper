@@ -5,7 +5,11 @@
     <h3 class="panel-title">
         <span>Claim</span>
         <span class="color-grey"
-              data-bind="text: (claim().fileNum() || '')"></span>
+              data-bind="text: (claim().fileNum() || '') + ' / ' + (claim().insuranceCompanyFileNum() || '')"></span>
+        <span data-bind="ifnot: isPartiallyCollapsed">
+            <span class="color-grey" style="font-size: .8em"
+                  data-bind="text: (claim().insuranceCompanyName() || '')"></span>
+        </span>
     </h3>
 </div>
 

@@ -196,6 +196,12 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox', 'underscore',
             return defer;
         }
 
+        BillingVM.prototype.onClaimClick = function (bill, ev) {
+            ev.stopPropagation();
+            router.routeToClaim(bill.claimId);
+            return false;
+        }
+
         BillingVM.prototype.onBillingProfileClick = function () {
             if (this.claimId()) {
                 router.routeToBillingProfile(this.claimId());
@@ -707,23 +713,25 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox', 'underscore',
                     if (item.mileage != 0) {
                         mileageItem = _.clone(item);
                         mileageItem.code = item.mileageCode;
-                        mileageItem.time = 0;
-                        mileageItem.expenseAmount = 0;
+                        mileageItem.time = null;
+                        mileageItem.mileage = Number(mileageItem.mileage);
+                        mileageItem.expenseAmount = null;
                         _this.groupedByCode.push(mileageItem);
                     }
                     if (item.expenseAmount != 0) {
                         expenseItem = _.clone(item);
                         expenseItem.code = item.expenseCode;
-                        expenseItem.time = 0;
-                        expenseItem.mileage = 0;
-                        expenseItem.expenseAmount = '$' + Number(expenseItem.expenseAmount).toFixed(2);
+                        expenseItem.time = null;
+                        expenseItem.mileage = null;
+                        expenseItem.expenseAmount = Number(expenseItem.expenseAmount);
                         _this.groupedByCode.push(expenseItem);
                     }
                     if (item.time != 0) {
                         timeItem = _.clone(item);
                         timeItem.code = item.timeCode;
-                        timeItem.mileage = 0;
-                        timeItem.expenseAmount = 0;
+                        timeItem.time = Number(timeItem.time);
+                        timeItem.mileage = null;
+                        timeItem.expenseAmount = null;
                         _this.groupedByCode.push(timeItem);
                     }
                 });
