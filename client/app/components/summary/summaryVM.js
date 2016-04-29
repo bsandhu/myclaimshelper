@@ -1,7 +1,8 @@
 define(['jquery', 'knockout', 'underscore', 'KOMap', 'amplify', 'model/claim', 'model/claimEntry', 'model/states', 'app/utils/events',
-        'app/utils/router', 'shared/dateUtils', 'app/utils/ajaxUtils',
+        'app/utils/router', 'shared/dateUtils', 'app/utils/ajaxUtils', 'app/utils/sessionKeys',
         'text!app/components/summary/summary.tmpl.html'],
-    function ($, ko, _, KOMap, amplify, Claim, ClaimEntry, States, Events, Router, DateUtils, AjaxUtils, summaryView) {
+    function ($, ko, _, KOMap, amplify, Claim, ClaimEntry, States, Events, Router,
+              DateUtils, AjaxUtils, SessionKeys, summaryView) {
         'use strict';
 
         function SummaryVM() {
@@ -36,6 +37,7 @@ define(['jquery', 'knockout', 'underscore', 'KOMap', 'amplify', 'model/claim', '
             this.setupGrouping();
 
             this.searchClaimEntries();
+            amplify.subscribe(Events.SELECTED_CLAIM, this, this.onNewTaskClaimSelection);
         }
 
         SummaryVM.prototype.componentLoaded = function () {
@@ -179,6 +181,19 @@ define(['jquery', 'knockout', 'underscore', 'KOMap', 'amplify', 'model/claim', '
         /* Event handling                                           */
         /************************************************************/
 
+        SummaryVM.prototype.onNewTask = function (entry) {
+            amplify.publish(Events.SELECT_CLAIM, {title: 'Select Claim to add the new task to', requestSource: 'SummaryVM'});
+        };
+
+        SummaryVM.prototype.onNewTaskClaimSelection = function (evData) {
+            if (evData.requestSource == 'SummaryVM') {
+                // Claim selector puts active claim in Session
+                // Task will be added against this claim
+                amplify.publish(Events.SHOW_CLAIM, {claimId: evData.claim.claimId});
+                setTimeout(Router.routeToNewClaimEntry, 100);
+            }
+        };
+
         SummaryVM.prototype.onClaimEntrySelect = function (entry) {
             Router.routeToClaimEntry(entry.claimId(), entry._id());
         };
@@ -205,7 +220,7 @@ define(['jquery', 'knockout', 'underscore', 'KOMap', 'amplify', 'model/claim', '
 
         SummaryVM.prototype.setupClaimEntryListener = function () {
             amplify.subscribe(Events.SAVED_CLAIM, this, this.searchClaimEntries);
-            amplify.subscribe(Events.NEW_CLAIM_ENTRY, this, this.searchClaimEntries);
+            ///amplify.subscribe(Events.NEW_CLAIM_ENTRY, this, this.searchClaimEntries);
             amplify.subscribe(Events.SAVED_CLAIM_ENTRY, this, this.searchClaimEntries);
             amplify.subscribe(Events.UPDATE_CLAIM_ENTRY_STATUS, this, this.searchClaimEntries);
         };

@@ -51,6 +51,7 @@ require(['jquery', 'knockout', 'KOAmd', 'text', 'amplify', 'app/components/appVM
             ko.components.register('file-upload-component', {require: 'app/components/fileUpload/fileUploadComponent'});
             ko.components.register('summary-component', {require: 'app/components/summary/summaryVM'});
             ko.components.register('claims-list-component', {require: 'app/components/claimsList/claimsListVM'});
+            ko.components.register('claim-selector-component', {require: 'app/components/claimsList/claimSelectorVM'});
             ko.components.register('notifier-component', {require: 'app/components/notifier/notifierVM'});
             ko.components.register('maps-component', {require: 'app/components/maps/mapsComponent'});
             ko.components.register('maps-dash-component', {require: 'app/components/maps/mapsDashboardVM'});

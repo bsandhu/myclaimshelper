@@ -41,6 +41,7 @@ var io = socketio.listen(server);
 
 function init() {
     server = restify.createServer();
+
     // Wrap with socket io instance
     io = socketio.listen(server);
 
@@ -70,13 +71,16 @@ function init() {
     server.use(restify.jsonp());
     server.use(restify.gzipResponse());
 
+    // Inject TEST_USER if needed
     server.use(function reqSessionHandler(req, res, next) {
         if (DISABLE_AUTH) {
-            console.log('Injecting test user into req');
             req.headers.userid = TEST_USER;
         }
         next();
     });
+    if (DISABLE_AUTH) {
+        console.log('**** Auth is disabled. Using ' + TEST_USER + ' ****');
+    }
     server.use(restify.conditionalRequest());
 }
 

@@ -25,9 +25,19 @@ define([],
             expr = String(expr);
             return expr.charAt(0).toUpperCase() + expr.substr(1);
         }
+
+        function defaultValue(obj, defaultVal) {
+            if (obj == undefined || obj == null) {
+                return defaultVal;
+            } else {
+                return obj;
+            }
+        }
+        
         return {
             'nullSafe': nullsafe,
-            'capitalize': capitalize
+            'capitalize': capitalize,
+            'defaultValue': defaultValue
         }
     }
 )

@@ -6,14 +6,24 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore', 'model/claim', '
 
         function ClaimsListVM() {
             console.log('Init ClaimsListVM');
+            this.init();
+        }
 
+        ClaimsListVM.prototype.init = function () {
             // Grouping
             this.groupBy = ko.observable();
             this.groupBy.subscribe(function () {
+                this.initDisplay();
                 this.loadClaims();
             }, this);
             this.groupBy('Open');
             this.groupByOptions = ko.observableArray(['Open', 'Closed']);
+
+            this.claims = ko.observableArray([]);
+            this.claims.subscribe(function(newVal){
+                $('#claimListTable').bootstrapTable('load', newVal);
+                $('#claimListTable').bootstrapTable('hideLoading');
+            });
 
             this.DateUtils = DateUtils;
             this.router = Router;
@@ -29,14 +39,8 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore', 'model/claim', '
         ClaimsListVM.prototype.loadClaims = function () {
             var _this = this;
             var postReq = _this.groupBy() === 'Open'
-                ? { query: {isClosed: false}}
-                : { query: {isClosed: true}};
-
-            if (!_this.init) {
-                $('#claimListTable').bootstrapTable();
-                $('#claimListTable').bootstrapTable('showLoading');
-                _this.init = true;
-            }
+                ? {query: {isClosed: false}}
+                : {query: {isClosed: true}};
 
             AjaxUtils.post(
                 '/claim/search',
@@ -59,24 +63,24 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore', 'model/claim', '
                         var claimantName = ObjectUtils.nullSafe.bind(claim, 'this.claimantContact.name', 'None')();
                         var claimantId = Number(ObjectUtils.nullSafe.bind(claim, 'this.claimantContact._id', '')());
                         var claimant =
-                                _.isNumber(claimantId) && claimantId > 0
-                                    ? '<a onclick="var event = arguments[0] || window.event; ' +
-                                            'event.stopPropagation(); ' +
-                                            'amplify.publish(\'SHOW_CONTACT\', {contactId:' + claimantId + '});">' +
-                                        claimantName +
-                                    '</a>'
-                                    : claimantName;
+                            _.isNumber(claimantId) && claimantId > 0
+                                ? '<a onclick="var event = arguments[0] || window.event; ' +
+                            'event.stopPropagation(); ' +
+                            'amplify.publish(\'SHOW_CONTACT\', {contactId:' + claimantId + '});">' +
+                            claimantName +
+                            '</a>'
+                                : claimantName;
 
                         var insuredName = ObjectUtils.nullSafe.bind(claim, 'this.insuredContact.name', 'None')();
                         var insuredId = Number(ObjectUtils.nullSafe.bind(claim, 'this.insuredContact._id', '')());
                         var insured =
-                                _.isNumber(insuredId) && insuredId > 0
-                                    ? '<a onclick="var event = arguments[0] || window.event; ' +
-                                            'event.stopPropagation(); ' +
-                                            'amplify.publish(\'SHOW_CONTACT\', {contactId:' + insuredId + '});">' +
-                                        insuredName +
-                                    '</a>'
-                                    : insuredName;
+                            _.isNumber(insuredId) && insuredId > 0
+                                ? '<a onclick="var event = arguments[0] || window.event; ' +
+                            'event.stopPropagation(); ' +
+                            'amplify.publish(\'SHOW_CONTACT\', {contactId:' + insuredId + '});">' +
+                            insuredName +
+                            '</a>'
+                                : insuredName;
 
                         tempArray.push({
                             claimId: claim._id,
@@ -93,14 +97,24 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore', 'model/claim', '
                             age: age
                         });
                     });
-                    $('#claimListTable').bootstrapTable('load', tempArray);
-                    $('#claimListTable').bootstrapTable('hideLoading');
+                    _this.claims(tempArray);
                 },
                 function onFail() {
                     amplify.publish(Events.FAILURE_NOTIFICATION, {msg: 'Error while refreshing Claims'});
                     defer.reject();
                 });
         };
+
+        ClaimsListVM.prototype.initDisplay = function () {
+            var _this = this;
+            if (!_this.init) {
+                _this.initDisplay();
+                _this.init = true;
+            }
+
+            $('#claimListTable').bootstrapTable();
+            $('#claimListTable').bootstrapTable('showLoading');
+        }
 
         return {viewModel: ClaimsListVM, template: claimsListView};
     });

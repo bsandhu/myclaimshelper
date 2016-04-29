@@ -3,52 +3,60 @@
         <h3 class="panel-title">Tasks</h3>
     </div>
 
-    <!-- widget div-->
     <div class="panel-body">
-        <!-- widget edit box -->
-        <div class="jarviswidget-editbox">
-            <!-- This area used as dropdown edit box -->
-        </div>
-        <!-- end widget edit box -->
 
         <!-- widget content -->
         <div class="widget-body no-padding">
             <div class="panel">
+
                 <div class="panel-heading">
-                    <form class="form-inline" role="form">
-                        <!-- Due date group filter -->
-                        <div class="form-group rightBorderSolid paddingRight5">
-                            <span>Due </span>
-                            <select class="form-control input-sm summaryGroupSelector"
-                                    data-bind="value: dueDateFilter,
+                    <div class="row">
+                        <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">
+                            <button type="button"
+                                    class="btn btn-default dropdown-toggle btn-info"
+                                    data-bind="click: onNewTask">
+                                <span class="fa fa-plus"></span>
+                                New Task
+                            </button>
+                        </div>
+                        <div class="col-lg-offset-5 col-lg-5 col-md-offset-3 col-md-7 col-sm-offset-2 col-sm-8 col-xs-12">
+                            <form class="form-inline" role="form">
+                                <!-- Due date group filter -->
+                                <div class="form-group rightBorderSolid paddingRight5">
+                                    <span>Due </span>
+                                    <select class="form-control input-sm summaryGroupSelector"
+                                            data-bind="value: dueDateFilter,
                                        options: dueDateFilters,
                                        optionsText: 'description'"></select>
 
-                            <div class="form-group" data-bind="if: showDueDateDaysFilter">
-                                <!-- Due date - day group filter -->
-                                <input class="form-control input-sm summaryGroupSelector" style="width: 50px"
-                                       type="number" min="0"
-                                       data-bind="value: dueDateDaysFilterValue">
-                                <span>days</span>
-                            </div>
-                        </div>
-                        <!-- Status filter -->
-                        <div class="form-group rightBorderSolid paddingRight5">
-                            <span class="leftMargin5">Status</span>
-                            <select class="form-control input-sm summaryGroupSelector"
-                                    data-bind="value: statusFilter,
+                                    <div class="form-group" data-bind="if: showDueDateDaysFilter">
+                                        <!-- Due date - day group filter -->
+                                        <input class="form-control input-sm summaryGroupSelector"
+                                               style="width: 50px"
+                                               type="number" min="0"
+                                               data-bind="value: dueDateDaysFilterValue">
+                                        <span>days</span>
+                                    </div>
+                                </div>
+                                <!-- Status filter -->
+                                <div class="form-group rightBorderSolid paddingRight5">
+                                    <span class="leftMargin5">Status</span>
+                                    <select class="form-control input-sm summaryGroupSelector"
+                                            data-bind="value: statusFilter,
                                        options: statusFilters,
                                        optionsText: 'description'"></select>
-                        </div>
-                        <div class="form-group rightBorderSolid paddingRight5">
-                            <!-- Group selection -->
-                            <span class="leftMargin5">Sort</span>
-                            <select class="form-control input-sm summaryGroupSelector"
-                                    data-bind="value: groupBy,
+                                </div>
+                                <div class="form-group paddingRight5">
+                                    <!-- Group selection -->
+                                    <span class="leftMargin5">Sort</span>
+                                    <select class="form-control input-sm summaryGroupSelector"
+                                            data-bind="value: groupBy,
                                        options: groupByOptions,
                                        optionsText: 'description'"></select>
+                                </div>
+                            </form>
                         </div>
-                    </form>
+                    </div>
                 </div>
 
                 <div class="panel-body">
@@ -84,8 +92,8 @@
                             </tr>
 
                             <!-- ko foreach: {data: $parent.claimEntriesGrouped()[groupKey], afterRender: $parent.onAfterRender} -->
-                                <tr draggable="true" class="summaryRow"
-                                    data-bind="event: {dragstart: $parents[1].onSummaryRowDragStart.bind($parents[1]),
+                            <tr draggable="true" class="summaryRow"
+                                data-bind="event: {dragstart: $parents[1].onSummaryRowDragStart.bind($parents[1]),
                                                        dragend  : $parents[1].onSummaryRowDragEnd.bind($parents[1]),
                                                        dragenter: $parents[1].onSummaryRowDragEnter.bind($parents[1]),
                                                        dragover:  $parents[1].onSummaryRowDragOver.bind($parents[1]),
@@ -96,37 +104,38 @@
                                                       'data-displayOrder': $data.displayOrder},
                                                click: $parents[1].onClaimEntrySelect">
 
-                                    <td class="summaryGroupDrag" title="Click and Drag to reorder">
-                                        <span class="fa fa-ellipsis-v"></span>
-                                        <span class="fa fa-ellipsis-v"></span>
-                                    </td>
-                                    <td>
-                                        <span data-bind="text: $data.fileNum"></span>
-                                    </td>
-                                    <td>
-                                        
-                                        <span data-bind="text: $data.insuredContact.name || '-'"></span>
-                                    </td>
-                                    <td>
-                                        <span data-bind="text: $data.claimantContact.name || '-'"></span>
-                                    </td>
-                                    <td>
+                                <td class="summaryGroupDrag" title="Click and Drag to reorder">
+                                    <span class="fa fa-ellipsis-v"></span>
+                                    <span class="fa fa-ellipsis-v"></span>
+                                </td>
+                                <td>
+                                    <span data-bind="text: $data.fileNum"></span>
+                                </td>
+                                <td>
+
+                                    <span data-bind="text: $data.insuredContact.name || '-'"></span>
+                                </td>
+                                <td>
+                                    <span data-bind="text: $data.claimantContact.name || '-'"></span>
+                                </td>
+                                <td>
                                         <span>
-                                            <span class="rightMargin5"><i data-bind="taskEntryTag: $data.tag"></i></span>
+                                            <span class="rightMargin5"><i
+                                                    data-bind="taskEntryTag: $data.tag"></i></span>
                                             <span data-bind="textTruncate: $data.summary, maxLength: 50"></span>
                                         </span>
-                                    </td>
-                                    <td class="summaryGroupCell">
-                                        <span data-bind="text: $parents[1].DateUtils.niceDate($data.dueDate ? $data.dueDate() : '')"></span>
-                                        <!--<span class="fa fa-pencil"></span>-->
-                                        <span></span>
-                                    </td>
-                                    <td class="summaryGroupCell">
-                                        <status-editor-component params="'statusValue': $data.state,
+                                </td>
+                                <td class="summaryGroupCell">
+                                    <span data-bind="text: $parents[1].DateUtils.niceDate($data.dueDate ? $data.dueDate() : '')"></span>
+                                    <!--<span class="fa fa-pencil"></span>-->
+                                    <span></span>
+                                </td>
+                                <td class="summaryGroupCell">
+                                    <status-editor-component params="'statusValue': $data.state,
                                                                              'entryId': $data._id">
-                                        </status-editor-component>
-                                    </td>
-                                </tr>
+                                    </status-editor-component>
+                                </td>
+                            </tr>
                             <!-- /ko -->
                             </tbody>
                         </table>
@@ -136,9 +145,7 @@
                 <!-- End panel body -->
             </div>
         </div>
-        <!-- end widget content -->
     </div>
-    <!-- end widget div -->
 </div>
 
 <div data-bind="template: {afterRender: componentLoaded()}"></div>

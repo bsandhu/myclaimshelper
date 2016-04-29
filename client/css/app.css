@@ -229,6 +229,15 @@ div {
     color: darkgreen;
 }
 
+.clearSearchIcon {
+    color: rgb(169, 169, 169);
+    font-size: 1.2em;
+}
+
+.clearSearchIcon:hover {
+    color: lightcoral;
+}
+
 /**********************************************************/
 /**** Map ****/
 /**********************************************************/
