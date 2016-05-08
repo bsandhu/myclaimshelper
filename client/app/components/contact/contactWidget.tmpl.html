@@ -1,7 +1,7 @@
 <div class="container container-fluid topMargin">
     <div class="panel panel-default">
 
-        <div class="panel-heading">
+        <div class="panel-heading" id="contacts-panelHeader">
             <h3 class="panel-title">Contacts
                 <div class="badge bg-color-teal font-xs pull-right" data-bind="text: contacts().length"></div>
             </h3>
@@ -52,7 +52,8 @@
 
             <div class="row">
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                    <div class="custom-scroll table-responsive" style="height:290px; overflow-y: scroll;">
+                    <div data-bind="style: {'max-height': panelContentHeight + 'px', 'overflow-y': 'auto'}">
+
                         <table class="table table-responsive table-hover">
                             <tbody data-bind="foreach: { data: filteredContacts , as: 'contact' }">
                             <tr data-bind="click: $parent.onShowContact">

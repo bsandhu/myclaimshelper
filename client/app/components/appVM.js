@@ -240,7 +240,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
 
             if (this[stateTracker] !== 'expanded') {
                 $(panelSelector).velocity(
-                    { width: '100%'},
+                    { width: '98%'},
                     {begin: function () {
                         $(panelSelector).show();
                     }},
