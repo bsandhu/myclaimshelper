@@ -10,7 +10,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore', 'model/claim', '
         }
 
         ClaimsListVM.prototype.init = function () {
-            this.panelContentHeight = $(window).height() - (140 + $('.navbar-brand').height());
+            this.panelContentHeight = $(window).height() - (200 + $('.navbar-brand').height());
 
             // Grouping
             this.groupBy = ko.observable();
