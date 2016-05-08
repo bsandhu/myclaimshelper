@@ -48,6 +48,11 @@ define(['knockout', 'KOMap', 'jquery',
                         try {
                             var loc = win.location.href;
                         } catch (e) {
+                            // Detect pop up blocker
+                            if (win == undefined) {
+                                window.clearInterval(timer);
+                                _this.notifyEnd(false, 'Pop-up blocked. Please allow popups for this page');
+                            }
                             // Till Google redirects there is a CORS security exception
                             exception = e;
                             console.log(e);
