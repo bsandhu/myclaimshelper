@@ -19,10 +19,62 @@ define(['knockout', 'maskedInput', 'text!app/components/contact/contactComponent
             this.allowEdits  = ko.observable(params.hasOwnProperty('allowEdits') ? params.allowEdits : true);
             this.contact     = params.contact;
             this.idSuffix    = ko.observable(params.idSuffix);
+            this.states      = ko.observable([
+                'NY',
+                'NJ',
+                'NH',
+                'CT',
+                'PA',
+                'AL',
+                'AK',
+                'AZ',
+                'AR',
+                'CA',
+                'CO',
+                'DE',
+                'FL',
+                'GA',
+                'HI',
+                'ID',
+                'IL',
+                'IN',
+                'IA',
+                'KS',
+                'KY',
+                'LA',
+                'ME',
+                'MD',
+                'MA',
+                'MI',
+                'MN',
+                'MS',
+                'MO',
+                'MT',
+                'NE',
+                'NV',
+                'NM',
+                'NC',
+                'ND',
+                'OH',
+                'OK',
+                'OR',
+                'RI',
+                'SC',
+                'SD',
+                'TN',
+                'TX',
+                'UT',
+                'VT',
+                'VA',
+                'WA',
+                'WV',
+                'WI',
+                'WY']);
 
             this.isBusinessOptionApplicable = ko.observable();
             this.setupBusinessTypeOption(params.isBusinessOptionApplicable);
 
+            // Add phone number input mask
             $().ready(function maskTelFields(){
                 $('input[type=tel]').mask("999-999-9999");
             });

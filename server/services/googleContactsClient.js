@@ -277,6 +277,11 @@ GoogleContactscClient.prototype.creationRequestBody = function (contactObj, grou
         '<gd:fullName><%= name %></gd:fullName>' +
         '</gd:name>');
 
+    var notesTmpl = _.template(
+        '<content type="text">' +
+        '<%= notes %>' +
+        '</content>');
+
     var emailTmpl = _.template(
         '<gd:email rel="http://schemas.google.com/g/2005#work" ' +
         'primary="true" ' +
@@ -309,7 +314,7 @@ GoogleContactscClient.prototype.creationRequestBody = function (contactObj, grou
     var name = contactObj.name || contactObj.businessName || 'Unknown';
     var header = headerTmpl({'name': enc(name)});
     var email = emailTmpl({'email': contactObj.email, 'name': enc(name)});
-    var homePhone = homePhoneTmpl({'phone': enc(contactObj.phone || '')});
+    var homePhone = homePhoneTmpl({'phone': enc((contactObj.phone || '') + (contactObj.ext ? ',' + contactObj.ext : ''))});
     var mobilePhone = mobilePhoneTmpl({'phone': enc(contactObj.cell || '')});
     var group = groupTmpl({'group': groupId});
     var addr = addrTmpl({
@@ -318,9 +323,11 @@ GoogleContactscClient.prototype.creationRequestBody = function (contactObj, grou
         'region': enc(contactObj.state || 'Unknown'),
         'zip': enc(contactObj.zip || 'Unknown')
     });
+    var notes = notesTmpl({'notes': enc(contactObj.notes || '')});
     var footer = footerTmpl({});
 
     var result = header;
+    if (contactObj.notes) result = result + notes;
     if (contactObj.email) result = result + email;
     if (contactObj.phone) result = result + homePhone;
     if (contactObj.cell) result = result + mobilePhone;

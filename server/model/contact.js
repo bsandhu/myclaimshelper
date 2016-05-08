@@ -23,7 +23,10 @@ define([], function () {
 
         this.email = undefined;
         this.phone = undefined;
+        this.ext = undefined;
         this.cell = undefined;
+
+        this.notes = undefined;
     }
 
     return Contact;
