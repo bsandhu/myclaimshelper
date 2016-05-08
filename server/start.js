@@ -9,6 +9,7 @@ var claimsService = require('./services/claimsService.js');
 var billingServices = require('./services/billingServices.js');
 var billingProfileService = require('./services/billingProfileService.js');
 var contactService = require('./services/contactService.js');
+var contactSyncService = require('./services/contactSyncService.js');
 var profileService = require('./services/profileService.js');
 var uploadService = require('./services/uploadService.js');
 var entityExtractionService = require('./services/entityExtractionService.js');
@@ -151,6 +152,9 @@ function setupContactServiceRoutes() {
     server.get('/contact', authenticate, contactService.listAllContacts);
     server.get('/contact/:id', authenticate, contactService.getContact);
     server.post('/contact', authenticate, contactService.saveOrUpdateContact);
+
+    server.get('/contactSync/auth', authenticate, contactSyncService.getAuthUrl);
+    server.post('/contactSync/contacts', authenticate, contactSyncService.addContactToGoogle);
 }
 
 function setupBillingServiceRoutes() {
@@ -181,9 +185,9 @@ function setupStaticRoutes() {
         maxAge: 60 * 60 * 24
     }));
     server.get(/\/lib\/.*/, serveStaticWith304({
-            directory: 'client',
-            maxAge: 60 * 60 * 24
-        }));
+        directory: 'client',
+        maxAge: 60 * 60 * 24
+    }));
     server.get(/\/css\/.*/, serveStaticWith304({
         directory: 'client',
         maxAge: 60 * 60 * 24

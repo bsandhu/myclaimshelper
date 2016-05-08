@@ -18,6 +18,7 @@ define([], function () {
 
         this.streetAddress = undefined;
         this.city = undefined;
+        this.state = undefined;
         this.zip = undefined;
 
         this.email = undefined;

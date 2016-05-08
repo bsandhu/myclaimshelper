@@ -74,6 +74,10 @@ div {
     margin-top: 5%;
 }
 
+.bottomMargin0 {
+    margin-bottom: 0px;
+}
+
 .bottomMargin {
     margin-bottom: 2px;
 }
@@ -146,6 +150,14 @@ div {
 
 .noBorder {
     border: 0;
+}
+
+.noRightBorder {
+    border-right: 0;
+}
+
+.noLeftBorder {
+    border-left: 0;
 }
 
 .noShadow {
@@ -579,6 +591,19 @@ nav ul {
 
 .fixed-table-container tbody td {
     border-left: 0px;
+}
+
+/**********************************************************/
+/**** Contacts ****/
+/**********************************************************/
+
+.stepBulletPoint {
+    background: #0091d9;
+    color: #fff;
+    font-weight: 500;
+    padding: 7px 13px;
+    font-size: 12px;
+    border-radius: 50%;
 }
 
 /**********************************************************/

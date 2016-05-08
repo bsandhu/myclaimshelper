@@ -1,6 +1,7 @@
-define(['knockout', 'text!app/components/contact/contactWidget.tmpl.html',
+define(['knockout', 'underscore',
+        'text!app/components/contact/contactWidget.tmpl.html',
         'app/utils/session', 'app/components/contact/contactClient', 'amplify', 'app/utils/events'],
-    function (ko, view, Session, ContactClient, amplify, Events) {
+    function (ko, _, view, Session, ContactClient, amplify, Events) {
 
         function ContactWidgetVM() {
             console.log('Init Contacts Widget');
@@ -10,7 +11,9 @@ define(['knockout', 'text!app/components/contact/contactWidget.tmpl.html',
             this.initFilter();
 
             if (Session.getContacts().length === 0) {
-                ContactClient.loadContactsAndStoreInSession().done(this.initContacts.bind(this));
+                ContactClient
+                    .loadContactsAndStoreInSession()
+                    .done(this.initContacts.bind(this));
             } else {
                 this.initContacts();
             }
@@ -18,11 +21,15 @@ define(['knockout', 'text!app/components/contact/contactWidget.tmpl.html',
         }
 
         ContactWidgetVM.prototype.initFilter = function () {
-            this.filterText.subscribe(function (newVal){
-                this.filteredContacts($.grep(this.contacts(), function(contact){
+            this.filterText.subscribe(function (newVal) {
+                this.filteredContacts($.grep(this.contacts(), function (contact) {
                     return contact.name.toUpperCase().indexOf(newVal.toUpperCase()) >= 0;
                 }));
             }, this);
+        }
+
+        ContactWidgetVM.prototype.onClearFilterClick = function () {
+            this.filterText('');
         }
 
         ContactWidgetVM.prototype.onAddedContactEv = function (contact) {
@@ -39,8 +46,8 @@ define(['knockout', 'text!app/components/contact/contactWidget.tmpl.html',
         }
 
         ContactWidgetVM.prototype.initContacts = function () {
-            this.contacts(Session.getContacts());
-            this.filteredContacts(Session.getContacts());
+            this.contacts(_.sortBy(Session.getContacts(), 'name'));
+            this.filteredContacts(_.sortBy(Session.getContacts(), 'name'));
         }
 
         return {viewModel: ContactWidgetVM, template: view};

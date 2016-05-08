@@ -63,6 +63,7 @@ require(['jquery', 'knockout', 'KOAmd', 'text', 'amplify', 'app/components/appVM
             ko.components.register('billing-component', {require: 'app/components/billing/billingComponent'});
             ko.components.register('billing-item-component', {require: 'app/components/billingItem/billingItemComponent'});
             ko.components.register('billing-profile-component', {require: 'app/components/billingProfile/billingProfileComponent'});
+            ko.components.register('contact-sync-component', {require: 'app/components/contactSync/contactSyncComponent'});
 
             // Knockout bindings init
             ko.applyBindings(new AppVM());
