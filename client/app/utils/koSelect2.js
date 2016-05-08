@@ -1,8 +1,6 @@
 define(['jquery', 'knockout', 'underscore', 'KOMap', 'shared/dateUtils', 'select2'],
 
     function ($, ko, _, KOMap, DateUtils) {
-        'use strict';
-
         /*
          * @See https://select2.github.io/
          */
