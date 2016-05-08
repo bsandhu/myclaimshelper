@@ -2,7 +2,7 @@ var _ = require('lodash');
 var assert = require('assert');
 var jQuery = require('jquery-deferred');
 var ContactSyncService = require('./../../server/services/contactSyncService.js');
-var Contact = require('./../../server/model/Contact.js')
+var Contact = require('./../../server/model/contact.js')
 
 
 xdescribe('ContactSyncService', function () {

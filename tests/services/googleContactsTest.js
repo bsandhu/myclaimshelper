@@ -3,7 +3,7 @@ var assert = require('assert');
 var jQuery = require('jquery-deferred');
 var ContactSyncService = require('./../../server/services/contactSyncService.js');
 var GoogleContactsClient = require('./../../server/services/googleContactsClient.js').GoogleContactsClient;
-var Contact = require('./../../server/model/Contact.js')
+var Contact = require('./../../server/model/contact.js')
 var google = require('googleapis');
 var OAuth2 = google.auth.OAuth2;
 
