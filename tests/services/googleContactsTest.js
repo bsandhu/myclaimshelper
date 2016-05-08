@@ -8,7 +8,7 @@ var google = require('googleapis');
 var OAuth2 = google.auth.OAuth2;
 
 
-describe('GoogleContactsClient', function () {
+xdescribe('GoogleContactsClient', function () {
 
     // Generate this and plug in here for the test to run
     var TEST_TOKEN =  'ya29.CjHaAggeSU9aui3T6RLDK_sLZGGkiggSNG98nQG6eGI8SYpR05pJs0eyU0nEyQvp1g7N';

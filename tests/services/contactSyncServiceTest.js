@@ -5,7 +5,7 @@ var ContactSyncService = require('./../../server/services/contactSyncService.js'
 var Contact = require('./../../server/model/Contact.js')
 
 
-describe('ContactSyncService', function () {
+xdescribe('ContactSyncService', function () {
 
     // Generate this and plug in here for the test to run
     var TEST_TOKEN =  'ya29.CjHaAliONRx9-MCT7km3V1y-rrX3S4lrTwuLMPRlsrRW9q_6lDHe6qXhy1VaI95CYXcw';
