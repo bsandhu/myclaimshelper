@@ -10,6 +10,8 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore', 'model/claim', '
         }
 
         ClaimsListVM.prototype.init = function () {
+            this.panelContentHeight = $(window).height() - (140 + $('.navbar-brand').height());
+
             // Grouping
             this.groupBy = ko.observable();
             this.groupBy.subscribe(function () {
@@ -112,6 +114,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore', 'model/claim', '
                 _this.init = true;
             }
 
+            $('#claimListTable').data('height', _this.panelContentHeight);
             $('#claimListTable').bootstrapTable();
             $('#claimListTable').bootstrapTable('showLoading');
         }
