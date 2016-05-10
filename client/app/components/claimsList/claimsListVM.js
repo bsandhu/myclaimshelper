@@ -110,7 +110,6 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore', 'model/claim', '
         ClaimsListVM.prototype.initDisplay = function () {
             var _this = this;
             if (!_this.init) {
-                _this.initDisplay();
                 _this.init = true;
             }
 
