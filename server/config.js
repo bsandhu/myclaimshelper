@@ -73,6 +73,25 @@ config.PROD.auth0_client_secret = 'L3_qew5xG1FsXL6PVGpwP-YLnb1ev9I8ZmRe6BmP_hSwE
 config.auth0_client_secret = config[config.env]['auth0_client_secret'];
 
 
+// **** Auth0 ****
+config.oauth = {};
+
+config.LOCAL.oauth_client_id = '198685353476-dmi3ilthpga177ghr9i9s3kmop08a9d8.apps.googleusercontent.com';
+config.TEST.oauth_client_id = '198685353476-7ll4r86ethbt7e73ss4fups833tugsg3.apps.googleusercontent.com';
+config.PROD.oauth_client_id = '198685353476-puc7iibpk05p5k6cki7p57gto53nnqkd.apps.googleusercontent.com';
+config.oauth_client_id = config[config.env]['oauth_client_id'];
+
+config.LOCAL.oauth_client_secret = 'Nt9v-xXok8cd_EQJU0VHFq5r';
+config.TEST.oauth_client_secret = 'Di4KPilzpL8F8VItCnW_CgmB';
+config.PROD.oauth_client_secret = 'BdCeIuEuMWrhiQqvyOF89PKq';
+config.oauth_client_secret = config[config.env]['oauth_client_secret'];
+
+config.LOCAL.oauth_redirect_url = 'http://localhost:8080/app/components/contactSync/contactAuthDone.html';
+config.TEST.oauth_redirect_url = 'http://myclaimshelpertest.herokuapp.com/app/components/contactSync/contactAuthDone.html';
+config.PROD.oauth_redirect_url = 'http://myclaimshelper.com/app/components/contactSync/contactAuthDone.html';
+config.oauth_redirect_url = config[config.env]['oauth_redirect_url'];
+
+
 // **** DNSSimple ****
 config.dnssimple = {};
 config.dnssimple.user = 'baljeet.mail@gmail.com';

@@ -1,5 +1,4 @@
 require.config({
-    urlArgs: "Ver=20160417",
     baseUrl: '/',
     paths: {
         'jquery': 'lib/jquery-2.1.1',

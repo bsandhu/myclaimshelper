@@ -1,0 +1,77 @@
+<div class="container container-fluid">
+
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <!--Add a button for the user to click to initiate auth sequence -->
+            <div class="btn-group inline pull-right">
+                <button type="button"
+                        class="btn btn-default btn-info"
+                        data-bind="click: onSyncContactsClick">
+                    <span class="fa fa-plus"></span>
+                    Add contact to mobile phone
+                </button>
+            </div>
+        </div> <!-- End col -->
+    </div> <!-- End row -->
+
+    <div class="row" id="contacts-syncPanel" style="display: none">
+        <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 col-md-offset-4 col-lg-offset-4">
+            <div class="panel panel-info">
+                <div class="panel-body">
+                    <div class="container container-fluid" style="line-height: 275%">
+
+                        <!-- Step 1 -->
+                        <div class="row">
+                            <span class="stepBulletPoint">1</span>
+                                <span style="padding-left: 5px">You will need a Google account. You can
+                                    <a href="https://accounts.google.com/Signup"
+                                       target="_blank">get one here <i class="fa fa-external-link"></i></a></span>
+                        </div>
+
+                        <!-- Step 2 -->
+                        <div class="row">
+                            <span class="stepBulletPoint">2</span>
+                            <span style="padding-left: 5px">Add contacts to your Google account</span>
+                            <span>
+                                <button class="btn btn-xs btn-info"
+                                        data-bind="click: onAddNowClick,
+                                                   disable: showSpinner">
+                                    Add now
+                                </button>
+                            </span>
+                            <p data-bind="if: successMsg() || failureMsg()">
+                                <span style="margin-right: 40px"></span>
+                                <span data-bind="if: showSpinner">
+                                    <i class="fa fa-spinner fa-spin fa-2x"></i>
+                                </span>
+                                <i><span class="text-success" data-bind="html: successMsg"></span></i>
+                                <i><span class="text-danger" data-bind="html: failureMsg"></span></i>
+                            </p>
+                        </div>
+
+                        <!-- Step 3 -->
+                        <div class="row">
+                            <span class="stepBulletPoint">3</span>
+                            <span style="padding-left: 5px">Turn on Google syncing for your
+                                <a href="https://support.google.com/mail/answer/2753077?hl=en"
+                                   target="_blank">iPhone <i class="fa fa-external-link"></i></a>
+                                or
+                                <a href="https://support.google.com/mail/answer/2672244?hl=en"
+                                   target="_blank">Android <i class="fa fa-external-link"></i></a>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                            <button class="btn btn-xs btn-info pull-right"
+                                    data-bind="click: onSyncContactsClick">
+                                Done
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div><!-- End col -->
+    </div><!-- End row -->
+
+</div>

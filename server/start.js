@@ -9,6 +9,7 @@ var claimsService = require('./services/claimsService.js');
 var billingServices = require('./services/billingServices.js');
 var billingProfileService = require('./services/billingProfileService.js');
 var contactService = require('./services/contactService.js');
+var contactSyncService = require('./services/contactSyncService.js');
 var profileService = require('./services/profileService.js');
 var uploadService = require('./services/uploadService.js');
 var entityExtractionService = require('./services/entityExtractionService.js');
@@ -41,6 +42,7 @@ var io = socketio.listen(server);
 
 function init() {
     server = restify.createServer();
+
     // Wrap with socket io instance
     io = socketio.listen(server);
 
@@ -70,13 +72,16 @@ function init() {
     server.use(restify.jsonp());
     server.use(restify.gzipResponse());
 
+    // Inject TEST_USER if needed
     server.use(function reqSessionHandler(req, res, next) {
         if (DISABLE_AUTH) {
-            console.log('Injecting test user into req');
             req.headers.userid = TEST_USER;
         }
         next();
     });
+    if (DISABLE_AUTH) {
+        console.log('**** Auth is disabled. Using ' + TEST_USER + ' ****');
+    }
     server.use(restify.conditionalRequest());
 }
 
@@ -147,6 +152,9 @@ function setupContactServiceRoutes() {
     server.get('/contact', authenticate, contactService.listAllContacts);
     server.get('/contact/:id', authenticate, contactService.getContact);
     server.post('/contact', authenticate, contactService.saveOrUpdateContact);
+
+    server.get('/contactSync/auth', authenticate, contactSyncService.getAuthUrl);
+    server.post('/contactSync/contacts', authenticate, contactSyncService.addContactToGoogle);
 }
 
 function setupBillingServiceRoutes() {
@@ -177,9 +185,9 @@ function setupStaticRoutes() {
         maxAge: 60 * 60 * 24
     }));
     server.get(/\/lib\/.*/, serveStaticWith304({
-            directory: 'client',
-            maxAge: 60 * 60 * 24
-        }));
+        directory: 'client',
+        maxAge: 60 * 60 * 24
+    }));
     server.get(/\/css\/.*/, serveStaticWith304({
         directory: 'client',
         maxAge: 60 * 60 * 24

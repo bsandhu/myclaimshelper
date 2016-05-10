@@ -18,11 +18,15 @@ define([], function () {
 
         this.streetAddress = undefined;
         this.city = undefined;
+        this.state = undefined;
         this.zip = undefined;
 
         this.email = undefined;
         this.phone = undefined;
+        this.ext = undefined;
         this.cell = undefined;
+
+        this.notes = undefined;
     }
 
     return Contact;

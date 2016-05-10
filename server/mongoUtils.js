@@ -186,7 +186,6 @@ function checkOwnerPresent(obj) {
 
 function getEntityById(entityId, colName, owner) {
     assert(owner, 'Owner attr must be present');
-    console.log('Getting Entity: ' + entityId);
     var defer = jQuery.Deferred();
     checkOwnerPresent(owner);
 

@@ -21,6 +21,8 @@ define([], function(){
         SHOW_CLAIM           : 'ShowClaim',
         NEW_CLAIM            : 'AddClaim',
         SAVED_CLAIM          : 'SavedClaim',
+        SELECT_CLAIM         : 'SELECT_CLAIM',
+        SELECTED_CLAIM       : 'SELECTED_CLAIM',
 
         SHOW_CLAIM_ENTRY     : 'ShowClaimEntry',
         NEW_CLAIM_ENTRY      : 'NewClaimEntry',

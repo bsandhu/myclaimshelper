@@ -81,13 +81,15 @@
                     </thead>
                     <tbody data-bind="foreach: { data: filteredBills, as: 'bill' }">
                     <tr>
-                        <td data-bind="html: '<span class=\'color-dark-grey\'>' +
-                                        bill.claimInsuranceCompanyFileNum +
-                                        ' / ' +
-                                        bill.claimFileNum +
+                        <td data-bind="click: $parent.router.routeToBill">
+                            <a data-bind="click: $parent.onClaimClick" href="#">
+                                <span data-bind="html:
+                                        '<span class=\'color-dark-grey\'>' +
+                                            bill.claimFileNum + ' / ' + bill.claimInsuranceCompanyFileNum +
                                         '</span><br/>' +
-                                        bill.claimInsuranceCompanyName,
-                                       click: $parent.router.routeToBill"></td>
+                                        bill.claimInsuranceCompanyName"></span>
+                            </a>
+                        </td>
                         <td data-bind="text: bill._id,
                                        click: $parent.router.routeToBill"></td>
                         <td>

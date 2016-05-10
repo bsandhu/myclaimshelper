@@ -43,4 +43,4 @@ function addDisplayOrderToClaimEntries() {
         });
 }
 
-addDisplayOrderToClaimEntries();
+//addDisplayOrderToClaimEntries();

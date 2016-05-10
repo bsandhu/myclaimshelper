@@ -54,6 +54,11 @@ div {
     min-width: 250px;
 }
 
+.widest {
+    width: 350px;
+    min-width: 350px;
+}
+
 /**********************************************************/
 /**** Margins and borders ****/
 /**********************************************************/
@@ -72,6 +77,10 @@ div {
 
 .topMargin5pc {
     margin-top: 5%;
+}
+
+.bottomMargin0 {
+    margin-bottom: 0px;
 }
 
 .bottomMargin {
@@ -146,6 +155,14 @@ div {
 
 .noBorder {
     border: 0;
+}
+
+.noRightBorder {
+    border-right: 0;
+}
+
+.noLeftBorder {
+    border-left: 0;
 }
 
 .noShadow {
@@ -227,6 +244,15 @@ div {
 
 #claimListTable .text-success {
     color: darkgreen;
+}
+
+.clearSearchIcon {
+    color: rgb(169, 169, 169);
+    font-size: 1.2em;
+}
+
+.clearSearchIcon:hover {
+    color: lightcoral;
 }
 
 /**********************************************************/
@@ -570,6 +596,19 @@ nav ul {
 
 .fixed-table-container tbody td {
     border-left: 0px;
+}
+
+/**********************************************************/
+/**** Contacts ****/
+/**********************************************************/
+
+.stepBulletPoint {
+    background: #0091d9;
+    color: #fff;
+    font-weight: 500;
+    padding: 7px 13px;
+    font-size: 12px;
+    border-radius: 50%;
 }
 
 /**********************************************************/

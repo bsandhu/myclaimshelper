@@ -1,0 +1,74 @@
+<div class="modal fade" id="selectClaimModal" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true"
+     style="width: 80%; top: 10%; margin: auto">
+
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <!-- Modal header -->
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title" data-bind="text: titleText"></h4>
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body">
+                <div class="panel panel-default noBorder">
+                    <div>
+                        <!-- Search box -->
+                        <div class="row bottomMargin5">
+                            <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8">
+                                <div class="inline">
+                                    <span class="glyphicon glyphicon-search"
+                                          style="font-size: initial; margin-top: 10px;"
+                                          aria-hidden="true"></span>
+                                </div>
+                                <div class="inline" style="width: 80%;">
+                                    <input class="form-control no-border"
+                                           id="claimSelector-search"
+                                           placeholder="Start typing to filter" type="text"
+                                           data-bind="textInput: filterText">
+                                </div>
+                                <div class="inline">
+                                    <span>
+                                        <a href="#" data-bind="click: onClearFilterClick">
+                                            <i class="fa fa-times-circle clearSearchIcon"
+                                               style="position: relative; right: 20px"></i></a>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Search results -->
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                <div class="custom-scroll table-responsive"
+                                     style="height:290px; overflow-y: scroll;">
+                                    <table class="table table-bordered table-hover">
+                                        <tbody data-bind="foreach: { data: filteredClaims , as: 'claim' }">
+                                        <tr data-bind="click: $parent.onSelectClaim.bind($parent)">
+                                            <td>
+                                                <span data-bind="html: claim.fileNo"></span>
+                                                <span data-bind="html: claim.insuranceCo"></span>
+                                                <span data-bind="text: insuredSort" class="leftMargin2pc"></span>
+                                                <span data-bind="text: claimantSort" class="leftMargin2pc"></span>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <!-- End Panel -->
+
+            </div>
+        </div>
+    </div>
+    <!-- End Modal -->
+
+</div>

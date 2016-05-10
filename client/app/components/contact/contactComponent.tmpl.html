@@ -55,18 +55,30 @@
     <div data-bind="visible: showDetails() && allowEdits()">
 
         <!--Address-->
-        <div class="inline bottomMargin">
-            <input type="text" class="form-control wider input-sm" placeholder="Address"
-                   data-bind="value: contact().streetAddress"/>
+        <div>
+            <div class="inline bottomMargin">
+                <input type="text" class="form-control wider input-sm" placeholder="Address"
+                       data-bind="value: contact().streetAddress"/>
+            </div>
         </div>
 
-        <div class="inline bottomMargin">
-            <input type="text" class="form-control normal input-sm" placeholder="City"
-                   data-bind="value: contact().city"/>
-        </div>
-        <div class="inline bottomMargin">
-            <input type="text" class="form-control narrow input-sm" placeholder="Zip"
-                   data-bind="value: contact().zip"/>
+        <!--City/State/Zip-->
+        <div>
+            <div class="inline bottomMargin">
+                <input type="text" class="form-control normal input-sm" placeholder="City"
+                       data-bind="value: contact().city"/>
+            </div>
+            <div class="inline bottomMargin">
+                <select class="form-control narrow input-sm"
+                        data-bind="value: contact().state,
+                                   options: states,
+                                   optionsCaption: '...'">
+                </select>
+            </div>
+            <div class="inline bottomMargin">
+                <input type="text" class="form-control narrow input-sm" placeholder="Zip"
+                       data-bind="value: contact().zip"/>
+            </div>
         </div>
 
         <!--Phone-->
@@ -76,10 +88,18 @@
                     <input type="tel" class="form-control normal input-sm" placeholder="Phone"
                            data-bind="value: contact().phone"/>
                 </div>
-                <div class="inline bottomMargin">
-                    <input type="tel" class="form-control normal input-sm" placeholder="Cell"
-                           data-bind="value: contact().cell"/>
+                <div class="inline narrow bottomMargin">
+                    <input class="form-control narrower input-sm" placeholder="Ext"
+                           data-bind="value: contact().ext"/>
                 </div>
+            </div>
+        </div>
+
+        <!--Cell-->
+        <div>
+            <div class="inline bottomMargin">
+                <input type="tel" class="form-control normal input-sm" placeholder="Cell"
+                       data-bind="value: contact().cell"/>
             </div>
         </div>
 
@@ -88,6 +108,14 @@
             <div class="inline bottomMargin">
                 <input type="email" class="form-control wide input-sm" placeholder="Email"
                        data-bind="value: contact().email"/>
+            </div>
+        </div>
+
+        <!--Notes-->
+        <div>
+            <div class="inline bottomMargin">
+                <textarea class="form-control widest input-sm" placeholder="Notes"
+                          data-bind="value: contact().notes"/>
             </div>
         </div>
     </div>

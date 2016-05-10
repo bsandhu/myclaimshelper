@@ -8,7 +8,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
             this.Session = Session;
 
             // UI state
-            this.gridNavDelay = 100;
+            this.gridNavDelay = 50;
             this.gridNavEffect = 'easeOut';
             this.claimPanelState = undefined;
             this.claimEntryPanelState = undefined;
@@ -240,7 +240,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
 
             if (this[stateTracker] !== 'expanded') {
                 $(panelSelector).velocity(
-                    { width: '100%'},
+                    { width: '98%'},
                     {begin: function () {
                         $(panelSelector).show();
                     }},

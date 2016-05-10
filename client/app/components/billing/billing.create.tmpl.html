@@ -2,8 +2,20 @@
 
 <div class="panel-heading" style="background-color: #FAFAFA">
     <div class="row">
-        <div class="col-lg-9 col-md-9 col-sm-6 col-xs-6">
-            <h3 class="panel-title" data-bind="text: bill().claimInsuranceCompanyFileNum"></h3>
+        <div class="col-lg-9 col-md-9 col-sm-6 col-xs-6" style="font-size: 1.5em">
+            <a data-bind="attr: {href: '#/claim/' + bill().claimId()}">
+                <span data-bind="if: bill().claimFileNum">
+                    <span data-bind="text: bill().claimFileNum()"
+                          style="font-size: .9em"></span>
+                </span>
+                <span data-bind="if: bill().claimInsuranceCompanyFileNum">
+                    <span data-bind="text: ' / ' + bill().claimInsuranceCompanyFileNum()"
+                          style="font-size: .9em"></span>
+                </span>
+                <span data-bind="if: bill().claimInsuranceCompanyName">
+                    <span data-bind="text: bill().claimInsuranceCompanyName()" style="font-size: .8em"></span>
+                </span>
+            </a>
         </div>
         <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
             <!-- ko if: bill().status() === BillingStatus.NOT_SUBMITTED -->
@@ -147,7 +159,7 @@
                     <i data-bind="taskEntryTag: billingItem.tag()"></i>
                 </td>
                 <td><a data-bind="text: billingItem.summary,
-                                  attr: {href: '#/claimEntry/' + $parent.claimId + '/' + billingItem.claimEntryId()}"></a>
+                                  attr: {href: '#/claimEntry/' + $parent.claimId() + '/' + billingItem.claimEntryId()}"></a>
                 </td>
                 <td>
                     <div style="min-width: 43px" class="inline">
