@@ -17,11 +17,16 @@ var broadcastNoHTTP = require('../../services/notificationService.js').broadcast
 /**
  * Invoked by the Mailgun service
  */
-var process = function (req, res, sendEmail) {
+var process = function (req, res, testMode) {
     res.send(200, 'Request received successfully.');
 
-    var sendSuccessEmail = config.send_success_email_reply;
-    var sendErrorEmail = config.send_failure_email_reply;
+    if (testMode) {
+        var sendSuccessEmail = false
+        var sendErrorEmail = false;
+    } else {
+        var sendSuccessEmail = config.send_success_email_reply;
+        var sendErrorEmail = config.send_failure_email_reply;
+    }
     var from = req.params.To.toUpperCase().split('@')[0];
     var defer = jQuery.Deferred();
 

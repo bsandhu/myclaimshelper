@@ -53,7 +53,7 @@ describe('mailHandler', function(){
         };
 
         req.params.To = 'TESTUSER1@foo.com';
-        ms.process(req, res, false).then(assertSuccess);
+        ms.process(req, res, true).then(assertSuccess);
     });
     
     it('fails to save attachments', function(done){
@@ -63,19 +63,19 @@ describe('mailHandler', function(){
         done();
       }; 
       req.files['attachment-1'].path = 'nonsense'
-      ms.process(req, res, false).fail(assertFailure);
+      ms.process(req, res, true).fail(assertFailure);
 
     });
     
     it('fails to find matching claim', function(done){
       var assertFailure = function(data){
         console.log(data);
-        assert.equal(data.errors[0], 'Could not find a matching claim. Plase ensure that the subject line of the email has the Claim file number');
+        assert.equal(data.errors[0], 'Could not find a matching claim. Please ensure that the subject line of the email has the Claim file number');
         done();
       }; 
 
       req.params.subject = "the subject claim id:AAA"
-      ms.process(req, res, false).fail(assertFailure);
+      ms.process(req, res, true).fail(assertFailure);
     });
 
 });

@@ -28,7 +28,7 @@ MailParser.prototype.parseRequest = function (req, allKnownClaims, allKnownUserI
             var claimId = this._getClaimId(req.params.subject, allKnownClaims, userId);
             console.log('Matched to claim file number: ' + claimId);
             if (!claimId) {
-                errors.push('Could not find a matching claim. Plase ensure that the subject line of the email has the Claim file number');
+                errors.push('Could not find a matching claim. Please ensure that the subject line of the email has the Claim file number');
             }
         }
 

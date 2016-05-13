@@ -79,7 +79,7 @@ describe('mailParser', function () {
         var entry = mailParser.parseRequest(req, [], ['DefaultUser']);
         assert.equal(entry.errors.length, 1);
         assert.deepEqual(entry.errors,
-            ['Could not find a matching claim. Plase ensure that the subject line of the email has the Claim file number']);
+            ['Could not find a matching claim. Please ensure that the subject line of the email has the Claim file number']);
     });
 
 
