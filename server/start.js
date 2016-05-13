@@ -214,16 +214,25 @@ function setupStaticRoutes() {
 function setUpWSConn() {
     io.sockets.on('connection', function (socket) {
         console.log("Web Socket connection established");
+
+        // UserId is used as roomName
+        socket.on('joinRoom', function(userId){
+            console.log('WS addToRoom: ' + userId);
+            socket.join(userId);
+        });
     });
     io.sockets.on('disconnect', function (socket) {
         console.log("Web Socket disconnected");
     });
+
 }
 
 function setupBroadcastListener() {
-    serviceUtils.eventEmitter.on('foo', function onMsg(notification) {
-        console.log('Broadcasting: ' + JSON.stringify(notification));
-        io.emit('broadcast', notification, {for: 'everyone'});
+    serviceUtils.eventEmitter.on('foo', function onMsg(notification, userid) {
+        console.log('Broadcasting to ' + userid + ', ' + JSON.stringify(notification));
+
+        // 'userid' is the 'room' - one room per user
+        io.sockets.in(userid).emit(userid, notification);
     });
 }
 

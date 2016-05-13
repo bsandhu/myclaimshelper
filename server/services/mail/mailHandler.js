@@ -20,7 +20,8 @@ var broadcastNoHTTP = require('../../services/notificationService.js').broadcast
 var process = function (req, res, sendEmail) {
     res.send(200, 'Request received successfully.');
 
-    var sendEmail = (sendEmail != null || sendEmail != undefined) ? sendEmail : true;
+    var sendSuccessEmail = config.send_success_email_reply;
+    var sendErrorEmail = config.send_failure_email_reply;
     var from = req.params.To.toUpperCase().split('@')[0];
     var defer = jQuery.Deferred();
 
@@ -46,14 +47,14 @@ var process = function (req, res, sendEmail) {
             var mailEntry = parser.parseRequest(req, allKnownClaims, allKnownUserIds);
 
             if (mailEntry.errors.length > 0) {
-                notifyFailure(sendEmail, mailEntry);
+                notifyFailure(sendErrorEmail, mailEntry);
                 defer.reject(mailEntry);
             } else {
                 mongoUtils.connect()
                     .then(_.partial(linkToParentClaim, mailEntry))
                     .then(saveAttachments)
                     .then(saveEntry)
-                    .then(_.partial(notifySuccess, sendEmail), _.partial(notifyFailure, sendEmail))
+                    .then(_.partial(notifySuccess, sendSuccessEmail), _.partial(notifyFailure, sendErrorEmail))
                     .then(_.partial(defer.resolve))
                     .fail(_.partial(defer.reject));
             }
@@ -165,7 +166,7 @@ var notifySuccess = function (sendEmail, mailEntry) {
             if (sendEmail) {
                 var body = 'Email processed successfully!';
                 body += '\n\n' + JSON.stringify(mailEntry);
-                sendEmail(mailEntry.mail.from, mailEntry.mail.subject, body);
+                sendEmailViaMailgun(mailEntry.mail.from, mailEntry.mail.subject, body);
             }
         });
     return mailEntry;
@@ -181,15 +182,11 @@ var notifyFailure = function (sendEmail, mailEntry) {
         body,
         mailEntry.owner);
 
-    var sendMailFn = _.partial(sendEmail,
-        mailEntry.mail.From,
-        mailEntry.mail.subject,
-        body);
     if (mailEntry.owner) {
         notifyFn();
     }
     if (sendEmail) {
-        sendMailFn();
+        sendEmailViaMailgun(mailEntry.mail.from, mailEntry.mail.subject, body);
     }
     return mailEntry;
 };
@@ -215,7 +212,7 @@ function constructClaimEntry(data) {
     return entry;
 }
 
-function sendEmail(recipient, subject, body) {
+function sendEmailViaMailgun(recipient, subject, body) {
     if (config.ev === config.ENV_LOCAL) {
         console.log('')
         return;
@@ -233,6 +230,7 @@ function sendEmail(recipient, subject, body) {
     mailgun.messages().send(data, function (error, body) {
         console.log(data);
         if (error) {
+            console.log('Failure sending Mail');
             console.log(error);
             throw error;
         }

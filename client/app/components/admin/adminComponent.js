@@ -1,10 +1,13 @@
 define(['jquery', 'knockout', 'amplify',
         'app/utils/events', 'app/utils/ajaxUtils',
         'socketio',
+        'app/utils/session',
         'text!app/components/admin/admin.tmpl.html'],
 
-    function ($, ko, amplify, Events, ajaxUtils, io, viewHtml) {
+    function ($, ko, amplify, Events, ajaxUtils, io, Session, viewHtml) {
         'use strict';
+
+        var socket;
 
         function AdminVM(params) {
             console.log('Init AdminVM');
@@ -13,8 +16,13 @@ define(['jquery', 'knockout', 'amplify',
             amplify.subscribe(Events.SHOW_MSGS, this, this.onShowMsgs);
 
             var host = window.location.protocol + "//" + window.location.hostname;
-            var socket = io(host);
-            socket.on('broadcast', function (msg) {
+            socket = io.connect(host);
+
+            socket.on('connect', function() {
+                console.log('WS connected');
+            });
+
+            socket.on(Session.getCurrentUserId(), function (msg) {
                 console.log('WS broadcast: ' + JSON.stringify(msg));
                 if (msg.name == 'UnreadMsgCount') {
                     document.getElementById("msgAlertAudio").play();
@@ -25,6 +33,8 @@ define(['jquery', 'knockout', 'amplify',
                     amplify.publish(Events.SAVED_CLAIM_ENTRY, {});
                 }
             }.bind(this));
+
+            socket.emit('joinRoom', Session.getCurrentUserId());
 
             this.getUnreadMsgCount();
         }
