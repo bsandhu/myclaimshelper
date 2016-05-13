@@ -84,8 +84,8 @@
                                                   data-bind="text: $parent.groupBy().description"></span>
                                     <span class="paddingRight5"></span>
                                             <span class="summaryGroupSubHeader"
-                                                  data-bind="text: groupKey,
-                                                             css: {'summaryGroupSubHeaderOverDue': groupKey == 'Over Due'}"></span>
+                                                  data-bind="text: $parent.groupBy().groupDisplayNameFn(groupKey),
+                                                             css: {'summaryGroupSubHeaderOverDue': groupKey == 0}"></span>
                                             <span class="summaryGroupSubHeader"
                                                   data-bind="text: '(' + ($parent.claimEntriesGrouped()[groupKey].length) + ')'"></span>
                                 </td>
