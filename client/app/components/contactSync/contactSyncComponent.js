@@ -51,7 +51,8 @@ define(['knockout', 'KOMap', 'jquery',
                             // Detect pop up blocker
                             if (win == undefined) {
                                 window.clearInterval(timer);
-                                _this.notifyEnd(false, 'Pop-up blocked. Please allow popups for this page');
+                                _this.notifyEnd(false, 'Failed. Pop-up blocked. Please allow popups for this page and try again.');
+                                // Todo show image
                             }
                             // Till Google redirects there is a CORS security exception
                             exception = e;
