@@ -1,7 +1,7 @@
-define(['knockout', 'KOMap',
+define(['knockout', 'KOMap', 'jquery',
         'amplify', 'app/utils/events',
         'text!app/components/fileUpload/fileUploadComponent.tmpl.html'],
-    function (ko, KOMap, amplify, Events, viewHtml) {
+    function (ko, KOMap, $, amplify, Events, viewHtml) {
         'use strict';
 
         function FileUploadComponentVM(params) {
@@ -58,6 +58,9 @@ define(['knockout', 'KOMap',
                             console.log(metaObj);
                             _this.claimEntry().attachments.push(KOMap.fromJS(metaObj));
                             _this.showUploadingSpinner(false);
+                            setTimeout(function clearFileName() {
+                                $('#fileUpload-input').val('')
+                            }, 500);
                         })
                         .fail(function (msg) {
                             amplify.publish(Events.FAILURE_NOTIFICATION,

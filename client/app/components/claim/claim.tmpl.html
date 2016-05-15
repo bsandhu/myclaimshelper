@@ -349,12 +349,12 @@
                     <div class="row">
                         <div class="col-md-10">
                             <span class="stepBulletPoint">2</span>
-                            Mention Claim file number in the Subject line
+                            Mention Claim file number or the insurance company file number in the Subject line. Example:
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-offset-1 col-md-10">
-                            <img class="topMargin5" src="/img/EmailMsg.png"/>
+                        <div class="col-md-offset-1 col-md-10 topMargin5">
+                            <i><span data-bind="text: 'Witness statement ' + (claim().fileNum() || claim().insuranceCompanyFileNum() || '04-92998')"/></i>
                         </div>
                     </div>
                     <div class="row">
@@ -368,11 +368,6 @@
                         <div class="col-md-10">
                             <span class="stepBulletPoint" style="visibility: hidden"></span>
                             The email will appear as a Task under the relevant claim
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-offset-1 col-md-10">
-                            <img class="topMargin5 boxShadow" src="/img/EmailTask.png"/>
                         </div>
                     </div>
                 </div>
