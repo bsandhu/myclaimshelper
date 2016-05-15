@@ -28,7 +28,6 @@ require.config({
         'circliful': 'lib/jquery.circliful.min',
         'underscore': 'lib/underscore.min',
         'chartjs': 'lib/Chart',
-        'Auth0Lock': 'lib/lock-8.2.min',
         'bootstrapTableCustom': 'lib/bootstrap.table.customization',
         'maskedInput': 'lib/jquery.maskedinput.min',
         'loggly': 'lib/loggly.tracker-2.1.min'
@@ -36,10 +35,6 @@ require.config({
     shim: {
         'loggly': {
             exports: '_LTracker'
-        },
-        'Auth0Lock': {
-            deps: ['jquery'],
-            exports: 'Auth0Lock'
         },
         'chartjs': {
             deps: ['jquery'],
