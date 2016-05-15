@@ -1,7 +1,7 @@
-define(['jquery', 'knockout', 'KOMap', 'amplify', 'Auth0Lock', 'app/utils/events', 'app/utils/session',
+define(['jquery', 'knockout', 'KOMap', 'amplify', 'app/utils/events', 'app/utils/session',
         'text!app/components/userProfile/userProfile.tmpl.html', 'model/profiles', 'app/utils/audit'],
 
-    function ($, ko, KOMap, amplify, Auth0Lock, Events, Session, viewHtml, UserProfile, Audit) {
+    function ($, ko, KOMap, amplify, Events, Session, viewHtml, UserProfile, Audit) {
         'use strict';
 
         function UserProfileComponent(params) {

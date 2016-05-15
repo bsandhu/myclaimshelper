@@ -26,4 +26,5 @@
         "shared/NumberUtils": "../server/shared/NumberUtils",
         "shared/objectUtils": "../server/shared/objectUtils"
     },
+    optimizeCss: 'standard'
 })
