@@ -21,7 +21,9 @@ function extractEntities(txt) {
             defer.resolve(people);
         })
         .fail(function (err) {
-            defer.reject(err);
+            // Don't want the app workflow to fail with defer.reject
+            console.error('Error while extracting entities: ' + e);
+            defer.resolve([]);
         });
     return defer;
 }
@@ -29,31 +31,51 @@ function extractEntities(txt) {
 
 function extract(text) {
     var defer = jQuery.Deferred();
-    var postData = querystring.stringify({ 'apikey': '98c9972fd185bc3e87b5a7194a2619bba9d3ad26',
+    var postData = querystring.stringify({
+        'apikey': '98c9972fd185bc3e87b5a7194a2619bba9d3ad26',
         'text': text,
-        'outputMode': 'json'});
+        'outputMode': 'json'
+    });
 
     var options = {
         hostname: 'access.alchemyapi.com',
         port: 80,
         path: '/calls/text/TextGetRankedNamedEntities',
         method: 'POST',
-        headers: {'Content-Type': 'application/x-www-form-urlencoded',
-            'Content-Length': postData.length}
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Content-Length': postData.length
+        }
     };
+
     var req = http.request(options, function (res) {
-        res.setEncoding('utf8');
+        var data = '';
+
         res.on('data', function (chunk) {
-            console.log('Alchemy response: ' + chunk);
-            defer.resolve(JSON.parse(chunk));
+            data += chunk.toString('utf-8');
+        });
+        res.on('end', function () {
+            if (res.statusCode < 200 || res.statusCode >= 300) {
+                var error = new Error('Bad client request status: ' + res.statusCode + ' .Data: ' + res.data);
+                console.error(error);
+                defer.reject(error);
+            } else {
+                try {
+                    console.log('Alchemy response: ' + data);
+                    defer.resolve(JSON.parse(data));
+                } catch (e) {
+                    console.error('Error parsing Alchemy response. ' + e);
+                    defer.reject(e);
+                }
+            }
         });
     });
+
+    // Fire off request
     req.on('error', function (e) {
-        console.log('problem with request: ' + e.message);
+        console.error('Problem with Alchemy request: ' + e.message);
         defer.reject(e);
     });
-
-    console.log('Alchemy request: ' + postData);
     req.write(postData);
     req.end();
     return defer;
