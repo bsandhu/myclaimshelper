@@ -6,8 +6,8 @@ var _ = require('underscore');
 var assert = require('assert');
 
 
-function MailParser() {
-}
+function MailParser() {}
+
 util.inherits(MailParser, EventEmitter);
 
 MailParser.prototype.parseRequest = function (req, allKnownClaims, allKnownUserIds) {
@@ -18,9 +18,9 @@ MailParser.prototype.parseRequest = function (req, allKnownClaims, allKnownUserI
 
         // Match user
         var userId = this._getUserId(req.params.To, allKnownUserIds);
-        console.log('Incoming useerId: ' + userId);
+        console.log('Incoming user Id: ' + userId);
         if (!userId) {
-            errors.push('User ' + req.params.To.split('@')[0] + ' is not registered with the MyClaimsHelper.com');
+            errors.push('User <i>' + req.params.To.split('@')[0] + '</i> is not registered with the MyClaimsHelper.com');
         }
 
         // Match claim
@@ -28,7 +28,20 @@ MailParser.prototype.parseRequest = function (req, allKnownClaims, allKnownUserI
             var claimId = this._getClaimId(req.params.subject, allKnownClaims, userId);
             console.log('Matched to claim file number: ' + claimId);
             if (!claimId) {
-                errors.push('Could not find a matching claim. Please ensure that the subject line of the email has the Claim file number');
+                try {
+                    var firstKnownClaimId = allKnownClaims[0]['insuranceCompanyFileNum'] || allKnownClaims[0]['fileNum'];
+                    firstKnownClaimId = firstKnownClaimId || '04-92998';
+                } catch (e) {
+                    var firstKnownClaimId = '04-92998';
+                }
+
+                errors.push('Could not find a Claim to add this task to. ' +
+                    'Please ensure that the subject line of the email has the Claim file number.' +
+                    '<br/>' +
+                    '<br/>' +
+                    'The subject line should look something like this' +
+                    '<br/>' +
+                    '<i>Meet attorney at court ' + firstKnownClaimId + '</i>');
             }
         }
 
@@ -50,13 +63,15 @@ MailParser.prototype.parseRequest = function (req, allKnownClaims, allKnownUserI
 /**
  * Gets all known Insurance file number from the DB and cached in MailParser.allClaimsByOwner
  */
-MailParser.prototype._getAllKnownClaims = function () {
+MailParser.prototype._getAllKnownClaims = function (owner) {
+    assert.ok(owner, 'Expecting owner param');
     var defer = jQuery.Deferred();
     mongoUtils
         .connect()
         .then(function (db) {
+            var ignoreCaseRegex = new RegExp(["^", owner, "$"].join(""), "i");
             db.collection(mongoUtils.CLAIMS_COL_NAME)
-                .find({}, {insuranceCompanyFileNum: 1, owner: 1})
+                .find({owner: ignoreCaseRegex}, {fileNum: 1, insuranceCompanyFileNum: 1, owner: 1, _id: 1})
                 .toArray(function (err, docs) {
                     if (err) {
                         defer.reject(err);
@@ -112,9 +127,11 @@ MailParser.prototype._getClaimId = function (subject, allClaimsByOwner, owner) {
     var claimId = null;
 
     _.each(tokens, function (token) {
+        token = token.trim();
         _.each(allClaimsByOwner, function (claimByOwner) {
-            if (claimByOwner.insuranceCompanyFileNum == token && claimByOwner.owner.toUpperCase() == owner.toUpperCase()) {
-                claimId = token;
+            // Note: owner is filtered out by mongo query
+            if (claimByOwner.insuranceCompanyFileNum == token || claimByOwner.fileNum == token ) {
+                claimId = claimByOwner._id;
             }
         })
     });

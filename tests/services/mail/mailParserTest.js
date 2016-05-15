@@ -2,6 +2,7 @@ var assert = require('assert');
 var fs = require('fs');
 var ms = require('../../../server/services/mail/mailParser.js');
 var _ = require('underscore');
+var lodash = require('lodash');
 var jQuery = require('jquery-deferred');
 var Claim = require("../../../server/model/claim.js");
 var claimsService = require("../../../server/services/claimsService.js");
@@ -27,10 +28,11 @@ describe('mailParser', function () {
         var res = {};
         res.json = function (data) {
             assert(data);
+            testClaim._id = data.data._id
             assert.equal(data.status, 'Success');
             done();
         };
-        claimsService.saveOrUpdateClaim(req, res);
+        claimsService.saveOrUpdateClaim(req, res)
     });
 
     after(function(done) {
@@ -43,14 +45,14 @@ describe('mailParser', function () {
         var req = JSON.parse(fs.readFileSync(file, 'utf8'));
         var mailParser = new ms.MailParser();
 
-        jQuery.when(mailParser._getAllKnownClaims(), mailParser._getAllKnownUserIds())
+        jQuery.when(mailParser._getAllKnownClaims('DefaultUser'), mailParser._getAllKnownUserIds())
             .then(function (allKnownClaims, allUserIds) {
                 assert.ok(allKnownClaims.length > 0);
                 assert.ok(allUserIds.length > 0);
 
                 var entry = mailParser.parseRequest(req, allKnownClaims, allUserIds);
                 assert.equal(entry.errors.length, 0);
-                assert.deepEqual(entry.claimId, '123');
+                assert.deepEqual(entry.claimId, testClaim._id);
                 assert.deepEqual(entry.owner, 'DefaultUser');
                 assert.deepEqual(Object.keys(entry), ['claimId', 'owner', 'attachments', 'tags', 'mail', 'errors']);
                 done();
@@ -66,8 +68,7 @@ describe('mailParser', function () {
         var entry = mailParser.parseRequest(req);
         assert.equal(entry.errors.length, 1);
         assert.deepEqual(entry.errors,
-            [ 'User DefaultUser is not registered with the MyClaimsHelper.com']);
-        //'Could not find a matching claim. Plase ensure that the subject line of the email has the Claim file number']);
+            [ 'User <i>DefaultUser</i> is not registered with the MyClaimsHelper.com']);
     });
 
     it('ParseRequest - Claim not found', function () {
@@ -78,8 +79,9 @@ describe('mailParser', function () {
         // Do not load cache, hence no user match
         var entry = mailParser.parseRequest(req, [], ['DefaultUser']);
         assert.equal(entry.errors.length, 1);
-        assert.deepEqual(entry.errors,
-            ['Could not find a matching claim. Please ensure that the subject line of the email has the Claim file number']);
+
+        assert.ok(lodash.isString(entry.errors[0]));
+        assert.ok(lodash.startsWith(entry.errors[0], 'Could not find a Claim to add this task to'));
     });
 
 
@@ -99,7 +101,7 @@ describe('mailParser', function () {
     it('_getAllKnownClaims', function (done) {
         var mailParser = new ms.MailParser();
         mailParser
-            ._getAllKnownClaims()
+            ._getAllKnownClaims('DefaultUser')
             .done(function (resp) {
                 assert.ok(resp);
                 assert.ok(_.isArray(resp));
@@ -115,10 +117,10 @@ describe('mailParser', function () {
         var claimId = mailParser._getClaimId(
             'FW: abc |claim id: X100',
             [
-                {insuranceCompanyFileNum: 'X100', owner: 'TestUser'}
+                {insuranceCompanyFileNum: 'X100', owner: 'TestUser', _id: 5000}
             ],
             'TestUser');
-        assert.equal(claimId, 'X100');
+        assert.equal(claimId, 5000);
         done();
     });
 

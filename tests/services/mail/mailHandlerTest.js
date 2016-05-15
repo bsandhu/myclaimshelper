@@ -1,5 +1,6 @@
 var assert = require('assert');
 var fs = require('fs');
+var _ = require('lodash');
 var ms = require('../../../server/services/mail/mailHandler.js');
 var mongoUtils = require('../../../server/mongoUtils.js');
 var Claim = require("../../../server/model/claim.js");
@@ -17,6 +18,7 @@ describe('mailHandler', function(){
     before(function(done){
         var testClaim = new Claim();
         testClaim.insuranceCompanyFileNum = "123";
+        testClaim.fileNum = "04-12345";
         var req = {body: testClaim, headers: {userid: 'testuser1'}};
         var res = {};
         res.json = function (data) {
@@ -33,7 +35,7 @@ describe('mailHandler', function(){
             .fail('Failed to cleanup test data');
     });
 
-    it('processRequest succeeds', function (done) {
+    it('processRequest succeeds for Insurance co', function (done) {
         var assertSuccess = function (data) {
             assert.ok(data);
             assert.ok(data.claimId);
@@ -55,6 +57,29 @@ describe('mailHandler', function(){
         req.params.To = 'TESTUSER1@foo.com';
         ms.process(req, res, true).then(assertSuccess);
     });
+
+    it('processRequest succeeds for file num', function (done) {
+        var assertSuccess = function (data) {
+            assert.ok(data);
+            assert.ok(data.claimId);
+            assert.ok(data.owner);
+            assert.deepEqual(data.tags, [ '#tag1', '#tag2', 'email' ]);
+            assert.ok(data.attachments);
+            assert.equal(data.mail.subject, 'the subject of email is 04-12345');
+            assert.equal(data.mail.From, 'plato@nonsense.foo');
+
+            var ce = mongoUtils.getEntityById(data._id, 'ClaimEntries', 'TestUser');
+            ce.then(function (entry) {
+                console.log(arguments);
+                assert.ok(arguments)
+            });
+            done();
+        };
+
+        req.params.To = 'TESTUSER1@foo.com';
+        req.params.subject = 'the subject of email is 04-12345';
+        ms.process(req, res, true).then(assertSuccess);
+    });
     
     it('fails to save attachments', function(done){
       var assertFailure = function(data){
@@ -70,7 +95,8 @@ describe('mailHandler', function(){
     it('fails to find matching claim', function(done){
       var assertFailure = function(data){
         console.log(data);
-        assert.equal(data.errors[0], 'Could not find a matching claim. Please ensure that the subject line of the email has the Claim file number');
+        assert.ok(_.isString(data.errors[0]));
+        assert.ok(_.startsWith(data.errors[0], 'Could not find a Claim to add this task to'));
         done();
       }; 
 
