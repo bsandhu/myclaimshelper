@@ -28,7 +28,12 @@ var process = function (req, res, testMode) {
         var sendSuccessEmail = config.send_success_email_reply;
         var sendErrorEmail = config.send_failure_email_reply;
     }
+
+    // Remove any spurious quotes around email addr
     var from = req.params.To.toUpperCase().split('@')[0];
+    from = from.replace('"', '');
+    from = from.replace("'", '');
+    console.log('Email from: ' + from);
     var defer = jQuery.Deferred();
 
     var isTestUser = ['TESTUSER1', 'TESTUSER2'].indexOf(from) >= 0;
@@ -68,6 +73,7 @@ var process = function (req, res, testMode) {
 };
 
 var saveEntry = function (mailEntry) {
+    console.log('Saving claim entry');
     entry = constructClaimEntry(mailEntry);
     attachments = mailEntry.attachments;
 
@@ -102,6 +108,7 @@ var saveAttachment = function (attachment) {
 };
 
 var saveAttachments = function (mailEntry) {
+    console.log('Saving attachments');
     var _success = function () {
         for (var i = 0; i < mailEntry.attachments.length; i++) {
             mailEntry.attachments[i].id = arguments[i];

@@ -21,13 +21,15 @@ MailParser.prototype.parseRequest = function (req, allKnownClaims, allKnownUserI
         console.log('Incoming user Id: ' + userId);
         if (!userId) {
             errors.push('User <i>' + req.params.To.split('@')[0] + '</i> is not registered with the MyClaimsHelper.com');
+        } else {
+            console.log('Incoming user Id ' + userId + ' found in system');
         }
 
         // Match claim
         if (userId) {
             var claimId = this._getClaimId(req.params.subject, allKnownClaims, userId);
-            console.log('Matched to claim file number: ' + claimId);
             if (!claimId) {
+                console.log('Failed to match to known claim');
                 try {
                     var firstKnownClaimId = allKnownClaims[0]['insuranceCompanyFileNum'] || allKnownClaims[0]['fileNum'];
                     firstKnownClaimId = firstKnownClaimId || '04-92998';
@@ -65,6 +67,7 @@ MailParser.prototype.parseRequest = function (req, allKnownClaims, allKnownUserI
  */
 MailParser.prototype._getAllKnownClaims = function (owner) {
     assert.ok(owner, 'Expecting owner param');
+    console.log('Get all known claims for user: ' + owner);
     var defer = jQuery.Deferred();
     mongoUtils
         .connect()
@@ -76,6 +79,7 @@ MailParser.prototype._getAllKnownClaims = function (owner) {
                     if (err) {
                         defer.reject(err);
                     } else {
+                        console.log(docs.length + ' known claims for ' + owner);
                         defer.resolve(docs);
                     }
                 });
@@ -98,6 +102,7 @@ MailParser.prototype._getAllKnownUserIds = function () {
                         var allUserIds = _.map(docs, function (x) {
                             return x._id;
                         });
+                        console.log(allUserIds.length + ' known users');
                         defer.resolve(allUserIds);
                     }
                 });
@@ -123,15 +128,20 @@ MailParser.prototype._getUserId = function (senderEmail, allUserIds) {
 
 MailParser.prototype._getClaimId = function (subject, allClaimsByOwner, owner) {
     assert(owner, 'Must specify owner');
+    console.log('Matching known claims to subject: ' + subject);
     var tokens = subject.split(' ');
     var claimId = null;
 
     _.each(tokens, function (token) {
         token = token.trim();
+        token = token.replace('"', '');
+        token = token.replace("'", '');
+
         _.each(allClaimsByOwner, function (claimByOwner) {
             // Note: owner is filtered out by mongo query
             if (claimByOwner.insuranceCompanyFileNum == token || claimByOwner.fileNum == token ) {
                 claimId = claimByOwner._id;
+                console.log('Matched claim: ' + JSON.stringify(claimByOwner));
             }
         })
     });
