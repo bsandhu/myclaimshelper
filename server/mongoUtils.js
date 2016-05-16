@@ -247,7 +247,7 @@ var findEntities = function (collectionName, search, db, checkOwnerAttr) {
     if (checkOwnerAttr) {
         checkOwnerPresent(search);
     }
-    console.log('Find entities: ' + collectionName + ', Search: ' + JSON.stringify(search));
+    //console.log('Find entities: ' + collectionName + ', Search: ' + JSON.stringify(search));
 
     var result = jQuery.Deferred();
     var collection = db.collection(collectionName);

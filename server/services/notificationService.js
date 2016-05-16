@@ -52,7 +52,7 @@ function broadcastNoHTTP(name, type, body, owner) {
     // Broadcast event picked up by the start.js module
     saveNotificationInDB(notification)
         .then(function (entity) {
-            serviceUtils.eventEmitter.emit('foo', entity);
+            serviceUtils.eventEmitter.emit('foo', entity, owner);
         })
         .then(_.partial(getUnreadMsgCountInDB, owner))
         .then(function (count) {
@@ -60,7 +60,7 @@ function broadcastNoHTTP(name, type, body, owner) {
             msgCountNotification.name = Consts.NotificationName.UNREAD_COUNT;
             msgCountNotification.body = count;
 
-            serviceUtils.eventEmitter.emit('foo', msgCountNotification);
+            serviceUtils.eventEmitter.emit('foo', msgCountNotification, owner);
             defer.resolve(notification);
         })
         .fail(function (err) {

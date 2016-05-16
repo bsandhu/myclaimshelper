@@ -15,7 +15,6 @@ require(['jquery', 'knockout', 'KOAmd', 'text', 'amplify', 'app/components/appVM
         'app/components/maps/mapsComponent',
         'app/components/maps/mapsDashboardVM',
         'app/components/statusEditor/statusEditorComponent',
-        'app/components/quickAdd/quickAddVM',
         'app/components/stats/statsVM',
         'app/components/taskEntry/taskEntryVM',
         'app/components/claim/claimVM',
@@ -56,7 +55,6 @@ require(['jquery', 'knockout', 'KOAmd', 'text', 'amplify', 'app/components/appVM
             ko.components.register('maps-component', {require: 'app/components/maps/mapsComponent'});
             ko.components.register('maps-dash-component', {require: 'app/components/maps/mapsDashboardVM'});
             ko.components.register('status-editor-component', {require: 'app/components/statusEditor/statusEditorComponent'});
-            ko.components.register('quick-add-component', {require: 'app/components/quickAdd/quickAddVM'});
             ko.components.register('stats-component', {require: 'app/components/stats/statsVM'});
             ko.components.register('task-entry-component', {require: 'app/components/taskEntry/taskEntryVM'});
             ko.components.register('admin-component', {require: 'app/components/admin/adminComponent'});

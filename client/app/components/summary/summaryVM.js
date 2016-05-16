@@ -50,48 +50,24 @@ define(['jquery', 'knockout', 'underscore', 'KOMap', 'amplify', 'model/claim', '
 
         SummaryVM.prototype.setupGroupingOptions = function () {
             this.groupByOptions = ko.observableArray([
-                {description: 'Date Due',
+                {
+                    description: 'Date Due',
                     group: 'dueDate',
                     groupingFn: this.getDueDateGroupName,
-                    sortFn: function (entry1, entry2) {
-                        var date1InMillis = entry1.dueDate ? entry1.dueDate().getTime() : 0;
-                        var date2InMillis = entry2.dueDate ? entry2.dueDate().getTime() : 0;
-                        return date1InMillis - date2InMillis;
-                    }
+                    groupDisplayNameFn: this.getDueDateGroupDisplayName
                 },
-                // {description: 'Date Created',
-                //     group: 'entryDate',
-                //     groupingFn: this.getEntryDateGroupName,
-                //     sortFn: function (entry1, entry2) {
-                //         var date1InMillis = entry1.entryDate ? entry1.entryDate().getTime() : '';
-                //         var date2InMillis = entry2.entryDate ? entry2.entryDate().getTime() : '';
-                //         return date1InMillis - date2InMillis;
-                //     }
-                // },
-                {description: 'Task Status',
+                {
+                    description: 'Task Status',
                     group: 'state',
                     groupingFn: this.getStatusGroupName,
-                    sortFn: function (entry1, entry2) {
-                        var status1 = entry1.status ? entry1.status() : States.None;
-                        var status2 = entry2.status ? entry2.status() : States.None;
-
-                        var todo = States.TODO;
-                        var pending = States.Pending;
-                        var complete = States.Complete;
-                        var none = States.None;
-
-                        var ordering = {todo: 1,
-                            pending: 2,
-                            complete: 3,
-                            none: 4};
-                        return ordering[status1] - ordering[status2];
-                    }
+                    groupDisplayNameFn: this.getStatusGroupDisplayName
                 }
             ]);
         };
 
         SummaryVM.prototype.setupGrouping = function () {
-            // {'Over Due':[...], 'Today': [...]}
+            // {'0 for Over Due':[...],
+            //  'time in ms'    : [...]}
             this.claimEntriesGrouped = ko.computed(function () {
                 var dimensionMetaData = this.groupBy();
                 var group = dimensionMetaData.group;
@@ -110,36 +86,56 @@ define(['jquery', 'knockout', 'underscore', 'KOMap', 'amplify', 'model/claim', '
                 return groups;
             }, this);
 
-            // ['Over Due', 'Today']
+            // ['Time in ms', 'Time in ms']
             this.arrangeByKeys = ko.computed(function () {
+                var dimensionMetaData = this.groupBy();
+                var groupDisplayNameFn = dimensionMetaData.groupDisplayNameFn;
                 var keys = [];
-                $.each(this.claimEntriesGrouped(), function (group) {
-                    keys.push(group);
+
+                $.each(this.claimEntriesGrouped(), function (groupName) {
+                    keys.push(groupName);
                 });
                 console.log(keys);
-                return keys;
+                return keys.sort();
             }, this);
         };
 
+        /************************************************************/
+        /* Grouping fns                                             */
+        /* Returns: (GroupName, groupSortKey)                       */
+        /************************************************************/
+
+        /**
+         * groupName: day part of the due date in millis
+         */
+        SummaryVM.prototype.getDueDateGroupDisplayName = function (groupName) {
+            return (Number(groupName) == 0)
+                ? 'Over Due'
+                : DateUtils.niceDate(new Date(Number(groupName)), false);
+        }
+
         SummaryVM.prototype.getDueDateGroupName = function (dueDate, entry) {
             if (!(dueDate instanceof Date)) {
-                return $.trim(String(dueDate || ''));
+                return 0;
             }
 
+            // OverDue - can be different days - just return 0
             if (DateUtils.isYesterdayOrBefore(dueDate) &&
-                (entry.state() === States.TODO || entry.state() === States.PENDING)){
-                return 'Over Due';
+                (entry.state() === States.TODO || entry.state() === States.PENDING)) {
+                return 0;
             } else {
-                return  DateUtils.niceDate(dueDate, false);
+                var dueDay = new Date(dueDate.getTime());
+                dueDay.setHours(0, 0, 0, 0);
+                return dueDay.getTime();
             }
         };
 
-        SummaryVM.prototype.getEntryDateGroupName = function (entryDate) {
-            if (entryDate instanceof Date) {
-                return DateUtils.niceDate(entryDate, false);
-            }
-            return $.trim(String(entryDate || ''));
-        };
+        /**
+         * GroupName is the task status
+         */
+        SummaryVM.prototype.getStatusGroupDisplayName = function (groupName) {
+            return groupName;
+        }
 
         SummaryVM.prototype.getStatusGroupName = function (status) {
             return $.trim(String(status || ''));
