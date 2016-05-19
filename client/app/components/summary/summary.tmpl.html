@@ -92,7 +92,7 @@
                             </tr>
 
                             <!-- ko foreach: {data: $parent.claimEntriesGrouped()[groupKey], afterRender: $parent.onAfterRender} -->
-                            <tr draggable="true" class="summaryRow"
+                            <tr draggable="true" class="summaryRow notebook"
                                 data-bind="event: {dragstart: $parents[1].onSummaryRowDragStart.bind($parents[1]),
                                                        dragend  : $parents[1].onSummaryRowDragEnd.bind($parents[1]),
                                                        dragenter: $parents[1].onSummaryRowDragEnter.bind($parents[1]),
