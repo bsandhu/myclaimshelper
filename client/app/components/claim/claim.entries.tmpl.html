@@ -37,9 +37,10 @@
         <!-- Claim entry row -->
         <tbody data-bind="foreach: {data: claimEntries, as: 'entry' }">
             <tr
-                data-bind="click: $parent.onClaimEntryClick.bind($parent),
-                           event: {mouseover: function(){$('#claimEntryArrowCell' + $index()).css('font-weight', 'bold');},
-                                   mouseout : function(){$('#claimEntryArrowCell' + $index()).css('font-weight', 'inherit');}}">
+                data-bind="css: {info: $parent.activeClaimEntryId() === entry._id},
+                           click: $parent.onClaimEntryClick.bind($parent),
+                           event: {mouseover: function(){$('#claimEntryArrowCell' + $index()).css('font-size', '1.2em');},
+                                   mouseout : function(){$('#claimEntryArrowCell' + $index()).css('font-size', '1em');}}">
                 <td style="min-width: 15px">
                     <!-- Tag -->
                     <i class="leftMargin"
