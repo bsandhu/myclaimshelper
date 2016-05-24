@@ -54,6 +54,12 @@
                 </td>
                 <!-- /ko -->
 
+                <!-- ko if: $parent.isPartiallyCollapsed -->
+                <td>
+                    <span data-bind="text: $parent.DateUtils.niceDate(entry.dueDate)"></span>
+                </td>
+                <!-- /ko -->
+
                 <td style="min-width: 20%;">
                     <span data-bind="text: entry.summary"></span>
                 </td>
@@ -110,11 +116,11 @@
                 <td>
                     <span data-bind="text: entry.billingItem.status"></span>
                 </td>
+                <!-- /ko -->
                 <td class="rightMargin">
                     <i class="fa fa-angle-right"
                        data-bind="attr: {id: 'claimEntryArrowCell' + $index()}"></i>
                 </td>
-                <!-- /ko -->
             </tr>
         </tbody>
 
