@@ -10,16 +10,30 @@ define(['jquery', 'knockout', 'underscore', 'KOMap', 'amplify', 'model/claim', '
 
             this.DateUtils = DateUtils;
             this.claimEntries = ko.observableArray([]);
+            this.tagFilter = { $nin: ['dummyClauseToIncludeAllTags']};
 
-            // Grouping
+            this.setupFiltering();
+            this.setupDragDrop();
+
+            this.setupClaimEntryListener();
+            this.searchClaimEntries();
+
+            amplify.subscribe(Events.SELECTED_CLAIM, this, this.onNewTaskClaimSelection);
+        }
+
+        SummaryVM.prototype.setupFiltering = function () {
             this.setupGroupingOptions();
             this.groupBy = ko.observable(this.groupByOptions()[0]);
 
-            // Filtering
             this.setupDueDateFilters();
             this.setupStatusFilters();
             this.setupFilterVisibility();
 
+            this.setupGroupByListener();
+            this.setupGrouping();
+        }
+
+        SummaryVM.prototype.setupDragDrop = function () {
             // Drag n Drop
             // Entry which was dropped on to
             // The drag ev carries the Entry being moved
@@ -31,14 +45,7 @@ define(['jquery', 'knockout', 'underscore', 'KOMap', 'amplify', 'model/claim', '
 
             this.summaryDropSourceDOMElement = undefined;
             this.summaryDropTargetDOMElement = undefined;
-
-            this.setupGroupByListener();
-            this.setupClaimEntryListener();
-            this.setupGrouping();
-
-            this.searchClaimEntries();
-            amplify.subscribe(Events.SELECTED_CLAIM, this, this.onNewTaskClaimSelection);
-        }
+        };
 
         SummaryVM.prototype.componentLoaded = function () {
             // no-op
@@ -114,6 +121,9 @@ define(['jquery', 'knockout', 'underscore', 'KOMap', 'amplify', 'model/claim', '
                 : DateUtils.niceDate(new Date(Number(groupName)), false);
         }
 
+        /**
+         * @returns {number} time in millis for the day portion of the Due date
+         */
         SummaryVM.prototype.getDueDateGroupName = function (dueDate, entry) {
             if (!(dueDate instanceof Date)) {
                 return 0;
@@ -124,9 +134,7 @@ define(['jquery', 'knockout', 'underscore', 'KOMap', 'amplify', 'model/claim', '
                 (entry.state() === States.TODO || entry.state() === States.PENDING)) {
                 return 0;
             } else {
-                var dueDay = new Date(dueDate.getTime());
-                dueDay.setHours(0, 0, 0, 0);
-                return dueDay.getTime();
+                return DateUtils.stripTime(dueDate).getTime();
             }
         };
 
@@ -224,6 +232,7 @@ define(['jquery', 'knockout', 'underscore', 'KOMap', 'amplify', 'model/claim', '
         SummaryVM.prototype.searchClaimEntries = function () {
             // Matches Filter or is Overdue
             var postReq = { query: {isClosed: false,
+                                    tag: this.tagFilter,
                                    '$or' : [
                                         {'$and': [{dueDate: this.dueDateFilter().query},
                                                   {state: this.statusFilter().query}]},

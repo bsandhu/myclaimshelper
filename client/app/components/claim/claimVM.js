@@ -21,6 +21,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore', 'bootbox',
             this.claimEntries = ko.observableArray();
             this.sortDir = ko.observable('desc');
             this.activeTab = ko.observable(Consts.CLAIMS_TAB);
+            this.activeClaimEntryId = ko.observable();
             this.isPartiallyCollapsed = ko.observable(false);
 
             // View state
@@ -164,10 +165,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore', 'bootbox',
         };
 
         ClaimVM.prototype.onClaimEntryClick = function (entry, ev) {
-            // Toggle row highlight
-            $('#claimEntriesList tr').removeClass('info');
-            $(ev.target).closest('tr').addClass('info');
-
+            this.activeClaimEntryId(entry._id);
             Router.routeToClaimEntry(this.claim()._id(), entry._id);
         };
 
@@ -322,6 +320,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore', 'bootbox',
                 .done(function (resp) {
                     console.log('Loaded claim entries' + JSON.stringify(resp.data.length));
                     this.claimEntries(resp.data);
+                    this.activeClaimEntryId(null);
                     this.sortEntries();
                 }.bind(this));
         };

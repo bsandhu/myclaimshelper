@@ -37,9 +37,10 @@
         <!-- Claim entry row -->
         <tbody data-bind="foreach: {data: claimEntries, as: 'entry' }">
             <tr
-                data-bind="click: $parent.onClaimEntryClick.bind($parent),
-                           event: {mouseover: function(){$('#claimEntryArrowCell' + $index()).css('font-weight', 'bold');},
-                                   mouseout : function(){$('#claimEntryArrowCell' + $index()).css('font-weight', 'inherit');}}">
+                data-bind="css: {info: $parent.activeClaimEntryId() === entry._id},
+                           click: $parent.onClaimEntryClick.bind($parent),
+                           event: {mouseover: function(){$('#claimEntryArrowCell' + $index()).css('font-size', '1.2em');},
+                                   mouseout : function(){$('#claimEntryArrowCell' + $index()).css('font-size', '1em');}}">
                 <td style="min-width: 15px">
                     <!-- Tag -->
                     <i class="leftMargin"
@@ -51,6 +52,12 @@
                     <span data-bind="if: Number(entry.attachments.length) > 0">
                         <i class="fa fa-paperclip" style="font-size: 1.4em"></i>
                     </span>
+                </td>
+                <!-- /ko -->
+
+                <!-- ko if: $parent.isPartiallyCollapsed -->
+                <td>
+                    <span data-bind="text: $parent.DateUtils.niceDate(entry.dueDate)"></span>
                 </td>
                 <!-- /ko -->
 
@@ -110,11 +117,11 @@
                 <td>
                     <span data-bind="text: entry.billingItem.status"></span>
                 </td>
+                <!-- /ko -->
                 <td class="rightMargin">
                     <i class="fa fa-angle-right"
                        data-bind="attr: {id: 'claimEntryArrowCell' + $index()}"></i>
                 </td>
-                <!-- /ko -->
             </tr>
         </tbody>
 

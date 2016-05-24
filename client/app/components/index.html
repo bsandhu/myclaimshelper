@@ -37,7 +37,7 @@
 <body class="menu-on-top">
 
 <!-- Navigation header -->
-<nav class="navbar navbar-default noBorder" role="navigation">
+<nav id="navbar-container" class="navbar navbar-default noBorder" role="navigation">
 
     <div class="navbar-header">
         <button type="button" class="navbar-toggle"
@@ -159,13 +159,13 @@
     <div id="travelPanel" class="slidingContainer travelPanel">
         <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                <div data-bind="component: 'maps-dash-component'"></div>
+                <div data-bind="component: 'travel-component'"></div>
             </div>
         </div>
     </div>
 
     <!-- **** Contacts **** -->
-    <div id="contactsPanel" class="slidingContainer contactsPane">
+    <div id="contactsPanel" class="slidingContainer contactsPanel">
         <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                 <div data-bind="component: 'contact-sync-component'"></div>

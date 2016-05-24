@@ -166,8 +166,18 @@ define([],
             return date.getTime() < startOfToday().getTime();
         }
 
+        function stripTime(date){
+            if (!(date instanceof Date)) {
+                return date;
+            }
+            var withoutTime = new Date(date.getTime());
+            withoutTime.setHours(0, 0, 0, 0);
+            return withoutTime;
+        }
+
         return {
             'niceDate': niceDate,
+            'stripTime': stripTime,
             'niceLocaleDate': niceLocaleDate,
             'toDatePickerFormat': toDatePickerFormat,
             'toTimePickerFormat': toTimePickerFormat,

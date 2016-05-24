@@ -8,7 +8,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
             this.Session = Session;
 
             // UI state
-            this.gridNavDelay = 50;
+            this.gridNavDelay = 0;
             this.gridNavEffect = 'easeOut';
             this.claimPanelState = undefined;
             this.claimEntryPanelState = undefined;

@@ -13,7 +13,7 @@ require(['jquery', 'knockout', 'KOAmd', 'text', 'amplify', 'app/components/appVM
         'app/components/claimsList/claimsListVM',
         'app/components/notifier/notifierVM',
         'app/components/maps/mapsComponent',
-        'app/components/maps/mapsDashboardVM',
+        'app/components/maps/travelComponent',
         'app/components/statusEditor/statusEditorComponent',
         'app/components/stats/statsVM',
         'app/components/taskEntry/taskEntryVM',
@@ -53,7 +53,7 @@ require(['jquery', 'knockout', 'KOAmd', 'text', 'amplify', 'app/components/appVM
             ko.components.register('claim-selector-component', {require: 'app/components/claimsList/claimSelectorVM'});
             ko.components.register('notifier-component', {require: 'app/components/notifier/notifierVM'});
             ko.components.register('maps-component', {require: 'app/components/maps/mapsComponent'});
-            ko.components.register('maps-dash-component', {require: 'app/components/maps/mapsDashboardVM'});
+            ko.components.register('travel-component', {require: 'app/components/maps/travelComponent'});
             ko.components.register('status-editor-component', {require: 'app/components/statusEditor/statusEditorComponent'});
             ko.components.register('stats-component', {require: 'app/components/stats/statsVM'});
             ko.components.register('task-entry-component', {require: 'app/components/taskEntry/taskEntryVM'});
