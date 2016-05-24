@@ -80,6 +80,9 @@
                                         </strong>
                                     </p>
                                     <span data-bind="textTruncate: $data.summary, maxLength: 50"></span>
+                                    <p data-bind="ifnot: $data.location">
+                                        <span class="text-danger">No location</span>
+                                    </p>
                                 </td>
                             </tr>
                             <!-- /ko -->

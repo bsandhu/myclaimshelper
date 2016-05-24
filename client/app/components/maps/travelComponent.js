@@ -55,8 +55,8 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore',
                 // The delay is to allow the panel to fully slide into view
                 setTimeout(function () {
                     google.maps.event.trigger(self.map, 'resize');
-                    var currCenter = self.map.getCenter();
-                    self.map.setCenter(currCenter);
+                    //var currCenter = self.map.getCenter();
+                    //self.map.setCenter(currCenter);
                 }, 500);
             });
         }
@@ -217,7 +217,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore',
 
                 var marker = new google.maps.Marker({
                     map: self.map,
-                    title: entry.summary(),
+                    title: _.isFunction(entry.summary) ? entry.summary() : '',
                     position: entryPos,
                     icon: self.markerIconFor(entry)
                 });
