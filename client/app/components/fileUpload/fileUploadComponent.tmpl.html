@@ -3,17 +3,19 @@
                         'dragover': dragover,
                         'drop': drop}">
 
-    <input type="file" class="topMargin leftMargin" multiple
-           id="fileUpload-input"
-           data-bind="event: {'change': handleFilesSelection}">
+    Drag n drop files here or
+    <label class="btn btn-info btn-md">
+        <input type="file" class="topMargin leftMargin" multiple
+               id="fileUpload-input"
+               data-bind="event: {'change': handleFilesSelection}">
+        Choose file ...
+    </label>
 
     <div style="position: relative; left: 40%"
          class="txt-color-red"
          data-bind="visible: showUploadingSpinner">
         <i class="fa fa-spinner fa-spin"></i> Uploading ...
     </div>
-    <div class="backgroundLabel">Drag n drop files here</div>
-
 
     <!-- List attachments -->
     <ol class="topMargin5" data-bind="foreach: {data: claimEntry().attachments, as: 'file'}">

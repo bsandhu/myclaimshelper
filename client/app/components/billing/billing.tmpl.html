@@ -1,11 +1,10 @@
-<!-- **** Billing overview **** -->
-<div data-bind="">
+<div class="fullWidthCentered">
+    <!-- **** Billing overview **** -->
     <div data-bind="template: {name: 'app/components/billing/billing.list',
                                if: mode() === Consts.BILLING_TAB_HISTORY_MODE}"></div>
+
+    <!-- **** Create/View Bill **** -->
+    <div data-bind="template: {name: 'app/components/billing/billing.create',
+                               ifnot: mode() === Consts.BILLING_TAB_HISTORY_MODE,
+                               afterRender: afterBillingCreateRender}"></div>
 </div>
-
-<!-- **** Create/View Bill **** -->
-<div data-bind="template: {name: 'app/components/billing/billing.create',
-                           ifnot: mode() === Consts.BILLING_TAB_HISTORY_MODE,
-                           afterRender: afterBillingCreateRender}"></div>
-

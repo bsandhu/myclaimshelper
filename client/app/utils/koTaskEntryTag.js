@@ -18,6 +18,7 @@ define(['jquery', 'knockout', 'KOMap', 'app/utils/session', 'app/components/cont
             init: function (element, valueAccessor, allBindings, viewModel, bindingContext) {
                 var tag = valueAccessor() || 'other';
 
+                $(element).addClass('taskTag');
                 $(element).addClass('fa');
                 $(element).addClass(icons[tag]);
                 $(element).attr('title', tag);

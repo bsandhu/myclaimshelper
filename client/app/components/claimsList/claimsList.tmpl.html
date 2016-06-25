@@ -1,12 +1,8 @@
-<div class="panel panel-default">
-    <div class="panel-heading">
-        <h3 class="panel-title">Claims</h3>
-    </div>
-
+    <div class="panel panel-default">
     <div id="claims-list-toolbar">
-        <button type="button" class="btn btn-default dropdown-toggle btn-info"
+        <button type="button" class="btn btn-default btn-info"
                 data-bind="click: router.routeToNewClaim">
-            <span class="fa fa-plus"></span>
+            <span class="fa fa-plus" style="font-size: .8em"></span>
             New Claim
         </button>
 
@@ -34,14 +30,15 @@
                data-show-export="true"
                data-export-types="['excel']"
                data-bind='event: {"click-row.bs.table": onClaimSelect}, attr: {"data-height": 500}'
-               data-toolbar="#claims-list-toolbar">
+               data-toolbar="#claims-list-toolbar"
+               data-buttons-align="left">
             <thead>
-            <th data-field="fileNo" class="text-success" data-sortable="true" data-visible="true">File No.</th>
-            <th data-field="insuranceCo" data-sortable="true" data-visible="true">Insurance Co.</th>
-            <th data-field="desc" data-sortable="true">Description</th>
-            <th data-field="claimant" data-sortable="true" data-sort-name="claimantSort">Claimant</th>
+            <th data-field="fileNo" data-sortable="true" data-visible="true">File No.</th>
             <th data-field="insured" data-sortable="true" data-sort-name="insuredSort">Insured</th>
+            <th data-field="claimant" data-sortable="true" data-sort-name="claimantSort">Claimant</th>
+            <th data-field="desc" data-sortable="true">Description</th>
             <th data-field="dateDue" data-sortable="true" data-sort-name="dueTime">Due</th>
+            <th data-field="insuranceCo" data-sortable="true" data-visible="true">Insurance Co.</th>
             <!-- See client/lib/bootstrap.table.customization.js for CSS override -->
             <th data-field="ageText" data-sort-name="age" data-sortable="true">Age</th>
             <th data-field="claimId" data-sortable="true" data-visible="false">Id</th>

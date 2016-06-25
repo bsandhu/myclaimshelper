@@ -896,16 +896,17 @@
         if (this.options.search) {
             html = [];
             html.push(
-                    '<div class="pull-right search" style="width:20%">',
-                sprintf(
-                        '<input '
-                            + 'class="form-control no-border" '
-                            + 'type="text" '
-                            + 'placeholder="%s" '
-                            + 'style="margin-top: 8px;"/>',
-                            this.options.formatSearch()),
-                    '</div>' +
-                    '<div class="pull-right glyphicon glyphicon-search" style="padding-top: 30px; padding-right: 5px; font-size:initial;"></div>');
+                    '<div class="inline pull-right search fake-search-box">',
+                    '<div class="inline pull-left glyphicon glyphicon-search"></div>',
+                    sprintf(
+                            '<div class="inline">'
+                                + '<input '
+                                + 'class="form-control input no-border" '
+                                + 'type="text" '
+                                + 'placeholder="%s" '
+                                + 'style="position: relative; top:-8px; left: 10px"/></div>',
+                                this.options.formatSearch()),
+                '</div>');
 
             this.$toolbar.append(html.join(''));
             $search = this.$toolbar.find('.search input');
@@ -931,11 +932,11 @@
 
         html = [];
         html.push(
-        '<div class="pull-right search" style="padding-right: 10px; padding-top: 10px">',
-            '<div class="form-group rightBorderSolid inline">' +
-                '<div class="inline">Status</div>' +
+        '<div style="padding-top: 10px">',
+            '<div class="form-group inline dropdown-container" style="padding-right: 10px; padding-left: 10px;">' +
+                '<div class="inline text-between-dropdown topMargin5">Status</div>' +
                 '<div class="inline">' +
-                '<select class="form-control input-sm summaryGroupSelector" data-bind="value: groupBy, options: groupByOptions"></select></div>' +
+                '<select class="form-control input dropdown topMargin5" data-bind="value: groupBy, options: groupByOptions"></select></div>' +
             '</div>' +
         '</div>');
         this.$toolbar.append(html.join(''));

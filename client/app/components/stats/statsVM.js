@@ -20,7 +20,7 @@ define(['jquery', 'underscore', 'knockout', 'KOMap', 'amplify',
                 return this.nullSafeStats("['TasksDueToday'][0]['total']");
             }, this);
             this.percentTasksDone = ko.computed(function () {
-                return  N(this.tasksDueToday()) > 0
+                return N(this.tasksDueToday()) > 0
                     ? Math.round((N(this.tasksDoneToday()) / N(this.tasksDueToday())) * 100)
                     : 100;
             }, this);
@@ -32,7 +32,7 @@ define(['jquery', 'underscore', 'knockout', 'KOMap', 'amplify',
                 return this.stats()
                     ? _.zip(
                     _.map(this.stats()['TaskByCategory'], function (i) {
-                        return capitalizeFirstLetter(i._id[0])
+                        return i._id[0]
                     }),
                     _.map(this.stats()['TaskByCategory'], function (i) {
                         return i.total
@@ -96,40 +96,15 @@ define(['jquery', 'underscore', 'knockout', 'KOMap', 'amplify',
             $('#tasksStatsCircliful').empty().removeData();
 
             $('#tasksStatsCircliful')
-                .data('dimension', 70)
-                .data('width', 5)
+                .data('dimension', 90)
+                .data('width', 10)
                 .data('fontsize', 14)
-                .data('fgcolor', '#00b19d')
-                .data('bgcolor', '#ebeff2')
+                .data('fgcolor', '#039cdb')
+                .data('bgcolor', '#bababa')
                 .data('percent', this.percentTasksDone())
-                .data('text', this.percentTasksDone() + '%')
+                .data('text', this.tasksDueToday() + ' Due')
+                .data('info', this.tasksDoneToday() + ' Done')
                 .circliful();
-
-            /* var ctx = document.getElementById("tasksStatsByType").getContext("2d");
-             var data = [
-             {
-             value: 300,
-             color:"#F7464A",
-             highlight: "#FF5A5E",
-             label: "Visit"
-             },
-             {
-             value: 50,
-             color: "#46BFBD",
-             highlight: "#5AD3D1",
-             label: "Photos"
-             },
-             {
-             value: 100,
-             color: "#FDB45C",
-             highlight: "#FFC870",
-             label: "Phone"
-             }
-             ];
-             var options = {animateScale: false, animation: false}
-             var myChart = new Chart(ctx).Pie(data, options);*/
-
-
         }
 
         StatsVM.prototype.onclosedClaimsStatsTemplRender = function () {

@@ -3,10 +3,6 @@
 <!-- ************************************************************ -->
 <div class="panel panel-default">
 
-    <div class="panel-heading">
-        <h3 class="panel-title">Billing Overview</h3>
-    </div>
-
     <div class="panel-body" data-bind="if: bills().length > 0">
 
         <!-- Filtered msg. -->
@@ -40,22 +36,23 @@
                     </div>
                 </div>
                 -->
-                <div class="col-lg-2 col-md-2 col-sm-3 col-xs-3 inline pull-right" style="padding: 0px;">
-                    <input class="form-control no-border" id="prepend"
-                           placeholder="Start typing Claim file num" type="text"/>
+                <div class="col-lg-3 col-md-3 col-sm-4 col-xs-6 inline pull-right fake-search-box" style="padding: 0px;">
+                    <div class="inline pull-left glyphicon glyphicon-search" style="top: 15px; left: 8px;"></div>
+                    <div class="inline">
+                        <input class="form-control input no-border" id="prepend"
+                               style="position:relative; top: 6px; left: 15px"
+                               placeholder="Search" type="text"/>
+                    </div>
                 </div>
-                <div class="col-lg-2 col-md-2 col-sm-3 col-xs-3 inline pull-right" style="padding: 0px;">
-                    <div class="form-group rightBorderSolid inline rightMargin5">
+                <div class="inline" style="padding: 0;">
+                    <div class="form-group rightBorderSolid inline rightMargin5 dropdown-container">
                         <!-- Group selection -->
-                        <div class="inline">Status</div>
+                        <div class="inline text-between-dropdown leftMargin rightMargin topMargin5">Status</div>
                         <div class="inline">
-                            <select class="form-control input-sm summaryGroupSelector"
+                            <select class="form-control input dropdown topMargin5"
                                     data-bind="value: groupBy,
                                                options: groupByOptions"></select></div>
                     </div>
-                    <div class="glyphicon glyphicon-search inline"
-                         style="font-size: initial; padding-top: 10px;"
-                         aria-hidden="true"></div>
                 </div>
             </div>
         </div>
@@ -65,7 +62,7 @@
                 <table id="billingListTable"
                        data-sortable
                        data-bind="sortable"
-                       class="table table-hover table-responsive">
+                       class="table table-hover">
                     <thead>
                     <tr>
                         <th data-field="claimInsuranceCompanyFileNum" data-sortable="true">File num. / Insurance co. num.</th>
@@ -73,10 +70,10 @@
                         <th>Bill status</th>
                         <th data-field="submissionDate" data-sortable="true">Submitted on</th>
                         <th data-field="paidDate" data-sortable="true">Paid on</th>
-                        <th data-field="total" data-sortable="true">Total</th>
-                        <th data-field="totaTimel" data-sortable="true">Time</th>
-                        <th data-field="totalMileage" data-sortable="true">Mileage</th>
-                        <th data-field="totalExpense" data-sortable="true">Expense</th>
+                        <th data-field="total" class="billAmount" data-sortable="true">Total</th>
+                        <th data-field="totaTimel" class="billAmount" data-sortable="true">Time</th>
+                        <th data-field="totalMileage" class="billAmount" data-sortable="true">Mileage</th>
+                        <th data-field="totalExpense" class="billAmount" data-sortable="true">Expense</th>
                     </tr>
                     </thead>
                     <tbody data-bind="foreach: { data: filteredBills, as: 'bill' }">
@@ -98,7 +95,7 @@
                                 <button class="btn btn-md dropdown-toggle"
                                         data-toggle="dropdown"
                                         data-bind="html: bill.status + ' <span class=\'caret\'></span>',
-                                               css: bill.status === $parent.billingStatus.PAID() ? 'btn-success' : 'btn-link'">
+                                               css: bill.status === $parent.billingStatus.PAID() ? 'btn-link text-success' : 'btn-link'">
                                 </button>
                                 <ul class="dropdown-menu">
                                     <li>
@@ -126,17 +123,21 @@
                         <td data-bind="text: bill.paidDate ? $parent.DateUtils.niceDate(bill.paidDate, false, '-') : '-',
                                        click: $parent.router.routeToBill"></td>
 
-                        <td><span class="color-dark-grey billTotalAmount"
+                        <td class="billAmount">
+                            <span class="color-dark-grey billTotalAmount"
                                   data-bind="text: $parent.NumberUtils.niceCCY(bill.total),
                                              click: $parent.router.routeToBill"></span></td>
 
-                        <td><span data-bind="text: $parent.NumberUtils.nice(bill.totalTime),
+                        <td class="billAmount">
+                            <span data-bind="text: $parent.NumberUtils.nice(bill.totalTime),
                                              click: $parent.router.routeToBill"></span></td>
 
-                        <td><span data-bind="text: $parent.NumberUtils.nice(bill.totalMileage),
+                        <td class="billAmount">
+                            <span data-bind="text: $parent.NumberUtils.nice(bill.totalMileage),
                                              click: $parent.router.routeToBill"></span></td>
 
-                        <td><span data-bind="text: $parent.NumberUtils.niceCCY(bill.totalExpenseAmount),
+                        <td class="billAmount">
+                            <span data-bind="text: $parent.NumberUtils.niceCCY(bill.totalExpenseAmount),
                                              click: $parent.router.routeToBill"></span></td>
                     </tr>
                     </tbody>
@@ -146,21 +147,21 @@
                         <td class="topBorderSubTotal">
                             <span class="pull-right billSubTotal">Total</span>
                         </td>
-                        <td class="topBorderSubTotal">
-                            <span class="text-success billSubTotal"
+                        <td class="topBorderSubTotal billAmount">
+                            <span class="billSubTotal"
                                   data-bind="text: NumberUtils.niceCCY(filteredTotal())"></span>
                         </td>
-                        <td class="topBorderSubTotal">
-                            <span class="text-success billSubTotal"
+                        <td class="topBorderSubTotal billAmount">
+                            <span class="billSubTotal"
                                   data-bind="text: NumberUtils.nice(filteredTotalTime()) + ' Hrs'"></span>
                         </td>
-                        <td class="topBorderSubTotal">
-                            <span class="text-success billSubTotal"
+                        <td class="topBorderSubTotal billAmount">
+                            <span class="billSubTotal"
                                   data-bind="text: NumberUtils.nice(filteredTotalMileage()) + ' Miles'"></span>
 
                         </td>
-                        <td class="topBorderSubTotal">
-                            <span class="text-success billSubTotal"
+                        <td class="topBorderSubTotal billAmount">
+                            <span class="billSubTotal"
                                   data-bind="text: NumberUtils.niceCCY(filteredTotalExpenses())"></span>
                         </td>
                     </tr>

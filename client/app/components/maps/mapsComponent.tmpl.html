@@ -1,6 +1,7 @@
 <div id="maps">
 
     <input id="pac-input" class="form-control bottomMargin" type="text"
+           style="width: 80%;"
            placeholder="Start typing business name or address"
            data-bind="disable: claimEntryObserv().isClosed(),
                       value: claimEntryObserv().location() && claimEntryObserv().location().formatted_address
@@ -11,7 +12,7 @@
        style="cursor:pointer;"
        class="leftMargin5"
        data-bind="click: onShowMap">
-        <i class="fa fa-external-link-square"></i> Show map</a>
+        <i class="fa fa-map"></i> Show map</a>
 
     <div id="dialog-message" title="Map">
         <div class="hr hr-12 hr-double"></div>

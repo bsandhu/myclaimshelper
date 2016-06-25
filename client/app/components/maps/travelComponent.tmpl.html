@@ -1,8 +1,5 @@
-<div class="panel panel-default">
-    <div id="travel-panel-heading" class="panel-heading">
-        <h3 class="panel-title">Travel</h3>
-    </div>
-
+<div class="fullWidthCentered">
+    <div class="panel panel-default">
     <div class="panel-body">
         <div class="row">
             <!-- **** Nav panel **** -->
@@ -10,22 +7,23 @@
                 <div id="map-nav-container">
 
                     <!-- Form -->
-                    <form class="form-inline" role="form">
+                    <form class="form-inline bottomMargin5" role="form">
                         <!-- Due date group filter -->
-                        <div class="form-group paddingRight5">
-                            <select class="form-control input-sm summaryGroupSelector"
+                        <div class="form-group dropdown-container paddingRight5">
+                            <span class="leftMargin5 text-between-dropdown topMargin5">Travel</span>
+                            <select class="form-control input dropdown"
                                     data-bind="value: dueDateFilter,
-                                                   options: dueDateFilters,
-                                                   optionsText: 'description'"></select>
+                                                     options: dueDateFilters,
+                                                     optionsText: 'description'"></select>
 
-                            <div class="form-group" data-bind="if: showDueDateDaysFilter">
-                                <!-- Due date - day group filter -->
-                                <input class="form-control input-sm summaryGroupSelector"
-                                       style="width: 50px"
-                                       type="number" min="0"
-                                       data-bind="value: dueDateDaysFilterValue">
-                                <span>days</span>
-                            </div>
+                            <!-- Due date - day group filter -->
+                            <!-- ko if:showDueDateDaysFilter -->
+                            <input class="form-control input dropdown"
+                                   style="width: 50px"
+                                   type="number" min="0"
+                                   data-bind="value: dueDateDaysFilterValue"/>
+                            <span class="text-between-dropdown topMargin5 leftMargin5">days</span>
+                            <!-- /ko -->
                         </div>
                     </form>
                     <!-- End of form -->
@@ -33,17 +31,13 @@
                     <!-- Entries -->
                     <div>
                         <table class="table table-hover table-responsive summaryTable">
-                            <thead>
-                            <th>Tasks</th>
-                            </thead>
-
                             <tbody data-bind="foreach : {data: arrangeByKeys, as: 'groupKey'}"
                                    class="summaryGroupTableBody">
 
                             <!-- Header row -->
                             <tr class="summaryGroupHeaderRow">
                                 <td colspan="7" data-bind="click: $parent.onSummaryHeaderClick">
-                                    <span data-bind="css: 'fa fa-angle-double-down summaryRow' + groupKey.replace(' ', '') + 'Arrow'"
+                                    <span data-bind="css: 'fa fa-caret-down summaryRow' + groupKey.replace(' ', '') + 'Arrow'"
                                           style="font-size: 1.4em"></span>
                                     <span class="paddingRight5"></span>
                                             <span class="summaryGroupSubHeader"
@@ -57,12 +51,12 @@
                             <!-- ko foreach: {data: $parent.claimEntriesGrouped()[groupKey], afterRender: $parent.onAfterRender} -->
                             <tr draggable="true" class="summaryRow"
                                 data-bind="event: {dragstart: $parents[1].onSummaryRowDragStart.bind($parents[1]),
-                                                       dragend  : $parents[1].onSummaryRowDragEnd.bind($parents[1]),
-                                                       dragenter: $parents[1].onSummaryRowDragEnter.bind($parents[1]),
-                                                       dragover:  $parents[1].onSummaryRowDragOver.bind($parents[1]),
-                                                       dragleave: $parents[1].onSummaryRowDragLeave.bind($parents[1]),
-                                                       mouseover: $parents[1].onSummaryRowMouseOver.bind($parents[1]),
-                                                       mouseout: $parents[1].onSummaryRowMouseOut.bind($parents[1])},
+                                               dragend  : $parents[1].onSummaryRowDragEnd.bind($parents[1]),
+                                               dragenter: $parents[1].onSummaryRowDragEnter.bind($parents[1]),
+                                               dragover:  $parents[1].onSummaryRowDragOver.bind($parents[1]),
+                                               dragleave: $parents[1].onSummaryRowDragLeave.bind($parents[1]),
+                                               mouseover: $parents[1].onSummaryRowMouseOver.bind($parents[1]),
+                                               mouseout: $parents[1].onSummaryRowMouseOut.bind($parents[1])},
                                                css: 'summaryRow' + groupKey.replace(' ', ''),
                                                attr: {'data-entryId': $data._id,
                                                       'data-group': groupKey,
@@ -90,7 +84,6 @@
                         </table>
                     </div>
                     <!-- End of entries -->
-
                 </div>
             </div>
 
@@ -100,12 +93,12 @@
                 <!-- Buttons -->
                 <div class="row bottomMargin5">
                     <div id="travel-toolbar">
-                        <button type="button" class="btn btn-default dropdown-toggle btn-info"
+                        <button type="button" class="btn btn-default ghost-button"
                                 data-bind="click: onPrint">
                             <span class="fa fa-print"></span>
                             Print
                         </button>
-                        <button type="button" class="btn btn-default dropdown-toggle btn-info"
+                        <button type="button" class="btn btn-default ghost-button"
                                 data-bind="click: onDirections">
                             <span class="fa fa-car"></span>
                             Directions
@@ -133,7 +126,9 @@
                     </div>
                 </div><!-- end maps panel -->
 
-            </div><!-- end row -->
+            </div><!-- end maps panel -->
+        </div><!-- end row -->
 
-        </div><!-- end panel-body -->
-    </div><!-- end panel -->
+    </div><!-- end panel-body -->
+</div><!-- end panel -->
+</div>

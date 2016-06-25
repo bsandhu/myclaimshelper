@@ -20,13 +20,13 @@
         <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
             <!-- ko if: bill().status() === BillingStatus.NOT_SUBMITTED -->
             <a href="javascript:void(0);"
-               class="btn btn-labeled btn-default pull-right leftMargin"
+               class="btn btn-default ghost-button pull-right leftMargin"
                data-bind="click: onBillingProfileClick">
                 <span class="btn-label"><i class="fa fa-cogs"></i></span>  Billing Rates
             </a>
             <!-- /ko -->
             <a href="javascript:void(0);"
-               class="btn btn-labeled btn-default pull-right"
+               class="btn btn-default ghost-button pull-right"
                data-bind="click: printBill">
                 <span class="btn-label"><i class="fa fa-print"></i></span>  Print
             </a>
