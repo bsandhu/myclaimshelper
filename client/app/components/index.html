@@ -37,96 +37,72 @@
     <!-- Setting the right viewport -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
 </head>
-
 <body>
 
-<!-- Navigation header -->
-<nav id="navbar-container" class="navbar navbar-default noBorder" role="navigation">
-
-    <div class="navbar-header">
-        <button type="button" class="navbar-toggle"
-                data-toggle="collapse" data-target="#main-navbar-collapse">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-        </button>
-        <a class="navbar-brand" href="#/home" style="font-size: 26px">
-            Claims<span class="secondary">Helper</span>
-        </a>
-    </div>
-    <!-- `collapse` class needed for smaller devices -->
-    <div class="collapse navbar-collapse" id="main-navbar-collapse">
-        <ul class="nav navbar-nav">
-            <li><a fixed-width href="#/home">Tasks</a></li>
-            <li><a fixed-width href="#/claim/list">Claims</a></li>
-            <li><a fixed-width href="#/billing">Billing</a></li>
-            <li><a fixed-width href="#/travel">Travel</a></li>
-            <li><a fixed-width href="#/contacts">Contacts</a></li>
-            <li><a href="" data-bind="click: router.showMsgsPopup">
+<nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+                    aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#/home" style="font-size: 26px">
+                Claims<span class="secondary">Helper</span>
+            </a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse" aria-expanded="false" style="height: 1px;">
+            <ul class="nav navbar-nav">
+                <li><a href="#/home">Tasks</a></li>
+                <li><a href="#/claim/list">Claims</a></li>
+                <li><a href="#/billing">Billing</a></li>
+                <li><a href="#/travel">Travel</a></li>
+                <li><a href="#/contacts">Contacts</a></li>
+                <li><a href="" data-bind="click: router.showMsgsPopup"
+                       style="padding-right: 0; padding-left: 50px">
                     <span class="badge badge-important pull-right navbar-msg-count"
                           data-bind="text: unreadMsgCount"></span>
-                <i class="fa fa-bell"></i></a>
-            </li>
-            <li>
-                <!-- ko if: showApp -->
-                <a href="" data-bind="click: router.showProfilePopup">
-                    <i class="fa fa-user"></i>
-                    <span data-bind="text: userName"
-                          style="font-size: 70%"></span></a>
-                <!-- /ko -->
+                    <i class="fa fa-bell"></i></a>
+                </li>
+                <li>
+                    <!-- ko if: showApp -->
+                    <a href="" data-bind="click: router.showProfilePopup"
+                       style="padding-left: 0;">
+                        <i class="fa fa-user"
+                           style="border-left: 1px solid white; padding-left: 5px"></i>
+                        <span data-bind="text: userName"
+                              style="font-size: 70%"></span></a>
+                    <!-- /ko -->
 
-                <!-- ko ifnot: showApp -->
-                <a href="">
-                    <span data-bind="text: 'Login', click: onLogin"
-                          style="font-size: 70%"></span></a>
-                <!-- /ko -->
-            </li>
-            <li class="navbar-right">
-                <script language="JavaScript" type="text/javascript">
-                    TrustLogo("https://myclaimshelper.com/img/comodo_secure_seal_76x26_transp.png", "CL1", "none");
-                </script>
-            </li>
-        </ul>
+                    <!-- ko ifnot: showApp -->
+                    <a href="" style="padding-right: 0">
+                        <span data-bind="text: 'Login',
+                                         click: onLogin"
+                              style="font-size: 70%"></span></a>
+                    <!-- /ko -->
+                </li>
+            </ul>
+        </div><!--/.nav-collapse -->
     </div>
-
 </nav>
-<!-- End navigation header -->
-
-<!-- User profile -->
-<div data-bind="component: 'user-profile-component'"></div>
-
-<!-- Billing profile -->
-<div data-bind="component: 'billing-profile-component'"></div>
-
-<!-- Claim selector -->
-<div data-bind="component: 'claim-selector-component'"></div>
 
 <!-- #MAIN PANEL -->
-<div id="main" role="main" data-bind="if: showApp">
-
-    <!-- Msgs component -->
-    <admin-component></admin-component>
-
-    <!-- Add contact -->
-    <add-contact-component></add-contact-component>
-
-    <!-- Notifications -->
-    <div data-bind="component: 'notifier-component'"></div>
+<div class="container" style="position: relative; top: 85px;">
 
     <!-- **** Dashboard **** -->
-    <div id="dashboardPanel" class="dashboardPanel">
-        <div class="row">
-            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                <div data-bind="component: 'stats-component'"></div>
+    <div id="dashboardPanel" class="row dashboardPanel">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <div data-bind="component: 'stats-component'"></div>
+                </div>
             </div>
-        </div>
-        <div class="row">
-            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <div class="row">
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                     <div data-bind="component: 'summary-component'"></div>
                 </div>
@@ -183,6 +159,25 @@
             <div data-bind="component: 'task-entry-component'"></div>
         </div>
     </div>
+
+    <!-- Notifications -->
+    <div data-bind="component: 'notifier-component'"></div>
+
+    <!-- User profile -->
+    <div data-bind="component: 'user-profile-component'"></div>
+
+    <!-- Billing profile -->
+    <div data-bind="component: 'billing-profile-component'"></div>
+
+    <!-- Claim selector -->
+    <div data-bind="component: 'claim-selector-component'"></div>
+
+    <!-- Msgs component -->
+    <admin-component></admin-component>
+
+    <!-- Add contact -->
+    <add-contact-component></add-contact-component>
+
 </div>
 <!-- END #MAIN CONTENT -->
 </body>

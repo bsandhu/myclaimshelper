@@ -486,6 +486,7 @@ input.no-border {
     min-width: 18px;
     opacity: .87;
 }
+
 /**********************************************************/
 /**** Task Summary panel ****/
 /**********************************************************/
@@ -540,9 +541,60 @@ input.no-border {
     opacity: .9;
 }
 
+.dropdown-menu {
+}
+
 /**********************************************************/
 /**** Bootstrap overrides ****/
 /**********************************************************/
+
+.alert-fixed-top {
+    position: fixed;
+    top: 74px;
+    right: 0;
+    width: 100%;
+    min-width: 100%;
+    margin: auto;
+    z-index: 1000
+}
+
+.alert-info {
+    background-color: #c7efff;
+    border-color: #c7efff;
+    border-radius: 0;
+    height: 40px;
+    padding-top: 10px;
+    padding-left: 10px;
+    color: #007aac;
+    font-size: 14px;
+    text-align: center;
+    font-weight: 700;
+}
+
+.alert-danger {
+    background-color: #ff5f5f;
+    border-color: #ff5f5f;
+    border-radius: 0;
+    height: 40px;
+    padding-top: 10px;
+    padding-left: 10px;
+    color: #fff;
+    font-size: 14px;
+    text-align: center;
+}
+
+.alert-success {
+    background-color: #30d599;
+    border-color: #30d599;
+    border-radius: 0;
+    height: 40px;
+    padding-top: 10px;
+    padding-left: 10px;
+    color: #fff;
+    font-weight: 700;
+    font-size: 14px;
+    text-align: center;
+}
 
 h3.panel-title {
     font-size: 18px;
@@ -688,8 +740,8 @@ h3.panel-title {
 /**** Bootstrap navbar overrides ****/
 /**********************************************************/
 
-nav ul {
-    width: 80%;
+.nav > li {
+    background-color: #34495e;
 }
 
 .navbar-default {
@@ -699,6 +751,9 @@ nav ul {
 
 .navbar-msg-count {
     background-color: rgb(217, 68, 57);
+    position: relative;
+    top: 5px;
+    left: -6px;
 }
 
 .navbar-default .navbar-brand {
@@ -717,20 +772,17 @@ nav ul {
 /* Un-selected menu item */
 .navbar-default .navbar-nav > li > a {
     font-size: 18px;
-    height: 74px;
+    height: 73px;
     line-height: 45px;
     color: white;
     text-align: center;
 }
 
-.navbar-default .navbar-nav > li > a[fixed-width] {
-    min-width: 100px;
-}
-
 /* Hover/Selected menu item */
-.navbar-default .navbar-nav > li > a:hover, .navbar-default .navbar-nav > li > a:focus {
+.navbar-default .navbar-nav > li > a:hover,
+.navbar-default .navbar-nav > li > a:focus {
     color: #6bd4ff;
-    transition: color 200ms ease;
+    transition: color 300ms ease-out;
 }
 
 .navbar-selected {
@@ -799,8 +851,8 @@ nav ul {
     position: relative;
     bottom: 4px;
 }
-/**** End circliful ****/
 
+/**** End circliful ****/
 
 .stats-counter-header-text {
     font-size: 12px;
@@ -852,3 +904,37 @@ nav ul {
     min-height: 125px;
 }
 
+/**********************************************************/
+/**** Tooltips ****/
+/**********************************************************/
+
+.myTooltip {
+    display: inline;
+    position: relative;
+    text-transform: capitalize;
+}
+
+.myTooltip:hover:before {
+    border: solid;
+    border-color: #333 transparent;
+    border-width: 6px 6px 0 6px;
+    bottom: 20px;
+    content: "";
+    left: 50%;
+    position: absolute;
+    z-index: 99;
+}
+
+.myTooltip:hover:after {
+    background: #333;
+    background: rgba(0, 0, 0, .8);
+    border-radius: 2px;
+    bottom: 26px;
+    color: #fff;
+    content: attr(myTitle);
+    left: 20%;
+    padding: 5px 15px;
+    position: absolute;
+    z-index: 98;
+    width: 200px;
+}

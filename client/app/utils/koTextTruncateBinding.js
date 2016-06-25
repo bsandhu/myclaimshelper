@@ -30,10 +30,14 @@ define(['jquery', 'knockout'],
                 var maxLengthInPx = ($(window).width() * maxLengthInPercentage) / 100;
 
                 var maxChars = (maxLengthInPx / charLengthInPx) - 4;
-                var truncatedContent = contentLengthInPx > maxLengthInPx ? content.substr(0, maxChars) + '...' : content;
+                var shouldTruncate = contentLengthInPx > maxLengthInPx;
+                var truncatedContent = shouldTruncate ? content.substr(0, maxChars) + '...' : content;
 
-                $(element).html(truncatedContent);
-                $(element).attr('title', content);
+                $(element).html('<span>' + truncatedContent + '</span>');
+                if (shouldTruncate) {
+                    $(element).attr('myTitle', content);
+                    $(element).addClass('myTooltip');
+                }
             } catch (e) {
                 console.error('Could not truncate text: ' + e);
             }
