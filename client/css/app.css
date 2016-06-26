@@ -92,11 +92,6 @@ div {
     min-width: 350px;
 }
 
-.fullWidthCentered {
-    width: 98%;
-    margin: auto;
-}
-
 /**********************************************************/
 /**** Margins and borders ****/
 /**********************************************************/
@@ -548,6 +543,10 @@ input.no-border {
 /**** Bootstrap overrides ****/
 /**********************************************************/
 
+.modal-content {
+    border-radius: 2px;
+}
+
 .alert-fixed-top {
     position: fixed;
     top: 74px;
@@ -937,4 +936,9 @@ h3.panel-title {
     position: absolute;
     z-index: 98;
     width: 200px;
+}
+
+.notification.list-group-item {
+    border: 0;
+    border-bottom: 1px dotted darkgray;
 }

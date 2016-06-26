@@ -56,7 +56,7 @@ var _getBillingItems = function (search, db) {
     var result = jQuery.Deferred();
     jQuery.when(mongoUtils.findEntities(BILLING_ITEMS_COL_NAME, search, db))
         .then(function (billingItems) {
-            console.log('_getBillingItems: ' + JSON.stringify(billingItems).substr(0, 100));
+            //console.log('_getBillingItems: ' + JSON.stringify(billingItems).substr(0, 100));
             result.resolve(_hydrate(BillingItem, billingItems));
         });
     return result;

@@ -28,9 +28,10 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
             // View state
             this.router = Router;
             this.setupEvListeners();
-
+            this.setupUserLink();
             $(window).on('hashchange', this.setNavBarHighlight);
             this.setNavBarHighlight();
+
         }
 
         AppVM.prototype.startRouter = function () {
@@ -118,6 +119,25 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
                 location.reload();
             });
         };
+
+        AppVM.prototype.setupUserLink = function () {
+            var _this = this;
+
+            this.userNameLinkText = ko.computed(function () {
+                var name = _this.userName() || 'Login';
+                return (name.length >= 7)
+                    ? name.substr(0, 7) + '..'
+                    : name;
+            });
+        }
+
+        AppVM.prototype.onUserNameLinkClick = function () {
+            if (this.userName()) {
+                this.router.showProfilePopup();
+            } else {
+                this.onLogin();
+            }
+        }
 
         AppVM.prototype.setNavBarHighlight = function () {
             var toolbarLinks = '.navbar-default .navbar-nav > li > a';
@@ -212,7 +232,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
         /* Panels animation                              */
         /*************************************************/
 
-        // Expand
+// Expand
 
         AppVM.prototype.expandDashboardPanel = function () {
             this._expandPanel('dashboardPanel');
@@ -244,7 +264,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
             }
         };
 
-        // Collapse
+// Collapse
 
         AppVM.prototype.collapseDashboardPanel = function () {
             this._collapsePanel('dashboardPanel');
@@ -276,7 +296,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
             }
         };
 
-        // Claim panel
+// Claim panel
 
         AppVM.prototype.expandClaimPanel = function () {
             if (this.claimPanelState !== 'expanded') {
@@ -308,24 +328,25 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
             }
         };
 
-        // Claim Entry panel
+// Claim Entry panel
 
         AppVM.prototype.expandClaimEntryPanel = function () {
             if (this.claimEntryPanelState !== 'expanded') {
-                $("#claimEntryPanel").velocity({ 'width': '70%' }, this.gridNavDelay);
-                $("#claimEntryPanelContent").velocity("fadeIn", { duration: this.gridNavDelay });
+                $("#claimEntryPanel").velocity({'width': '70%'}, this.gridNavDelay);
+                $("#claimEntryPanelContent").velocity("fadeIn", {duration: this.gridNavDelay});
                 this.claimEntryPanelState = 'expanded';
             }
         };
 
         AppVM.prototype.collapseClaimEntryPanel = function () {
             if (this.claimEntryPanelState !== 'collapsed') {
-                $("#claimEntryPanel").velocity({ width: '0%' }, {duration: this.gridNavDelay}, this.gridNavEffect);
-                $("#claimEntryPanelContent").velocity("fadeOut", { duration: this.gridNavDelay });
+                $("#claimEntryPanel").velocity({width: '0%'}, {duration: this.gridNavDelay}, this.gridNavEffect);
+                $("#claimEntryPanelContent").velocity("fadeOut", {duration: this.gridNavDelay});
                 this.claimEntryPanelState = 'collapsed';
             }
         };
 
         return AppVM;
     }
-);
+)
+;

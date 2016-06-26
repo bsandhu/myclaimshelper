@@ -11,9 +11,9 @@
                 <h4 class="modal-title" id="msgModalTitle">Unread messages</h4>
             </div>
             <div class="modal-body" id="msgs-modal-body">
-                <ul class="list-group">
+                <ul class="notification list-group">
                     <!-- ko foreach: msgs() -->
-                        <li class="list-group-item"
+                        <li class="notification list-group-item"
                             data-bind="html: $data.body,
                                        css: 'list-group-item-' + $data.type,
                                        click: $parent.closeModal"></li>
@@ -27,11 +27,11 @@
                 <button type="button" class="btn btn-default" data-dismiss="modal">
                     Close
                 </button>
-                <!--
+
                 <button type="button" class="btn btn-primary" data-bind="click: onServerBroadcast">
                     Broadcast
                 </button>
-                -->
+
             </div>
         </div>
         <!-- /.modal-content -->
