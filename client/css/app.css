@@ -938,7 +938,45 @@ h3.panel-title {
     width: 200px;
 }
 
+/**********************************************************/
+/**** Notifications ****/
+/**********************************************************/
+
+@media (max-width: 1024px) {
+    .notification.modal {
+        width: 80%;
+    }
+}
+
+@media (min-width: 1024px) {
+    .notification.modal {
+        width: 50%;
+    }
+}
+
 .notification.list-group-item {
-    border: 0;
-    border-bottom: 1px dotted darkgray;
+    border: 1px dotted darkgrey;
+    border-right: 0;
+    border-left: 0;
+    border-radius: 0;
+}
+
+.notification.modal-header {
+    padding-bottom: 0;
+    border: 0
+}
+
+.notification.modal-footer {
+    padding-top: 0;
+    border: 0
+}
+
+.notification .fa-check-circle {
+    margin-right: 9px;
+    color: #10ca4c;
+}
+
+.notification .fa-icon-warning-sign {
+    margin-right: 9px;
+    color: #fd3333;
 }

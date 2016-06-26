@@ -129,7 +129,7 @@ var notifySuccess = function (sendEmail, mailEntry) {
     broadcastNoHTTP(
         Consts.NotificationName.NEW_MSG,
         Consts.NotificationType.INFO,
-        'Email processed. ' + mailEntry.mail.subject + '  <a href="#/claimEntry/' + mailEntry.claimId + '/' + mailEntry._id + '">Goto task</a>',
+        '<b>Email processed</b> ' + mailEntry.mail.subject + '  <a href="#/claimEntry/' + mailEntry.claimId + '/' + mailEntry._id + '">Goto task</a>',
         mailEntry.owner)
         .always(function email() {
             if (sendEmail) {
@@ -142,7 +142,7 @@ var notifySuccess = function (sendEmail, mailEntry) {
 };
 
 var notifyFailure = function (sendEmail, mailEntry) {
-    var header = 'Failed to process this email <i>' + mailEntry.mail.subject + '</i>';
+    var header = '<b>Failed to process email</b> ' + mailEntry.mail.subject;
     var body = JSON.stringify(mailEntry.errors[0]) || 'There was a problem on our server. Apologies.';
 
     var notifyFn = _.partial(broadcastNoHTTP,
