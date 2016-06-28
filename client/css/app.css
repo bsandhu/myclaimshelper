@@ -739,6 +739,14 @@ h3.panel-title {
 /**** Bootstrap navbar overrides ****/
 /**********************************************************/
 
+@media (max-width: 1024px) {
+    /* Narrow the nav bar on small devices */
+    .nav > li > a {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+}
+
 .nav > li {
     background-color: #34495e;
 }
