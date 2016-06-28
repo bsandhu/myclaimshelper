@@ -18,19 +18,20 @@ define(['jquery', 'knockout', 'KOMap', 'app/utils/session', 'app/components/cont
             init: function (element, valueAccessor, allBindings, viewModel, bindingContext) {
                 var tag = valueAccessor() || 'other';
 
-                $(element).addClass('fa');
-                $(element).addClass(icons[tag]);
-                $(element).attr('title', tag);
+                var tagStyle = 'taskTag fa ' + icons[tag];
+                $(element).html('<i class="' + tagStyle + '"></i>');
+
+                $(element).attr('myTitle', tag);
                 $(element).css('font-size', 'medium');
+                $(element).addClass('myTooltip');
             },
 
             update: function (element, valueAccessor, allBindings, viewModel, bindingContext) {
                 var tag = valueAccessor() || 'other';
 
-                $.each(icons, function(k, v){
-                    $(element).removeClass(v);
-                })
-                $(element).addClass(icons[tag]);
+                var tagStyle = 'taskTag fa ' + icons[tag];
+                $(element).html('');
+                $(element).html('<i class="' + tagStyle + '"></i>');
             }
         }
     }

@@ -88,7 +88,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore', 'model/claim', '
                             claimId: claim._id,
                             fileNo: claim.fileNum,
                             desc: claimDesc.length > 40 ? claimDesc.substr(0, 40) + '...' : claimDesc,
-                            insuranceCo: "<span class='text-success'>" + insuranceCompanyFileNum + "</span><br/>" + insuranceCoName,
+                            insuranceCo: "<span>" + insuranceCompanyFileNum + "</span><br/><span class='secondary'>" + insuranceCoName + "</span>",
                             dateDue: DateUtils.niceDate(claim.dateDue, false),
                             dueTime: claim.dateDue.getTime(),
                             claimant: claimant,

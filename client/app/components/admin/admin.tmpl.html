@@ -1,37 +1,49 @@
-<div class="modal fade" id="msgs-modal" tabindex="-1" role="dialog"
-     aria-labelledby="msgModalTitle" aria-hidden="true"
-     style="width: 40%; top: 20%; margin: auto">
+<div class="notification modal fade" id="msgs-modal" tabindex="-1" role="dialog"
+     aria-labelledby="msgModalTitle"
+     aria-hidden="true"
+     style="top: 40px; margin: auto">
 
     <div class="modal-dialog demo-modal">
         <div class="modal-content">
-            <div class="modal-header" id="msgs-modal-header">
+            <div class="notification modal-header"
+                 id="msgs-modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
                     ×
                 </button>
-                <h4 class="modal-title" id="msgModalTitle">Unread messages</h4>
+                <h4 class="modal-title" id="msgModalTitle"></h4>
             </div>
             <div class="modal-body" id="msgs-modal-body">
-                <ul class="list-group">
+                <ul class="notification list-group">
                     <!-- ko foreach: msgs() -->
-                        <li class="list-group-item"
-                            data-bind="html: $data.body,
-                                       css: 'list-group-item-' + $data.type,
-                                       click: $parent.closeModal"></li>
+                        <li class="notification list-group-item">
+
+                            <!-- ko if: $data.type == $parent.ServerConsts.NotificationType.ERROR -->
+                            <i class="notification fa fa-icon-warning-sign"
+                               data-bind="if: "></i>
+                            <!-- /ko -->
+
+                            <!-- ko if: $data.type == $parent.ServerConsts.NotificationType.INFO -->
+                            <i class="notification fa fa-check-circle"></i>
+                            <!-- /ko -->
+
+                            <span data-bind="html: $data.body,
+                                             css: 'list-group-item-' + $data.type,
+                                             click: $parent.closeModal"></span>
+                        </li>
                     <!-- /ko -->
                 </ul>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-bind="click: onMarkAllAsRead">
-                    Mark as read
+            <div class="notification modal-footer">
+                <button type="button" class="btn btn-default btn-link" data-bind="click: onMarkAllAsRead">
+                    MARK AS READ
                 </button>
-                <button type="button" class="btn btn-default" data-dismiss="modal">
-                    Close
+                <button type="button" class="btn btn-default btn-link" data-dismiss="modal">
+                    CLOSE
                 </button>
-                <!--
-                <button type="button" class="btn btn-primary" data-bind="click: onServerBroadcast">
-                    Broadcast
+                <button type="button" class="btn btn-primary btn-link" data-bind="click: onServerBroadcast">
+                    BROADCAST
                 </button>
-                -->
+
             </div>
         </div>
         <!-- /.modal-content -->

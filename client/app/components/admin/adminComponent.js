@@ -2,9 +2,10 @@ define(['jquery', 'knockout', 'amplify',
         'app/utils/events', 'app/utils/ajaxUtils',
         'socketio',
         'app/utils/session',
+        'shared/consts',
         'text!app/components/admin/admin.tmpl.html'],
 
-    function ($, ko, amplify, Events, ajaxUtils, io, Session, viewHtml) {
+    function ($, ko, amplify, Events, ajaxUtils, io, Session, ServerConsts, viewHtml) {
         'use strict';
 
         var socket;
@@ -12,6 +13,7 @@ define(['jquery', 'knockout', 'amplify',
         function AdminVM(params) {
             console.log('Init AdminVM');
             this.msgs = ko.observableArray([]);
+            this.ServerConsts = ServerConsts;
 
             amplify.subscribe(Events.SHOW_MSGS, this, this.onShowMsgs);
 
@@ -70,7 +72,7 @@ define(['jquery', 'knockout', 'amplify',
         AdminVM.prototype.onServerBroadcast = function () {
             ajaxUtils.post(
                 '/notification/broadcast',
-                JSON.stringify({msg: 'Hello from Mars'}),
+                JSON.stringify({msg: 'Email processed. mailEntry.mail.subject <a href="#/claimEntry/">Goto task</a>'}),
                 function onSuccess(response) {
                     console.log('Requested server broadcast');
                 });

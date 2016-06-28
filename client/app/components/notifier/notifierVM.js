@@ -43,8 +43,8 @@ define(['knockout', 'amplify', 'app/utils/events', 'text!app/components/notifier
             this.msg(msg);
             this.isVisible(true);
             var panelRef = $("#notifier-container");
-            panelRef.velocity("fadeIn",  { duration: 50, easing: 'easeIn'});
-            panelRef.velocity("fadeOut", { delay: 5000, duration: 200, easing: 'easeOut'});
+            panelRef.velocity("slideDown",  { duration: 300});
+            panelRef.velocity("slideUp", { delay: 5000, duration: 300});
         };
 
         return {viewModel: NotifierVM, template: notifierView};

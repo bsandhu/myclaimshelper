@@ -9,10 +9,10 @@
     </div>
 
     <div class="panel-body">
-        <form class="form-horizontal" role="form">
+        <form>
             <div class="form-group">
-                <label for="claimEntry-dueDate" class="col-sm-2 control-label">Due on</label>
-                <div class="col-sm-10 inline">
+                <label for="claimEntry-dueDate" class="control-label">Due on</label>
+                <div>
                     <input type="text" class="form-control normal input-sm" id="claimEntry-dueDate"
                            data-bind="
                            disable: isClosed,
@@ -23,9 +23,8 @@
             </div>
 
             <div class="form-group">
-                <label for="claimEntry-summary" class="col-sm-2 control-label">Summary</label>
-
-                <div class="col-sm-10">
+                <label for="claimEntry-summary" class="control-label">Summary</label>
+                <div>
                     <textarea class="form-control" rows="1" id="claimEntry-summary"
                               data-bind="value: claimEntry().summary,
                                         disable: isClosed"
@@ -34,9 +33,9 @@
             </div>
 
             <div class="form-group">
-                <label for="claimEntry-desc" class="col-sm-2 control-label">Description</label>
+                <label for="claimEntry-desc" class="control-label">Description</label>
 
-                <div class="col-sm-10">
+                <div>
                     <div class="btn-toolbar" data-role="editor-toolbar" data-target="#claimEntry-desc"
                          data-bind="ifnot: isClosed">
                         <div class="btn-group">
@@ -79,26 +78,30 @@
             </div>
 
             <div class="form-group">
-                <label for="claimEntry-dueDate" class="col-sm-2 control-label">Location</label>
-                <div class="col-sm-8">
+                <label for="claimEntry-dueDate" class="control-label">Location</label>
+                <div>
                     <!-- Maps component -->
                     <maps-component params="'claimEntry': claimEntry"></maps-component>
                 </div>
             </div>
 
             <div class="form-group">
-                <label for="claimEntry-dueDate" class="col-sm-2 control-label">Attachments</label>
-                <div class="col-sm-10">
+                <label for="claimEntry-dueDate" class="control-label">Attachments</label>
+                <div>
                     <!-- File upload component -->
                     <file-upload-component params="'claimEntry': claimEntry"></file-upload-component>
                 </div>
             </div>
 
             <div class="form-group">
-                <legend>
-                    <label class="col-lg-2 control-label">Billing</label>
-                </legend>
-                <div class="col-lg-10">
+                <!-- Billing status label -->
+                <label class="control-label">
+                    Billing
+                    <span class="color-yellow leftMargin5"
+                          style="font-size: 13px; font-weight: 400;"
+                          data-bind="text: claimEntry().billingItem().status"></span>
+                </label>
+                <div>
                     <!-- Billing item component -->
                     <billing-item-component params="'billingItem': claimEntry().billingItem,
                                                     'disable'    : claimEntry().isClosed() || isBilled() "></billing-item-component>
@@ -116,7 +119,7 @@
                                 data-toggle="tooltip" data-placement="top"
                                 data-bind="click: onDelete,
                                            enable: isNotBilled,
-                                           css: isBilled() ? 'btn btn-default' : 'btn btn-danger'">
+                                           css: isBilled() ? 'btn btn-link color-dark-grey' : 'btn btn-link color-red'">
                             <i class="fa fa-trash-o"></i>
                             Delete
                         </button>
@@ -130,8 +133,8 @@
                     <!-- /ko -->
                     <!-- ko if: isNotBilled -->
                     <div class="inline leftMargin2pc">
-                        <span class="color-dark-grey"><strong>Last updated</strong></span>
-                        <span class="color-dark-grey" data-bind="text : DateUtils.niceDate(claimEntry().updateDate())"></span>
+                        <span class="text-fine-print">Last updated</span>
+                        <span class="text-fine-print" data-bind="text : DateUtils.niceDate(claimEntry().updateDate())"></span>
                     </div>
                     <!-- /ko -->
 
