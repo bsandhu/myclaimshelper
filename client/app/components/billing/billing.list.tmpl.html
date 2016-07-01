@@ -67,13 +67,13 @@
                        data-sortable
                        data-bind="sortable"
                        class="table table-hover">
-                    <thead>
+                    <thead class="hidden-xs">
                     <tr>
-                        <th data-field="claimInsuranceCompanyFileNum" data-sortable="true">File num. / Insurance co.
-                            num.
+                        <th data-field="claimInsuranceCompanyFileNum" data-sortable="true">
+                            File num. / Insurance co. num.
                         </th>
-                        <th data-field="id" data-sortable="true" class="hidden-xs">Bill Id</th>
-                        <th>Bill status</th>
+                        <th data-field="id" data-sortable="true">Bill Id</th>
+                        <th>Status</th>
                         <th data-field="submissionDate" data-sortable="true">Submitted on</th>
                         <th data-field="paidDate" data-sortable="true">Paid on</th>
                         <th data-field="total" class="billAmount" data-sortable="true">Total</th>
@@ -83,47 +83,43 @@
                     </tr>
                     </thead>
                     <tbody data-bind="foreach: { data: filteredBills, as: 'bill' }">
-                    <tr>
-                        <td data-bind="click: $parent.router.routeToBill">
-                            <a data-bind="click: $parent.onClaimClick" href="#">
-                                <span data-bind="html:
-                                        '<span class=\'color-dark-grey\'>' +
-                                            bill.claimFileNum + ' / ' + bill.claimInsuranceCompanyFileNum +
-                                        '</span><br/>' +
-                                        bill.claimInsuranceCompanyName"></span>
-                            </a>
+
+                    <!-- XS device render -->
+                    <tr class="visible-xs" >
+                        <td>
+                            <div class="tableRow">
+                                <div class="tableCell cardViewTitle paddingRight5">File/Insur. num.</div>
+                                <div class="tableCell" data-bind='template: { name: "billClaimNumTemplate" }'></div>
+                            </div>
+                            <div class="tableRow">
+                                <div class="tableCell cardViewTitle paddingRight5">Status</div>
+                                <div class="tableCell" data-bind='template: { name: "billStatusTemplate" }'></div>
+                            </div>
+                            <div class="tableRow" data-bind="click: $parent.router.routeToBill">
+                                <div class="tableCell cardViewTitle paddingRight5">Submitted</div>
+                                <div class="tableCell" data-bind="text: bill.submissionDate ? $parent.DateUtils.niceDate(bill.submissionDate, false, '-') : '-'"></div>
+                            </div>
+                            <div class="tableRow" data-bind="click: $parent.router.routeToBill">
+                                <div class="tableCell cardViewTitle paddingRight5">Paid</div>
+                                <div class="tableCell" data-bind="text: bill.paidDate ? $parent.DateUtils.niceDate(bill.paidDate, false, '-') : '-'"></div>
+                            </div>
+                            <div class="tableRow" data-bind="click: $parent.router.routeToBill">
+                                <div class="tableCell cardViewTitle paddingRight5">Total</div>
+                                <div class="tableCell" data-bind="text: $parent.NumberUtils.niceCCY(bill.total)"></div>
+                            </div>
                         </td>
-                        <td class="hidden-xs"
-                            data-bind="text: bill._id,
+                    </tr>
+                    <!-- End - XS device render -->
+
+                    <tr class="hidden-xs">
+                        <td>
+                            <div data-bind='template: { name: "billClaimNumTemplate" }'></div></td>
+
+                        <td data-bind="text: bill._id,
                                        click: $parent.router.routeToBill"></td>
                         <td>
-                            <!-- ko ifnot: bill.isClaimClosed -->
-                            <div class="btn-group">
-                                <button class="btn btn-md dropdown-toggle"
-                                        data-toggle="dropdown"
-                                        data-bind="html: bill.status + ' <span class=\'caret\'></span>',
-                                               css: bill.status === $parent.billingStatus.PAID() ? 'btn-link text-success' : 'btn-link'">
-                                </button>
-                                <ul class="dropdown-menu">
-                                    <li>
-                                        <a data-bind="html: '<i class=&quot;fa fa-circle-o&quot;>&nbsp;</i>' + $parent.billingStatus.NOT_SUBMITTED(),
-                                                  click: $parent.onUpdateBillStatus.bind($parent, $parent.billingStatus.NOT_SUBMITTED(), bill)"></a>
-                                    </li>
-                                    <li>
-                                        <a data-bind="html: '<i class=&quot;fa fa-circle&quot;>&nbsp;</i>' + $parent.billingStatus.SUBMITTED(),
-                                                  click: $parent.onUpdateBillStatus.bind($parent, $parent.billingStatus.SUBMITTED(), bill)"></a>
-                                    </li>
-                                    <li>
-                                        <a data-bind="html: '<i class=&quot;fa fa-check&quot;>&nbsp;</i>' + $parent.billingStatus.PAID(),
-                                                  click: $parent.onUpdateBillStatus.bind($parent, $parent.billingStatus.PAID(), bill)"></a>
-                                    </li>
-                                </ul>
-                            </div>
-                            <!-- /ko -->
-                            <!-- ko if: bill.isClaimClosed -->
-                            <span data-bind="text: bill.status"></span>
-                            <!-- /ko -->
-                        </td>
+                            <div data-bind='template: { name: "billStatusTemplate" }'></div></td>
+
                         <td data-bind="text: bill.submissionDate ? $parent.DateUtils.niceDate(bill.submissionDate, false, '-') : '-',
                                        click: $parent.router.routeToBill"></td>
 
@@ -148,7 +144,7 @@
                                              click: $parent.router.routeToBill"></span></td>
                     </tr>
                     </tbody>
-                    <tfoot>
+                    <tfoot class="hidden-xs">
                     <tr>
                         <td colspan="4" style="border-top-width: 0"></td>
                         <td class="topBorderSubTotal">
@@ -183,3 +179,46 @@
         <a data-bind="attr: {href: '#/claim/' + claimId() + '/newbill'}">Create New?</a>
     </div>
 </div>
+
+<!-- ****************************************************************** -->
+<!-- **** Templates **** -->
+<!-- ****************************************************************** -->
+
+<script type="text/html" id="billClaimNumTemplate">
+    <a data-bind="click: $parent.onClaimClick" href="#">
+        <span data-bind="html:
+                '<span class=\'color-dark-grey\'>' +
+                    bill.claimFileNum + ' / ' + bill.claimInsuranceCompanyFileNum +
+                '</span><br/>' +
+                bill.claimInsuranceCompanyName"></span>
+    </a>
+</script>
+
+<script type="text/html" id="billStatusTemplate">
+    <!-- ko ifnot: bill.isClaimClosed -->
+    <div class="btn-group">
+        <button class="btn btn-md dropdown-toggle noPadding"
+                data-toggle="dropdown"
+                data-bind="html: bill.status + ' <span class=\'caret\'></span>',
+                           css: bill.status === $parent.billingStatus.PAID() ? 'btn-link text-success' : 'btn-link'">
+        </button>
+        <ul class="dropdown-menu">
+            <li>
+                <a data-bind="html: '<i class=&quot;fa fa-circle-o&quot;>&nbsp;</i>' + $parent.billingStatus.NOT_SUBMITTED(),
+                              click: $parent.onUpdateBillStatus.bind($parent, $parent.billingStatus.NOT_SUBMITTED(), bill)"></a>
+            </li>
+            <li>
+                <a data-bind="html: '<i class=&quot;fa fa-circle&quot;>&nbsp;</i>' + $parent.billingStatus.SUBMITTED(),
+                              click: $parent.onUpdateBillStatus.bind($parent, $parent.billingStatus.SUBMITTED(), bill)"></a>
+            </li>
+            <li>
+                <a data-bind="html: '<i class=&quot;fa fa-check&quot;>&nbsp;</i>' + $parent.billingStatus.PAID(),
+                              click: $parent.onUpdateBillStatus.bind($parent, $parent.billingStatus.PAID(), bill)"></a>
+            </li>
+        </ul>
+    </div>
+    <!-- /ko -->
+    <!-- ko if: bill.isClaimClosed -->
+    <span data-bind="text: bill.status"></span>
+    <!-- /ko -->
+</script>

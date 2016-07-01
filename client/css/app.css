@@ -47,12 +47,21 @@ div {
     display: table-cell;
 }
 
+.tableRow {
+    display: table-row;
+}
+
 .alignLeft {
     float: left;
 }
 
 .alignRight {
     float: right;
+}
+
+.centered {
+    left: 50%;
+    transform: translateX(-50%);
 }
 
 /**** Width Dimensions ****/
@@ -196,6 +205,10 @@ div {
     box-shadow: none;
 }
 
+.noPadding {
+    padding: 0;
+}
+
 .boxShadow {
     border: 1px solid darkgrey;
     box-shadow: 2px 2px 2px lightgray;
@@ -207,6 +220,14 @@ div {
 
 .overflowY {
     overflow-y: auto;
+}
+
+/**********************************************************/
+/**** Claims list ****/
+/**********************************************************/
+
+.fixed-table-body .card-view .title{
+    font-weight: 600;
 }
 
 /**********************************************************/
@@ -446,14 +467,12 @@ input.no-border {
     font-weight: 700;
 }
 
-.centered {
-    left: 50%;
-    transform: translateX(-50%);
-}
-
 .btn-link.text-success {
     color: #10ca4c;
-    font-weight: 700;
+}
+
+.cardViewTitle {
+    font-weight: 600;
 }
 
 .billAmount {
