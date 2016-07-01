@@ -36,22 +36,26 @@
                     </div>
                 </div>
                 -->
-                <div class="col-lg-3 col-md-3 col-sm-4 col-xs-6 inline pull-right fake-search-box" style="padding: 0px;">
+                <div class="col-lg-3 col-md-3 col-sm-4 col-xs-12"
+                     style="padding: 0px;">
+                    <div class="inline" style="padding: 0;">
+                        <div class="form-group rightBorderSolid inline rightMargin5 dropdown-container">
+                            <!-- Group selection -->
+                            <div class="inline text-between-dropdown leftMargin5 rightMargin5 topMargin5">Status</div>
+                            <div class="inline">
+                                <select class="form-control input dropdown topMargin5"
+                                        data-bind="value: groupBy,
+                                               options: groupByOptions"></select></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 inline pull-right fake-search-box"
+                     style="padding: 0px;">
                     <div class="inline pull-left glyphicon glyphicon-search" style="top: 15px; left: 8px;"></div>
                     <div class="inline">
                         <input class="form-control input no-border" id="prepend"
                                style="position:relative; top: 6px; left: 15px"
                                placeholder="Search" type="text"/>
-                    </div>
-                </div>
-                <div class="inline" style="padding: 0;">
-                    <div class="form-group rightBorderSolid inline rightMargin5 dropdown-container">
-                        <!-- Group selection -->
-                        <div class="inline text-between-dropdown leftMargin rightMargin topMargin5">Status</div>
-                        <div class="inline">
-                            <select class="form-control input dropdown topMargin5"
-                                    data-bind="value: groupBy,
-                                               options: groupByOptions"></select></div>
                     </div>
                 </div>
             </div>
@@ -65,15 +69,17 @@
                        class="table table-hover">
                     <thead>
                     <tr>
-                        <th data-field="claimInsuranceCompanyFileNum" data-sortable="true">File num. / Insurance co. num.</th>
-                        <th data-field="id" data-sortable="true">Bill Id</th>
+                        <th data-field="claimInsuranceCompanyFileNum" data-sortable="true">File num. / Insurance co.
+                            num.
+                        </th>
+                        <th data-field="id" data-sortable="true" class="hidden-xs">Bill Id</th>
                         <th>Bill status</th>
                         <th data-field="submissionDate" data-sortable="true">Submitted on</th>
                         <th data-field="paidDate" data-sortable="true">Paid on</th>
                         <th data-field="total" class="billAmount" data-sortable="true">Total</th>
-                        <th data-field="totaTimel" class="billAmount" data-sortable="true">Time</th>
-                        <th data-field="totalMileage" class="billAmount" data-sortable="true">Mileage</th>
-                        <th data-field="totalExpense" class="billAmount" data-sortable="true">Expense</th>
+                        <th data-field="totaTime" class="billAmount hidden-xs" data-sortable="true">Time</th>
+                        <th data-field="totalMileage" class="billAmount hidden-xs" data-sortable="true">Mileage</th>
+                        <th data-field="totalExpense" class="billAmount hidden-xs" data-sortable="true">Expense</th>
                     </tr>
                     </thead>
                     <tbody data-bind="foreach: { data: filteredBills, as: 'bill' }">
@@ -87,7 +93,8 @@
                                         bill.claimInsuranceCompanyName"></span>
                             </a>
                         </td>
-                        <td data-bind="text: bill._id,
+                        <td class="hidden-xs"
+                            data-bind="text: bill._id,
                                        click: $parent.router.routeToBill"></td>
                         <td>
                             <!-- ko ifnot: bill.isClaimClosed -->
@@ -114,7 +121,7 @@
                             </div>
                             <!-- /ko -->
                             <!-- ko if: bill.isClaimClosed -->
-                                <span data-bind="text: bill.status"></span>
+                            <span data-bind="text: bill.status"></span>
                             <!-- /ko -->
                         </td>
                         <td data-bind="text: bill.submissionDate ? $parent.DateUtils.niceDate(bill.submissionDate, false, '-') : '-',
@@ -128,15 +135,15 @@
                                   data-bind="text: $parent.NumberUtils.niceCCY(bill.total),
                                              click: $parent.router.routeToBill"></span></td>
 
-                        <td class="billAmount">
+                        <td class="billAmount hidden-xs">
                             <span data-bind="text: $parent.NumberUtils.nice(bill.totalTime),
                                              click: $parent.router.routeToBill"></span></td>
 
-                        <td class="billAmount">
+                        <td class="billAmount hidden-xs">
                             <span data-bind="text: $parent.NumberUtils.nice(bill.totalMileage),
                                              click: $parent.router.routeToBill"></span></td>
 
-                        <td class="billAmount">
+                        <td class="billAmount hidden-xs">
                             <span data-bind="text: $parent.NumberUtils.niceCCY(bill.totalExpenseAmount),
                                              click: $parent.router.routeToBill"></span></td>
                     </tr>
