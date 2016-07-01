@@ -140,7 +140,6 @@
                     </div>
                 </div>
 
-
                 <!-- Other contacts -->
                 <div data-bind="foreach: claim().otherContacts()">
                     <div class="row bottomBorder">
@@ -226,90 +225,91 @@
                     </li>
                 </ul>
             </div>
+            <!-- Email task btn -->
             <!-- ko ifnot: inEditMode && isPartiallyCollapsed -->
-                <div class="btn btn-default inline btn-info"
-                     data-toggle="modal" data-target="#emailTaskTypeModal">
-                    <span class="fa fa-mail-forward"></span>
-                    <span class="leftMargin5">From Email</span>
-                </div>
+            <div class="btn btn-default inline btn-info hidden-xs"
+                 data-toggle="modal" data-target="#emailTaskTypeModal">
+                <span class="fa fa-mail-forward"></span>
+                <span class="leftMargin5">From Email</span>
+            </div>
             <!-- /ko -->
 
-            <!-- `Close claim` button -->
-            <div data-bind="ifnot: inEditMode && isPartiallyCollapsed" class="inline pull-right rightMargin5">
-                <!-- ko ifnot: isClaimClosed -->
-                <div class="btn btn-default inline btn-info"
-                     data-bind="click: onCloseClaimClick.bind($data)">
-                    <i class="fa fa-check-square-o"></i>
-                    Close claim
+            <div class="pull-right">
+                <!-- `Close claim` button -->
+                <div data-bind="ifnot: inEditMode && isPartiallyCollapsed" class="inline hidden-xs">
+                    <!-- ko ifnot: isClaimClosed -->
+                    <div class="btn btn-default inline btn-info"
+                         data-bind="click: onCloseClaimClick.bind($data)">
+                        <i class="fa fa-check-square-o"></i>
+                        Close
+                    </div>
+                    <!-- /ko -->
+                    <!-- ko if: isClaimClosed -->
+                    <div class="btn btn-default inline btn-info"
+                         data-bind="click: onReOpenClaimClick.bind($data)">
+                        <i class="fa fa-share-square-o"></i>
+                        Re-open
+                    </div>
+                    <!-- /ko -->
                 </div>
-                <!-- /ko -->
-                <!-- ko if: isClaimClosed -->
-                <div class="btn btn-default inline btn-info"
-                     data-bind="click: onReOpenClaimClick.bind($data)">
-                    <i class="fa fa-share-square-o"></i>
-                    Re-open claim
+
+                <!-- Edit claim button -->
+                <div data-bind="ifnot: inEditMode && isPartiallyCollapsed" class="inline">
+                    <!-- ko ifnot: isClaimClosed -->
+                    <div class="btn btn-default inline btn-info"
+                         data-bind="click: onEditModeClick.bind($data)">
+                        <i class="fa fa-pencil"></i>
+                        Edit
+                    </div>
+                    <!-- /ko -->
                 </div>
-                <!-- /ko -->
+
+                <!-- Billing Button -->
+                <div data-bind="ifnot: inEditMode && isPartiallyCollapsed" class="inline">
+                    <div class="btn-group inline">
+                        <button type="button"
+                                class="btn btn-default dropdown-toggle btn-info"
+                                data-toggle="dropdown">
+                            <span class="fa fa-fw fa-credit-card"></span>
+                            Billing <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" role="menu">
+                            <!-- ko ifnot: isClaimClosed -->
+                            <li>
+                                <a data-bind="attr: {href: '#/claim/' + claim()._id() + '/newbill'}">
+                                    <span class="fa fa-plus"></span>
+                                    <span class="leftMargin5">New</span>
+                                </a>
+                            </li>
+                            <!-- /ko -->
+                            <li>
+                                <a data-bind="attr: {href: '#/billing/history/' + claim()._id()}">
+                                    <span class="fa fa-history"></span>
+                                    <span class="leftMargin5">History</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a data-bind="click: onBillingProfileClick">
+                                    <span class="fa fa-cogs"></span>
+                                    <span class="leftMargin5">Rates</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
             </div>
 
-            <!-- Edit claim button -->
-            <div data-bind="ifnot: inEditMode && isPartiallyCollapsed" class="inline pull-right rightMargin5">
-                <!-- ko ifnot: isClaimClosed -->
-                <div class="btn btn-default inline btn-info"
-                     data-bind="click: onEditModeClick.bind($data)">
-                    <i class="fa fa-pencil"></i>
-                    Edit claim
-                </div>
-                <!-- /ko -->
-            </div>
-
-            <!-- Billing Button -->
-            <div data-bind="ifnot: inEditMode && isPartiallyCollapsed" class="inline pull-right rightMargin5">
-                <div class="btn-group inline leftMargin5">
-                    <button type="button"
-                            class="btn btn-default dropdown-toggle btn-info"
-                            data-toggle="dropdown">
-                        <span class="fa fa-fw fa-credit-card"></span>
-                        Billing <span class="caret"></span>
-                    </button>
-                    <ul class="dropdown-menu" role="menu">
-                        <!-- ko ifnot: isClaimClosed -->
-                        <li>
-                            <a data-bind="attr: {href: '#/claim/' + claim()._id() + '/newbill'}">
-                                <span class="fa fa-plus"></span>
-                                <span class="leftMargin5">New</span>
-                            </a>
-                        </li>
-                        <!-- /ko -->
-                        <li>
-                            <a data-bind="attr: {href: '#/billing/history/' + claim()._id()}">
-                                <span class="fa fa-history"></span>
-                                <span class="leftMargin5">History</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a data-bind="click: onBillingProfileClick">
-                                <span class="fa fa-cogs"></span>
-                                <span class="leftMargin5">Rates</span>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-
-        </div>
-    </div>
-
-    <div class="clear"></div>
-    <!-- *** Entries *** -->
-    <div data-bind="ifnot: inEditMode" class="row">
-        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-            <div data-bind="template: {name: 'app/components/claim/claim.entries',
+            <div class="clear"></div>
+            <!-- *** Entries *** -->
+            <div data-bind="ifnot: inEditMode" class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div data-bind="template: {name: 'app/components/claim/claim.entries',
                                            afterRender: initTooltipComponent}"></div>
+                </div>
+            </div>
         </div>
     </div>
-</div>
-<!-- *** Claim Panel - end -->
+    <!-- *** Claim Panel - end -->
 </div>
 
 <!-- *** Modal with the email instructions *** -->
@@ -348,12 +348,14 @@
                     <div class="row">
                         <div class="col-md-10">
                             <span class="stepBulletPoint">2</span>
-                            Mention Claim file number or the insurance company file number in the Subject line. Example:
+                            Mention Claim file number or the insurance company file number in the Subject line.
+                            Example:
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-offset-1 col-md-10 topMargin5">
-                            <i><span data-bind="text: 'Witness statement ' + (claim().fileNum() || claim().insuranceCompanyFileNum() || '04-92998')"/></i>
+                            <i><span
+                                    data-bind="text: 'Witness statement ' + (claim().fileNum() || claim().insuranceCompanyFileNum() || '04-92998')"/></i>
                         </div>
                     </div>
                     <div class="row">

@@ -7,45 +7,48 @@
 
                 <div class="panel-heading">
                     <div class="row">
-                        <div class="inline">
-                            <button type="button"
-                                    class="btn btn-default btn-info"
-                                    data-bind="click: onNewTask">
-                                <span class="fa fa-plus"></span>
-                                New Task
-                            </button>
-                        </div>
-                        <div class="inline">
-                            <form class="form-inline" role="form">
+                        <div class="col-xs-12 col-md-12 col-lg-12">
+                            <form class="form-inline">
+                                <div class="form-group">
+                                    <button type="button"
+                                            class="btn btn-default btn-info"
+                                            data-bind="click: onNewTask">
+                                        <span class="fa fa-plus"></span>
+                                        New Task
+                                    </button>
+                                </div>
+
                                 <!-- Due date group filter -->
                                 <div class="form-group dropdown-container paddingRight5">
-                                    <span class="leftMargin5 topMargin5 text-between-dropdown">Due </span>
-                                    <select class="form-control input dropdown"
+                                    <label class="leftMargin5 topMargin5 text-between-dropdown">Due </label>
+                                    <select class="input dropdown"
                                             data-bind="value: dueDateFilter,
-                                       options: dueDateFilters,
-                                       optionsText: 'description'"></select>
+                                                       options: dueDateFilters,
+                                                       optionsText: 'description'"></select>
 
-                                    <div class="form-group" data-bind="if: showDueDateDaysFilter">
+                                    <div data-bind="if: showDueDateDaysFilter" style="display: inline;">
                                         <!-- Due date - day group filter -->
-                                        <span class="leftMargin5 text-between-dropdown">days</span>
-                                        <input class="form-control input dropdown"
+                                        <label class="leftMargin5 text-between-dropdown">days</label>
+                                        <input class="input dropdown"
                                                style="width: 50px"
                                                type="number" min="0"
                                                data-bind="value: dueDateDaysFilterValue">
                                     </div>
                                 </div>
+
                                 <!-- Status filter -->
-                                <div class="form-group dropdown-container paddingRight5">
-                                    <span class="leftMargin5 text-between-dropdown topMargin5">Status</span>
-                                    <select class="form-control input dropdown"
+                                <div class="form-group dropdown-container">
+                                    <label class="leftMargin5 text-between-dropdown topMargin5">Status</label>
+                                    <select class="input dropdown"
                                             data-bind="value: statusFilter,
                                                        options: statusFilters,
                                                        optionsText: 'description'"></select>
                                 </div>
-                                <div class="form-group dropdown-container paddingRight5">
-                                    <!-- Group selection -->
-                                    <span class="leftMargin5 topMargin5 text-between-dropdown">Sort by</span>
-                                    <select class="form-control input dropdown"
+
+                                <!-- Group selection -->
+                                <div class="form-group dropdown-container">
+                                    <label class="leftMargin5 topMargin5 text-between-dropdown">Sort by</label>
+                                    <select class="input dropdown"
                                             data-bind="value: groupBy,
                                                        options: groupByOptions,
                                                        optionsText: 'description'"></select>
@@ -57,8 +60,8 @@
 
                 <div class="panel-body">
                     <div>
-                        <table class="table table-hover table-responsive summaryTable">
-                            <thead>
+                        <table class="table table-hover summaryTable">
+                            <thead class="hidden-xs">
                             <th>&nbsp;</th>
                             <th>File num.</th>
                             <th>Insured</th>
@@ -100,36 +103,53 @@
                                                       'data-displayOrder': $data.displayOrder},
                                                click: $parents[1].onClaimEntrySelect">
 
-                                <td class="summaryGroupDrag" title="Click and Drag to reorder">
+                                <td class="visible-xs">
+                                    <span class="rightMargin">
+                                        <i data-bind="taskEntryTag: $data.tag"></i>
+                                    </span>
+                                    <span data-bind="text: $data.fileNum"></span>
+                                    <br/>
+                                    <span data-bind="textTruncate: $data.summary, maxLength: 100"></span>
+                                    <br/>
+                                    <span class="color-dark-grey"
+                                          data-bind="textTruncate: $data.insuredContact.name || '-', maxLength: 50"></span>
+                                    <span class="color-dark-grey"> / </span>
+                                    <span class="color-dark-grey"
+                                          data-bind="textTruncate: $data.claimantContact.name || '-', maxLength: 50"></span>
+                                    <br/>
+                                    <status-editor-component params="'statusValue': $data.state,
+                                                                     'entryId': $data._id"></status-editor-component>
+                                </td>
+
+                                <td class="summaryGroupDrag hidden-xs" title="Click and Drag to reorder">
                                     <div class="inline" style="width: 15px">
                                         <div class="inline"><span class="fa fa-ellipsis-v"></span></div>
                                         <div class="inline"><span class="fa fa-ellipsis-v"></span></div>
                                     </div>
                                 </td>
-                                <td>
+                                <td class="hidden-xs">
                                     <span class="rightMargin">
                                         <i data-bind="taskEntryTag: $data.tag"></i>
                                     </span>
                                     <span data-bind="text: $data.fileNum"></span>
                                 </td>
-                                <td>
+                                <td class="hidden-xs">
                                     <span data-bind="textTruncate: $data.insuredContact.name || '-', maxLength: 10"></span>
                                 </td>
-                                <td>
+                                <td class="hidden-xs">
                                     <span data-bind="textTruncate: $data.claimantContact.name || '-', maxLength: 10"></span>
                                 </td>
-                                <td>
+                                <td class="hidden-xs">
                                     <span data-bind="textTruncate: $data.summary, maxLength: 20"></span>
                                 </td>
-                                <td class="summaryGroupCell" nowrap="">
+                                <td class="summaryGroupCell hidden-xs" nowrap="">
                                     <span data-bind="text: $parents[1].DateUtils.niceDate($data.dueDate ? $data.dueDate() : '')"></span>
                                     <!--<span class="fa fa-pencil"></span>-->
                                     <span></span>
                                 </td>
-                                <td class="summaryGroupCell">
+                                <td class="summaryGroupCell hidden-xs">
                                     <status-editor-component params="'statusValue': $data.state,
-                                                                     'entryId': $data._id">
-                                    </status-editor-component>
+                                                                     'entryId': $data._id"></status-editor-component>
                                 </td>
                             </tr>
                             <!-- /ko -->

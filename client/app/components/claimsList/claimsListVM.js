@@ -1,28 +1,26 @@
 define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore', 'model/claim', 'model/claimEntry', 'app/utils/events',
-        'app/utils/router', 'shared/dateUtils', 'app/utils/ajaxUtils', 'shared/objectUtils',
+        'app/utils/router', 'shared/dateUtils', 'app/utils/ajaxUtils', 'shared/objectUtils', 'app/utils/responsive',
         'text!app/components/claimsList/claimsList.tmpl.html'],
-    function ($, ko, KOMap, amplify, _, Claim, ClaimEntry, Events, Router, DateUtils, AjaxUtils, ObjectUtils, claimsListView) {
+    function ($, ko, KOMap, amplify, _, Claim, ClaimEntry, Events, Router, DateUtils, AjaxUtils, ObjectUtils, responsive, claimsListView) {
         'use strict';
 
         function ClaimsListVM() {
             console.log('Init ClaimsListVM');
+            this.Responsive = responsive;
             this.init();
         }
 
         ClaimsListVM.prototype.init = function () {
-            this.panelContentHeight = $(window).height() - (200 + $('.navbar-brand').height());
-
             // Grouping
             this.groupBy = ko.observable();
             this.groupBy.subscribe(function () {
-                this.initDisplay();
                 this.loadClaims();
             }, this);
             this.groupBy('Open');
             this.groupByOptions = ko.observableArray(['Open', 'Closed']);
 
             this.claims = ko.observableArray([]);
-            this.claims.subscribe(function(newVal){
+            this.claims.subscribe(function (newVal) {
                 $('#claimListTable').bootstrapTable('load', newVal);
                 $('#claimListTable').bootstrapTable('hideLoading');
             });
@@ -83,12 +81,13 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore', 'model/claim', '
                             insuredName +
                             '</a>'
                                 : insuredName;
+                        var insuranceCo = "<span>" + insuranceCompanyFileNum + "</span><span class='secondary'>" + insuranceCoName + "</span>";
 
                         tempArray.push({
                             claimId: claim._id,
                             fileNo: claim.fileNum,
                             desc: claimDesc.length > 40 ? claimDesc.substr(0, 40) + '...' : claimDesc,
-                            insuranceCo: "<span>" + insuranceCompanyFileNum + "</span><br/><span class='secondary'>" + insuranceCoName + "</span>",
+                            insuranceCo: insuranceCo,
                             dateDue: DateUtils.niceDate(claim.dateDue, false),
                             dueTime: claim.dateDue.getTime(),
                             claimant: claimant,
@@ -107,17 +106,18 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore', 'model/claim', '
                 });
         };
 
-        ClaimsListVM.prototype.initDisplay = function () {
+        ClaimsListVM.prototype.onclaimsListTmplRender = function () {
             var _this = this;
-            if (!_this.init) {
-                _this.init = true;
-            }
+            _this.panelContentHeight = $(window).height();
 
-            $('#claimListTable').data('height', _this.panelContentHeight);
-            $('#claimListTable').bootstrapTable();
+            $('#claimListTable').bootstrapTable({
+                "height": _this.panelContentHeight,
+                "cardView": _this.Responsive.onXSDevice(),
+                "showExport": !_this.Responsive.onXSDevice()
+            });
             $('#claimListTable').bootstrapTable('showLoading');
         }
-
+       
         return {viewModel: ClaimsListVM, template: claimsListView};
     });
 

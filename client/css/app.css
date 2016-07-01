@@ -365,10 +365,6 @@ input.no-border {
     width: 100%;
 }
 
-.modal.in .modal-dialog {
-    width: 90%;
-}
-
 #map-modal {
     min-height: 640px;
 }
@@ -536,12 +532,14 @@ input.no-border {
     opacity: .9;
 }
 
-.dropdown-menu {
-}
-
 /**********************************************************/
 /**** Bootstrap overrides ****/
 /**********************************************************/
+
+.container {
+    padding-right: 3px;
+    padding-left: 3px;
+}
 
 .modal-content {
     border-radius: 2px;
@@ -706,6 +704,16 @@ h3.panel-title {
     font-weight: 400;
 }
 
+@media (max-width: 1024px) {
+    .dropdown-menu > li > a {
+        line-height: 2.5;
+    }
+}
+
+.dropdown-menu > li > a {
+    line-height: 2;
+}
+
 .dropdown-container {
     height: 42px;
     font-size: 14px;
@@ -720,6 +728,16 @@ h3.panel-title {
     border: 0;
     box-shadow: none;
     color: #039cdb;
+}
+
+.search.fake-search-box {
+    width: 30%;
+}
+
+@media (max-width: 1024px) {
+    .search.fake-search-box {
+        width: 100%;
+    }
 }
 
 .fake-search-box {
@@ -952,7 +970,7 @@ h3.panel-title {
 
 @media (max-width: 1024px) {
     .notification.modal {
-        width: 80%;
+        width: 95%;
     }
 }
 
@@ -988,3 +1006,5 @@ h3.panel-title {
     margin-right: 9px;
     color: #fd3333;
 }
+
+

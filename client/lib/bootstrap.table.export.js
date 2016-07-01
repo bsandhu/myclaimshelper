@@ -13,7 +13,7 @@
         if (this.showToolbar = this.options.showExport, d.apply(this, Array.prototype.slice.apply(arguments)), this.options.showExport) {
             var c = this, e = this.$toolbar.find(">.btn-group"), f = e.find("div.export");
             if (!f.length) {
-                f = a(['<div class="export btn-group">',
+                f = a(['<div class="export btn-group" style="padding-left: 10px">',
                     '<button class="btn btn-default dropdown-toggle" data-toggle="dropdown" type="button">',
                         'Export  ',
                         '<span class="caret"></span>',

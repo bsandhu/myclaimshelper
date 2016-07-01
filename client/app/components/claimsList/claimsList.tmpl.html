@@ -1,37 +1,39 @@
-    <div class="panel panel-default">
+<div class="panel panel-default">
     <div id="claims-list-toolbar">
         <button type="button" class="btn btn-default btn-info"
+                style="padding-top: 4px; top: -3px; position: relative;"
                 data-bind="click: router.routeToNewClaim">
             <span class="fa fa-plus" style="font-size: .8em"></span>
             New Claim
         </button>
-
+        <div class="inline dropdown-container" style="padding-right: 10px; padding-left: 10px;">
+            <div class="inline text-between-dropdown">Status</div>
+            <div class="inline">
+                <select class="form-control input dropdown"
+                        data-bind="value: groupBy, options: groupByOptions"></select></div>
+        </div>
     </div>
-    <!-- Note: Div container is managed by parent -->
+
+    <!-- Claims --->
+    <div data-bind='template: { name: "claimsListTemplate",
+                                afterRender: onclaimsListTmplRender.bind($data) }'></div>
+</div>
+
+
+<script type="text/html" id="claimsListTemplate">
     <div class="panel-body" style="padding-top: 0">
 
         <table id="claimListTable"
-               data-classes="table table-hover table-responsive"
-               data-toggle="table"
-               data-striped="false"
-               data-show-columns="false"
-               data-show-toggle="false"
+               data-classes="table table-hover"
                data-search="true"
-               data-trim-on-search="true"
-               data-show-header="true"
-               data-show-footer="false"
-               data-sortable="true"
                data-sort-name="date1"
                data-sort-order="desc"
-               data-pagination="false"
-               data-show-pagination-switch="false"
                data-maintain-selected="true"
-               data-smart-display="false"
-               data-show-export="true"
                data-export-types="['excel']"
-               data-bind='event: {"click-row.bs.table": onClaimSelect}, attr: {"data-height": 500}'
+               data-bind='event: {"click-row.bs.table": onClaimSelect}'
                data-toolbar="#claims-list-toolbar"
                data-buttons-align="left">
+
             <thead>
             <th data-field="fileNo" data-sortable="true" data-visible="true">File No.</th>
             <th data-field="insured" data-sortable="true" data-sort-name="insuredSort">Insured</th>
@@ -47,4 +49,4 @@
             <!-- Rows appended by Bootstrap table in VM -->
         </table>
     </div>
-</div>
+</script>
