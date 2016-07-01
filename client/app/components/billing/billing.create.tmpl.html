@@ -1,8 +1,8 @@
-<div class="panel panel-default" id="billPanel">
+<div class="panel panel-default" id="billPanel" style="overflow: auto">
 
     <div class="panel-heading" style="background-color: #FAFAFA">
         <div class="row">
-            <div class="col-lg-9 col-md-9 col-sm-6 col-xs-6" style="font-size: 1.5em">
+            <div class="col-lg-8 col-md-8 col-sm-7 col-xs-10" style="font-size: 1.5em">
                 <a data-bind="attr: {href: '#/claim/' + bill().claimId()}">
                 <span data-bind="if: bill().claimFileNum">
                     <span data-bind="text: bill().claimFileNum()"
@@ -17,18 +17,29 @@
                 </span>
                 </a>
             </div>
-            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+            <div class="col-lg-4 col-md-4 col-sm-5 col-xs-2">
                 <!-- ko if: bill().status() === BillingStatus.NOT_SUBMITTED -->
                 <a href="javascript:void(0);"
-                   class="btn btn-default ghost-button pull-right leftMargin"
+                   class="btn btn-default ghost-button pull-right leftMargin hidden-xs"
                    data-bind="click: onBillingProfileClick">
                     <span class="btn-label"><i class="fa fa-cogs"></i></span> Billing Rates
                 </a>
                 <!-- /ko -->
+
+                <!-- > XS view -->
                 <a href="javascript:void(0);"
-                   class="btn btn-default ghost-button pull-right"
+                   class="btn btn-default ghost-button pull-right hidden-xs"
                    data-bind="click: printBill">
                     <span class="btn-label"><i class="fa fa-print"></i></span> Print
+                </a>
+                <!-- XS view -->
+                <a href="javascript:void(0);"
+                   class="pull-right visible-xs"
+                   data-bind="click: printBill">
+                    <span class="fa-stack fa-lg">
+                        <i class="fa fa-circle fa-stack-2x"></i>
+                        <i class="fa fa-print fa-stack-1x fa-inverse"></i>
+                    </span>
                 </a>
             </div>
         </div>
@@ -118,10 +129,10 @@
                     </div>
                     <div>
                         <h5>Invoice Date :
-                    <span class="pull-right"
-                          data-bind="text: DateUtils.niceLocaleDate(bill().submissionDate(), 'Not submitted')">
-                        <i class="fa fa-calendar"></i>
-                    </span>
+                            <span class="pull-right"
+                                  data-bind="text: DateUtils.niceLocaleDate(bill().submissionDate(), 'Not submitted')">
+                                <i class="fa fa-calendar"></i>
+                            </span>
                         </h5>
                     </div>
                     <br>
@@ -144,75 +155,87 @@
                     <thead>
                     <tr>
                         <th data-sortable="true" data-sorted="true" data-sorted-direction="ascending">Date</th>
-                        <th>Task</th>
+                        <th class="hidden-xs">Task</th>
                         <th>Description</th>
-                        <th>Time|Code</th>
-                        <th>Mileage|Code</th>
-                        <th>Expense|Code</th>
-                        <th>Amount</th>
+                        <th class="hidden-xs">Time|Code</th>
+                        <th class="visible-xs">Time</th>
+                        <th class="hidden-xs">Mileage|Code</th>
+                        <th class="visible-xs">Miles</th>
+                        <th class="hidden-xs">Expense|Code</th>
+                        <th class="visible-xs">Exp.</th>
+                        <th>Total</th>
                         <th data-bind="if: isBillEditable">&nbsp;</th>
                     </tr>
                     </thead>
                     <tbody>
                     <!-- ko foreach: { data: bill().billingItems(), as: 'billingItem' } -->
                     <tr>
-                        <td data-bind="text: $parent.DateUtils.niceLocaleDate(billingItem.entryDate())"></td>
-                        <td>
+                        <!-- Use short form date for xs devices -->
+                        <td class="visible-xs"  data-bind="text: $parent.DateUtils.niceLocaleDate(billingItem.entryDate(), 'None', true)"></td>
+                        <td class="hidden-xs" data-bind="text: $parent.DateUtils.niceLocaleDate(billingItem.entryDate())"></td>
+
+                        <td class="hidden-xs">
                             <i data-bind="taskEntryTag: billingItem.tag()"></i>
                         </td>
                         <td><a data-bind="text: billingItem.summary,
-                                  attr: {href: '#/claimEntry/' + $parent.claimId() + '/' + billingItem.claimEntryId()}"></a>
+                                          attr: {href: '#/claimEntry/' + $parent.claimId() + '/' + billingItem.claimEntryId()}"></a>
                         </td>
                         <td>
                             <div style="min-width: 43px" class="inline">
-                        <span data-bind="ifnot: $parent.isBillEditable">
-                             <span data-bind="text: billingItem.time"></span>
-                        </span>
-                                <a><span data-bind="if: $parent.isBillEditable">
-                            <span data-bind="editable: billingItem.time,
-                                             editableOptions: {mode: 'popup',
-                                                               title: 'Edit time',
-                                                               success: $parent.onTimeUpdate.bind($parent, billingItem)}"></span>
-                        </span></a>
+                                <span data-bind="ifnot: $parent.isBillEditable">
+                                     <span data-bind="text: billingItem.time"></span>
+                                </span>
+                                <a>
+                                    <span data-bind="if: $parent.isBillEditable">
+                                    <span data-bind="editable: billingItem.time,
+                                                     editableOptions: {mode: 'popup',
+                                                                       title: 'Edit time',
+                                                                       success: $parent.onTimeUpdate.bind($parent, billingItem)}"></span>
+                                    </span>
+                                </a>
                             </div>
                             <span data-bind="text: billingItem.timeCode"></span>
                         </td>
                         <td>
                             <div style="min-width: 43px" class="inline">
-                        <span data-bind="ifnot: $parent.isBillEditable">
-                            <span data-bind="text: billingItem.mileage"></span>
-                        </span>
-                                <a><span data-bind="if: $parent.isBillEditable">
-                            <span data-bind="editable: billingItem.mileage,
-                                             editableOptions: {mode: 'popup',
-                                                             title: 'Edit Mileage',
-                                                             success: $parent.onMileageUpdate.bind($parent, billingItem)}"></span>
-                        </span></a>
+                                <span data-bind="ifnot: $parent.isBillEditable">
+                                    <span data-bind="text: billingItem.mileage"></span>
+                                </span>
+                                <a>
+                                    <span data-bind="if: $parent.isBillEditable">
+                                        <span data-bind="editable: billingItem.mileage,
+                                                         editableOptions: {mode: 'popup',
+                                                                          title: 'Edit Mileage',
+                                                                          success: $parent.onMileageUpdate.bind($parent, billingItem)}"></span>
+                                    </span>
+                                </a>
                             </div>
                             <span data-bind="text: billingItem.mileageCode"></span>
                         </td>
                         <td>
                             <div style="min-width: 63px" class="inline">
-                        <span data-bind="ifnot: $parent.isBillEditable">
-                            <span data-bind="text: $parent.NumberUtils.niceCCY(billingItem.expenseAmount())"></span>
-                        </span>
-                                <a><span data-bind="if: $parent.isBillEditable">
-                            <span data-bind="editable: billingItem.expenseAmount,
-                                             editableOptions: {mode: 'popup',
-                                                               title: 'Edit Amount',
-                                                               success: $parent.onExpenseAmountUpdate.bind($parent, billingItem)}"></span>
-                        </span></a>
+                                <span data-bind="ifnot: $parent.isBillEditable">
+                                    <span data-bind="text: $parent.NumberUtils.niceCCY(billingItem.expenseAmount())"></span>
+                                </span>
+                                <a>
+                                    <span data-bind="if: $parent.isBillEditable">
+                                    <span data-bind="editable: billingItem.expenseAmount,
+                                                     editableOptions: {mode: 'popup',
+                                                                       title: 'Edit Amount',
+                                                                       success: $parent.onExpenseAmountUpdate.bind($parent, billingItem)}"></span>
+                                    </span>
+                                </a>
                             </div>
                             <span data-bind="text: billingItem.expenseCode"></span>
                         </td>
                         <td data-bind="text: $parent.NumberUtils.niceCCY(billingItem.totalAmount())"></td>
                         <td>
-                    <span data-bind="if: $parent.isBillEditable">
-                        <a data-toggle="tooltip" data-placement="top" title="Exclude item from this Bill"
-                           data-bind="click: $parent.removeBillingItem,
-                                      text: billingItem.removeOrUndoLabel ? billingItem.removeOrUndoLabel() : ''">
-                        </a>
-                    </span>
+                            <span data-bind="if: $parent.isBillEditable">
+                                <a data-toggle="tooltip" data-placement="top" title="Exclude item from this Bill"
+                                   data-bind="click: $parent.removeBillingItem,
+                                              text: billingItem.removeOrUndoLabel ? billingItem.removeOrUndoLabel() : ''">
+                                </a>
+                            </span>
                         </td>
                     </tr>
                     <!-- /ko -->

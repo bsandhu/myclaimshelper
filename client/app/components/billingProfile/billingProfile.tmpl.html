@@ -1,6 +1,6 @@
 <div id="billingProfileModal"
-     class="modal fade" role="dialog" aria-labelledby="userProfileModalLabel" aria-hidden="true"
-     style="width: 50%; right: 25%; left: 25%; top:25%">
+     class="modal fade modal-lg" role="dialog" aria-labelledby="userProfileModalLabel" aria-hidden="true"
+     style="top:20%; margin: auto;">
 
     <div class="modal-dialog">
         <div class="modal-content">
@@ -22,17 +22,17 @@
 
                         <fieldset class="form-group">
                             <div class="row bottomMargin5">
-                                <div class="col-md-4 col-sm-6 col-xs-8"><span class="pull-right">Tax rate</span></div>
+                                <div class="col-md-4 col-sm-6 col-xs-6"><span class="pull-right">Tax rate</span></div>
                                 <div class="col-md-4 col-sm-6 col-xs-4">
                                     <div class="input-group">
-                                    <input type="text" class="form-control input-sm"
-                                           data-bind="value: billingProfile.taxRate"/>
+                                        <input type="text" class="form-control input-sm"
+                                               data-bind="value: billingProfile.taxRate"/>
                                         <div class="input-group-addon">%</div>
-                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="row bottomMargin5">
-                                <div class="col-md-4 col-sm-6 col-xs-8"><span class="pull-right">Track time in</span>
+                                <div class="col-md-4 col-sm-6 col-xs-6"><span class="pull-right">Track time in</span>
                                 </div>
                                 <div class="col-md-4 col-sm-6 col-xs-4">
                                     <input type="text" class="form-control input-sm"
@@ -40,7 +40,7 @@
                                 </div>
                             </div>
                             <div class="row bottomMargin5">
-                                <div class="col-md-4 col-sm-6 col-xs-8">
+                                <div class="col-md-4 col-sm-6 col-xs-6">
                                     <span class="pull-right"
                                           data-bind="text: 'Rate/' + billingProfile.timeUnit()"></span>
                                 </div>
@@ -53,7 +53,7 @@
                                 </div>
                             </div>
                             <div class="row bottomMargin5">
-                                <div class="col-md-4 col-sm-6 col-xs-8">
+                                <div class="col-md-4 col-sm-6 col-xs-6">
                                     <span class="pull-right">Track distance in</span>
                                 </div>
                                 <div class="col-md-4 col-sm-6 col-xs-4">
@@ -62,7 +62,7 @@
                                 </div>
                             </div>
                             <div class="row bottomMargin5">
-                                <div class="col-md-4 col-sm-6 col-xs-8">
+                                <div class="col-md-4 col-sm-6 col-xs-6">
                                     <span class="pull-right"
                                           data-bind="text: 'Rate/' + billingProfile.distanceUnit()"></span>
                                 </div>
@@ -82,9 +82,18 @@
 
             <!-- Footer -->
             <div class="modal-footer">
-                <span class="pull-left" style="color: palevioletred">* Changes apply to un-submitted bills only</span>
-                <button type="button" class="btn btn-default" data-dismiss="modal" data-bind="click: onSave">Save</button>
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <div class="row">
+                    <div class="col-lg-8 col-md-8 col-sm-6 col-xs-6">
+                        <span class="pull-left"
+                              style="color: palevioletred">* Changes apply to un-submitted bills only</span>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6">
+                        <button type="button" class="btn btn-info" data-dismiss="modal" data-bind="click: onSave">
+                            Save
+                        </button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
             </div>
 
         </div>
