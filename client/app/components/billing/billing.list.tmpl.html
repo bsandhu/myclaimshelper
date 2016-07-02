@@ -3,7 +3,7 @@
 <!-- ************************************************************ -->
 <div class="panel panel-default">
 
-    <div class="panel-body" data-bind="if: bills().length > 0">
+    <div class="billingList panel-body" data-bind="if: bills().length > 0">
 
         <!-- Filtered msg. -->
         <div class="row bottomMargin5" data-bind="if: Boolean(claimId())">
@@ -50,7 +50,7 @@
                     </div>
                 </div>
                 <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 inline pull-right fake-search-box"
-                     style="padding: 0px;">
+                     style="padding: 0;">
                     <div class="inline pull-left glyphicon glyphicon-search" style="top: 15px; left: 8px;"></div>
                     <div class="inline">
                         <input class="form-control input no-border" id="prepend"

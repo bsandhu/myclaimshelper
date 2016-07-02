@@ -1,6 +1,6 @@
-<div class="modal fade" id="selectClaimModal" tabindex="-1" role="dialog"
+<div class="modal fade modal-lg" id="selectClaimModal" tabindex="-1" role="dialog"
      aria-labelledby="myModalLabel" aria-hidden="true"
-     style="width: 80%; top: 10%; margin: auto">
+     style="top: 10%; margin: auto">
 
     <div class="modal-dialog">
         <div class="modal-content">
@@ -19,24 +19,27 @@
                     <div>
                         <!-- Search box -->
                         <div class="row bottomMargin5">
-                            <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8">
-                                <div class="inline">
+                            <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12"
+                                     style="border: 1px solid #ccc">
+                                    <div class="inline">
                                     <span class="glyphicon glyphicon-search"
                                           style="font-size: initial; margin-top: 10px;"
                                           aria-hidden="true"></span>
-                                </div>
-                                <div class="inline" style="width: 80%;">
-                                    <input class="form-control no-border"
-                                           id="claimSelector-search"
-                                           placeholder="Start typing to filter" type="text"
-                                           data-bind="textInput: filterText">
-                                </div>
-                                <div class="inline">
+                                    </div>
+                                    <div class="inline" style="width: 80%;">
+                                        <input class="form-control no-border"
+                                               id="claimSelector-search"
+                                               placeholder="Start typing to filter" type="text"
+                                               data-bind="textInput: filterText">
+                                    </div>
+                                    <div class="inline">
                                     <span>
                                         <a href="#" data-bind="click: onClearFilterClick">
                                             <i class="fa fa-times-circle clearSearchIcon"
                                                style="position: relative; right: 20px"></i></a>
                                     </span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -50,10 +53,12 @@
                                         <tbody data-bind="foreach: { data: filteredClaims , as: 'claim' }">
                                         <tr data-bind="click: $parent.onSelectClaim.bind($parent)">
                                             <td>
-                                                <span data-bind="html: claim.fileNo"></span>
+                                                <span class="taskTitle" data-bind="html: claim.fileNo"></span>
                                                 <span data-bind="html: claim.insuranceCo"></span>
-                                                <span data-bind="text: insuredSort" class="leftMargin2pc"></span>
-                                                <span data-bind="text: claimantSort" class="leftMargin2pc"></span>
+                                                <span class="taskSecondaryText leftMargin2pc"
+                                                      data-bind="text: insuredSort"></span>
+                                                <span class="taskSecondaryText leftMargin2pc"
+                                                      data-bind="text: claimantSort"></span>
                                             </td>
                                         </tr>
                                         </tbody>

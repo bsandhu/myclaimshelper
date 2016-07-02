@@ -226,7 +226,7 @@ div {
 /**** Claims list ****/
 /**********************************************************/
 
-.fixed-table-body .card-view .title{
+.fixed-table-body .card-view .title {
     font-weight: 600;
 }
 
@@ -479,6 +479,10 @@ input.no-border {
     background-color: rgb(249, 249, 249);
 }
 
+.billingList .form-group {
+    margin-bottom: 5px;
+}
+
 /**********************************************************/
 /**** Dashboard - Summary panel ****/
 /**********************************************************/
@@ -495,6 +499,25 @@ input.no-border {
 .taskTag {
     min-width: 18px;
     opacity: .87;
+}
+
+.taskTitle {
+    font-weight: 600;
+    opacity: .87;
+}
+
+.taskSecondaryText {
+    color: rgb(85, 85, 85);
+    opacity: .65;
+}
+
+.summary.panel-heading {
+    padding-bottom: 0;
+}
+
+.summary .form-group {
+    margin-bottom: 5px;
+    margin-right: 5px;
 }
 
 /**********************************************************/
@@ -555,6 +578,7 @@ input.no-border {
 /**** Bootstrap overrides ****/
 /**********************************************************/
 
+/* Narrow to avoid excessive whitespace on XS devices */
 .container {
     padding-right: 3px;
     padding-left: 3px;
@@ -723,9 +747,16 @@ h3.panel-title {
     font-weight: 400;
 }
 
+/* Make the menu bigger on smaller screens */
 @media (max-width: 1024px) {
     .dropdown-menu > li > a {
         line-height: 2.5;
+    }
+}
+
+@media (max-width: 1024px) {
+    .list-group-item {
+        line-height: 2;
     }
 }
 
@@ -1025,5 +1056,3 @@ h3.panel-title {
     margin-right: 9px;
     color: #fd3333;
 }
-
-

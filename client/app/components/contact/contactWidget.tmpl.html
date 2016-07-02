@@ -15,7 +15,7 @@
                     <div class="inline hidden-xs" data-bind="component: 'contact-sync-component'"></div>
                 </div>
                 <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
-                    <div class="fake-search-box pull-right">
+                    <div class="col-xs-12 col-sm-10 col-md-10 col-lg-10 fake-search-box pull-right">
                         <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
                                 <span class="glyphicon glyphicon-search"
                                       style="font-size: initial; margin-top: 2px;"
@@ -36,7 +36,7 @@
                 </div>
             </div>
 
-            <div class="row">
+            <div class="row hidden-xs">
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                     <table class="table table-responsive table-hover bottomMargin0">
                         <thead>
@@ -48,6 +48,7 @@
                 </div>
             </div>
 
+            <!-- Contacts listing -->
             <div class="row">
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                     <div data-bind="style: {'max-height': panelContentHeight + 'px', 'overflow-y': 'auto'}">
@@ -56,9 +57,9 @@
                             <tbody data-bind="foreach: { data: filteredContacts , as: 'contact' }">
                             <tr data-bind="click: $parent.onShowContact">
                                 <td><a data-bind="text: contact.name, click: $parent.onShowContact"></a></td>
-                                <td nowrap><span data-bind="text: contact.phone"></span></td>
-                                <td nowrap><span data-bind="text: contact.cell"></span></td>
-                                <td><span data-bind="text: contact.email"></span></td>
+                                <td class="hidden-xs" nowrap><span data-bind="text: contact.phone"></span></td>
+                                <td class="hidden-xs" nowrap><span data-bind="text: contact.cell"></span></td>
+                                <td class="hidden-xs"><span data-bind="text: contact.email"></span></td>
                             </tr>
                             </tbody>
                         </table>
