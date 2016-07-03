@@ -1,56 +1,93 @@
-<div class="container-fluid">
-    <div class="panel panel-default">
-        <div class="panel-body">
-            <div class="row">
-                <!-- **** Nav panel **** -->
-                <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 ">
-                    <div id="map-nav-container">
+<div class="panel panel-default">
+    <div class="panel-body">
 
-                        <!-- Form -->
-                        <form class="form-inline bottomMargin5" role="form">
-                            <!-- Due date group filter -->
-                            <div class="form-group dropdown-container paddingRight5">
-                                <span class="leftMargin5 text-between-dropdown topMargin5">Travel</span>
-                                <select class="form-control input dropdown"
-                                        data-bind="value: dueDateFilter,
+        <!-- **** Buttons row **** -->
+        <div class="row">
+
+            <div class="col-xs-11 col-sm-6 col-md-6 col-lg-6">
+                <div class="pull-left">
+                    <!-- Form -->
+                    <form class="form-inline bottomMargin5 inline" role="form">
+
+                        <!-- Due date group filter -->
+                        <div class="form-group dropdown-container paddingRight5">
+                            <span class="leftMargin5 text-between-dropdown topMargin5">Travel</span>
+                            <select class="input dropdown"
+                                    data-bind="value: dueDateFilter,
                                                      options: dueDateFilters,
                                                      optionsText: 'description'"></select>
 
+                            <!-- Due date - day group filter -->
+                            <div data-bind="if: showDueDateDaysFilter" style="display: inline;">
                                 <!-- Due date - day group filter -->
-                                <!-- ko if:showDueDateDaysFilter -->
-                                <input class="form-control input dropdown"
+                                <label class="leftMargin5 text-between-dropdown">days</label>
+                                <input class="input dropdown"
                                        style="width: 50px"
                                        type="number" min="0"
-                                       data-bind="value: dueDateDaysFilterValue"/>
-                                <span class="text-between-dropdown topMargin5 leftMargin5">days</span>
-                                <!-- /ko -->
+                                       data-bind="value: dueDateDaysFilterValue">
                             </div>
-                        </form>
-                        <!-- End of form -->
+                        </div>
+                    </form>
 
-                        <!-- Entries -->
-                        <div>
-                            <table class="table table-hover table-responsive summaryTable">
-                                <tbody data-bind="foreach : {data: arrangeByKeys, as: 'groupKey'}"
-                                       class="summaryGroupTableBody">
+                    <!-- Slide handle -->
+                    <div id="map-nav-handle" class="inline">
+                        <button type="button" class="btn btn-default ghost-button"
+                                data-bind="click: collapseNav">
+                            <span class="fa fa-navicon"></span>
+                            <span data-bind="if: navCollapsed" class="hidden-xs">Show list</span>
+                            <span data-bind="ifnot: navCollapsed" class="hidden-xs">Hide list</span>
+                        </button>
+                    </div>
+                </div>
+                <!-- End of form -->
+            </div>
 
-                                <!-- Header row -->
-                                <tr class="summaryGroupHeaderRow">
-                                    <td colspan="7" data-bind="click: $parent.onSummaryHeaderClick">
+            <div class="col-xs-1 col-sm-6 col-md-6 col-lg-6">
+                <!-- Print/Directions -->
+                <div id="travel-toolbar" class="pull-right">
+                    <button type="button" class="btn btn-default ghost-button hidden-xs"
+                            data-bind="click: onPrint">
+                        <span class="fa fa-print"></span>
+                        <span class="hidden-xs">Print</span>
+                    </button>
+                    <button type="button" class="btn btn-default ghost-button"
+                            data-bind="click: onDirections">
+                        <span class="fa fa-car"></span>
+                        <span class="hidden-xs">Directions</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+
+                <!-- **** Nav panel **** -->
+                <div data-bind="style: {width: navWidth, 'transition-duration': '300ms', 'transition-timing-function': 'ease-out'}"
+                     id="map-nav-container" class="inline pull-top noOverflow">
+                    <!-- Entries -->
+                    <div>
+                        <table class="table table-hover table-responsive summaryTable">
+                            <tbody data-bind="foreach : {data: arrangeByKeys, as: 'groupKey'}"
+                                   class="summaryGroupTableBody">
+
+                            <!-- Header row -->
+                            <tr class="summaryGroupHeaderRow">
+                                <td colspan="7" data-bind="click: $parent.onSummaryHeaderClick">
                                     <span data-bind="css: 'fa fa-caret-down summaryRow' + groupKey.replace(' ', '') + 'Arrow'"
                                           style="font-size: 1.4em"></span>
-                                        <span class="paddingRight5"></span>
+                                    <span class="paddingRight5"></span>
                                             <span class="summaryGroupSubHeader"
                                                   data-bind="text: $parent.groupBy().groupDisplayNameFn(groupKey),
                                                              css: {'summaryGroupSubHeaderOverDue': groupKey == 0}"></span>
                                             <span class="summaryGroupSubHeader"
                                                   data-bind="text: '(' + ($parent.claimEntriesGrouped()[groupKey].length) + ')'"></span>
-                                    </td>
-                                </tr>
+                                </td>
+                            </tr>
 
-                                <!-- ko foreach: {data: $parent.claimEntriesGrouped()[groupKey], afterRender: $parent.onAfterRender} -->
-                                <tr draggable="true" class="summaryRow"
-                                    data-bind="event: {dragstart: $parents[1].onSummaryRowDragStart.bind($parents[1]),
+                            <!-- ko foreach: {data: $parent.claimEntriesGrouped()[groupKey], afterRender: $parent.onAfterRender} -->
+                            <tr draggable="true" class="summaryRow"
+                                data-bind="event: {dragstart: $parents[1].onSummaryRowDragStart.bind($parents[1]),
                                                dragend  : $parents[1].onSummaryRowDragEnd.bind($parents[1]),
                                                dragenter: $parents[1].onSummaryRowDragEnter.bind($parents[1]),
                                                dragover:  $parents[1].onSummaryRowDragOver.bind($parents[1]),
@@ -63,73 +100,56 @@
                                                       'data-displayOrder': $data.displayOrder},
                                                click: $parents[1].onClaimEntrySelect">
 
-                                    <td>
-                                        <p>
-                                            <img data-bind="attr: {src: $parents[1].markerIconFor.bind($parents[1], $data)()}"
-                                                 style="zoom:.4;"/>
-                                            <strong>
-                                                <span data-bind="text: $data.fileNum"></span>
-                                                <span>/</span>
-                                                <span data-bind="text: $data.insuranceCompanyFileNum"></span>
-                                            </strong>
-                                        </p>
-                                        <span data-bind="textTruncate: $data.summary, maxLength: 50"></span>
-                                        <p data-bind="ifnot: $data.location">
-                                            <span class="text-danger">No location</span>
-                                        </p>
-                                    </td>
-                                </tr>
-                                <!-- /ko -->
-                                </tbody>
-                            </table>
-                        </div>
-                        <!-- End of entries -->
+                                <td>
+                                    <p>
+                                        <img data-bind="attr: {src: $parents[1].markerIconFor.bind($parents[1], $data)()}"
+                                             style="zoom:.4;"/>
+                                        <strong>
+                                            <span data-bind="text: $data.fileNum"></span>
+                                            <span>/</span>
+                                            <span data-bind="text: $data.insuranceCompanyFileNum"></span>
+                                        </strong>
+                                    </p>
+                                    <span data-bind="textTruncate: $data.summary, maxLength: 50"></span>
+                                    <p data-bind="ifnot: $data.location">
+                                        <span class="text-danger">No location</span>
+                                    </p>
+                                </td>
+                            </tr>
+                            <!-- /ko -->
+                            </tbody>
+                        </table>
                     </div>
+                    <!-- End of entries -->
                 </div>
 
                 <!-- **** Maps panel **** -->
-                <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9 ">
-
-                    <!-- Buttons -->
-                    <div class="row bottomMargin5">
-                        <div id="travel-toolbar">
-                            <button type="button" class="btn btn-default ghost-button"
-                                    data-bind="click: onPrint">
-                                <span class="fa fa-print"></span>
-                                Print
-                            </button>
-                            <button type="button" class="btn btn-default ghost-button"
-                                    data-bind="click: onDirections">
-                                <span class="fa fa-car"></span>
-                                Directions
-                            </button>
-                        </div>
-                    </div>
+                <div data-bind="style: {width: mapsWidth, 'transition-duration': '300ms', 'transition-timing-function': 'ease-out'}"
+                     id="map-map-container" class="inline">
 
                     <!-- Google maps -->
-                    <div class="row">
-                        <div id="map-container" data-bind="ifnot: showLocationError">
-                            <div id="map-dash" style="width:100%; height:100%"></div>
-                            <div id="directionsPanel" style="width:100%;height 100%"
-                                 data-bind="visible: showDirections"></div>
+                    <div id="map-container" data-bind="ifnot: showLocationError">
+                        <div id="map-dash" style="width:100%; height:100%"></div>
+                        <div id="directionsPanel" style="width:100%;height 100%"
+                             data-bind="visible: showDirections"></div>
+                    </div>
+                    <div id="map-dash-error" data-bind="if: showLocationError" class="bg-warning">
+                        <div style="width:100%; padding-top:100px" class="text-center">
+                            <h4>
+                                <small>Please allow the browser to use your location. Its needed to display
+                                    the
+                                    Travel
+                                    map
+                                </small>
+                            </h4>
+                            <a href="https://support.google.com/chrome/answer/142065?hl=en" target="_blank">How
+                                to
+                                enable location sharing?</a>
                         </div>
-                        <div id="map-dash-error" data-bind="if: showLocationError" class="bg-warning">
-                            <div style="width:100%; padding-top:100px" class="text-center">
-                                <h4>
-                                    <small>Please allow the browser to use your location. Its needed to display the
-                                        Travel
-                                        map
-                                    </small>
-                                </h4>
-                                <a href="https://support.google.com/chrome/answer/142065?hl=en" target="_blank">How to
-                                    enable location sharing?</a>
-                            </div>
-                        </div>
-                    </div><!-- end maps panel -->
+                    </div>
+                </div><!--End map-map-container -->
+            </div><!-- End col -->
+        </div><!-- End row -->
 
-                </div><!-- end maps panel -->
-            </div><!-- end row -->
-
-        </div><!-- end panel-body -->
-    </div><!-- end panel -->
-</div>
+    </div><!-- end panel-body -->
+</div><!-- end panel -->

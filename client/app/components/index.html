@@ -86,26 +86,28 @@
 </nav>
 
 <!-- #MAIN PANEL -->
-<div class="container" style="position: relative; top: 85px;">
+<div style="position: relative; top: 85px;">
 
     <!-- **** Dashboard **** -->
-    <div id="dashboardPanel" class="row dashboardPanel">
-        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-            <div class="row hidden-xs">
-                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                    <div data-bind="component: 'stats-component'"></div>
+    <div class="container">
+        <div id="dashboardPanel" class="row dashboardPanel">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <div class="row hidden-xs">
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                        <div data-bind="component: 'stats-component'"></div>
+                    </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                    <div data-bind="component: 'summary-component'"></div>
+                <div class="row">
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                        <div data-bind="component: 'summary-component'"></div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- **** Billing **** -->
-    <div id="billingPanel" class="billingPanel">
+    <div id="billingPanel" class="billingPanel container">
         <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                 <div data-bind="component: {name: 'billing-component'}"></div>
@@ -123,7 +125,7 @@
     </div>
 
     <!-- **** Contacts **** -->
-    <div id="contactsPanel" class="contactsPanel">
+    <div id="contactsPanel" class="contactsPanel container">
         <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 ">
                 <div data-bind="component: 'contact-widget-component'"></div>
@@ -132,7 +134,7 @@
     </div>
 
     <!-- **** Claims list **** -->
-    <div id="claimsListPanel" class="claimsListPanel">
+    <div id="claimsListPanel" class="claimsListPanel container">
         <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                 <div data-bind="component: 'claims-list-component'"></div>
@@ -141,18 +143,20 @@
     </div>
 
     <!-- **** Claim edit/entry module **** -->
-    <div class="row">
-        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-            <div id="claimPanel" class="claimPanel inline" style="vertical-align: top">
-                <!-- Note: Still using module for the afterRender fn -->
-                <div data-bind="module: {name: 'app/components/claim/claimVM',
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <div id="claimPanel" class="claimPanel inline pull-top">
+                    <!-- Note: Still using module for the afterRender fn -->
+                    <div data-bind="module: {name: 'app/components/claim/claimVM',
                                      template: 'app/components/claim/claim'}"></div>
-            </div>
+                </div>
 
-            <!-- **** Task edit/entry module **** -->
-            <div id="claimEntryPanel" class="claimEntryPanel inline">
-                <div id="claimEntryPanelContent" class="claimEntryPanelContent">
-                    <div data-bind="component: 'task-entry-component'"></div>
+                <!-- **** Task edit/entry module **** -->
+                <div id="claimEntryPanel" class="claimEntryPanel inline">
+                    <div id="claimEntryPanelContent" class="claimEntryPanelContent">
+                        <div data-bind="component: 'task-entry-component'"></div>
+                    </div>
                 </div>
             </div>
         </div>

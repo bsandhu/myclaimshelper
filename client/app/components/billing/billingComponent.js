@@ -28,7 +28,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox', 'underscore',
             this.groupedByCode = ko.observableArray([]);
 
             // Grouping
-            this.groupBy = ko.observable();
+            this.groupBy = ko.observable('Not Submitted');
             this.groupByOptions = ko.observableArray(['Any', 'Not Submitted', 'Submitted', 'Paid']);
 
             // Updated via Claim lifecycle events

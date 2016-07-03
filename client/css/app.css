@@ -64,6 +64,10 @@ div {
     transform: translateX(-50%);
 }
 
+.pull-top {
+    vertical-align: top;
+}
+
 /**** Width Dimensions ****/
 
 .narrowest {
@@ -207,6 +211,10 @@ div {
 
 .noPadding {
     padding: 0;
+}
+
+.noOverflow{
+    overflow: hidden;
 }
 
 .boxShadow {
@@ -730,6 +738,14 @@ h3.panel-title {
     border-color: #039cdb;
     color: #039cdb;
     background-color: #fff;
+}
+
+.ghost-button:focus {
+    border-color: #039cdb;
+    color: #039cdb;
+    background-color: #fff;
+    box-shadow: none;
+    outline: none;
 }
 
 .dropdown-toggle {
