@@ -116,13 +116,16 @@ define([],
             return result;
         }
 
-        function niceLocaleDate(date, displayIfInvalidDate) {
+        function niceLocaleDate(date, displayIfInvalidDate, hideYear) {
             displayIfInvalidDate = displayIfInvalidDate || 'None';
+            hideYear = hideYear || false;
 
             if (date === undefined || date === null || date === '' || date.getTime() == 0) {
                 return displayIfInvalidDate;
             }
-            return date.getMonth()+1 + '/' + date.getDate() + '/' + date.getFullYear() ;
+            return hideYear
+                    ? date.getMonth()+1 + '/' + date.getDate()
+                    : date.getMonth()+1 + '/' + date.getDate() + '/' + date.getFullYear() ;
         }
 
         function isThisWeek(date) {

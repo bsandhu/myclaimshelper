@@ -10,7 +10,7 @@ define(['knockout', 'underscore',
             this.filterText = ko.observable();
             this.initFilter();
 
-            this.panelContentHeight = $(window).height() - (250 + $('.navbar-brand').height());
+            this.panelContentHeight = $(window).height() - (100 + $('.navbar-brand').height());
 
             if (Session.getContacts().length === 0) {
                 ContactClient

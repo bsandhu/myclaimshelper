@@ -1,147 +1,163 @@
-<div class="panel panel-default">
-    <div class="panel-body">
+<div class="panel">
 
-        <!-- widget content -->
-        <div class="widget-body no-padding">
-            <div class="panel">
+    <div class="summary panel-heading">
+        <div class="row">
+            <form class="form-inline">
+                <div class="col-xs-12 col-md-12 col-lg-12">
+                    <div class="form-group">
+                        <button type="button"
+                                class="btn btn-default btn-info"
+                                data-bind="click: onNewTask">
+                            <span class="fa fa-plus"></span>
+                            New Task
+                        </button>
+                    </div>
 
-                <div class="panel-heading">
-                    <div class="row">
-                        <div class="inline">
-                            <button type="button"
-                                    class="btn btn-default btn-info"
-                                    data-bind="click: onNewTask">
-                                <span class="fa fa-plus"></span>
-                                New Task
-                            </button>
+                    <!-- Due date group filter -->
+                    <div class="form-group dropdown-container paddingRight5">
+                        <label class="leftMargin5 topMargin5 text-between-dropdown">Due </label>
+                        <select class="input dropdown"
+                                data-bind="value: dueDateFilter,
+                                           options: dueDateFilters,
+                                           optionsText: 'description'"></select>
+
+                        <div data-bind="if: showDueDateDaysFilter" style="display: inline;">
+                            <!-- Due date - day group filter -->
+                            <label class="leftMargin5 text-between-dropdown">days</label>
+                            <input class="input dropdown"
+                                   style="width: 50px"
+                                   type="number" min="0"
+                                   data-bind="value: dueDateDaysFilterValue">
                         </div>
-                        <div class="inline">
-                            <form class="form-inline" role="form">
-                                <!-- Due date group filter -->
-                                <div class="form-group dropdown-container paddingRight5">
-                                    <span class="leftMargin5 topMargin5 text-between-dropdown">Due </span>
-                                    <select class="form-control input dropdown"
-                                            data-bind="value: dueDateFilter,
-                                       options: dueDateFilters,
-                                       optionsText: 'description'"></select>
+                    </div>
 
-                                    <div class="form-group" data-bind="if: showDueDateDaysFilter">
-                                        <!-- Due date - day group filter -->
-                                        <span class="leftMargin5 text-between-dropdown">days</span>
-                                        <input class="form-control input dropdown"
-                                               style="width: 50px"
-                                               type="number" min="0"
-                                               data-bind="value: dueDateDaysFilterValue">
-                                    </div>
-                                </div>
-                                <!-- Status filter -->
-                                <div class="form-group dropdown-container paddingRight5">
-                                    <span class="leftMargin5 text-between-dropdown topMargin5">Status</span>
-                                    <select class="form-control input dropdown"
-                                            data-bind="value: statusFilter,
+                    <!-- Status filter -->
+                    <div class="form-group dropdown-container">
+                        <label class="leftMargin5 text-between-dropdown topMargin5">Status</label>
+                        <select class="input dropdown"
+                                data-bind="value: statusFilter,
                                                        options: statusFilters,
                                                        optionsText: 'description'"></select>
-                                </div>
-                                <div class="form-group dropdown-container paddingRight5">
-                                    <!-- Group selection -->
-                                    <span class="leftMargin5 topMargin5 text-between-dropdown">Sort by</span>
-                                    <select class="form-control input dropdown"
-                                            data-bind="value: groupBy,
+
+                        <!-- Group selection -->
+                        <label class="leftMargin5 topMargin5 text-between-dropdown">Sort by</label>
+                        <select class="input dropdown"
+                                data-bind="value: groupBy,
                                                        options: groupByOptions,
                                                        optionsText: 'description'"></select>
-                                </div>
-                            </form>
-                        </div>
                     </div>
                 </div>
-
-                <div class="panel-body">
-                    <div>
-                        <table class="table table-hover table-responsive summaryTable">
-                            <thead>
-                            <th>&nbsp;</th>
-                            <th>File num.</th>
-                            <th>Insured</th>
-                            <th>Claimant</th>
-                            <th>Task</th>
-                            <th>Due Date</th>
-                            <th>Status</th>
-                            </thead>
-
-                            <tbody data-bind="foreach : {data: arrangeByKeys, as: 'groupKey'}"
-                                   class="summaryGroupTableBody">
-
-                            <!-- Header row -->
-                            <tr class="summaryGroupHeaderRow">
-                                <td colspan="7" data-bind="click: $parent.onSummaryHeaderClick">
-                                    <span data-bind="css: 'fa fa-caret-down summaryRow' + groupKey.replace(' ', '') + 'Arrow'"
-                                          style="font-size: 1.4em; padding-right: 3px"></span>
-                                            <span class="summaryGroupHeader"
-                                                  data-bind="text: $parent.groupBy().description"></span>
-                                    <span class="paddingRight5"></span>
-                                            <span class="summaryGroupSubHeader"
-                                                  data-bind="text: $parent.groupBy().groupDisplayNameFn(groupKey),
-                                                             css: {'summaryGroupSubHeaderOverDue': groupKey == 0}"></span>
-                                            <span class="summaryGroupSubHeader"
-                                                  data-bind="text: '(' + ($parent.claimEntriesGrouped()[groupKey].length) + ')'"></span>
-                                </td>
-                            </tr>
-
-                            <!-- ko foreach: {data: $parent.claimEntriesGrouped()[groupKey], afterRender: $parent.onAfterRender} -->
-                            <tr draggable="true" class="summaryRow"
-                                data-bind="event: {dragstart: $parents[1].onSummaryRowDragStart.bind($parents[1]),
-                                                       dragend  : $parents[1].onSummaryRowDragEnd.bind($parents[1]),
-                                                       dragenter: $parents[1].onSummaryRowDragEnter.bind($parents[1]),
-                                                       dragover:  $parents[1].onSummaryRowDragOver.bind($parents[1]),
-                                                       dragleave: $parents[1].onSummaryRowDragLeave.bind($parents[1])},
-                                               css: 'summaryRow' + groupKey.replace(' ', ''),
-                                               attr: {'data-entryId': $data._id,
-                                                      'data-group': groupKey,
-                                                      'data-displayOrder': $data.displayOrder},
-                                               click: $parents[1].onClaimEntrySelect">
-
-                                <td class="summaryGroupDrag" title="Click and Drag to reorder">
-                                    <div class="inline" style="width: 15px">
-                                        <div class="inline"><span class="fa fa-ellipsis-v"></span></div>
-                                        <div class="inline"><span class="fa fa-ellipsis-v"></span></div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <span class="rightMargin">
-                                        <i data-bind="taskEntryTag: $data.tag"></i>
-                                    </span>
-                                    <span data-bind="text: $data.fileNum"></span>
-                                </td>
-                                <td>
-                                    <span data-bind="textTruncate: $data.insuredContact.name || '-', maxLength: 10"></span>
-                                </td>
-                                <td>
-                                    <span data-bind="textTruncate: $data.claimantContact.name || '-', maxLength: 10"></span>
-                                </td>
-                                <td>
-                                    <span data-bind="textTruncate: $data.summary, maxLength: 20"></span>
-                                </td>
-                                <td class="summaryGroupCell" nowrap="">
-                                    <span data-bind="text: $parents[1].DateUtils.niceDate($data.dueDate ? $data.dueDate() : '')"></span>
-                                    <!--<span class="fa fa-pencil"></span>-->
-                                    <span></span>
-                                </td>
-                                <td class="summaryGroupCell">
-                                    <status-editor-component params="'statusValue': $data.state,
-                                                                     'entryId': $data._id">
-                                    </status-editor-component>
-                                </td>
-                            </tr>
-                            <!-- /ko -->
-                            </tbody>
-                        </table>
-                    </div>
-
-                </div>
-                <!-- End panel body -->
-            </div>
+            </form>
         </div>
     </div>
-</div>
+
+    <div class="panel-body">
+        <div>
+            <table class="table table-hover summaryTable">
+                <thead class="hidden-xs">
+                <th>&nbsp;</th>
+                <th>File num.</th>
+                <th>Insured</th>
+                <th>Claimant</th>
+                <th>Task</th>
+                <th>Due Date</th>
+                <th>Status</th>
+                </thead>
+
+                <tbody data-bind="foreach : {data: arrangeByKeys, as: 'groupKey'}"
+                       class="summaryGroupTableBody">
+
+                <!-- Header row -->
+                <tr class="summaryGroupHeaderRow">
+                    <td colspan="7" data-bind="click: $parent.onSummaryHeaderClick">
+                        <span data-bind="css: 'fa fa-caret-down summaryRow' + groupKey.replace(' ', '') + 'Arrow'"
+                              style="font-size: 1.4em; padding-right: 3px"></span>
+                        <span class="summaryGroupHeader"
+                              data-bind="text: $parent.groupBy().description"></span>
+                        <span class="paddingRight5"></span>
+                        <span class="summaryGroupSubHeader"
+                              data-bind="text: $parent.groupBy().groupDisplayNameFn(groupKey),
+                                         css: {'summaryGroupSubHeaderOverDue': groupKey == 0}"></span>
+                        <span class="summaryGroupSubHeader"
+                              data-bind="text: '(' + ($parent.claimEntriesGrouped()[groupKey].length) + ')'"></span>
+                    </td>
+                </tr>
+
+                <!-- ko foreach: {data: $parent.claimEntriesGrouped()[groupKey], afterRender: $parent.onAfterRender} -->
+                <tr draggable="true" class="summaryRow"
+                    data-bind="event: {dragstart: $parents[1].onSummaryRowDragStart.bind($parents[1]),
+                                       dragend  : $parents[1].onSummaryRowDragEnd.bind($parents[1]),
+                                       dragenter: $parents[1].onSummaryRowDragEnter.bind($parents[1]),
+                                       dragover:  $parents[1].onSummaryRowDragOver.bind($parents[1]),
+                                       dragleave: $parents[1].onSummaryRowDragLeave.bind($parents[1])},
+
+                                       css: 'summaryRow' + groupKey.replace(' ', ''),
+                                       attr: {'data-entryId': $data._id,
+                                              'data-group': groupKey,
+                                              'data-displayOrder': $data.displayOrder},
+                                       click: $parents[1].onClaimEntrySelect">
+
+                    <!-- XS view -->
+                    <td nowrap style="vertical-align: middle" class="visible-xs">
+                        <status-editor-component params="'statusValue': $data.state,
+                                                         'entryId': $data._id"></status-editor-component></td>
+                    <td class="visible-xs">
+                        <span class="rightMargin">
+                            <i data-bind="taskEntryTag: $data.tag"></i>
+                        </span>
+                        <span class="taskTitle" data-bind="text: $data.fileNum"></span>
+                        <br/>
+                        <span data-bind="textTruncate: $data.summary, maxLength: 100"></span>
+                        <br/>
+                        <span class="taskSecondaryText"
+                              data-bind="textTruncate: $data.insuredContact.name || '-', maxLength: 50"></span>
+                        <span class="taskSecondaryText"> / </span>
+                        <span class="taskSecondaryText"
+                              data-bind="textTruncate: $data.claimantContact.name || '-', maxLength: 50"></span>
+                        <br/>
+                    </td>
+                    <!-- End - XS view -->
+
+                    <td class="summaryGroupDrag hidden-xs" title="Click and Drag to reorder">
+                        <div class="inline" style="width: 15px">
+                            <div class="inline"><span class="fa fa-ellipsis-v"></span></div>
+                            <div class="inline"><span class="fa fa-ellipsis-v"></span></div>
+                        </div>
+                    </td>
+                    <td class="hidden-xs">
+                        <span class="rightMargin">
+                            <i data-bind="taskEntryTag: $data.tag"></i>
+                        </span>
+                        <span data-bind="text: $data.fileNum"></span>
+                    </td>
+                    <td class="hidden-xs">
+                        <span data-bind="textTruncate: $data.insuredContact.name || '-', maxLength: 10"></span>
+                    </td>
+                    <td class="hidden-xs">
+                        <span data-bind="textTruncate: $data.claimantContact.name || '-', maxLength: 10"></span>
+                    </td>
+                    <td class="hidden-xs">
+                        <span data-bind="textTruncate: $data.summary, maxLength: 20"></span>
+                    </td>
+                    <td class="summaryGroupCell hidden-xs" nowrap="">
+                        <span data-bind="text: $parents[1].DateUtils.niceDate($data.dueDate ? $data.dueDate() : '')"></span>
+                        <!--<span class="fa fa-pencil"></span>-->
+                        <span></span>
+                    </td>
+                    <td class="summaryGroupCell hidden-xs">
+                        <status-editor-component params="'statusValue': $data.state,
+                                                                     'entryId': $data._id"></status-editor-component>
+                    </td>
+                </tr>
+                <!-- /ko -->
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+    <!-- End panel body -->
+
+</div><!-- End panel -->
+
 
 <div data-bind="template: {afterRender: componentLoaded()}"></div>

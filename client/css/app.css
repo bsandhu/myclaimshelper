@@ -47,12 +47,25 @@ div {
     display: table-cell;
 }
 
+.tableRow {
+    display: table-row;
+}
+
 .alignLeft {
     float: left;
 }
 
 .alignRight {
     float: right;
+}
+
+.centered {
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.pull-top {
+    vertical-align: top;
 }
 
 /**** Width Dimensions ****/
@@ -196,6 +209,14 @@ div {
     box-shadow: none;
 }
 
+.noPadding {
+    padding: 0;
+}
+
+.noOverflow {
+    overflow: hidden;
+}
+
 .boxShadow {
     border: 1px solid darkgrey;
     box-shadow: 2px 2px 2px lightgray;
@@ -207,6 +228,14 @@ div {
 
 .overflowY {
     overflow-y: auto;
+}
+
+/**********************************************************/
+/**** Claims list ****/
+/**********************************************************/
+
+.fixed-table-body .card-view .title {
+    font-weight: 600;
 }
 
 /**********************************************************/
@@ -365,10 +394,6 @@ input.no-border {
     width: 100%;
 }
 
-.modal.in .modal-dialog {
-    width: 90%;
-}
-
 #map-modal {
     min-height: 640px;
 }
@@ -450,18 +475,20 @@ input.no-border {
     font-weight: 700;
 }
 
-.centered {
-    left: 50%;
-    transform: translateX(-50%);
-}
-
 .btn-link.text-success {
     color: #10ca4c;
-    font-weight: 700;
+}
+
+.cardViewTitle {
+    font-weight: 600;
 }
 
 .billAmount {
     background-color: rgb(249, 249, 249);
+}
+
+.billingList .form-group {
+    margin-bottom: 5px;
 }
 
 /**********************************************************/
@@ -480,6 +507,25 @@ input.no-border {
 .taskTag {
     min-width: 18px;
     opacity: .87;
+}
+
+.taskTitle {
+    font-weight: 600;
+    opacity: .87;
+}
+
+.taskSecondaryText {
+    color: rgb(85, 85, 85);
+    opacity: .65;
+}
+
+.summary.panel-heading {
+    padding-bottom: 0;
+}
+
+.summary .form-group {
+    margin-bottom: 5px;
+    margin-right: 5px;
 }
 
 /**********************************************************/
@@ -536,12 +582,15 @@ input.no-border {
     opacity: .9;
 }
 
-.dropdown-menu {
-}
-
 /**********************************************************/
 /**** Bootstrap overrides ****/
 /**********************************************************/
+
+/* Narrow to avoid excessive whitespace on XS devices */
+.container {
+    padding-right: 3px;
+    padding-left: 3px;
+}
 
 .modal-content {
     border-radius: 2px;
@@ -595,11 +644,24 @@ input.no-border {
     text-align: center;
 }
 
+@media (max-width: 1024px) {
+    h3 {
+        font-size: 20px;
+    }
+}
+
 h3.panel-title {
     font-size: 18px;
     font-weight: 600;
     color: #797979 !important;
     letter-spacing: 0.04em;
+}
+
+@media (max-width: 1024px) {
+    .panel-heading {
+        padding-top: 5px;
+        padding-bottom: 5px;
+    }
 }
 
 .panel-default .panel-heading {
@@ -691,6 +753,14 @@ h3.panel-title {
     background-color: #fff;
 }
 
+.ghost-button:focus {
+    border-color: #039cdb;
+    color: #039cdb;
+    background-color: #fff;
+    box-shadow: none;
+    outline: none;
+}
+
 .dropdown-toggle {
     height: 42px;
     border-radius: 0;
@@ -704,6 +774,23 @@ h3.panel-title {
     display: inline-block;
     padding-top: 5px;
     font-weight: 400;
+}
+
+/* Make the menu bigger on smaller screens */
+@media (max-width: 1024px) {
+    .dropdown-menu > li > a {
+        line-height: 2.5;
+    }
+}
+
+@media (max-width: 1024px) {
+    .list-group-item {
+        line-height: 2;
+    }
+}
+
+.dropdown-menu > li > a {
+    line-height: 2;
 }
 
 .dropdown-container {
@@ -720,6 +807,16 @@ h3.panel-title {
     border: 0;
     box-shadow: none;
     color: #039cdb;
+}
+
+.search.fake-search-box {
+    width: 30%;
+}
+
+@media (max-width: 1024px) {
+    .search.fake-search-box {
+        width: 100%;
+    }
 }
 
 .fake-search-box {
@@ -763,6 +860,28 @@ h3.panel-title {
     left: -6px;
 }
 
+@media (max-width: 1024px) {
+    .navbar-header {
+        padding-right: 5px;
+    }
+}
+
+/**** Brand  styling ****/
+
+.navbar-default .navbar-brand:visited {
+    color: #fff;
+}
+
+.navbar-default .navbar-brand:hover {
+    color: #fff;
+}
+
+@media (max-width: 1024px) {
+    .navbar-default .navbar-brand {
+        padding-left: 20px;
+    }
+}
+
 .navbar-default .navbar-brand {
     height: 74px;
     line-height: 45px;
@@ -775,6 +894,8 @@ h3.panel-title {
     color: #6bd4ff;
     font-weight: 700;
 }
+
+/**** End - Brand  styling ****/
 
 /* Un-selected menu item */
 .navbar-default .navbar-nav > li > a {
@@ -949,18 +1070,6 @@ h3.panel-title {
 /**********************************************************/
 /**** Notifications ****/
 /**********************************************************/
-
-@media (max-width: 1024px) {
-    .notification.modal {
-        width: 80%;
-    }
-}
-
-@media (min-width: 1024px) {
-    .notification.modal {
-        width: 50%;
-    }
-}
 
 .notification.list-group-item {
     border: 1px dotted darkgrey;

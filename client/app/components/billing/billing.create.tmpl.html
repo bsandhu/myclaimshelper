@@ -1,9 +1,9 @@
-<div class="panel panel-default" id="billPanel">
+<div class="panel panel-default" id="billPanel" style="overflow: auto">
 
-<div class="panel-heading" style="background-color: #FAFAFA">
-    <div class="row">
-        <div class="col-lg-9 col-md-9 col-sm-6 col-xs-6" style="font-size: 1.5em">
-            <a data-bind="attr: {href: '#/claim/' + bill().claimId()}">
+    <div class="panel-heading" style="background-color: #FAFAFA">
+        <div class="row">
+            <div class="col-lg-8 col-md-8 col-sm-7 col-xs-10" style="font-size: 1.5em">
+                <a data-bind="attr: {href: '#/claim/' + bill().claimId()}">
                 <span data-bind="if: bill().claimFileNum">
                     <span data-bind="text: bill().claimFileNum()"
                           style="font-size: .9em"></span>
@@ -15,51 +15,62 @@
                 <span data-bind="if: bill().claimInsuranceCompanyName">
                     <span data-bind="text: bill().claimInsuranceCompanyName()" style="font-size: .8em"></span>
                 </span>
-            </a>
-        </div>
-        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
-            <!-- ko if: bill().status() === BillingStatus.NOT_SUBMITTED -->
-            <a href="javascript:void(0);"
-               class="btn btn-default ghost-button pull-right leftMargin"
-               data-bind="click: onBillingProfileClick">
-                <span class="btn-label"><i class="fa fa-cogs"></i></span>  Billing Rates
-            </a>
-            <!-- /ko -->
-            <a href="javascript:void(0);"
-               class="btn btn-default ghost-button pull-right"
-               data-bind="click: printBill">
-                <span class="btn-label"><i class="fa fa-print"></i></span>  Print
-            </a>
-        </div>
-    </div>
-</div>
+                </a>
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-5 col-xs-2">
+                <!-- ko if: bill().status() === BillingStatus.NOT_SUBMITTED -->
+                <a href="javascript:void(0);"
+                   class="btn btn-default ghost-button pull-right leftMargin hidden-xs"
+                   data-bind="click: onBillingProfileClick">
+                    <span class="btn-label"><i class="fa fa-cogs"></i></span> Billing Rates
+                </a>
+                <!-- /ko -->
 
-<div class="panel-body">
-
-<!--- Header messages -->
-<div data-bind="if: isNewBill() && !haveBillableTasks()" class="row">
-    <div class="col-sm-12">
-        <div class="well well-sm bg-color-greenLighter txt-color-green text-center">
-            There are are no Tasks which can be billed at this time.
-            Once you add some Tasks you will be able to create a bill for them.
-        </div>
-    </div>
-</div>
-
-<div data-bind="if: haveBillableTasks">
-    <div data-bind="if: isBillEditable" class="row" id="bililngCreateMsg">
-        <div class="col-sm-12">
-            <div class="well well-sm bg-color-greenLighter txt-color-green text-center">
-                Please review the tasks to include in the bill
+                <!-- > XS view -->
+                <a href="javascript:void(0);"
+                   class="btn btn-default ghost-button pull-right hidden-xs"
+                   data-bind="click: printBill">
+                    <span class="btn-label"><i class="fa fa-print"></i></span> Print
+                </a>
+                <!-- XS view -->
+                <a href="javascript:void(0);"
+                   class="pull-right visible-xs"
+                   data-bind="click: printBill">
+                    <span class="fa-stack fa-lg">
+                        <i class="fa fa-circle fa-stack-2x"></i>
+                        <i class="fa fa-print fa-stack-1x fa-inverse"></i>
+                    </span>
+                </a>
             </div>
         </div>
     </div>
-    <div data-bind="ifnot: isBillEditable" class="row">
-        <div class="col-sm-12">
-            <div class="well well-sm bg-color-greenLighter txt-color-green text-center">
-                <!-- Open -->
-                <div data-bind="ifnot: isClaimClosed">
-                    <i class="fa fa-check-circle"></i>
+
+    <div class="panel-body">
+
+        <!--- Header messages -->
+        <div data-bind="if: isNewBill() && !haveBillableTasks()" class="row">
+            <div class="col-sm-12">
+                <div class="well well-sm bg-color-greenLighter txt-color-green text-center">
+                    There are are no Tasks which can be billed at this time.
+                    Once you add some Tasks you will be able to create a bill for them.
+                </div>
+            </div>
+        </div>
+
+        <div data-bind="if: haveBillableTasks">
+            <div data-bind="if: isBillEditable" class="row" id="bililngCreateMsg">
+                <div class="col-sm-12">
+                    <div class="well well-sm bg-color-greenLighter txt-color-green text-center">
+                        Please review the tasks to include in the bill
+                    </div>
+                </div>
+            </div>
+            <div data-bind="ifnot: isBillEditable" class="row">
+                <div class="col-sm-12">
+                    <div class="well well-sm bg-color-greenLighter txt-color-green text-center">
+                        <!-- Open -->
+                        <div data-bind="ifnot: isClaimClosed">
+                            <i class="fa fa-check-circle"></i>
                     <span data-bind="if: isBillSubmitted">
                         <strong>Invoice submitted.</strong> Sent on <span
                             data-bind="text: DateUtils.niceDate(bill().submissionDate())"></span>
@@ -68,218 +79,233 @@
                         <strong>Invoice Paid.</strong>
                             <span data-bind="text: DateUtils.niceDate(bill().paidDate())"></span>
                     </span>
-                </div>
-                <!-- Closed -->
-                <div data-bind="if: isClaimClosed">
-                    <i class="fa fa-lock"></i>
-                    <span>Claim is closed</span>
+                        </div>
+                        <!-- Closed -->
+                        <div data-bind="if: isClaimClosed">
+                            <i class="fa fa-lock"></i>
+                            <span>Claim is closed</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</div>
 
-<!--- Invoice content -->
-<div data-bind="if: haveBillableTasks" id="invoice-body" class="yes-print">
-    <div class="pull-left">
-        <address>
-            <strong><span data-bind="text: userProfile.contactInfo.businessName"></span></strong><br>
-            <span data-bind="text: userProfile.contactInfo.streetAddress"></span><br>
-            <span data-bind="text: userProfile.contactInfo.city + ' ' + userProfile.contactInfo.zip"></span><br>
-        </address>
-    </div>
+        <!--- Invoice content -->
+        <div data-bind="if: haveBillableTasks" id="invoice-body" class="yes-print">
+            <div class="pull-left">
+                <address>
+                    <strong><span data-bind="text: userProfile.contactInfo.businessName"></span></strong><br>
+                    <span data-bind="text: userProfile.contactInfo.streetAddress"></span><br>
+                    <span data-bind="text: userProfile.contactInfo.city + ' ' + userProfile.contactInfo.zip"></span><br>
+                </address>
+            </div>
 
-    <div class="pull-right">
-        <h1>Invoice</h1>
-    </div>
-    <div class="clearfix"></div>
-    <br>
+            <div class="pull-right">
+                <h1>Invoice</h1>
+            </div>
+            <div class="clearfix"></div>
+            <br>
 
-    <div class="row">
-        <div class="col-sm-8" data-bind="if: isBillEditable">
-            <contact-component params="contact : billRecipient,
+            <div class="row">
+                <div class="col-sm-8" data-bind="if: isBillEditable">
+                    <contact-component params="contact : billRecipient,
                                        idSuffix: 'billing-recipient',
                                        allowEdits: false,
                                        showDetails: true,
                                        placeholder: 'Start typing recipient',
                                        isBusinessOptionApplicable: false"></contact-component>
-        </div>
-        <div class="col-sm-8" data-bind="ifnot: isBillEditable">
-            <span data-bind="text: billRecipient().name"></span><br>
-            <span data-bind="text: billRecipient().streetAddress"></span><br>
-            <span data-bind="text: billRecipient().city"></span>
-            <span data-bind="text: billRecipient().zip"></span><br>
-            <span data-bind="text: billRecipient().phone"></span>
-        </div>
-        <div class="col-sm-4 pull-right">
-            <div>
-                Invoice Number :
-                <span class="pull-right" data-bind="text: bill()._id"></span>
-            </div>
-            <div>
-                <h5>Invoice Date :
-                    <span class="pull-right"
-                          data-bind="text: DateUtils.niceLocaleDate(bill().submissionDate(), 'Not submitted')">
-                        <i class="fa fa-calendar"></i>
-                    </span>
-                </h5>
-            </div>
-            <br>
-
-            <div class="well well-sm  bg-color-darken txt-color-white no-border">
-                <div class="fa-lg">
-                    Total Due :
-                    <span class="pull-right" data-bind="text: NumberUtils.niceCCY(bill().total()) + ' **'"></span>
                 </div>
+                <div class="col-sm-8" data-bind="ifnot: isBillEditable">
+                    <span data-bind="text: billRecipient().name"></span><br>
+                    <span data-bind="text: billRecipient().streetAddress"></span><br>
+                    <span data-bind="text: billRecipient().city"></span>
+                    <span data-bind="text: billRecipient().zip"></span><br>
+                    <span data-bind="text: billRecipient().phone"></span>
+                </div>
+                <div class="col-sm-4 pull-right">
+                    <div>
+                        Invoice Number :
+                        <span class="pull-right" data-bind="text: bill()._id"></span>
+                    </div>
+                    <div>
+                        <h5>Invoice Date :
+                            <span class="pull-right"
+                                  data-bind="text: DateUtils.niceLocaleDate(bill().submissionDate(), 'Not submitted')">
+                                <i class="fa fa-calendar"></i>
+                            </span>
+                        </h5>
+                    </div>
+                    <br>
 
+                    <div class="well well-sm  bg-color-darken txt-color-white no-border">
+                        <div class="fa-lg">
+                            Total Due :
+                            <span class="pull-right"
+                                  data-bind="text: NumberUtils.niceCCY(bill().total()) + ' **'"></span>
+                        </div>
+
+                    </div>
+                    <br>
+                </div>
             </div>
-            <br>
-        </div>
-    </div>
-    <!-- **** Entries listing **** -->
-    <div class="row">
-        <table class="table table-hover" data-bind="sortable" id="billingCreateTable" data-sortable>
-            <thead>
-            <tr>
-                <th data-sortable="true" data-sorted="true" data-sorted-direction="ascending">Date</th>
-                <th>Task</th>
-                <th>Description</th>
-                <th>Time|Code</th>
-                <th>Mileage|Code</th>
-                <th>Expense|Code</th>
-                <th>Amount</th>
-                <th data-bind="if: isBillEditable">&nbsp;</th>
-            </tr>
-            </thead>
-            <tbody>
-            <!-- ko foreach: { data: bill().billingItems(), as: 'billingItem' } -->
-            <tr>
-                <td data-bind="text: $parent.DateUtils.niceLocaleDate(billingItem.entryDate())"></td>
-                <td>
-                    <i data-bind="taskEntryTag: billingItem.tag()"></i>
-                </td>
-                <td><a data-bind="text: billingItem.summary,
-                                  attr: {href: '#/claimEntry/' + $parent.claimId() + '/' + billingItem.claimEntryId()}"></a>
-                </td>
-                <td>
-                    <div style="min-width: 43px" class="inline">
-                        <span data-bind="ifnot: $parent.isBillEditable">
-                             <span data-bind="text: billingItem.time"></span>
-                        </span>
-                        <a><span data-bind="if: $parent.isBillEditable">
-                            <span data-bind="editable: billingItem.time,
-                                             editableOptions: {mode: 'popup',
-                                                               title: 'Edit time',
-                                                               success: $parent.onTimeUpdate.bind($parent, billingItem)}"></span>
-                        </span></a>
+            <!-- **** Entries listing **** -->
+            <div class="row">
+                <table class="table table-hover table-responsive" data-bind="sortable" id="billingCreateTable"
+                       data-sortable>
+                    <thead>
+                    <tr>
+                        <th data-sortable="true" data-sorted="true" data-sorted-direction="ascending">Date</th>
+                        <th class="hidden-xs">Task</th>
+                        <th>Description</th>
+                        <th class="hidden-xs">Time|Code</th>
+                        <th class="visible-xs">Time</th>
+                        <th class="hidden-xs">Mileage|Code</th>
+                        <th class="visible-xs">Miles</th>
+                        <th class="hidden-xs">Expense|Code</th>
+                        <th class="visible-xs">Exp.</th>
+                        <th>Total</th>
+                        <th data-bind="if: isBillEditable">&nbsp;</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <!-- ko foreach: { data: bill().billingItems(), as: 'billingItem' } -->
+                    <tr>
+                        <!-- Use short form date for xs devices -->
+                        <td class="visible-xs"  data-bind="text: $parent.DateUtils.niceLocaleDate(billingItem.entryDate(), 'None', true)"></td>
+                        <td class="hidden-xs" data-bind="text: $parent.DateUtils.niceLocaleDate(billingItem.entryDate())"></td>
+
+                        <td class="hidden-xs">
+                            <i data-bind="taskEntryTag: billingItem.tag()"></i>
+                        </td>
+                        <td><a data-bind="text: billingItem.summary,
+                                          attr: {href: '#/claimEntry/' + $parent.claimId() + '/' + billingItem.claimEntryId()}"></a>
+                        </td>
+                        <td>
+                            <div style="min-width: 43px" class="inline">
+                                <span data-bind="ifnot: $parent.isBillEditable">
+                                     <span data-bind="text: billingItem.time"></span>
+                                </span>
+                                <a>
+                                    <span data-bind="if: $parent.isBillEditable">
+                                    <span data-bind="editable: billingItem.time,
+                                                     editableOptions: {mode: 'popup',
+                                                                       title: 'Edit time',
+                                                                       success: $parent.onTimeUpdate.bind($parent, billingItem)}"></span>
+                                    </span>
+                                </a>
+                            </div>
+                            <span data-bind="text: billingItem.timeCode"></span>
+                        </td>
+                        <td>
+                            <div style="min-width: 43px" class="inline">
+                                <span data-bind="ifnot: $parent.isBillEditable">
+                                    <span data-bind="text: billingItem.mileage"></span>
+                                </span>
+                                <a>
+                                    <span data-bind="if: $parent.isBillEditable">
+                                        <span data-bind="editable: billingItem.mileage,
+                                                         editableOptions: {mode: 'popup',
+                                                                          title: 'Edit Mileage',
+                                                                          success: $parent.onMileageUpdate.bind($parent, billingItem)}"></span>
+                                    </span>
+                                </a>
+                            </div>
+                            <span data-bind="text: billingItem.mileageCode"></span>
+                        </td>
+                        <td>
+                            <div style="min-width: 63px" class="inline">
+                                <span data-bind="ifnot: $parent.isBillEditable">
+                                    <span data-bind="text: $parent.NumberUtils.niceCCY(billingItem.expenseAmount())"></span>
+                                </span>
+                                <a>
+                                    <span data-bind="if: $parent.isBillEditable">
+                                    <span data-bind="editable: billingItem.expenseAmount,
+                                                     editableOptions: {mode: 'popup',
+                                                                       title: 'Edit Amount',
+                                                                       success: $parent.onExpenseAmountUpdate.bind($parent, billingItem)}"></span>
+                                    </span>
+                                </a>
+                            </div>
+                            <span data-bind="text: billingItem.expenseCode"></span>
+                        </td>
+                        <td data-bind="text: $parent.NumberUtils.niceCCY(billingItem.totalAmount())"></td>
+                        <td>
+                            <span data-bind="if: $parent.isBillEditable">
+                                <a data-toggle="tooltip" data-placement="top" title="Exclude item from this Bill"
+                                   data-bind="click: $parent.removeBillingItem,
+                                              text: billingItem.removeOrUndoLabel ? billingItem.removeOrUndoLabel() : ''">
+                                </a>
+                            </span>
+                        </td>
+                    </tr>
+                    <!-- /ko -->
+                    <tr>
+                        <td colspan="3"><strong>Sub-total</strong></td>
+                        <td><strong data-bind="text: NumberUtils.nice(bill().totalTime()) + ' Hrs'"></strong></td>
+                        <td><strong data-bind="text: NumberUtils.nice(bill().totalMileage()) + ' Miles'"></strong></td>
+                        <td><strong data-bind="text: NumberUtils.niceCCY(bill().totalExpenseAmount())"></strong></td>
+                        <td colspan="2"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <!-- **** End entries listing **** -->
+
+            <!-- Totals -->
+            <div class="invoice-footer padding-10 row">
+                <div class="col-lg-3 col-md-3 col-sm-4 col-xs-8 pull-right">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <div>
+                            <div class="inline" style="min-width: 100px">Pre-tax Total</div>
+                            <div class="pull-right inline"><strong
+                                    data-bind="text: NumberUtils.niceCCY(bill().preTaxTotal())"></strong></div>
+                        </div>
+                        <div>
+                            <div class="inline" style="min-width: 100px"
+                                 data-bind="text: 'Tax (' + bill().taxRate() + ')%'"></div>
+                            <div class="pull-right inline"><strong
+                                    data-bind="text: NumberUtils.niceCCY(bill().tax())"></strong>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="inline" style="min-width: 100px">
+                                <h3><strong>Total</strong></h3>
+                            </div>
+                            <div class="pull-right inline">
+                                <strong><h3>
+                                    <span class="text-success"
+                                          data-bind="text: NumberUtils.niceCCY(bill().total())"></span>
+                                </h3></strong>
+                            </div>
+                        </div>
                     </div>
-                    <span data-bind="text: billingItem.timeCode"></span>
-                </td>
-                <td>
-                    <div style="min-width: 43px" class="inline">
-                        <span data-bind="ifnot: $parent.isBillEditable">
-                            <span data-bind="text: billingItem.mileage"></span>
-                        </span>
-                        <a><span data-bind="if: $parent.isBillEditable">
-                            <span data-bind="editable: billingItem.mileage,
-                                             editableOptions: {mode: 'popup',
-                                                             title: 'Edit Mileage',
-                                                             success: $parent.onMileageUpdate.bind($parent, billingItem)}"></span>
-                        </span></a>
-                    </div>
-                    <span data-bind="text: billingItem.mileageCode"></span>
-                </td>
-                <td>
-                    <div style="min-width: 63px" class="inline">
-                        <span data-bind="ifnot: $parent.isBillEditable">
-                            <span data-bind="text: $parent.NumberUtils.niceCCY(billingItem.expenseAmount())"></span>
-                        </span>
-                        <a><span data-bind="if: $parent.isBillEditable">
-                            <span data-bind="editable: billingItem.expenseAmount,
-                                             editableOptions: {mode: 'popup',
-                                                               title: 'Edit Amount',
-                                                               success: $parent.onExpenseAmountUpdate.bind($parent, billingItem)}"></span>
-                        </span></a>
-                    </div>
-                    <span data-bind="text: billingItem.expenseCode"></span>
-                </td>
-                <td data-bind="text: $parent.NumberUtils.niceCCY(billingItem.totalAmount())"></td>
-                <td>
-                    <span data-bind="if: $parent.isBillEditable">
-                        <a data-toggle="tooltip" data-placement="top" title="Exclude item from this Bill"
-                           data-bind="click: $parent.removeBillingItem,
-                                      text: billingItem.removeOrUndoLabel ? billingItem.removeOrUndoLabel() : ''">
+                </div>
+            </div>
+
+            <!-- Buttons -->
+            <div class="row" data-bind="if: isBillEditable">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="pull-right">
+                        <a href="javascript:void(0);" class="btn btn-labeled btn-info"
+                           data-bind="click: updateBill">
+                            <span class="btn-label"><i class="glyphicon glyphicon-ok"></i></span>Save draft
                         </a>
-                    </span>
-                </td>
-            </tr>
-            <!-- /ko -->
-            <tr>
-                <td colspan="3"><strong>Sub-total</strong></td>
-                <td><strong data-bind="text: NumberUtils.nice(bill().totalTime()) + ' Hrs'"></strong></td>
-                <td><strong data-bind="text: NumberUtils.nice(bill().totalMileage()) + ' Miles'"></strong></td>
-                <td><strong data-bind="text: NumberUtils.niceCCY(bill().totalExpenseAmount())"></strong></td>
-                <td colspan="2"></td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
-    <!-- **** End entries listing **** -->
-
-    <!-- Totals -->
-    <div class="invoice-footer padding-10 row">
-        <div class="col-lg-3 col-md-3 col-sm-4 col-xs-8 pull-right">
-            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                <div>
-                    <div class="inline" style="min-width: 100px">Pre-tax Total</div>
-                    <div class="pull-right inline"><strong
-                            data-bind="text: NumberUtils.niceCCY(bill().preTaxTotal())"></strong></div>
-                </div>
-                <div>
-                    <div class="inline" style="min-width: 100px"
-                         data-bind="text: 'Tax (' + bill().taxRate() + ')%'"></div>
-                    <div class="pull-right inline"><strong data-bind="text: NumberUtils.niceCCY(bill().tax())"></strong>
-                    </div>
-                </div>
-                <div>
-                    <div class="inline" style="min-width: 100px">
-                        <h3><strong>Total</strong></h3>
-                    </div>
-                    <div class="pull-right inline">
-                        <strong><h3>
-                            <span class="text-success" data-bind="text: NumberUtils.niceCCY(bill().total())"></span>
-                        </h3></strong>
+                        <a href="javascript:void(0);" class="btn btn-labeled btn-success" data-bind="click: submitBill">
+                            <span class="btn-label"><i class="glyphicon glyphicon-arrow-right"></i></span>Submit Bill
+                        </a>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
 
-    <!-- Buttons -->
-    <div class="row" data-bind="if: isBillEditable">
-        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-            <div class="pull-right">
-                <a href="javascript:void(0);" class="btn btn-labeled btn-info"
-                   data-bind="click: updateBill">
-                    <span class="btn-label"><i class="glyphicon glyphicon-ok"></i></span>Save draft
-                </a>
-                <a href="javascript:void(0);" class="btn btn-labeled btn-success" data-bind="click: submitBill">
-                    <span class="btn-label"><i class="glyphicon glyphicon-arrow-right"></i></span>Submit Bill
-                </a>
+            <div class="row">
+                <div class="col-sm-12">
+                    <p class="note">** None</p>
+                </div>
             </div>
+            <!-- **** End footer **** -->
         </div>
-    </div>
+    </div><!-- End panel body -->
 
-    <div class="row">
-        <div class="col-sm-12">
-            <p class="note">** None</p>
-        </div>
-    </div>
-    <!-- **** End footer **** -->
-</div>
-
-</div>
-</div>
-
+</div><!-- End panel -->
 <!-- Print tmpl is dynamically populated by the VM -->
 <script type="text/html" id="print-template"></script>

@@ -58,19 +58,22 @@
         </div>
         <div id="navbar" class="navbar-collapse collapse" aria-expanded="false" style="height: 1px;">
             <ul class="nav navbar-nav">
-                <li><a href="#/home">Tasks</a></li>
-                <li><a href="#/claim/list">Claims</a></li>
-                <li><a href="#/billing">Billing</a></li>
-                <li><a href="#/travel">Travel</a></li>
-                <li><a href="#/contacts">Contacts</a></li>
-                <li><a href="" data-bind="click: router.showMsgsPopup"
+                <li><a href="#/home" data-toggle="collapse" data-target=".navbar-collapse">Tasks</a></li>
+                <li><a href="#/claim/list" data-toggle="collapse" data-target=".navbar-collapse">Claims</a></li>
+                <li><a href="#/billing" data-toggle="collapse" data-target=".navbar-collapse">Billing</a></li>
+                <li><a href="#/travel" data-toggle="collapse" data-target=".navbar-collapse">Travel</a></li>
+                <li><a href="#/contacts" data-toggle="collapse" data-target=".navbar-collapse">Contacts</a></li>
+                <li><a href=""
+                       data-toggle="collapse" data-target=".navbar-collapse"
+                       data-bind="click: router.showMsgsPopup"
                        style="padding-right: 0; padding-left: 10px">
                         <span class="badge badge-important pull-right navbar-msg-count"
                               data-bind="text: unreadMsgCount"></span>
-                        <i class="fa fa-bell"></i></a>
+                    <i class="fa fa-bell"></i></a>
                 </li>
                 <li>
                     <a href=""
+                       data-toggle="collapse" data-target=".navbar-collapse"
                        data-bind="click: onUserNameLinkClick"
                        style="padding-right: 10px; padding-left: 0">
                         <span data-bind="text: userNameLinkText"
@@ -83,26 +86,28 @@
 </nav>
 
 <!-- #MAIN PANEL -->
-<div class="container" style="position: relative; top: 85px;">
+<div style="position: relative; top: 85px;">
 
     <!-- **** Dashboard **** -->
-    <div id="dashboardPanel" class="row dashboardPanel">
-        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-            <div class="row">
-                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                    <div data-bind="component: 'stats-component'"></div>
+    <div class="container">
+        <div id="dashboardPanel" class="row dashboardPanel">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <div class="row hidden-xs">
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                        <div data-bind="component: 'stats-component'"></div>
+                    </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                    <div data-bind="component: 'summary-component'"></div>
+                <div class="row">
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                        <div data-bind="component: 'summary-component'"></div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- **** Billing **** -->
-    <div id="billingPanel" class="billingPanel">
+    <div id="billingPanel" class="billingPanel container">
         <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                 <div data-bind="component: {name: 'billing-component'}"></div>
@@ -120,7 +125,7 @@
     </div>
 
     <!-- **** Contacts **** -->
-    <div id="contactsPanel" class="contactsPanel">
+    <div id="contactsPanel" class="contactsPanel container">
         <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 ">
                 <div data-bind="component: 'contact-widget-component'"></div>
@@ -129,7 +134,7 @@
     </div>
 
     <!-- **** Claims list **** -->
-    <div id="claimsListPanel" class="claimsListPanel">
+    <div id="claimsListPanel" class="claimsListPanel container">
         <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                 <div data-bind="component: 'claims-list-component'"></div>
@@ -138,16 +143,22 @@
     </div>
 
     <!-- **** Claim edit/entry module **** -->
-    <div id="claimPanel" class="claimPanel" style="width: 0%;display: inline-block; vertical-align: top">
-        <!-- Note: Still using module for the afterRender fn -->
-        <div data-bind="module: {name: 'app/components/claim/claimVM',
-                                 template: 'app/components/claim/claim'}"></div>
-    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <div id="claimPanel" class="claimPanel inline pull-top">
+                    <!-- Note: Still using module for the afterRender fn -->
+                    <div data-bind="module: {name: 'app/components/claim/claimVM',
+                                     template: 'app/components/claim/claim'}"></div>
+                </div>
 
-    <!-- **** Task edit/entry module **** -->
-    <div id="claimEntryPanel" class="claimEntryPanel" style="width: 0%;display: inline-block">
-        <div id="claimEntryPanelContent" class="claimEntryPanelContent">
-            <div data-bind="component: 'task-entry-component'"></div>
+                <!-- **** Task edit/entry module **** -->
+                <div id="claimEntryPanel" class="claimEntryPanel inline">
+                    <div id="claimEntryPanelContent" class="claimEntryPanelContent">
+                        <div data-bind="component: 'task-entry-component'"></div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 

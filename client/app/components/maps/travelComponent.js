@@ -3,9 +3,10 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore',
         'text!app/components/maps/travelComponent.tmpl.html',
         'model/tags', 'model/claimEntry',
         'shared/dateUtils', 'app/utils/ajaxUtils', 'app/utils/events',
+        'app/utils/responsive',
         'async!https://maps.googleapis.com/maps/api/js?key=AIzaSyBB-Qincf0sNQcsu5PzZh7znG3GiB98GRU&libraries=places&signed_in=true&v=3.exp'],
 
-    function ($, ko, KOMap, amplify, _, SummaryVM, viewHtml, Tags, ClaimEntry, DateUtils, AjaxUtils, Events) {
+    function ($, ko, KOMap, amplify, _, SummaryVM, viewHtml, Tags, ClaimEntry, DateUtils, AjaxUtils, Events, Responsive) {
         'use strict';
         console.log('Maps Dash');
 
@@ -29,9 +30,24 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore',
             this.entryIdToMarkerData = {};
             this.entryIdToMarkerIcon = {};
 
-            // Share with SummaryVM
+            // **** Share with SummaryVM ****
             $.extend(this, SummaryVM.viewModel.prototype);
             this.tagFilter = {$in: ['visit']};
+            this.navCollapsed = ko.observable(Responsive.onXSDevice());
+            this.navWidth = ko.computed(function(){
+                if (this.navCollapsed()) {
+                    return '0';
+                }
+                return Responsive.onXSDevice() ? '99%' : '29%'
+            }, this);
+
+            this.mapsWidth = ko.computed(function(){
+                if (this.navCollapsed()) {
+                    return '99%';
+                }
+                return Responsive.onXSDevice() ? '99%' : '70%'
+            }, this);
+
             this.setupFiltering();
             this.setupDragDrop();
             this.setupClaimEntryListener();
@@ -59,6 +75,10 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore',
                     //self.map.setCenter(currCenter);
                 }, 500);
             });
+        }
+
+        TravelVM.prototype.collapseNav = function () {
+            this.navCollapsed(!this.navCollapsed());
         }
 
         TravelVM.prototype.initMapControl = function () {

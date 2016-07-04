@@ -931,14 +931,6 @@
         // **********************************************************
 
         html = [];
-        html.push(
-        '<div style="padding-top: 10px">',
-            '<div class="form-group inline dropdown-container" style="padding-right: 10px; padding-left: 10px;">' +
-                '<div class="inline text-between-dropdown topMargin5">Status</div>' +
-                '<div class="inline">' +
-                '<select class="form-control input dropdown topMargin5" data-bind="value: groupBy, options: groupByOptions"></select></div>' +
-            '</div>' +
-        '</div>');
         this.$toolbar.append(html.join(''));
 
     };
