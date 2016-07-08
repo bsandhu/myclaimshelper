@@ -85,6 +85,9 @@
     </div>
 </nav>
 
+<!-- User profile -->
+<div data-bind="component: 'user-profile-component'"></div>
+
 <!-- #MAIN PANEL -->
 <div style="position: relative; top: 85px;">
 
@@ -116,7 +119,7 @@
     </div>
 
     <!-- **** Travel **** -->
-    <div id="travelPanel" class="travelPanel">
+    <div id="travelPanel" class="travelPanel" data-bind="if: loadTravel">
         <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                 <div data-bind="component: 'travel-component'"></div>
@@ -125,7 +128,7 @@
     </div>
 
     <!-- **** Contacts **** -->
-    <div id="contactsPanel" class="contactsPanel container">
+    <div id="contactsPanel" class="contactsPanel container" data-bind="if: loadContacts">
         <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 ">
                 <div data-bind="component: 'contact-widget-component'"></div>
@@ -134,7 +137,7 @@
     </div>
 
     <!-- **** Claims list **** -->
-    <div id="claimsListPanel" class="claimsListPanel container">
+    <div id="claimsListPanel" class="claimsListPanel container" data-bind="if: loadClaimsList">
         <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                 <div data-bind="component: 'claims-list-component'"></div>
@@ -164,9 +167,6 @@
 
     <!-- Notifications -->
     <div data-bind="component: 'notifier-component'"></div>
-
-    <!-- User profile -->
-    <div data-bind="component: 'user-profile-component'"></div>
 
     <!-- Billing profile -->
     <div data-bind="component: 'billing-profile-component'"></div>
