@@ -1,5 +1,7 @@
 require(['jquery', 'knockout', 'KOAmd', 'text', 'amplify', 'app/components/appVM', 'shared/dateUtils', 'app/utils/session',
-        'app/utils/audit', 'loggly',
+        'app/utils/audit',
+        'webfont',
+        'loggly',
         'bootbox', 'app/utils/koDatetimePickerBinding', 'app/utils/koWYSIWYGBinding',
         'app/utils/koTextTruncateBinding', 'app/utils/koSortableBinding', 'app/utils/koAutoComplete', 'app/utils/koSelect2',
         'app/utils/koTaskEntryTag',
@@ -27,6 +29,13 @@ require(['jquery', 'knockout', 'KOAmd', 'text', 'amplify', 'app/components/appVM
         'app/components/billingProfile/billingProfileComponent'],
     function ($, ko, KOAmd, text, amplify, AppVM, DateUtils, Session, Audit) {
         console.log('Init App');
+
+        <!-- Google fonts -->
+        WebFont.load({
+            google: {
+                families: ["Lato:100,100italic,300,300italic,400,400italic,700,700italic,900,900italic"]
+            }
+        });
 
         Audit.init().then(function () {
             // Chart.noConflict restores the Chart global variable to it's previous owner
