@@ -1,8 +1,8 @@
-define(['knockout', 'KOMap',
-        'app/utils/session',
+define(['knockout', 'KOMap', 'amplify',
+        'app/utils/events', 'app/utils/session',
         'text!app/components/billingItem/billingItemComponent.tmpl.html', 'model/billingItem'],
 
-    function (ko, KOMap, Session, viewHtml, BillingItem) {
+    function (ko, KOMap, amplify, Events, Session, viewHtml, BillingItem) {
         'use strict';
 
         function BillingItemVM(params) {
@@ -14,7 +14,18 @@ define(['knockout', 'KOMap',
             this.billingItem().mileageCode.subscribe(function(newVal){
                 this.billingItem().timeCode(newVal);
             }, this);
+
+            // We are ready to render when billing codes (in user profile) are available (after login)
+            this.readyToRender = ko.observable(false);
             this.userProfile = Session.getCurrentUserProfile();
+            if (!this.userProfile) {
+                amplify.subscribe(Events.LOADED_USER_PROFILE, this, function () {
+                    this.userProfile = Session.getCurrentUserProfile();
+                    this.readyToRender(true);
+                });
+            } else {
+                this.readyToRender(true);
+            }
         }
 
         /**

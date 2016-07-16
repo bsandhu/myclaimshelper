@@ -67,7 +67,7 @@ define(['knockout', 'KOMap', 'text!app/components/contact/addContactComponent.tm
         };
 
         AddContactComponentVM.prototype.loadContact = function (contactId) {
-            $.getJSON('/contact/' + contactId)
+            AjaxUtils.getJSON('/contact/' + contactId)
                 .done(function (resp) {
                     console.log('Loaded contact ' + JSON.stringify(resp.data));
 

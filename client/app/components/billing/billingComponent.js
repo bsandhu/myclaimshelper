@@ -177,17 +177,19 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox', 'underscore',
         }
 
         BillingVM.prototype.loadUserProfileFromSession = function (evData) {
-            this.userProfile = Session.getCurrentUserProfile();
-            if (!this.userProfile) {
-                console.error('Could not retrieve User profile from session');
-            }
+            amplify.subscribe(Events.LOADED_USER_PROFILE, this, function () {
+                this.userProfile = Session.getCurrentUserProfile();
+                if (!this.userProfile) {
+                    console.error('Could not retrieve User profile from session');
+                }
+            });
         }
 
         BillingVM.prototype.loadBillingProfile = function (claimId) {
             var _this = this;
             var defer = $.Deferred();
 
-            $.getJSON('/billing/profile/' + claimId)
+            ajaxUtils.getJSON('/billing/profile/' + claimId)
                 .then(function (resp) {
                     console.log('Loaded BillingProfile for Claim ' + claimId);
                     _this.billingProfile = resp.data;
@@ -420,7 +422,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox', 'underscore',
         BillingVM.prototype.getEligibleBillingItemsForClaim = function (claimId) {
             var defer = $.Deferred();
 
-            $.getJSON('/claim/' + claimId + '/entries')
+            ajaxUtils.getJSON('/claim/' + claimId + '/entries')
                 .done(function (resp) {
                     console.log('Loaded claim entries' + JSON.prettyPrint(resp.data));
                     var claimEntries = resp.data;
@@ -696,7 +698,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox', 'underscore',
             var claimLoaded = $.Deferred();
 
             if (Session.getActiveClaimId() != _this.claimId()) {
-                $.getJSON('/claim/' + _this.claimId())
+                ajaxUtils.getJSON('/claim/' + _this.claimId())
                     .done(function (resp) {
                         console.log('Loaded claim ' + JSON.stringify(resp.data).substr(0, 100));
                         _this.activeClaim = resp.data;

@@ -306,7 +306,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore', 'bootbox',
         };
 
         ClaimVM.prototype.loadClaim = function (claimId) {
-            $.getJSON('/claim/' + claimId)
+            ajaxUtils.getJSON('/claim/' + claimId)
                 .done(function (resp) {
                     console.log('Loaded claim ' + JSON.stringify(resp.data).substr(0, 100));
                     KOMap.fromJS(resp.data, {}, this.claim);
@@ -316,7 +316,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore', 'bootbox',
         };
 
         ClaimVM.prototype.loadEntriesForClaim = function (claimId) {
-            $.getJSON('/claim/' + claimId + '/entries')
+            ajaxUtils.getJSON('/claim/' + claimId + '/entries')
                 .done(function (resp) {
                     console.log('Loaded claim entries' + JSON.stringify(resp.data.length));
                     this.claimEntries(resp.data);

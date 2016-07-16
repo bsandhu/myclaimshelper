@@ -30,7 +30,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'app/utils/events', 'app/utils
         BillingProfileComponent.prototype.loadProfile = function (claimId) {
             var _this = this;
 
-            return $.getJSON('/billing/profile/' + claimId)
+            return AjaxUtils.getJSON('/billing/profile/' + claimId)
                 .done(function (resp) {
                     console.debug('Loaded BillingProfile ' + JSON.stringify(resp.data).substr(0, 100));
                     KOMap.fromJS(resp.data, {}, this.billingProfile);

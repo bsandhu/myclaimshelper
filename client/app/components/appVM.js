@@ -114,14 +114,14 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
                 console.log('AppVM - UPDATE_UNREAD_MSGS_COUNT ev');
                 this.unreadMsgCount(count);
             });
-            amplify.subscribe(Events.LOGIN, this, function (count) {
-                console.log('AppVM - LOGIN ev');
+            amplify.subscribe(Events.LOGGED_IN, this, function (count) {
+                console.log('AppVM - LOGGED_IN ev');
                 this.showApp(true);
                 this.userName(Session.getCurrentUserId());
                 this.startRouter();
             });
             amplify.subscribe(Events.LOGOFF, this, function (count) {
-                console.log('AppVM - LOGIN ev');
+                console.log('AppVM - LOGOFF ev');
                 this.showApp(false);
                 this.userName('');
                 location.reload();

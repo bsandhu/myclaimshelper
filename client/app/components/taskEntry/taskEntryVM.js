@@ -202,7 +202,7 @@ define(['underscore', 'jquery', 'knockout', 'KOMap', 'amplify',
             this.stopStateTracking();
             $("#claimEntry-desc").height(100);
 
-            $.getJSON('/claimEntry/' + claimEntryId)
+            ajaxUtils.getJSON('/claimEntry/' + claimEntryId)
                 .done(function (resp) {
                     console.log('Loaded claim entry ' + JSON.stringify(resp.data).substr(0, 100));
 
