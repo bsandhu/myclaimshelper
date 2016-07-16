@@ -17,28 +17,32 @@ define(['jquery', 'knockout', 'amplify',
 
             amplify.subscribe(Events.SHOW_MSGS, this, this.onShowMsgs);
 
-            var host = window.location.protocol + "//" + window.location.hostname;
-            socket = io.connect(host);
+            // Delay the subscription to allow faster initial rendering
+            var _this = this;
+            setTimeout(function initWebSocket() {
+                var host = window.location.protocol + "//" + window.location.hostname;
+                socket = io.connect(host);
 
-            socket.on('connect', function() {
-                console.log('WS connected');
-            });
+                socket.on('connect', function () {
+                    console.log('WS connected');
+                });
 
-            socket.on(Session.getCurrentUserId(), function (msg) {
-                console.log('WS broadcast: ' + JSON.stringify(msg));
-                if (msg.name == 'UnreadMsgCount') {
-                    document.getElementById("msgAlertAudio").play();
-                    amplify.publish(Events.UPDATE_UNREAD_MSGS_COUNT, msg.body);
-                }
-                if (msg.name == 'NewMsg') {
-                    this.msgs.push(msg);
-                    amplify.publish(Events.SAVED_CLAIM_ENTRY, {});
-                }
-            }.bind(this));
+                socket.on(Session.getCurrentUserId(), function (msg) {
+                    console.log('WS broadcast: ' + JSON.stringify(msg));
+                    if (msg.name == 'UnreadMsgCount') {
+                        document.getElementById("msgAlertAudio").play();
+                        amplify.publish(Events.UPDATE_UNREAD_MSGS_COUNT, msg.body);
+                    }
+                    if (msg.name == 'NewMsg') {
+                        _this.msgs.push(msg);
+                        amplify.publish(Events.SAVED_CLAIM_ENTRY, {});
+                    }
+                });
 
-            socket.emit('joinRoom', Session.getCurrentUserId());
+                socket.emit('joinRoom', Session.getCurrentUserId());
 
-            this.getUnreadMsgCount();
+                _this.getUnreadMsgCount();
+            }, 5000);
         }
 
         AdminVM.prototype.closeModal = function () {

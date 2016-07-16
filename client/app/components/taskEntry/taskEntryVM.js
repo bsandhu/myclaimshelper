@@ -21,6 +21,7 @@ define(['underscore', 'jquery', 'knockout', 'KOMap', 'amplify',
             this.claimEntry = ko.observable(this.newEmptyClaimEntry());
 
             // View state
+            this.readyToRender = ko.observable(false);
             this.inEditMode = ko.observable(true);
             this.stateChange = ko.observable(false);
             this.isClosed = ko.computed(function () {
@@ -94,12 +95,14 @@ define(['underscore', 'jquery', 'knockout', 'KOMap', 'amplify',
             console.log('TaskEntryVM - SHOW_CLAIM_ENTRY ev ' + JSON.stringify(evData));
             this.claimEntry(this.newEmptyClaimEntry());
             this.loadClaimEntry(evData.claimEntryId);
+            this.readyToRender(true);
         };
 
         TaskEntryVM.prototype.onNewClaimEntry = function (evData) {
             console.log('TaskEntryVM - NEW_CLAIM_ENTRY ev ' + JSON.stringify(evData));
             var tag = Boolean(evData.entryType) ? evData.entryType : 'other';
             this.claimEntry(this.newEmptyClaimEntry(tag));
+            this.readyToRender(true);
 
             // Re-size editor
             var txtArea = $("#claimEntry-desc");
