@@ -30,8 +30,7 @@ require.config({
         'chartjs': 'lib/Chart',
         'bootstrapTableCustom': 'lib/bootstrap.table.customization',
         'maskedInput': 'lib/jquery.maskedinput.min',
-        'loggly': 'lib/loggly.tracker-2.1.min',
-        'webfont': 'lib/webfont'
+        'loggly': 'lib/loggly.tracker-2.1.min'
     },
     shim: {
         'loggly': {

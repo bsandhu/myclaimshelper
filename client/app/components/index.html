@@ -1,16 +1,10 @@
 <!DOCTYPE html>
 <html lang="en-us">
-<script type="text/javascript">
-    //<![CDATA[
-    var tlJsHost = ((window.location.protocol == "https:") ? "https://secure.comodo.com/" : "http://www.trustlogo.com/");
-    document.write(unescape("%3Cscript src='" + tlJsHost + "trustlogo/javascript/trustlogo.js' type='text/javascript'%3E%3C/script%3E"));
-    //]]>
-</script>
 <head>
     <title> My Claims Helper </title>
     <meta charset="utf-8">
     <meta name="description" content="Productivity tool for Insurance Adjusters">
-    <meta name="author" content="LogiCube">
+    <meta name="author" content="Epitomic.Systems">
     <!-- Setting the right viewport -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
 
@@ -20,6 +14,7 @@
     <audio id="msgAlertAudio" src="audio/messagebox.mp3" preload="auto"></audio>
 
     <!-- CSS -->
+    <link rel="stylesheet" type="text/css" href='https://fonts.googleapis.com/css?family=Lato'>
     <link rel="stylesheet" type="text/css" href="css/index-lib-built.css">
     <link rel="stylesheet" type="text/css" href="css/app.css">
 
@@ -124,6 +119,9 @@
                 <div data-bind="component: 'contact-widget-component'"></div>
             </div>
         </div>
+
+        <!-- Add contact -->
+        <add-contact-component></add-contact-component>
     </div>
 
     <!-- **** Claims list **** -->
@@ -158,18 +156,14 @@
     <!-- Notifications -->
     <div data-bind="component: 'notifier-component'"></div>
 
-    <!-- Billing profile -->
-    <div data-bind="component: 'billing-profile-component'"></div>
-
     <!-- Claim selector -->
     <div data-bind="component: 'claim-selector-component'"></div>
 
+    <!-- Billing profile -->
+    <div data-bind="component: 'billing-profile-component'"></div>
+
     <!-- Msgs component -->
     <admin-component></admin-component>
-
-    <!-- Add contact -->
-    <add-contact-component></add-contact-component>
-
 </div>
 <!-- END #MAIN CONTENT -->
 </body>
