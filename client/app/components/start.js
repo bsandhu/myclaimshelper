@@ -29,48 +29,48 @@ require(['jquery', 'knockout', 'KOAmd', 'text', 'amplify', 'app/components/appVM
     function ($, ko, KOAmd, text, amplify, AppVM, DateUtils, Session, Audit) {
         console.log('Init App');
 
-        Audit.init().then(function () {
-            // Chart.noConflict restores the Chart global variable to it's previous owner
-            // The function returns what was previously Chart, allowing you to reassign.
-            var Chartjs = Chart.noConflict();
-            DateUtils.enableJSONDateHandling();
+        // Start Loggly
+        Audit.init();
 
-            // Cleanup session
-            Session.clearContacts();
+        // Chart.noConflict restores the Chart global variable to it's previous owner
+        // The function returns what was previously Chart, allowing you to reassign.
+        var Chartjs = Chart.noConflict();
+        DateUtils.enableJSONDateHandling();
 
-            // Knockout AMD supoprt setup
-            ko.amdTemplateEngine.defaultRequireTextPluginName = "text";
-            ko.amdTemplateEngine.defaultPath = "/";
-            ko.amdTemplateEngine.defaultSuffix = ".tmpl.html";
+        // Cleanup session
+        Session.clearContacts();
 
-            // Register components
-            ko.components.register('user-profile-component', {require: 'app/components/userProfile/userProfileComponent'});
-            ko.components.register('contact-component', {require: 'app/components/contact/contactComponent'});
-            ko.components.register('add-contact-component', {require: 'app/components/contact/addContactComponent'});
-            ko.components.register('contact-widget-component', {require: 'app/components/contact/contactWidgetVM'});
-            ko.components.register('file-upload-component', {require: 'app/components/fileUpload/fileUploadComponent'});
-            ko.components.register('summary-component', {require: 'app/components/summary/summaryVM'});
-            ko.components.register('claims-list-component', {require: 'app/components/claimsList/claimsListVM'});
-            ko.components.register('claim-selector-component', {require: 'app/components/claimsList/claimSelectorVM'});
-            ko.components.register('notifier-component', {require: 'app/components/notifier/notifierVM'});
-            ko.components.register('maps-component', {require: 'app/components/maps/mapsComponent'});
-            ko.components.register('travel-component', {require: 'app/components/maps/travelComponent'});
-            ko.components.register('status-editor-component', {require: 'app/components/statusEditor/statusEditorComponent'});
-            ko.components.register('stats-component', {require: 'app/components/stats/statsVM'});
-            ko.components.register('task-entry-component', {require: 'app/components/taskEntry/taskEntryVM'});
-            ko.components.register('admin-component', {require: 'app/components/admin/adminComponent'});
-            ko.components.register('billing-component', {require: 'app/components/billing/billingComponent'});
-            ko.components.register('billing-item-component', {require: 'app/components/billingItem/billingItemComponent'});
-            ko.components.register('billing-profile-component', {require: 'app/components/billingProfile/billingProfileComponent'});
-            ko.components.register('contact-sync-component', {require: 'app/components/contactSync/contactSyncComponent'});
+        // Knockout AMD supoprt setup
+        ko.amdTemplateEngine.defaultRequireTextPluginName = "text";
+        ko.amdTemplateEngine.defaultPath = "/";
+        ko.amdTemplateEngine.defaultSuffix = ".tmpl.html";
 
-            // Knockout bindings init
-            ko.applyBindings(new AppVM());
+        // Register components
+        ko.components.register('user-profile-component', {require: 'app/components/userProfile/userProfileComponent'});
+        ko.components.register('contact-component', {require: 'app/components/contact/contactComponent'});
+        ko.components.register('add-contact-component', {require: 'app/components/contact/addContactComponent'});
+        ko.components.register('contact-widget-component', {require: 'app/components/contact/contactWidgetVM'});
+        ko.components.register('file-upload-component', {require: 'app/components/fileUpload/fileUploadComponent'});
+        ko.components.register('summary-component', {require: 'app/components/summary/summaryVM'});
+        ko.components.register('claims-list-component', {require: 'app/components/claimsList/claimsListVM'});
+        ko.components.register('claim-selector-component', {require: 'app/components/claimsList/claimSelectorVM'});
+        ko.components.register('notifier-component', {require: 'app/components/notifier/notifierVM'});
+        ko.components.register('maps-component', {require: 'app/components/maps/mapsComponent'});
+        ko.components.register('travel-component', {require: 'app/components/maps/travelComponent'});
+        ko.components.register('status-editor-component', {require: 'app/components/statusEditor/statusEditorComponent'});
+        ko.components.register('stats-component', {require: 'app/components/stats/statsVM'});
+        ko.components.register('task-entry-component', {require: 'app/components/taskEntry/taskEntryVM'});
+        ko.components.register('admin-component', {require: 'app/components/admin/adminComponent'});
+        ko.components.register('billing-component', {require: 'app/components/billing/billingComponent'});
+        ko.components.register('billing-item-component', {require: 'app/components/billingItem/billingItemComponent'});
+        ko.components.register('billing-profile-component', {require: 'app/components/billingProfile/billingProfileComponent'});
+        ko.components.register('contact-sync-component', {require: 'app/components/contactSync/contactSyncComponent'});
 
-            JSON.prettyPrint = function (str) {
-                var maxLength = 80;
-                return JSON.stringify(str).substring(0, maxLength);
-            };
-        })
+        // Knockout bindings init
+        ko.applyBindings(new AppVM());
 
+        JSON.prettyPrint = function (str) {
+            var maxLength = 80;
+            return JSON.stringify(str).substring(0, maxLength);
+        };
     });
