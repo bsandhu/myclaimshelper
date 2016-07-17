@@ -6,6 +6,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'app/utils/events', 'app/utils
 
         function UserProfileComponent(params) {
             console.log('Init UserProfile');
+            this.readyToRender = ko.observable(false);
             this.userProfile = KOMap.fromJS(new UserProfile());
             this.setupEvListeners();
 
@@ -19,6 +20,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'app/utils/events', 'app/utils
 
         UserProfileComponent.prototype.onShowUserProfile = function (evData) {
             console.log('UserProfileComponent - SHOW_USER_PROFILE ev ' + JSON.stringify(evData));
+            this.readyToRender(true);
             $('#userProfileModal').modal();
         };
 

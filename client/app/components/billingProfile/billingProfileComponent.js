@@ -6,6 +6,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'app/utils/events', 'app/utils
 
         function BillingProfileComponent(params) {
             console.log('Init BillingProfile');
+            this.readyToRender = ko.observable(false);
             this.billingProfile = KOMap.fromJS(new BillingProfile());
             this.setupEvListeners();
         }
@@ -20,6 +21,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'app/utils/events', 'app/utils
                 return;
             }
             console.log('BillingProfileComponent - SHOW_BILLING_PROFILE ev ' + JSON.stringify(evData));
+            this.readyToRender(true);
             this.loadProfile(evData.claimId);
             $('#billingProfileModal').modal();
         };

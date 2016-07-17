@@ -8,6 +8,7 @@ define(['knockout', 'KOMap', 'text!app/components/contact/addContactComponent.tm
         function AddContactComponentVM(params) {
             console.log('Init Add Contact Widget');
 
+            this.readyToRender = ko.observable(false);
             var contact = new Contact();
             contact.isBusiness = false;
             this.contact = ko.observable(KOMap.fromJS(contact));
@@ -22,6 +23,7 @@ define(['knockout', 'KOMap', 'text!app/components/contact/addContactComponent.tm
 
         AddContactComponentVM.prototype.onShowContact = function (evData) {
             console.log('AddContactComponentVM - SHOW_CONTACT ev ' + JSON.stringify(evData));
+            this.readyToRender(true);
             this.popupTitle('Contact details');
             this.loadContact(evData.contactId);
             Audit.info('ViewContact', {_id: evData.contactId});
@@ -29,6 +31,7 @@ define(['knockout', 'KOMap', 'text!app/components/contact/addContactComponent.tm
 
         AddContactComponentVM.prototype.onAddContact = function () {
             console.log('AddContactComponentVM - ADD_CONTACT ev ');
+            this.readyToRender(true);
             this.popupTitle('Add new contact');
             this.addContact();
             Audit.info('AddContact');

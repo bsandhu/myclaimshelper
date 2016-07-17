@@ -21,7 +21,7 @@
     <script src="../../../lib/lock-9.1.min.js"></script>
     <script src="../../../lib/require.js"></script>
     <script src="../../../lib/requireConfig.js"></script>
-    <script src="/dist/app/components/start.js"></script>
+    <!--<script src="/dist/app/components/start.js"></script>-->
 </head>
 <body>
 
@@ -120,9 +120,6 @@
                 <div data-bind="component: 'contact-widget-component'"></div>
             </div>
         </div>
-
-        <!-- Add contact -->
-        <add-contact-component></add-contact-component>
     </div>
 
     <!-- **** Claims list **** -->
@@ -165,17 +162,22 @@
 
     <!-- Msgs component -->
     <admin-component></admin-component>
+
+    <!-- Add contact -->
+    <add-contact-component></add-contact-component>
 </div>
 <!-- END #MAIN CONTENT -->
 </body>
 
 <script type="application/javascript">
+/*
     require.config({
         paths: {
             // Load optimized file
             "app/components/start": "dist/app/components/start"
         }
     });
+*/
     require(['app/components/start'], function () {
     });
 </script>

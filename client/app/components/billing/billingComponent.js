@@ -13,6 +13,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox', 'underscore',
             console.log('Init BillingVM.');
 
             this.vmId = new Date().getTime();
+            this.readyToRender = ko.observable(window.location.hash.indexOf('bill') >= 0);
             this.Consts = Consts;
             this.DateUtils = DateUtils;
             this.BillingStatus = BillingStatus;
@@ -229,6 +230,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox', 'underscore',
             console.log('BillingVM > onCreateNewBill');
             console.assert(evData.claimId, 'Expecting ev to carry claimId');
             this.claimId(evData.claimId);
+            this.readyToRender(true);
 
             // Check if an unsubmitted bill exists for claim
             var _this = this;
@@ -255,6 +257,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox', 'underscore',
             console.assert(evData.claimId, 'Expecting ev to carry claimId');
             console.assert(evData.billId, 'Expecting ev to billId');
             this.claimId(evData.claimId);
+            this.readyToRender(true);
 
             _this.loadBillingProfile(evData.claimId)
                 .then(function () {
@@ -319,6 +322,8 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox', 'underscore',
 
         BillingVM.prototype.onShowBilllingHistory = function (evData) {
             console.assert('Billing component > SHOW_BILLING_HISTORY');
+            this.readyToRender(true);
+
             if (evData.hasOwnProperty('claimId')) {
                 console.log('Show Billing History for claim ' + evData.claimId);
                 this.claimId(evData.claimId);

@@ -12,6 +12,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore',
         function ClaimSelectorVM() {
             console.log('Init ClaimsSelectorVM');
             var _this = this;
+            this.readyToRender = ko.observable(false);
 
             // Share with ClaimsList
             _this.loadClaims = ClaimsListVM.viewModel.prototype.loadClaims;
@@ -47,6 +48,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore',
             if (!_.has(evData, 'requestSource')) {
                 console.error('Expecting SELECT_CLAIM ev to carry request source');
             }
+            this.readyToRender(true);
             this.titleText(evData.title);
             this.requestSource(evData.requestSource);
             this.loadClaims();

@@ -14,6 +14,7 @@ define(['jquery', 'knockout', 'amplify',
             console.log('Init AdminVM');
             this.msgs = ko.observableArray([]);
             this.ServerConsts = ServerConsts;
+            this.readyToRender = ko.observable(false);
 
             amplify.subscribe(Events.SHOW_MSGS, this, this.onShowMsgs);
 
@@ -83,6 +84,7 @@ define(['jquery', 'knockout', 'amplify',
         }
 
         AdminVM.prototype.onShowMsgs = function () {
+            this.readyToRender(true);
             $('#msgs-modal').modal('show');
             ajaxUtils.getJSON('notification/unreadMsgs')
                 .done(function (resp) {
