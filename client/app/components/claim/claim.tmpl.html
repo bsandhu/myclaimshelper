@@ -1,5 +1,5 @@
 <!-- *** Claim Panel -->
-<div class="panel panel-default">
+<div class="panel panel-default" data-bind="if: readyToRender">
 
     <div class="panel-heading">
         <h3>
@@ -304,7 +304,7 @@
             <div data-bind="ifnot: inEditMode" class="row">
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                     <div data-bind="template: {name: 'app/components/claim/claim.entries',
-                                           afterRender: initTooltipComponent}"></div>
+                                               afterRender: initTooltipComponent}"></div>
                 </div>
             </div>
         </div>
@@ -313,7 +313,7 @@
 </div>
 
 <!-- *** Modal with the email instructions *** -->
-<div class="modal modal-lg fade centered" role="dialog" tabindex="-1" id="emailTaskTypeModal">
+<div class="modal modal-lg fade centered" role="dialog" tabindex="-1" id="emailTaskTypeModal" data-bind="if: readyToRender">
     <div class="modal-dialog">
         <div class="modal-content">
 

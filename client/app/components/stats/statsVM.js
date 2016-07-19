@@ -1,7 +1,7 @@
 define(['jquery', 'underscore', 'knockout', 'KOMap', 'amplify',
-        'app/utils/events', 'shared/NumberUtils',
+        'app/utils/events', 'shared/NumberUtils', 'app/utils/ajaxUtils',
         'text!app/components/stats/stats.tmpl.html', 'chartjs'],
-    function ($, _, ko, KOMap, amplify, Events, NumberUtils, statsView, Chart) {
+    function ($, _, ko, KOMap, amplify, Events, NumberUtils, AjaxUtils, statsView, Chart) {
 
         var N = Number;
 
@@ -147,7 +147,7 @@ define(['jquery', 'underscore', 'knockout', 'KOMap', 'amplify',
 
         StatsVM.prototype.loadStats = function () {
             console.log('Loading All Stats');
-            $.getJSON('/stats/all')
+            AjaxUtils.getJSON('/stats/all')
                 .done(function (resp) {
                     console.debug('Loaded Stats ' + JSON.stringify(resp.data));
                     this.stats(resp.data);

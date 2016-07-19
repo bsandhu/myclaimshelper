@@ -25,6 +25,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore', 'bootbox',
             this.isPartiallyCollapsed = ko.observable(false);
 
             // View state
+            this.readyToRender = ko.observable(false);
             this.isClaimClosed = ko.computed(function () {
                 return this.claim().isClosed();
             }, this);
@@ -106,6 +107,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore', 'bootbox',
             this.loadClaim(evData.claimId);
             this.loadEntriesForClaim(evData.claimId);
             this.inEditMode(false);
+            this.readyToRender(true);
         };
 
         ClaimVM.prototype.onNewClaim = function () {
@@ -115,6 +117,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore', 'bootbox',
             this.claimEntries([]);
             this.inEditMode(true);
             this.selectClaimTab();
+            this.readyToRender(true);
         };
 
         ClaimVM.prototype.onShowClaimEntry = function (evData) {
@@ -306,7 +309,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore', 'bootbox',
         };
 
         ClaimVM.prototype.loadClaim = function (claimId) {
-            $.getJSON('/claim/' + claimId)
+            ajaxUtils.getJSON('/claim/' + claimId)
                 .done(function (resp) {
                     console.log('Loaded claim ' + JSON.stringify(resp.data).substr(0, 100));
                     KOMap.fromJS(resp.data, {}, this.claim);
@@ -316,7 +319,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore', 'bootbox',
         };
 
         ClaimVM.prototype.loadEntriesForClaim = function (claimId) {
-            $.getJSON('/claim/' + claimId + '/entries')
+            ajaxUtils.getJSON('/claim/' + claimId + '/entries')
                 .done(function (resp) {
                     console.log('Loaded claim entries' + JSON.stringify(resp.data.length));
                     this.claimEntries(resp.data);

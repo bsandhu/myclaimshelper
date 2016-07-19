@@ -6,6 +6,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'app/utils/events', 'app/utils
 
         function UserProfileComponent(params) {
             console.log('Init UserProfile');
+            this.readyToRender = ko.observable(false);
             this.userProfile = KOMap.fromJS(new UserProfile());
             this.setupEvListeners();
 
@@ -19,6 +20,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'app/utils/events', 'app/utils
 
         UserProfileComponent.prototype.onShowUserProfile = function (evData) {
             console.log('UserProfileComponent - SHOW_USER_PROFILE ev ' + JSON.stringify(evData));
+            this.readyToRender(true);
             $('#userProfileModal').modal();
         };
 
@@ -28,7 +30,8 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'app/utils/events', 'app/utils
 
         UserProfileComponent.prototype.login = function () {
             // Load and set in SessionStorage
-            this.checkAndSetUserAuthProfile(this.loadUserProfile.bind(this));
+            var onDoneFn = this.loadUserProfile.bind(this);
+            this.checkAndSetUserAuthProfile(onDoneFn);
         }
 
         /**
@@ -43,7 +46,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'app/utils/events', 'app/utils
                     console.debug('Loaded UserProfile ' + JSON.stringify(resp.data).substr(0, 100));
                     KOMap.fromJS(resp.data, {}, this.userProfile);
                     Session.setCurrentUserProfile(resp.data);
-                    amplify.publish(Events.LOGIN);
+                    amplify.publish(Events.LOADED_USER_PROFILE);
                 }.bind(this))
                 .fail(function (resp) {
                     console.error('Failed to load UserProfile ' + JSON.stringify(resp));
@@ -78,6 +81,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'app/utils/events', 'app/utils
                                 Session.setCurrentUserAuthProfile(profile);
                                 Session.setCurrentUserAuthToken(token);
                                 Session.setCurrentUserId(profile.nickname);
+                                amplify.publish(Events.LOGGED_IN);
                                 Audit.info('Login');
                                 onDone();
                             }
@@ -87,6 +91,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'app/utils/events', 'app/utils
                         console.error('Failed to load Config' + JSON.stringify(resp));
                     });
             } else {
+                amplify.publish(Events.LOGGED_IN);
                 onDone();
             }
         };

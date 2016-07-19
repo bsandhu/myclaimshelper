@@ -16,6 +16,11 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
             this.showApp = ko.observable(false);
             this.userName = ko.observable('');
 
+            //Lazy load
+            this.loadTravel = ko.observable(false);
+            this.loadContacts = ko.observable(false);
+            this.loadClaimsList = ko.observable(false);
+
             // Model
             this.stateChoice = ko.observable();
             this.states = [
@@ -54,10 +59,12 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
             });
             amplify.subscribe(Events.SHOW_TRAVEL, this, function () {
                 console.log('AppVM - SHOW_TRAVEL ev');
+                this.loadTravel(true);
                 this.transitionToTravel();
             });
             amplify.subscribe(Events.SHOW_CONTACTS, this, function () {
                 console.log('AppVM - SHOW_CONTACTS ev');
+                this.loadContacts(true);
                 this.transitionToContacts();
             });
             amplify.subscribe(Events.SHOW_BILLING, this, function () {
@@ -74,6 +81,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
             });
             amplify.subscribe(Events.SHOW_CLAIMS_LIST, this, function () {
                 console.log('AppVM - SHOW_CLAIMS_LIST ev');
+                this.loadClaimsList(true);
                 this.transitionToClaimsList();
             });
             amplify.subscribe(Events.SHOW_CLAIM, this, function () {
@@ -106,14 +114,14 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
                 console.log('AppVM - UPDATE_UNREAD_MSGS_COUNT ev');
                 this.unreadMsgCount(count);
             });
-            amplify.subscribe(Events.LOGIN, this, function (count) {
-                console.log('AppVM - LOGIN ev');
+            amplify.subscribe(Events.LOGGED_IN, this, function (count) {
+                console.log('AppVM - LOGGED_IN ev');
                 this.showApp(true);
                 this.userName(Session.getCurrentUserId());
                 this.startRouter();
             });
             amplify.subscribe(Events.LOGOFF, this, function (count) {
-                console.log('AppVM - LOGIN ev');
+                console.log('AppVM - LOGOFF ev');
                 this.showApp(false);
                 this.userName('');
                 location.reload();
@@ -301,7 +309,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
             }
         };
 
-        // Claim panel
+            // Claim panel
 
         AppVM.prototype.expandClaimPanel = function () {
             if (this.claimPanelState !== 'expanded') {

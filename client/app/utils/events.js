@@ -11,6 +11,7 @@ define([], function(){
         SHOW_CONTACTS        : 'SHOW_CONTACTS',
         ADD_CONTACT          : 'ADD_CONTACT',
         ADDED_CONTACT        : 'ADDED_CONTACT',
+        INIT_CONTACTS_CACHE  : 'INIT_CONTACTS_CACHE',
 
         SHOW_TRAVEL          : 'SHOW_TRAVEL',
 
@@ -49,8 +50,9 @@ define([], function(){
         SMALL_DEVICE_MODE        : 'SMALL_DEVICE_MODE',
         MEDIUM_OR_BIGGER_DEVICE  : 'MEDIUM_OR_BIGGER_DEVICE',
 
-        LOGIN : 'LOGIN',
-        LOGOFF : 'LOGOFF',
-        SHOW_LOGIN: 'SHOW_LOGIN'
+        SHOW_LOGIN: 'SHOW_LOGIN',
+        LOGGED_IN : 'LOGGED_IN',
+        LOADED_USER_PROFILE : 'LOADED_USER_PROFILE',
+        LOGOFF : 'LOGOFF'
     };
 });

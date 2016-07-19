@@ -8,20 +8,34 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore',
 
     function ($, ko, KOMap, amplify, _, SummaryVM, viewHtml, Tags, ClaimEntry, DateUtils, AjaxUtils, Events, Responsive) {
         'use strict';
-        console.log('Maps Dash');
 
         function TravelVM(params) {
+            console.log('Init Travel VM');
 
             this.DateUtils = DateUtils;
             this.claimEntries = ko.observableArray([]);
+            this.showMapLoading = ko.observable(true);
+
+            // Clean display state since backing data has changed
             this.claimEntries.subscribe(function () {
-                // Clean display state since backing data has changed
                 this.clearMarkerState();
             }, this);
+
+            // Throttle array update to prevent duplicate render
             this.claimEntriesThrottled = ko.computed(function () {
-                // Throttle array update to prevent duplicate render
                 return this.claimEntries();
             }, this).extend({throttle: 200});
+
+            // Draw map on data load
+            this.claimEntriesThrottled.subscribe(function (newVal) {
+                if (newVal && newVal.length > 0) {
+                    console.log('TravelVM - re-render routes');
+                    this.showMapLoading(true);
+                    this.loadAndShowRoutes(newVal);
+                    this.createMarker(newVal);
+                    google.maps.event.trigger(this.map, 'resize');
+                }
+            }, this);
 
             this.showDirections = ko.observable(false);
             this.showLocationError = ko.observable(false);
@@ -30,7 +44,11 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore',
             this.entryIdToMarkerData = {};
             this.entryIdToMarkerIcon = {};
 
+            this.initMapControl();
+
+            // ******************************
             // **** Share with SummaryVM ****
+            // ******************************
             $.extend(this, SummaryVM.viewModel.prototype);
             this.tagFilter = {$in: ['visit']};
             this.navCollapsed = ko.observable(Responsive.onXSDevice());
@@ -60,25 +78,21 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore',
 
         /**
          * Map rendering depends on the container being displayed.
-         * If the travel section is not the first page in view,
+         * If the travel section is not in view,
          * trigger re-render when user navigates to it.
          */
         TravelVM.prototype.setupNavListener = function () {
+            var self = this;
             amplify.subscribe(Events.SHOW_TRAVEL, this, function () {
-                var self = this;
                 console.log('TravelVM - SHOW_TRAVEL ev');
-
-                // The delay is to allow the panel to fully slide into view
-                setTimeout(function () {
-                    google.maps.event.trigger(self.map, 'resize');
-                    //var currCenter = self.map.getCenter();
-                    //self.map.setCenter(currCenter);
-                }, 500);
+                this.showMapLoading(true);
+                google.maps.event.trigger(self.map, 'resize');
             });
         }
 
         TravelVM.prototype.collapseNav = function () {
             this.navCollapsed(!this.navCollapsed());
+            google.maps.event.trigger(this.map, 'resize');
         }
 
         TravelVM.prototype.initMapControl = function () {
@@ -100,14 +114,13 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore',
                 suppressMarkers: true
             });
 
-            // Draw map on data load
-            this.claimEntriesThrottled.subscribe(function (newVal) {
-                if (newVal && newVal.length > 0) {
-                    console.log('TravelVM - re-render routes');
-                    this.loadAndShowRoutes(newVal);
-                    this.createMarker(newVal);
-                }
-            }, this);
+            // Listen for load finish
+            var _this = this;
+            google.maps.event.addListener(this.map, 'idle', function(){
+                setTimeout(function(){
+                    _this.showMapLoading(false);
+                }, 3000);
+            });
         }
 
         /***************************************************************/
