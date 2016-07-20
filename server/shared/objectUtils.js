@@ -33,11 +33,16 @@ define([],
                 return obj;
             }
         }
-        
+
+        function isBlank(obj) {
+            return (!obj || String(obj).trim() === "");
+        };
+
         return {
             'nullSafe': nullsafe,
             'capitalize': capitalize,
-            'defaultValue': defaultValue
+            'defaultValue': defaultValue,
+            'isBlank': isBlank
         }
     }
 )

@@ -13,4 +13,12 @@ describe('ObjectUtils', function () {
         assert.equal(objectUtils.capitalize('AaaB'), 'AaaB');
         assert.equal(objectUtils.capitalize('aa aB'), 'Aa aB');
     });
+
+    it('isBlank', function () {
+        assert.equal(objectUtils.isBlank(' '), true);
+        assert.equal(objectUtils.isBlank(null), true);
+        assert.equal(objectUtils.isBlank(undefined), true);
+        assert.equal(objectUtils.isBlank('zz-12'), false);
+        assert.equal(objectUtils.isBlank({}), false);
+    });
 });

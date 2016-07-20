@@ -22,10 +22,12 @@
         <li>
             <span class="leftMargin">
                 <a data-bind="attr: {href: '/download?id=' + file.id()}">
-                    <span data-bind="text: file.name"></span>
-                </a>
+                    <span data-bind="text: file.name"></span></a>
             </span>
-            <span data-bind="text: Math.round(file.size()/1024, 2) + 'K' "></span>
+            <span data-bind="text: Math.round(file.size()/1024, 2) + 'K'" style="padding-left: 5px"></span>
+            <span data-bind="click: $parent.onRemoveClick.bind($parent)" style="padding-left: 5px">
+                <i class="fa fa-times-circle clearSearchIcon"></i>
+            </span>
         </li>
     </ol>
 </div>
