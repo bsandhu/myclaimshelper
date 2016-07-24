@@ -24,7 +24,7 @@ define(['jquery', 'app/utils/session', 'loggly'],
                         _this.error('windowOnError', arguments);
                     }
 
-                    // Drain the msg queue
+                    // Drain the cached msg queue
                     while (logglyQueue.length > 0) {
                         _this._LTracker.push(logglyQueue.pop());
                     }
@@ -43,6 +43,7 @@ define(['jquery', 'app/utils/session', 'loggly'],
             };
 
             if (!this._LTracker) {
+                // If not configured yet, cache msg
                 logglyQueue.push(payload);
             } else {
                 this._LTracker.push(payload);

@@ -1,7 +1,9 @@
-define(['knockout', 'KOMap', 'text!app/components/maps/mapsComponent.tmpl.html',
+define(['knockout', 'KOMap',
+        'app/utils/audit',
+        'text!app/components/maps/mapsComponent.tmpl.html',
         'async!https://maps.googleapis.com/maps/api/js?key=AIzaSyBB-Qincf0sNQcsu5PzZh7znG3GiB98GRU&libraries=places&signed_in=true&v=3.exp'],
 
-    function (ko, KOMap, viewHtml) {
+    function (ko, KOMap, Audit, viewHtml) {
         'use strict';
         console.log('Maps Widget');
 
@@ -73,6 +75,7 @@ define(['knockout', 'KOMap', 'text!app/components/maps/mapsComponent.tmpl.html',
                              'lng': self.autocomplete.getPlace().geometry.location.lng()}
                          }
                     });
+                Audit.info('AddedLocationToTask', {_id: self.claimEntryObserv()._id(), loca: self.claimEntryObserv().location()});
             });
             self.claimEntryObserv.subscribe(function(){
                 self.autocompletePlacePopulated = false;

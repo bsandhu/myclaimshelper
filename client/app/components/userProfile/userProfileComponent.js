@@ -1,7 +1,8 @@
-define(['jquery', 'knockout', 'KOMap', 'amplify', 'app/utils/events', 'app/utils/session',
+define(['jquery', 'knockout', 'KOMap', 'amplify',
+        'app/utils/events', 'app/utils/session', 'app/utils/responsive',
         'text!app/components/userProfile/userProfile.tmpl.html', 'model/profiles', 'app/utils/audit'],
 
-    function ($, ko, KOMap, amplify, Events, Session, viewHtml, UserProfile, Audit) {
+    function ($, ko, KOMap, amplify, Events, Session, Responsive, viewHtml, UserProfile, Audit) {
         'use strict';
 
         function UserProfileComponent(params) {
@@ -61,8 +62,8 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'app/utils/events', 'app/utils
 
         UserProfileComponent.prototype.checkAndSetUserAuthProfile = function (onDone) {
             if (!Session.getCurrentUserAuthProfile()) {
-                // Delegate to Auth0 service
 
+                // Delegate to Auth0 service
                 $.getJSON('/config')
                     .then(function (resp) {
                         return resp.data.Auth0;
@@ -82,7 +83,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'app/utils/events', 'app/utils
                                 Session.setCurrentUserAuthToken(token);
                                 Session.setCurrentUserId(profile.nickname);
                                 amplify.publish(Events.LOGGED_IN);
-                                Audit.info('Login');
+                                Audit.info('LoggedIn', {deviceInfo: Responsive.deviceInfo()});
                                 onDone();
                             }
                         })
@@ -92,6 +93,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'app/utils/events', 'app/utils
                     });
             } else {
                 amplify.publish(Events.LOGGED_IN);
+                Audit.info('LoggedIn', {deviceInfo: Responsive.deviceInfo()});
                 onDone();
             }
         };
