@@ -17,11 +17,12 @@
     <link rel="stylesheet" type="text/css" href='https://fonts.googleapis.com/css?family=Lato'>
     <link rel="stylesheet" type="text/css" href="css/index-lib-built.css">
     <link rel="stylesheet" type="text/css" href="css/app.css">
+    <link rel="stylesheet" type="text/css" href="css/hopscotch.css">
 
     <script src="../../../lib/lock-9.1.min.js"></script>
     <script src="../../../lib/require.js"></script>
     <script src="../../../lib/requireConfig.js"></script>
-    <script src="/dist/app/components/start.js"></script>
+    <!--<script src="/dist/app/components/start.js"></script>-->
 </head>
 <body>
 
@@ -37,16 +38,22 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="#/home" style="font-size: 26px">
+            <a class="navbar-brand"
+               id="navbar-brand-logo"
+               href="#/home" style="font-size: 26px">
                 Claims<span class="secondary">Helper</span>
             </a>
         </div>
         <div id="navbar" class="navbar-collapse collapse" aria-expanded="false" style="height: 1px;">
             <ul class="nav navbar-nav">
-                <li><a href="#/home" data-toggle="collapse" data-target=".navbar-collapse">Tasks</a></li>
-                <li><a href="#/claim/list" data-toggle="collapse" data-target=".navbar-collapse">Claims</a></li>
-                <li><a href="#/billing" data-toggle="collapse" data-target=".navbar-collapse">Billing</a></li>
+                <li id="index-tasks-list"><a href="#/home" data-toggle="collapse"
+                                             data-target=".navbar-collapse">Tasks</a></li>
+                <li id="index-claims-list"><a href="#/claim/list" data-toggle="collapse" data-target=".navbar-collapse">Claims</a>
+                </li>
+                <li id="index-billing"><a href="#/billing" data-toggle="collapse"
+                                          data-target=".navbar-collapse">Billing</a></li>
                 <li><a href="#/travel" data-toggle="collapse" data-target=".navbar-collapse">Travel</a></li>
                 <li><a href="#/contacts" data-toggle="collapse" data-target=".navbar-collapse">Contacts</a></li>
                 <li><a href=""
@@ -66,6 +73,19 @@
                               style="border-left: 1px solid white; padding-left: 5px"></span>
                     </a>
                 </li>
+                <li>
+                    <a data-bind="click: onShowHelp">
+                        <i class="fa fa-lg fa-question-circle" style="cursor: pointer;"></i>
+                    </a>
+                </li>
+                    <div class="hide slideout-menu" id="help-panel">
+                        <div class="header">Quick tours</div>
+                        <ul>
+                            <li><a href="" data-bind="click: onStartClaimsTour">Claims</a></li>
+                            <li><a href="" data-bind="click: onStartBillingTour">Billing</a></li>
+                            <li><a href="" data-bind="click: onStartTravelTour">Travel</a></li>
+                        </ul>
+                    </div>
             </ul>
         </div><!--/.nav-collapse -->
     </div>
@@ -170,14 +190,14 @@
 </body>
 
 <script type="application/javascript">
-
-    require.config({
-        paths: {
-            // Load optimized file
-            "app/components/start": "dist/app/components/start"
-        }
-    });
-
+    /*
+     require.config({
+     paths: {
+     // Load optimized file
+     "app/components/start": "dist/app/components/start"
+     }
+     });
+     */
     require(['app/components/start'], function () {
     });
 </script>

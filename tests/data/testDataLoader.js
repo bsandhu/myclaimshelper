@@ -90,4 +90,4 @@ function populateUserProfiles() {
 //populateContacts()
 //populateClaimEntries();
 //populateBillingItems();
-//populateClaims()
+populateClaims()

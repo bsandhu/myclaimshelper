@@ -35,7 +35,8 @@
         </thead>
 
         <!-- Claim entry row -->
-        <tbody data-bind="foreach: {data: claimEntries, as: 'entry' }">
+        <tbody data-bind="foreach: {data: claimEntries, as: 'entry' }"
+               id="claimEntriesListBody">
             <tr
                 data-bind="css: {info: $parent.activeClaimEntryId() === entry._id},
                            click: $parent.onClaimEntryClick.bind($parent),
@@ -62,7 +63,8 @@
                 <!-- /ko -->
 
                 <td style="min-width: 20%;">
-                    <span data-bind="text: entry.summary"></span>
+                    <span data-bind="text: entry.summary,
+                                     attr: {id: 'taskEntrySummary' + $index()}"></span>
                 </td>
 
                 <!-- ko ifnot: $parent.isPartiallyCollapsed -->

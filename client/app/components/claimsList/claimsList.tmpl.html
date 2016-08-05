@@ -1,6 +1,8 @@
 <div class="panel panel-default">
     <div id="claims-list-toolbar">
-        <button type="button" class="btn btn-default btn-info"
+        <button type="button"
+                id="claims-list-new-claim"
+                class="btn btn-default btn-info"
                 style="padding-top: 4px; top: -3px; position: relative;"
                 data-bind="click: router.routeToNewClaim">
             <span class="fa fa-plus" style="font-size: .8em"></span>
@@ -17,6 +19,8 @@
     <!-- Claims --->
     <div data-bind='template: { name: "claimsListTemplate",
                                 afterRender: onclaimsListTmplRender.bind($data) }'></div>
+
+    <span id="claimListTableFooter">.</span>
 </div>
 
 

@@ -13,7 +13,9 @@
                     </div>
                 </div>
                 <div class="col-lg-6 col-md-7 col-sm-6 col-xs-7" style="padding-left: 0">
-                    <select class="form-control input-sm bigdrop" type="text" style="width: 90%;"
+                    <select id="billing-item-select-1"
+                            class="form-control input-sm bigdrop"
+                            type="text" style="width: 90%;"
                             data-bind="select2: billingItem().mileageCode,
                                        myoptions: billingCodesDatasource(),
                                        disable: isDisabled">

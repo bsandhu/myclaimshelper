@@ -47,6 +47,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify',
                     console.debug('Loaded UserProfile ' + JSON.stringify(resp.data).substr(0, 100));
                     KOMap.fromJS(resp.data, {}, this.userProfile);
                     Session.setCurrentUserProfile(resp.data);
+                    amplify.publish(Events.LOGGED_IN);
                     amplify.publish(Events.LOADED_USER_PROFILE);
                 }.bind(this))
                 .fail(function (resp) {
@@ -82,8 +83,9 @@ define(['jquery', 'knockout', 'KOMap', 'amplify',
                                 Session.setCurrentUserAuthProfile(profile);
                                 Session.setCurrentUserAuthToken(token);
                                 Session.setCurrentUserId(profile.nickname);
-                                amplify.publish(Events.LOGGED_IN);
                                 Audit.info('LoggedIn', {deviceInfo: Responsive.deviceInfo()});
+                                // If existing credentials are not found, wait till the profile
+                                // is created to trigger LOGGED_IN ev
                                 onDone();
                             }
                         })

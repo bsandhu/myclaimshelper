@@ -1,5 +1,5 @@
 require(['jquery', 'knockout', 'KOAmd', 'text', 'amplify', 'app/components/appVM', 'shared/dateUtils', 'app/utils/session',
-        'app/utils/audit',
+        'app/utils/audit', 'hopscotch',
         'loggly',
         'bootbox', 'app/utils/koDatetimePickerBinding', 'app/utils/koWYSIWYGBinding',
         'app/utils/koTextTruncateBinding', 'app/utils/koSortableBinding', 'app/utils/koAutoComplete', 'app/utils/koSelect2',
@@ -26,11 +26,8 @@ require(['jquery', 'knockout', 'KOAmd', 'text', 'amplify', 'app/components/appVM
         'app/components/billing/billingComponent',
         'app/components/billingItem/billingItemComponent',
         'app/components/billingProfile/billingProfileComponent'],
-    function ($, ko, KOAmd, text, amplify, AppVM, DateUtils, Session, Audit) {
+    function ($, ko, KOAmd, text, amplify, AppVM, DateUtils, Session, Audit, hopscotch) {
         console.log('Init App');
-
-        // Start Loggly
-        Audit.init();
 
         // Chart.noConflict restores the Chart global variable to it's previous owner
         // The function returns what was previously Chart, allowing you to reassign.
@@ -40,7 +37,7 @@ require(['jquery', 'knockout', 'KOAmd', 'text', 'amplify', 'app/components/appVM
         // Cleanup session
         Session.clearContacts();
 
-        // Knockout AMD supoprt setup
+        // Knockout AMD support setup
         ko.amdTemplateEngine.defaultRequireTextPluginName = "text";
         ko.amdTemplateEngine.defaultPath = "/";
         ko.amdTemplateEngine.defaultSuffix = ".tmpl.html";
@@ -69,6 +66,10 @@ require(['jquery', 'knockout', 'KOAmd', 'text', 'amplify', 'app/components/appVM
         // Knockout bindings init
         ko.applyBindings(new AppVM());
 
+        // Start Loggly
+        Audit.init();
+
+        // Util fn(s)
         JSON.prettyPrint = function (str) {
             var maxLength = 80;
             return JSON.stringify(str).substring(0, maxLength);

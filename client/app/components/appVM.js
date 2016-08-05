@@ -1,6 +1,8 @@
 define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEntry', 'model/states', 'app/utils/events',
-        'app/utils/router', 'shared/dateUtils', 'app/utils/ajaxUtils', 'app/utils/session', 'app/utils/responsive'],
-    function ($, ko, KOMap, amplify, Claim, ClaimEntry, States, Events, Router, DateUtils, AjaxUtils, Session, Responsive) {
+        'app/utils/router', 'shared/dateUtils', 'app/utils/ajaxUtils', 'app/utils/session',
+        'app/utils/responsive', 'app/utils/tours'],
+    function ($, ko, KOMap, amplify, Claim, ClaimEntry, States, Events, Router, DateUtils, AjaxUtils, Session,
+              Responsive, Tours) {
         'use strict';
 
         function AppVM() {
@@ -36,7 +38,6 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
             this.setupUserLink();
             $(window).on('hashchange', this.setNavBarHighlight);
             this.setNavBarHighlight();
-
         }
 
         AppVM.prototype.startRouter = function () {
@@ -133,9 +134,10 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
 
             this.userNameLinkText = ko.computed(function () {
                 var name = _this.userName() || 'Login';
-                return (name.length >= 7)
-                    ? name.substr(0, 7) + '..'
-                    : name;
+                /*return (name.length >= 7)
+                 ? name.substr(0, 7) + '..'
+                 : name;*/
+                return name;
             });
         }
 
@@ -145,6 +147,45 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
             } else {
                 this.onLogin();
             }
+        }
+
+        AppVM.prototype.onShowHelp = function (vm, ev) {
+            var slideoutMenu = $('.slideout-menu');
+
+            slideoutMenu.css('left', ev.clientX - slideoutMenu.width()/2);
+            // toggle open class
+            slideoutMenu.toggleClass("open");
+
+            // slide menu
+            if (slideoutMenu.hasClass("open")) {
+                slideoutMenu.removeClass("hide");
+                slideoutMenu.animate({
+                    height: "200px"
+                });
+            } else {
+                slideoutMenu.animate({
+                    height: "0px"
+                }, 250, function(){
+                    slideoutMenu.addClass("hide");
+                });
+            }
+        }
+
+        AppVM.prototype.onStartTravelTour = function (vm, ev) {
+        }
+
+        AppVM.prototype.onStartBillingTour = function (vm, ev) {
+            Router.routeToBilling();
+            $('.slideout-menu').toggleClass('hide');
+            $('.slideout-menu').toggleClass('open');
+            Tours.startBillingTour();
+        }
+
+        AppVM.prototype.onStartClaimsTour = function (vm, ev) {
+            Router.routeToHome();
+            $('.slideout-menu').toggleClass('hide');
+            $('.slideout-menu').toggleClass('open');
+            Tours.startClaimsTour();
         }
 
         AppVM.prototype.setNavBarHighlight = function () {
@@ -309,7 +350,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
             }
         };
 
-            // Claim panel
+        // Claim panel
 
         AppVM.prototype.expandClaimPanel = function () {
             if (this.claimPanelState !== 'expanded') {

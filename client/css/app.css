@@ -217,6 +217,10 @@ div {
     overflow: hidden;
 }
 
+.hide {
+    display: none;
+}
+
 .boxShadow {
     border: 1px solid darkgrey;
     box-shadow: 2px 2px 2px lightgray;
@@ -907,6 +911,8 @@ h3.panel-title {
 }
 
 /* Hover/Selected menu item */
+.slideout-menu ul li a:hover,
+.slideout-menu ul li a:focus,
 .navbar-default .navbar-nav > li > a:hover,
 .navbar-default .navbar-nav > li > a:focus {
     color: #6bd4ff;
@@ -1096,4 +1102,39 @@ h3.panel-title {
 .notification .fa-icon-warning-sign {
     margin-right: 9px;
     color: #fd3333;
+}
+
+/**********************************************************/
+/**** Slide out menu ****/
+/**********************************************************/
+
+.slideout-menu {
+    font-size: 16px;
+    padding: 8px;
+    position: fixed;
+    top: 73px;
+    width: 150px;
+    height: 0;
+    background: #34495e;
+    z-index: 100;
+    border: 1px solid #e7e7e7;
+    color: white;
+    border-top: 0;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
+}
+
+.slideout-menu ul {
+    padding-left: 20px;
+    list-style: none;
+    font-weight: 300;
+}
+
+.slideout-menu ul li {
+    padding: 5px;
+    text-decoration: none;
+}
+
+.slideout-menu ul li a{
+    color: white;
+    text-decoration: none;
 }
