@@ -1,8 +1,9 @@
 define(['jquery', 'knockout', 'KOMap', 'amplify',
         'app/utils/events', 'app/utils/session', 'app/utils/responsive',
-        'text!app/components/userProfile/userProfile.tmpl.html', 'model/profiles', 'app/utils/audit'],
+        'text!app/components/userProfile/userProfile.tmpl.html', 'model/profiles',
+        'app/utils/audit', 'app/utils/consts'],
 
-    function ($, ko, KOMap, amplify, Events, Session, Responsive, viewHtml, UserProfile, Audit) {
+    function ($, ko, KOMap, amplify, Events, Session, Responsive, viewHtml, UserProfile, Audit, Consts) {
         'use strict';
 
         function UserProfileComponent(params) {
@@ -46,7 +47,13 @@ define(['jquery', 'knockout', 'KOMap', 'amplify',
                 .done(function (resp) {
                     console.debug('Loaded UserProfile ' + JSON.stringify(resp.data).substr(0, 100));
                     KOMap.fromJS(resp.data, {}, this.userProfile);
-                    Session.setCurrentUserProfile(resp.data);
+
+                    var userProfile = resp.data;
+                    Session.setCurrentUserProfile(userProfile);
+                    if (!userProfile.hasOwnProperty[Consts.CLAIMS_TOUR_PROFILE_KEY]
+                        || userProfile[Consts.CLAIMS_TOUR_PROFILE_KEY] == false) {
+                        amplify.publish(Events.SHOW_WELCOME_MSG);
+                    }
                     amplify.publish(Events.LOGGED_IN);
                     amplify.publish(Events.LOADED_USER_PROFILE);
                 }.bind(this))

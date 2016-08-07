@@ -1,8 +1,8 @@
 define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEntry', 'model/states', 'app/utils/events',
         'app/utils/router', 'shared/dateUtils', 'app/utils/ajaxUtils', 'app/utils/session',
-        'app/utils/responsive', 'app/utils/tours'],
+        'app/utils/responsive', 'app/utils/tours', 'app/utils/consts'],
     function ($, ko, KOMap, amplify, Claim, ClaimEntry, States, Events, Router, DateUtils, AjaxUtils, Session,
-              Responsive, Tours) {
+              Responsive, Tours, Consts) {
         'use strict';
 
         function AppVM() {
@@ -115,17 +115,21 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
                 console.log('AppVM - UPDATE_UNREAD_MSGS_COUNT ev');
                 this.unreadMsgCount(count);
             });
-            amplify.subscribe(Events.LOGGED_IN, this, function (count) {
+            amplify.subscribe(Events.LOGGED_IN, this, function () {
                 console.log('AppVM - LOGGED_IN ev');
                 this.showApp(true);
                 this.userName(Session.getCurrentUserId());
                 this.startRouter();
             });
-            amplify.subscribe(Events.LOGOFF, this, function (count) {
+            amplify.subscribe(Events.LOGOFF, this, function () {
                 console.log('AppVM - LOGOFF ev');
                 this.showApp(false);
                 this.userName('');
                 location.reload();
+            });
+            amplify.subscribe(Events.SHOW_WELCOME_MSG, this, function () {
+                console.log('AppVM - SHOW_WELCOME_MSG ev');
+                $('#welcomeModal').modal();
             });
         };
 
@@ -152,7 +156,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
         AppVM.prototype.onShowHelp = function (vm, ev) {
             var slideoutMenu = $('.slideout-menu');
 
-            slideoutMenu.css('left', ev.clientX - slideoutMenu.width()/2);
+            slideoutMenu.css('left', ev.clientX - slideoutMenu.width() / 2);
             // toggle open class
             slideoutMenu.toggleClass("open");
 
@@ -165,10 +169,15 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
             } else {
                 slideoutMenu.animate({
                     height: "0px"
-                }, 250, function(){
+                }, 250, function () {
                     slideoutMenu.addClass("hide");
                 });
             }
+        }
+
+        AppVM.prototype.onWelcomeAccept = function (vm, ev) {
+            Router.routeToHome();
+            Tours.startClaimsTour();
         }
 
         AppVM.prototype.onStartTravelTour = function (vm, ev) {

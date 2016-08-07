@@ -168,6 +168,7 @@ function setupBillingServiceRoutes() {
 
 function setupProfileServiceRoutes() {
     server.post('/userProfile', authenticate, profileService.saveOrUpdateUserProfileREST);
+    server.post('/userProfile/modify', authenticate, profileService.modifyUserProfileREST);
     server.get('/userProfile/:id', authenticate, profileService.checkAndGetUserProfileREST);
 }
 
@@ -216,7 +217,7 @@ function setUpWSConn() {
         console.log("Web Socket connection established");
 
         // UserId is used as roomName
-        socket.on('joinRoom', function(userId){
+        socket.on('joinRoom', function (userId) {
             console.log('WS addToRoom: ' + userId);
             socket.join(userId);
         });

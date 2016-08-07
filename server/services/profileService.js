@@ -28,6 +28,18 @@ function _getUserProfile(search, db) {
     return result;
 }
 
+function _modifyUserProfile(id, attrsAsJson) {
+    var defer = jQuery.Deferred();
+    mongoUtils.modifyEntityAttr(id, mongoUtils.USERPROFILE_COL_NAME, attrsAsJson)
+        .then(function (results) {
+            defer.resolve(results);
+        })
+        .fail(function (err) {
+            defer.reject(err);
+        });
+    return defer;
+}
+
 
 // REST ------------------------------
 
@@ -41,6 +53,17 @@ function getUserProfileREST(req, res) {
         .then(
             _.partial(sendResponse, res, null),
             _.partial(sendResponse, res, 'Failed to get UserProfile  ' + req.params.id));
+}
+
+function modifyUserProfileREST(req, res) {
+    var reqBody = req.body;
+    var id = reqBody.id;
+    var attrsAsJson = reqBody.attrsAsJson;
+    console.log("Modify profile " + id+ ". Attrs: " + attrsAsJson);
+    
+    _modifyUserProfile(id, attrsAsJson)
+        .then(_.partial(sendResponse, res, null, {}),
+              _.partial(sendResponse, res, 'Failed to modify profile ' + id));
 }
 
 // :: Dict -> Dict -> None
@@ -94,4 +117,6 @@ function checkAndGetUserProfileREST(req, res) {
 exports.saveOrUpdateUserProfileREST = saveOrUpdateUserProfileREST;
 exports.getUserProfileREST = getUserProfileREST;
 exports.checkAndGetUserProfileREST = checkAndGetUserProfileREST;
+exports._modifyUserProfile = _modifyUserProfile;
+exports.modifyUserProfileREST = modifyUserProfileREST;
 exports.DEFAULT_USER = DEFAULT_USER;

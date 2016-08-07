@@ -17,7 +17,6 @@
     <link rel="stylesheet" type="text/css" href='https://fonts.googleapis.com/css?family=Lato'>
     <link rel="stylesheet" type="text/css" href="css/index-lib-built.css">
     <link rel="stylesheet" type="text/css" href="css/app.css">
-    <link rel="stylesheet" type="text/css" href="css/hopscotch.css">
 
     <script src="../../../lib/lock-9.1.min.js"></script>
     <script src="../../../lib/require.js"></script>
@@ -78,14 +77,14 @@
                         <i class="fa fa-lg fa-question-circle" style="cursor: pointer;"></i>
                     </a>
                 </li>
-                    <div class="hide slideout-menu" id="help-panel">
-                        <div class="header">Quick tours</div>
-                        <ul>
-                            <li><a href="" data-bind="click: onStartClaimsTour">Claims</a></li>
-                            <li><a href="" data-bind="click: onStartBillingTour">Billing</a></li>
-                            <li><a href="" data-bind="click: onStartTravelTour">Travel</a></li>
-                        </ul>
-                    </div>
+                <div class="hide slideout-menu" id="help-panel">
+                    <div class="header">Quick tours</div>
+                    <ul>
+                        <li><a href="" data-bind="click: onStartClaimsTour">Claims</a></li>
+                        <li><a href="" data-bind="click: onStartBillingTour">Billing</a></li>
+                        <li><a href="" data-bind="click: onStartTravelTour">Travel</a></li>
+                    </ul>
+                </div>
             </ul>
         </div><!--/.nav-collapse -->
     </div>
@@ -188,6 +187,31 @@
 </div>
 <!-- END #MAIN CONTENT -->
 </body>
+
+<!-- Welcome splash -->
+<div id="welcomeModal" data-backdrop="static"
+     class="modal fade modal-lg" role="dialog" aria-labelledby="welcomeModal" aria-hidden="true"
+     style="top:20%; margin: auto;">
+
+    <div class="welcome modal-dialog">
+        <div class="welcome modal-content">
+            <div class="welcome modal-body">
+                <div class="container-fluid">
+                    <div class="text-center">
+                        <div class="welcome banner">Welcome to MyClaimsHelper</div>
+                        <div>Would you like a quick tour of the basics?</div>
+                        <div>Takes less than a minute</div>
+                    </div>
+                </div>
+            </div>
+            <div class="welcome modal-footer">
+                <button type="button" class="welcome btn btn-default btn-link no" data-dismiss="modal">Not now</button>
+                <button type="button" class="welcome btn btn-default btn-link" data-dismiss="modal" data-bind="click: onWelcomeAccept">Yes please
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <script type="application/javascript">
     /*

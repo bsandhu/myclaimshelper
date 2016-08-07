@@ -1,11 +1,28 @@
-define(['jquery', 'amplify', 'hopscotch', 'app/utils/router'],
-
-    function ($, amplify, hopscotch, Router) {
+define(['jquery', 'amplify', 'hopscotch',
+        'app/utils/router', 'app/utils/ajaxUtils', 'app/utils/session', 'app/utils/consts'],
+    
+    function ($, amplify, hopscotch, Router, ajaxUtils, Session, Consts) {
         function Tours() {
             console.log('Init Tours');
         }
 
+        Tours.prototype.markAsDone = function (tourName) {
+            var attrs = {};
+            attrs[tourName] = true;
+
+            ajaxUtils.post(
+                '/userProfile/modify',
+                JSON.stringify({id: Session.getCurrentUserId(), attrsAsJson: attrs}),
+                function onSuccess(response) {
+                    console.log("Marked tour " + tourName + "as done");
+                },
+                function onSuccess(response) {
+                    console.error("Failed to mark tour " + tourName + " as done");
+                });
+        }
+
         Tours.prototype.startClaimsTour = function () {
+            var _this = this;
             var claimsTour = {
                 id: "claims-tour",
                 steps: [
@@ -120,6 +137,12 @@ define(['jquery', 'amplify', 'hopscotch', 'app/utils/router'],
                 ],
                 onError: function (e) {
                     console.error('Tour error ' + JSON.stringify(arguments));
+                },
+                onClose: function () {
+                    _this.markAsDone(Consts.CLAIMS_TOUR_PROFILE_KEY)
+                },
+                onEnd: function () {
+                    _this.markAsDone(Consts.CLAIMS_TOUR_PROFILE_KEY)
                 }
             }
 
@@ -143,14 +166,14 @@ define(['jquery', 'amplify', 'hopscotch', 'app/utils/router'],
                     {
                         title: "Billing",
                         content: "You can manage all your bills on this screen. Track what's been paid and outstanding. " +
-                                 "Clicking on this will take you to the details of the Bill.",
+                        "Clicking on this will take you to the details of the Bill.",
                         target: "billigListSubmitHeader",
                         placement: "bottom"
                     },
                     {
                         title: "Billing",
                         content: "You can quickly see the Bills by status by using this filter." +
-                                 "<br/> Lets look at the details of an individual bill next.",
+                        "<br/> Lets look at the details of an individual bill next.",
                         target: "billingListStatusFilter",
                         placement: "bottom",
                         onNext: function () {
@@ -197,7 +220,7 @@ define(['jquery', 'amplify', 'hopscotch', 'app/utils/router'],
                     {
                         title: "Bill",
                         content: "Once you are done making changes, you can save a draft or Submit the bill. " +
-                                 "<br/> Submitting the bill does not send the bill to anyone. It just tracks its as such in the system",
+                        "<br/> Submitting the bill does not send the bill to anyone. It just tracks its as such in the system",
                         target: "billCreationSaveDraftBtn",
                         placement: "left"
                     }
@@ -205,7 +228,7 @@ define(['jquery', 'amplify', 'hopscotch', 'app/utils/router'],
                 onError: function (e) {
                     console.error('Tour error ' + JSON.stringify(arguments));
                 },
-                onEnd: function(){
+                onEnd: function () {
                     Router.routeToBilling();
                 }
             }
