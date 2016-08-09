@@ -21,7 +21,7 @@
     <script src="../../../lib/lock-9.1.min.js"></script>
     <script src="../../../lib/require.js"></script>
     <script src="../../../lib/requireConfig.js"></script>
-    <!--<script src="/dist/app/components/start.js"></script>-->
+    <script src="/dist/app/components/start.js"></script>
 </head>
 <body>
 
@@ -210,7 +210,8 @@
             </div>
             <div class="welcome modal-footer">
                 <button type="button" class="welcome btn btn-default btn-link no" data-dismiss="modal">Not now</button>
-                <button type="button" class="welcome btn btn-default btn-link" data-dismiss="modal" data-bind="click: onWelcomeAccept">Yes please
+                <button type="button" class="welcome btn btn-default btn-link" data-dismiss="modal"
+                        data-bind="click: onWelcomeAccept">Yes please
                 </button>
             </div>
         </div>
@@ -218,14 +219,13 @@
 </div>
 
 <script type="application/javascript">
-    /*
-     require.config({
-     paths: {
-     // Load optimized file
-     "app/components/start": "dist/app/components/start"
-     }
-     });
-     */
+    require.config({
+        paths: {
+            // Load optimized file
+            "app/components/start": "dist/app/components/start"
+        }
+    });
+
     require(['app/components/start'], function () {
     });
 </script>
