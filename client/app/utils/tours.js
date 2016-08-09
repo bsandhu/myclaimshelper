@@ -27,9 +27,9 @@ define(['jquery', 'amplify', 'hopscotch',
                 id: "claims-tour",
                 steps: [
                     {
-                        title: "Welcome!",
-                        content: "Take a quick tour .. just click next",
-                        target: "navbar-brand-logo",
+                        title: "Claims",
+                        content: "A claim corresponds to a file or a case which you investigate<br/><br/>This is the Claims section",
+                        target: "index-claims-list",
                         placement: "bottom",
                         delay: 1000,
                         onNext: function (tour) {
@@ -50,7 +50,7 @@ define(['jquery', 'amplify', 'hopscotch',
                     },
                     {
                         title: "Claim",
-                        content: "A claim corresponds to a file or a case which you work on",
+                        content: "All the open Claims are listed on this page<br/><br/>Let's look at a sample Claim file in more detail.",
                         target: 'claimListTable',
                         placement: "bottom",
                         delay: 1000,
@@ -72,7 +72,16 @@ define(['jquery', 'amplify', 'hopscotch',
                     },
                     {
                         title: "Claim details",
-                        content: "All the work you do while investigating a Claim can be tracked as tasks",
+                        content: "This is the detailed view of a sample Claim file.<br/><br/>You can track various pieces of information like the dates and contacts",
+                        target: "claim-id",
+                        placement: "right",
+                        onNext: function () {
+                            $('#claim-newtask-btn')[0].click()
+                        }
+                    },
+                    {
+                        title: "Claim details",
+                        content: "All the work you do while investigating a Claim can be tracked as `Tasks`",
                         target: "taskEntrySummary0",
                         placement: "bottom",
                         onNext: function () {
@@ -81,7 +90,8 @@ define(['jquery', 'amplify', 'hopscotch',
                     },
                     {
                         title: "Task type",
-                        content: "You can create different types of tasks, including tasks specifically for travel",
+                        content: "You can create different types of tasks, including tasks specifically for travel<br/><br/>" +
+                                 "Let's look at a sample task in more detail",
                         target: "claim-newtask-btn",
                         placement: "bottom",
                         onNext: function () {
@@ -95,17 +105,23 @@ define(['jquery', 'amplify', 'hopscotch',
 
                                 if ($element.is(':visible')) {
                                     clearInterval(checkExist);
-                                    hopscotch.startTour(currTour, 4);
+                                    hopscotch.startTour(currTour, 5);
                                 }
                             }, 100);
                         },
                     },
                     {
                         title: "Task",
-                        content: "In additional to basic information, you can attach files, location and billing information here",
+                        content: "This is the detailed view of a Task<br/><br/>In additional to basic information, you can attach files and location information",
                         target: "taskEntryHeading",
-                        placement: "bottom",
-
+                        placement: "right"
+                    },
+                    {
+                        title: "Billing information",
+                        content: "You can Bill for aspects like Miles travelled / Hours worked or business expense<br/><br/>" +
+                                 "You can also specify billing codes as needed by the Insurer. Please contact us to customize these codes",
+                        target: "billing-item-mileage",
+                        placement: "right",
                         onNext: function () {
                             var currTour = hopscotch.getCurrTour();
                             hopscotch.endTour();
@@ -117,21 +133,22 @@ define(['jquery', 'amplify', 'hopscotch',
 
                                 if ($element.is(':visible')) {
                                     clearInterval(checkExist);
-                                    hopscotch.startTour(currTour, 5);
+                                    hopscotch.startTour(currTour, 7);
                                 }
                             }, 100);
                         }
                     },
                     {
                         title: "Tasks list",
-                        content: "You can see all the tasks for today on this page",
+                        content: "You can see all of Today's and upcoming tasks on the 'Tasks' page<br/><br/>" +
+                                 "This could help in staying organized and tracking progress",
                         target: "summaryTableHeader3",
                         placement: "bottom",
                     },
                     {
                         title: "There's more",
                         content: "When you have a minute check out more tours from the help section!",
-                        target: "index-billing",
+                        target: "index-help",
                         placement: "bottom"
                     }
                 ],
@@ -165,15 +182,15 @@ define(['jquery', 'amplify', 'hopscotch',
                 steps: [
                     {
                         title: "Billing",
-                        content: "You can manage all your bills on this screen. Track what's been paid and outstanding. " +
-                        "Clicking on this will take you to the details of the Bill.",
+                        content: "You can manage all your Bills on this screen<br/><br/>" +
+                                 "Easily track what's been paid and outstanding",
                         target: "billigListSubmitHeader",
                         placement: "bottom"
                     },
                     {
                         title: "Billing",
-                        content: "You can quickly see the Bills by status by using this filter." +
-                        "<br/> Lets look at the details of an individual bill next.",
+                        content: "You can quickly see the Bills by status by using this filter<br/><br/>" +
+                                 "Lets look at the details of an individual bill next",
                         target: "billingListStatusFilter",
                         placement: "bottom",
                         onNext: function () {
@@ -192,16 +209,16 @@ define(['jquery', 'amplify', 'hopscotch',
                         }
                     },
                     // This step is dummy - to keep hopscotch happy
-                    // Hopscotch seems to have going to next step after the page step
+                    // Hopscotch seems to be going to next step after the page step
                     {
-                        title: "Bill",
-                        content: "This is a Bill for the tasks done on a Claim. You can create multiple bills.",
+                        title: "Dummy Step",
+                        content: "This is the detailed view of a Bill, for the Tasks done on the sample Claim",
                         target: "billigListSubmitHeader",
                         placement: "left"
                     },
                     {
                         title: "Bill",
-                        content: "This is a Bill for the tasks done on a Claim. You can create multiple bills.",
+                        content: "This is the detailed view of a Bill, for the Tasks done on the sample Claim",
                         target: "billingInvoiceHeader",
                         placement: "left"
                     },
@@ -219,8 +236,8 @@ define(['jquery', 'amplify', 'hopscotch',
                     },
                     {
                         title: "Bill",
-                        content: "Once you are done making changes, you can save a draft or Submit the bill. " +
-                        "<br/> Submitting the bill does not send the bill to anyone. It just tracks its as such in the system",
+                        content: "Once you are done making changes, you can save a draft or Submit the bill<br/><br/>" +
+                                 "Submitting the bill does not send the bill to anyone. It just tracks its as such in the system",
                         target: "billCreationSaveDraftBtn",
                         placement: "left"
                     }

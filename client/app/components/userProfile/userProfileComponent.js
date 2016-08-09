@@ -50,8 +50,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify',
 
                     var userProfile = resp.data;
                     Session.setCurrentUserProfile(userProfile);
-                    if (!userProfile.hasOwnProperty[Consts.CLAIMS_TOUR_PROFILE_KEY]
-                        || userProfile[Consts.CLAIMS_TOUR_PROFILE_KEY] == false) {
+                    if (userProfile[Consts.CLAIMS_TOUR_PROFILE_KEY] == false) {
                         amplify.publish(Events.SHOW_WELCOME_MSG);
                     }
                     amplify.publish(Events.LOGGED_IN);

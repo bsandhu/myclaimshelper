@@ -8,6 +8,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
         function AppVM() {
             console.log('Init AppVM');
             this.Session = Session;
+            this.Responsive = Responsive;
 
             // UI state
             this.gridNavDelay = 0;
@@ -129,7 +130,9 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
             });
             amplify.subscribe(Events.SHOW_WELCOME_MSG, this, function () {
                 console.log('AppVM - SHOW_WELCOME_MSG ev');
-                $('#welcomeModal').modal();
+                if (!Responsive.onXSDevice()){
+                    $('#welcomeModal').modal();
+                }
             });
         };
 
@@ -154,13 +157,18 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
         }
 
         AppVM.prototype.onShowHelp = function (vm, ev) {
+            var timer = undefined;
             var slideoutMenu = $('.slideout-menu');
 
             slideoutMenu.css('left', ev.clientX - slideoutMenu.width() / 2);
-            // toggle open class
-            slideoutMenu.toggleClass("open");
 
-            // slide menu
+            // Toggle open class
+            slideoutMenu.toggleClass("open");
+            if (timer) {
+                clearTimeout(timer);
+            }
+
+            // Slide menu
             if (slideoutMenu.hasClass("open")) {
                 slideoutMenu.removeClass("hide");
                 slideoutMenu.animate({
@@ -171,8 +179,20 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
                     height: "0px"
                 }, 250, function () {
                     slideoutMenu.addClass("hide");
+                    slideoutMenu.removeClass("open");
                 });
             }
+            // Hide after a bit, if still open
+            timer = setTimeout(function(){
+                if (slideoutMenu.hasClass("open")) {
+                    slideoutMenu.animate({
+                        height: "0px"
+                    }, 250, function () {
+                        slideoutMenu.addClass("hide");
+                        slideoutMenu.removeClass("open");
+                    });
+                }
+            }, 5000);
         }
 
         AppVM.prototype.onWelcomeAccept = function (vm, ev) {

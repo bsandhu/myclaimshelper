@@ -914,7 +914,9 @@ h3.panel-title {
 .slideout-menu ul li a:hover,
 .slideout-menu ul li a:focus,
 .navbar-default .navbar-nav > li > a:hover,
-.navbar-default .navbar-nav > li > a:focus {
+.navbar-default .navbar-nav > li > a:focus,
+.slideout-menu a:focus,
+.slideout-menu a:hover {
     color: #6bd4ff;
     transition: color 300ms ease-out;
 }
@@ -1109,7 +1111,7 @@ h3.panel-title {
 /**********************************************************/
 
 .slideout-menu {
-    font-size: 16px;
+    font-size: 18px;
     padding: 8px;
     position: fixed;
     top: 73px;
@@ -1121,20 +1123,22 @@ h3.panel-title {
     color: white;
     border-top: 0;
     box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
+    text-align: center;
 }
 
-.slideout-menu ul {
-    padding-left: 20px;
+.slideout-menu .items {
     list-style: none;
     font-weight: 300;
-}
-
-.slideout-menu ul li {
-    padding: 5px;
+    font-size: 16px;
+    text-align: center;
     text-decoration: none;
 }
 
-.slideout-menu ul li a {
+.slideout-menu .item {
+    padding: 5px;
+}
+
+.slideout-menu a {
     color: white;
     text-decoration: none;
 }
@@ -1165,6 +1169,7 @@ h3.panel-title {
 
 .welcome.modal-body {
     height: 40vh;
+    max-height: 200px;
     font-size: 16px;
 }
 
@@ -1206,4 +1211,20 @@ div.hopscotch-bubble .hopscotch-bubble-arrow-container.up .hopscotch-bubble-arro
 
 div.hopscotch-bubble .hopscotch-bubble-arrow-container.up .hopscotch-bubble-arrow-border {
     border-bottom: 17px solid rgb(171, 175, 176);
+}
+
+div.hopscotch-bubble .hopscotch-bubble-arrow-container.left .hopscotch-bubble-arrow {
+    border-right: 17px solid rgb(49, 54, 58);;
+}
+
+div.hopscotch-bubble .hopscotch-bubble-arrow-container.left .hopscotch-bubble-arrow-border {
+    border-right: 17px solid rgb(171, 175, 176);
+}
+
+div.hopscotch-bubble .hopscotch-bubble-arrow-container.right .hopscotch-bubble-arrow {
+    border-left: 17px solid rgb(49, 54, 58);
+}
+
+div.hopscotch-bubble .hopscotch-bubble-arrow-container.right .hopscotch-bubble-arrow-border {
+    border-left: 17px solid rgb(171, 175, 176);
 }
