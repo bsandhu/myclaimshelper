@@ -39,7 +39,7 @@ define(['jquery', 'amplify', 'hopscotch',
 
                             var checkExist = setInterval(function () {
                                 // This is the element from the next step.
-                                $element = $('#claimListTable tbody tr:last-child td:nth-child(4)');
+                                $element = $('#claimListTable tbody tr:nth-child(1) td:nth-child(4)');
 
                                 if ($element.is(':visible')) {
                                     clearInterval(checkExist);
@@ -57,7 +57,7 @@ define(['jquery', 'amplify', 'hopscotch',
                         onNext: function () {
                             var currTour = hopscotch.getCurrTour();
                             hopscotch.endTour();
-                            $('#claimListTable tbody tr:last-child td:nth-child(4)').click();
+                            $('#claimListTable tbody tr:nth-child(1) td:nth-child(4)').click();
 
                             var checkExist = setInterval(function () {
                                 // This is the element from the next step.
