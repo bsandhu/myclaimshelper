@@ -31,7 +31,6 @@ define(['jquery', 'amplify', 'hopscotch',
                         content: "A claim corresponds to a file or a case which you investigate<br/><br/>This is the Claims section",
                         target: "index-claims-list",
                         placement: "bottom",
-                        delay: 1000,
                         onNext: function (tour) {
                             var currTour = hopscotch.getCurrTour();
                             hopscotch.endTour();
@@ -39,7 +38,7 @@ define(['jquery', 'amplify', 'hopscotch',
 
                             var checkExist = setInterval(function () {
                                 // This is the element from the next step.
-                                $element = $('#claimListTable tbody tr:nth-child(1) td:nth-child(4)');
+                                $element = $('#claimListTable tbody tr:first-child td:nth-child(4)');
 
                                 if ($element.is(':visible')) {
                                     clearInterval(checkExist);
@@ -51,13 +50,12 @@ define(['jquery', 'amplify', 'hopscotch',
                     {
                         title: "Claim",
                         content: "All the open Claims are listed on this page<br/><br/>Let's look at a sample Claim file in more detail.",
-                        target: 'claimListTable',
+                        target: 'claimListTableHeader',
                         placement: "bottom",
-                        delay: 1000,
                         onNext: function () {
                             var currTour = hopscotch.getCurrTour();
                             hopscotch.endTour();
-                            $('#claimListTable tbody tr:nth-child(1) td:nth-child(4)').click();
+                            $('#claimListTable tbody tr:first-child td:nth-child(4)').click();
 
                             var checkExist = setInterval(function () {
                                 // This is the element from the next step.
@@ -74,7 +72,7 @@ define(['jquery', 'amplify', 'hopscotch',
                         title: "Claim details",
                         content: "This is the detailed view of a sample Claim file.<br/><br/>You can track various pieces of information like the dates and contacts",
                         target: "claim-id",
-                        placement: "right",
+                        placement: "bottom",
                         onNext: function () {
                             $('#claim-newtask-btn')[0].click()
                         }
@@ -114,7 +112,7 @@ define(['jquery', 'amplify', 'hopscotch',
                         title: "Task",
                         content: "This is the detailed view of a Task<br/><br/>In additional to basic information, you can attach files and location information",
                         target: "taskEntryHeading",
-                        placement: "right"
+                        placement: "bottom"
                     },
                     {
                         title: "Billing information",
@@ -142,7 +140,7 @@ define(['jquery', 'amplify', 'hopscotch',
                         title: "Tasks list",
                         content: "You can see all of Today's and upcoming tasks on the 'Tasks' page<br/><br/>" +
                                  "This could help in staying organized and tracking progress",
-                        target: "summaryTableHeader3",
+                        target: "summaryTableHeader4",
                         placement: "bottom",
                     },
                     {
@@ -182,6 +180,27 @@ define(['jquery', 'amplify', 'hopscotch',
                 steps: [
                     {
                         title: "Billing",
+                        content: "You can Bill the work done for a Claim<br/><br/>This is the Bills section",
+                        target: "index-billing",
+                        placement: "bottom",
+                        onNext: function (tour) {
+                            var currTour = hopscotch.getCurrTour();
+                            hopscotch.endTour();
+                            $('#index-billing a')[0].click();
+
+                            var checkExist = setInterval(function () {
+                                // This is the element from the next step.
+                                $element = $('#billingListTable');
+
+                                if ($element.is(':visible')) {
+                                    clearInterval(checkExist);
+                                    hopscotch.startTour(currTour, 1);
+                                }
+                            }, 100);
+                        }
+                    },
+                    {
+                        title: "Billing",
                         content: "You can manage all your Bills on this screen<br/><br/>" +
                                  "Easily track what's been paid and outstanding",
                         target: "billigListSubmitHeader",
@@ -203,7 +222,7 @@ define(['jquery', 'amplify', 'hopscotch',
                                 $element = $('#billingCreateTable tbody tr');
                                 if ($element.is(':visible')) {
                                     clearInterval(checkExist);
-                                    hopscotch.startTour(currTour, 2);
+                                    hopscotch.startTour(currTour, 3);
                                 }
                             }, 100);
                         }
@@ -250,16 +269,7 @@ define(['jquery', 'amplify', 'hopscotch',
                 }
             }
 
-            var pgLoadCheck = setInterval(function () {
-                // This is the element from the next step.
-                var $element = $('#billingListTable');
-
-                if ($element.is(':visible')) {
-                    clearInterval(pgLoadCheck);
-                    hopscotch.endTour(true);
-                    hopscotch.startTour(billingTour);
-                }
-            }, 100);
+            hopscotch.startTour(billingTour);
         }
 
         return new Tours();
