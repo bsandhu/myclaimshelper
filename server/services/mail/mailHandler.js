@@ -188,7 +188,7 @@ function constructClaimEntry(data, attachments) {
 
                             var entry = new ClaimEntry();
                             entry.entryDate = (new Date()).getTime();
-                            entry.dueDate = (DateUtils.startOfTodayUTC()).getTime() - (zoneOffsetInMinutes * 60 * 1000);
+                            entry.dueDate = (DateUtils.startOfTodayUTC()).getTime() + (zoneOffsetInMinutes * 60 * 1000);
                             entry.updateDate = (new Date()).getTime();
                             entry.summary = data.mail.subject;
                             entry.from = data.mail.from;

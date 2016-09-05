@@ -6,7 +6,7 @@ var data = [
             "businessName": "Business name",
             "streetAddress": "Street name",
             "city": "City",
-            "zip": "110011"
+            "zip": "11001"
         },
         "billingProfile": {
             "timeUnit": "hour",
