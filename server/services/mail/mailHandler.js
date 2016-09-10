@@ -206,7 +206,7 @@ function constructClaimEntry(data, attachments) {
                             for (var i = 0; i < attachments.length; i++) {
                                 var metadata = {
                                     id: attachments[i].id,
-                                    name: attachments[i].name,
+                                    name: data.claimId + '-' + attachments[i].name,
                                     size: attachments[i].size
                                 };
                                 entry.attachments.push(metadata);
