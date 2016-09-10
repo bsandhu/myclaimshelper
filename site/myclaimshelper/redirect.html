@@ -1,0 +1,9 @@
+<script type="application/javascript">
+    var user = sessionStorage.getItem('__amplify__USER_ID');
+    if (user){
+        console.log('Previous login detected')
+        window.location.href = '/app/components/index.html';
+    } else {
+        window.location.href = '/myclaimshelper/index.html';
+    }
+</script>
