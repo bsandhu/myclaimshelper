@@ -54,7 +54,7 @@ describe('mailParser', function () {
                 assert.equal(entry.errors.length, 0);
                 assert.deepEqual(entry.claimId, testClaim._id);
                 assert.deepEqual(entry.owner, 'DefaultUser');
-                assert.deepEqual(Object.keys(entry), ['claimId', 'owner', 'attachments', 'tags', 'mail', 'errors']);
+                assert.deepEqual(Object.keys(entry), ['claimId', 'fileNum', 'owner', 'attachments', 'tags', 'mail', 'errors']);
                 done();
             })
     });
@@ -114,25 +114,27 @@ describe('mailParser', function () {
 
     it('_get claim id', function (done) {
         var mailParser = new ms.MailParser();
-        var claimId = mailParser._getClaimId(
+        var info = mailParser._getClaimId(
             'FW: abc |claim id: X100',
             [
                 {insuranceCompanyFileNum: 'X100', owner: 'TestUser', _id: 5000}
             ],
             'TestUser');
-        assert.equal(claimId, 5000);
+        assert.equal(info[0], 5000);
+        assert.equal(info[1], 'X100');
         done();
     });
 
     it('_get non existent claim id', function () {
         var mailParser = new ms.MailParser();
-        var claimId = mailParser._getClaimId(
+        var info = mailParser._getClaimId(
             'FW: abc |claim id: XXX',
             [
                 {insuranceCompanyFileNum: 'X100', owner: 'TestUser'}
             ],
             'TestUser')
-        assert.equal(claimId, null);
+        assert.equal(info[0], null);
+        assert.equal(info[1], null);
     });
 
 

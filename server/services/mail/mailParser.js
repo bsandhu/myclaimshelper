@@ -27,7 +27,9 @@ MailParser.prototype.parseRequest = function (req, allKnownClaims, allKnownUserI
 
         // Match claim
         if (userId) {
-            var claimId = this._getClaimId(req.params.subject, allKnownClaims, userId);
+            var matchInfo = this._getClaimId(req.params.subject, allKnownClaims, userId);
+            var claimId = matchInfo[0];
+            var fileNum = matchInfo[1];
             if (!claimId) {
                 console.log('Failed to match to known claim');
                 try {
@@ -55,6 +57,7 @@ MailParser.prototype.parseRequest = function (req, allKnownClaims, allKnownUserI
     }
     return {
         'claimId': claimId,
+        'fileNum': fileNum,
         'owner': userId,
         'attachments': attachments,
         'tags': tags,
@@ -131,6 +134,7 @@ MailParser.prototype._getClaimId = function (subject, allClaimsByOwner, owner) {
     console.log('Matching known claims to subject: ' + subject);
     var tokens = subject.split(' ');
     var claimId = null;
+    var fileNum = null;
 
     _.each(tokens, function (token) {
         token = token.trim();
@@ -141,11 +145,12 @@ MailParser.prototype._getClaimId = function (subject, allClaimsByOwner, owner) {
             // Note: owner is filtered out by mongo query
             if (claimByOwner.insuranceCompanyFileNum == token || claimByOwner.fileNum == token ) {
                 claimId = claimByOwner._id;
+                fileNum = claimByOwner.fileNum || claimByOwner.insuranceCompanyFileNum;
                 console.log('Matched claim: ' + JSON.stringify(claimByOwner));
             }
         })
     });
-    return claimId;
+    return [claimId, fileNum];
 };
 
 /*
