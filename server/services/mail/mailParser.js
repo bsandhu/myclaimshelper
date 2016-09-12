@@ -140,10 +140,19 @@ MailParser.prototype._getClaimId = function (subject, allClaimsByOwner, owner) {
         token = token.trim();
         token = token.replace('"', '');
         token = token.replace("'", '');
+        console.log('Inspecting email subject token: ' + token);
 
         _.each(allClaimsByOwner, function (claimByOwner) {
             // Note: owner is filtered out by mongo query
-            if (claimByOwner.insuranceCompanyFileNum == token || claimByOwner.fileNum == token ) {
+            var insuranceCo = claimByOwner.insuranceCompanyFileNum
+                ? claimByOwner.insuranceCompanyFileNum.trim()
+                : claimByOwner.insuranceCompanyFileNum;
+
+            var fileNum = claimByOwner.fileNum
+                ? claimByOwner.fileNum.trim()
+                : claimByOwner.fileNum;
+
+            if (insuranceCo == token || fileNum == token ) {
                 claimId = claimByOwner._id;
                 fileNum = claimByOwner.fileNum || claimByOwner.insuranceCompanyFileNum;
                 console.log('Matched claim: ' + JSON.stringify(claimByOwner));
