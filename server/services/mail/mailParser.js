@@ -6,7 +6,8 @@ var _ = require('underscore');
 var assert = require('assert');
 
 
-function MailParser() {}
+function MailParser() {
+}
 
 util.inherits(MailParser, EventEmitter);
 
@@ -62,7 +63,8 @@ MailParser.prototype.parseRequest = function (req, allKnownClaims, allKnownUserI
         'attachments': attachments,
         'tags': tags,
         'mail': req.params,
-        'errors': errors};
+        'errors': errors
+    };
 };
 
 /**
@@ -144,15 +146,15 @@ MailParser.prototype._getClaimId = function (subject, allClaimsByOwner, owner) {
 
         _.each(allClaimsByOwner, function (claimByOwner) {
             // Note: owner is filtered out by mongo query
-            var insuranceCo = claimByOwner.insuranceCompanyFileNum
+            var insuranceCoOnClaim = claimByOwner.insuranceCompanyFileNum
                 ? claimByOwner.insuranceCompanyFileNum.trim()
                 : claimByOwner.insuranceCompanyFileNum;
 
-            var fileNum = claimByOwner.fileNum
+            var fileNumOnClaim = claimByOwner.fileNum
                 ? claimByOwner.fileNum.trim()
                 : claimByOwner.fileNum;
 
-            if (insuranceCo == token || fileNum == token ) {
+            if (insuranceCoOnClaim == token || fileNumOnClaim == token) {
                 claimId = claimByOwner._id;
                 fileNum = claimByOwner.fileNum || claimByOwner.insuranceCompanyFileNum;
                 console.log('Matched claim: ' + JSON.stringify(claimByOwner));
