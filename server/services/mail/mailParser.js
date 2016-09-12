@@ -85,6 +85,7 @@ MailParser.prototype._getAllKnownClaims = function (owner) {
                         defer.reject(err);
                     } else {
                         console.log(docs.length + ' known claims for ' + owner);
+                        console.log(docs);
                         defer.resolve(docs);
                     }
                 });
@@ -142,7 +143,7 @@ MailParser.prototype._getClaimId = function (subject, allClaimsByOwner, owner) {
         token = token.trim();
         token = token.replace('"', '');
         token = token.replace("'", '');
-        console.log('Inspecting email subject token: ' + token);
+        console.log('Inspecting email subject token: >' + token + '<');
 
         _.each(allClaimsByOwner, function (claimByOwner) {
             // Note: owner is filtered out by mongo query
@@ -154,7 +155,7 @@ MailParser.prototype._getClaimId = function (subject, allClaimsByOwner, owner) {
                 ? claimByOwner.fileNum.trim()
                 : claimByOwner.fileNum;
 
-            if (insuranceCoOnClaim == token || fileNumOnClaim == token) {
+            if (String(insuranceCoOnClaim) == String(token) || String(fileNumOnClaim) == String(token)) {
                 claimId = claimByOwner._id;
                 fileNum = claimByOwner.fileNum || claimByOwner.insuranceCompanyFileNum;
                 console.log('Matched claim: ' + JSON.stringify(claimByOwner));
