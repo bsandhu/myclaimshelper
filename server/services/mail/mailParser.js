@@ -6,7 +6,8 @@ var _ = require('underscore');
 var assert = require('assert');
 
 
-function MailParser() {}
+function MailParser() {
+}
 
 util.inherits(MailParser, EventEmitter);
 
@@ -62,7 +63,8 @@ MailParser.prototype.parseRequest = function (req, allKnownClaims, allKnownUserI
         'attachments': attachments,
         'tags': tags,
         'mail': req.params,
-        'errors': errors};
+        'errors': errors
+    };
 };
 
 /**
@@ -83,6 +85,7 @@ MailParser.prototype._getAllKnownClaims = function (owner) {
                         defer.reject(err);
                     } else {
                         console.log(docs.length + ' known claims for ' + owner);
+                        console.log(docs);
                         defer.resolve(docs);
                     }
                 });
@@ -140,10 +143,19 @@ MailParser.prototype._getClaimId = function (subject, allClaimsByOwner, owner) {
         token = token.trim();
         token = token.replace('"', '');
         token = token.replace("'", '');
+        console.log('Inspecting email subject token: >' + token + '<');
 
         _.each(allClaimsByOwner, function (claimByOwner) {
             // Note: owner is filtered out by mongo query
-            if (claimByOwner.insuranceCompanyFileNum == token || claimByOwner.fileNum == token ) {
+            var insuranceCoOnClaim = claimByOwner.insuranceCompanyFileNum
+                ? claimByOwner.insuranceCompanyFileNum.trim()
+                : claimByOwner.insuranceCompanyFileNum;
+
+            var fileNumOnClaim = claimByOwner.fileNum
+                ? claimByOwner.fileNum.trim()
+                : claimByOwner.fileNum;
+
+            if (String(insuranceCoOnClaim) == String(token) || String(fileNumOnClaim) == String(token)) {
                 claimId = claimByOwner._id;
                 fileNum = claimByOwner.fileNum || claimByOwner.insuranceCompanyFileNum;
                 console.log('Matched claim: ' + JSON.stringify(claimByOwner));
