@@ -4,16 +4,18 @@
         <!-- Mileage -->
         <form class="form-inline">
             <div class="form-group col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                <div class="col-lg-3 col-md-3 col-sm-4 col-xs-5 bottomMargin">
+                <div class="col-lg-3 col-md-3 col-sm-4 col-xs-5 bottomMargin" id="billing-item-mileage">
                     <div class="input-group">
-                        <input class="form-control input-sm" id="appendprepend" type="number"
+                        <input class="form-control input-sm" type="number"
                                data-bind="value: billingItem().mileage,
                                           disable: isDisabled">
                         <span class="input-group-addon">Miles</span>
                     </div>
                 </div>
                 <div class="col-lg-6 col-md-7 col-sm-6 col-xs-7" style="padding-left: 0">
-                    <select class="form-control input-sm bigdrop" type="text" style="width: 90%;"
+                    <select id="billing-item-select-1"
+                            class="form-control input-sm bigdrop"
+                            type="text" style="width: 90%;"
                             data-bind="select2: billingItem().mileageCode,
                                        myoptions: billingCodesDatasource(),
                                        disable: isDisabled">

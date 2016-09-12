@@ -217,6 +217,10 @@ div {
     overflow: hidden;
 }
 
+.hide {
+    display: none;
+}
+
 .boxShadow {
     border: 1px solid darkgrey;
     box-shadow: 2px 2px 2px lightgray;
@@ -907,8 +911,12 @@ h3.panel-title {
 }
 
 /* Hover/Selected menu item */
+.slideout-menu ul li a:hover,
+.slideout-menu ul li a:focus,
 .navbar-default .navbar-nav > li > a:hover,
-.navbar-default .navbar-nav > li > a:focus {
+.navbar-default .navbar-nav > li > a:focus,
+.slideout-menu a:focus,
+.slideout-menu a:hover {
     color: #6bd4ff;
     transition: color 300ms ease-out;
 }
@@ -1096,4 +1104,127 @@ h3.panel-title {
 .notification .fa-icon-warning-sign {
     margin-right: 9px;
     color: #fd3333;
+}
+
+/**********************************************************/
+/**** Slide out menu ****/
+/**********************************************************/
+
+.slideout-menu {
+    font-size: 18px;
+    padding: 8px;
+    position: fixed;
+    top: 73px;
+    width: 150px;
+    height: 0;
+    background: #34495e;
+    z-index: 100;
+    border: 1px solid #e7e7e7;
+    color: white;
+    border-top: 0;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
+    text-align: center;
+}
+
+.slideout-menu .items {
+    list-style: none;
+    font-weight: 300;
+    font-size: 16px;
+    text-align: center;
+    text-decoration: none;
+}
+
+.slideout-menu .item {
+    padding: 5px;
+}
+
+.slideout-menu a {
+    color: white;
+    text-decoration: none;
+}
+
+/**********************************************************/
+/**** Welcome banner ****/
+/**********************************************************/
+
+.welcome.banner {
+    font-size: 24px;
+    padding-bottom: 20px;
+    padding-top: 20px;
+    font-weight: 900;
+    color: #6bd4ff;
+}
+
+.welcome.modal-content {
+    background-color: rgb(49, 54, 58);
+    border: 3px solid rgb(171, 175, 176);
+    color: white;
+    font-family: Lato, sans-serif;
+    border-radius: 1px;
+}
+
+.welcome.modal-dialog {
+    border: none;
+}
+
+.welcome.modal-body {
+    height: 40vh;
+    max-height: 200px;
+    font-size: 16px;
+}
+
+.welcome.modal-footer {
+    padding: 15px;
+    text-align: center;
+    border-top: none;
+}
+
+.welcome.btn-link {
+    color: #E3F2FD;
+    border: 1px solid #E3F2FD;
+}
+
+.welcome.btn-link.no {
+    color: lightgray;
+    border: 1px solid lightgray;
+}
+
+/**********************************************************/
+/**** Hopscotch overrides ****/
+/**********************************************************/
+
+div.hopscotch-bubble {
+    color: #E3F2FD;
+    background-color: rgb(49, 54, 58);
+    border: 5px solid rgb(171, 175, 176);
+    border-radius: 2px;
+}
+
+div.hopscotch-bubble h3 {
+    color: #E3F2FD;
+    font-family: Lato, sans-serif;
+}
+
+div.hopscotch-bubble .hopscotch-bubble-arrow-container.up .hopscotch-bubble-arrow {
+    border-bottom: 17px solid rgb(49, 54, 58);
+}
+
+div.hopscotch-bubble .hopscotch-bubble-arrow-container.up .hopscotch-bubble-arrow-border {
+    border-bottom: 17px solid rgb(171, 175, 176);
+}
+
+div.hopscotch-bubble .hopscotch-bubble-arrow-container.left .hopscotch-bubble-arrow {
+    border-right: 17px solid rgb(49, 54, 58);;
+}
+
+div.hopscotch-bubble .hopscotch-bubble-arrow-container.left .hopscotch-bubble-arrow-border {
+    border-right: 17px solid rgb(171, 175, 176);
+}
+
+div.hopscotch-bubble .hopscotch-bubble-arrow-container.right .hopscotch-bubble-arrow {
+    border-left: 17px solid rgb(49, 54, 58);
+}
+
+div.hopscotch-bubble .hopscotch-bubble-arrow-container.right .hopscotch-bubble-arrow-border {
+    border-left: 17px solid rgb(171, 175, 176);
 }

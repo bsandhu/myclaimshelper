@@ -1,47 +1,98 @@
-.no-print {
-    display: none;
-}
+/**********************************************/
+/* Commons */
+/**********************************************/
 
-.yes-print {
-    display: normal;
-}
-
-#shortcut, #header, #left-panel, #ribbon, #sparks, .page-title, .panel-heading {
-    display: none !important;
+body {
+    height: 100%;
+    font-family: "Open Sans", Arial, Helvetica, Sans-Serif, serif;
+    font-size: 14px;
 }
 
 table {
-    border-spacing: 0px;
+    border-spacing: 0;
 }
 
-.invoice-body tr th {
+strong {
+    font-weight: 600;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.pull-right {
+    float: right !Important;
+}
+
+.pull-left {
+    float: left !Important;
+}
+
+.row {
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+/**********************************************/
+/* Template 1 */
+/**********************************************/
+
+.print1.invoice-body tr th {
     border-bottom: 1px solid #333;
     border-right: 1px solid #333;
 }
 
-.invoice-body tr td {
+.print1.invoice-body tr td {
     border-bottom: 1px dotted #333;
     border-right: 1px dotted #333;
     padding-left: 5px;
-    padding-top: 0px;
+    padding-top: 0;
 }
 
-.invoice-body tr td:last-child {
+.print1.invoice-body tr td:last-child {
     border-right: none;
 }
 
-.invoice-body tr:last-child td {
+.print1.invoice-body tr:last-child td {
     border-bottom: none;
 }
 
-.invoice {
-    border: none;
+
+/**********************************************/
+/* Template 2 */
+/**********************************************/
+
+.print2.invoice-body tr th {
+    background-color: #efefef;
+    border-bottom: 2px solid #ddd;
+    padding: 5px;
+    text-align: left;
+    font-size: 14px;
 }
 
-.invoice td a {
-    font-weight: normal;
+.print2.invoice-body tr td {
+    font-size: 14px;;
+    border-bottom: 1px solid rgb(221, 221, 221);
+    padding-left: 5px;
+    padding-top: 0;
+    line-height: 1.5;
 }
 
-.invoice-body table td, .invoice-body table th, .invoice-header, .invoice-client-info, .invoice-footer {
-    font-family: 'Segoe UI', Tahoma, sans-serif !important;
+.print2.invoice-body tr td:last-child {
+    border-right: none;
+}
+
+.print2.invoice-body tr:last-child td {
+    border-bottom: none;
+}
+
+.print2.invoice-header-total {
+    background: #404040 !important;
+    padding: 8px;
+    color: white;
+    font-size: 1.1em;
+}
+
+.print2.invoice-header-company {
+    font-size: 1.3em;
 }

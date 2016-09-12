@@ -4,7 +4,8 @@
     <div class="panel-heading">
         <h3>
             <span>Claim</span>
-            <span class="color-grey"
+            <span id="claim-id"
+                  class="color-grey"
                   data-bind="text: (claim().fileNum() || '') + ' / ' + (claim().insuranceCompanyFileNum() || '')"></span>
             <span data-bind="ifnot: isPartiallyCollapsed">
                 <span class="color-grey" style="font-size: .8em"
@@ -186,6 +187,7 @@
             <div class="btn-group inline leftMargin5"
                  data-bind="ifnot: isClaimClosed">
                 <button type="button"
+                        id="claim-newtask-btn"
                         class="btn btn-default dropdown-toggle btn-info"
                         data-toggle="dropdown">
                     <span class="fa fa-plus"></span>
@@ -268,6 +270,7 @@
                 <div data-bind="ifnot: inEditMode && isPartiallyCollapsed" class="inline">
                     <div class="btn-group inline">
                         <button type="button"
+                                id="claim-billing-btn"
                                 class="btn btn-default dropdown-toggle btn-info"
                                 data-toggle="dropdown">
                             <span class="fa fa-fw fa-credit-card"></span>

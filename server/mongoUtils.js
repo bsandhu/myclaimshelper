@@ -292,3 +292,4 @@ exports.BILLING_ITEMS_COL_NAME = 'BillingItems';
 exports.BILLING_PROFILE_COL_NAME = 'BillingProfiles';
 exports.USERPROFILE_COL_NAME = 'UserProfiles';
 exports.NOTIFICATIONS_COL_NAME = 'Notifications';
+exports.ZIPCODES_COL_NAME = 'ZipCodes';

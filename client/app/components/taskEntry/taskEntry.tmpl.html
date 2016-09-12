@@ -3,6 +3,7 @@
         <h3>
             <i data-bind="taskEntryTag: claimEntry().tag()"></i>
             <div class="inline"
+                 id="taskEntryHeading"
                  data-bind="text: niceHeader(),
                             attr: {title: 'Task Id ' + claimEntry()._id()}"></div>
         </h3>
@@ -85,7 +86,7 @@
                 </div>
             </div>
 
-            <div class="form-group">
+            <div class="form-group" id="task-entry-attach">
                 <label for="claimEntry-dueDate" class="control-label">Attachments</label>
                 <div>
                     <!-- File upload component -->
@@ -140,7 +141,10 @@
 
                 </div>
                 <div class="col-lg-5">
-                    <button type="button" class="btn btn-default pull-right" data-bind="click: onCancel">Close</button>
+                    <button id="task-entry-close"
+                            type="button"
+                            class="btn btn-default pull-right"
+                            data-bind="click: onCancel">Close</button>
 
                     <!-- ko if: isClosed -->
                     <span class="text-primary leftMargin5">

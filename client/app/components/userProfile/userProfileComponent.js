@@ -1,7 +1,9 @@
-define(['jquery', 'knockout', 'KOMap', 'amplify', 'app/utils/events', 'app/utils/session',
-        'text!app/components/userProfile/userProfile.tmpl.html', 'model/profiles', 'app/utils/audit'],
+define(['jquery', 'knockout', 'KOMap', 'amplify',
+        'app/utils/events', 'app/utils/session', 'app/utils/responsive',
+        'text!app/components/userProfile/userProfile.tmpl.html', 'model/profiles',
+        'app/utils/audit', 'app/utils/consts'],
 
-    function ($, ko, KOMap, amplify, Events, Session, viewHtml, UserProfile, Audit) {
+    function ($, ko, KOMap, amplify, Events, Session, Responsive, viewHtml, UserProfile, Audit, Consts) {
         'use strict';
 
         function UserProfileComponent(params) {
@@ -45,7 +47,14 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'app/utils/events', 'app/utils
                 .done(function (resp) {
                     console.debug('Loaded UserProfile ' + JSON.stringify(resp.data).substr(0, 100));
                     KOMap.fromJS(resp.data, {}, this.userProfile);
-                    Session.setCurrentUserProfile(resp.data);
+
+                    var userProfile = resp.data;
+                    Session.setCurrentUserProfile(userProfile);
+                    if (userProfile[Consts.CLAIMS_TOUR_PROFILE_KEY] == undefined ||
+                        userProfile[Consts.CLAIMS_TOUR_PROFILE_KEY] == false) {
+                        amplify.publish(Events.SHOW_WELCOME_MSG);
+                    }
+                    amplify.publish(Events.LOGGED_IN);
                     amplify.publish(Events.LOADED_USER_PROFILE);
                 }.bind(this))
                 .fail(function (resp) {
@@ -61,8 +70,8 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'app/utils/events', 'app/utils
 
         UserProfileComponent.prototype.checkAndSetUserAuthProfile = function (onDone) {
             if (!Session.getCurrentUserAuthProfile()) {
-                // Delegate to Auth0 service
 
+                // Delegate to Auth0 service
                 $.getJSON('/config')
                     .then(function (resp) {
                         return resp.data.Auth0;
@@ -81,8 +90,9 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'app/utils/events', 'app/utils
                                 Session.setCurrentUserAuthProfile(profile);
                                 Session.setCurrentUserAuthToken(token);
                                 Session.setCurrentUserId(profile.nickname);
-                                amplify.publish(Events.LOGGED_IN);
-                                Audit.info('Login');
+                                Audit.info('LoggedIn', {deviceInfo: Responsive.deviceInfo()});
+                                // If existing credentials are not found, wait till the profile
+                                // is created to trigger LOGGED_IN ev
                                 onDone();
                             }
                         })
@@ -92,6 +102,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'app/utils/events', 'app/utils
                     });
             } else {
                 amplify.publish(Events.LOGGED_IN);
+                Audit.info('LoggedIn', {deviceInfo: Responsive.deviceInfo()});
                 onDone();
             }
         };

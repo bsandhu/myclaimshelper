@@ -2,6 +2,7 @@ var jQuery = require('jquery-deferred');
 var Mailgun = require('mailgun-js');
 var _ = require('underscore');
 var lodash = require('lodash');
+var moment = require('moment-timezone');
 
 var config = require('../../config.js');
 var claimsService = require("../../services/claimsService.js");
@@ -74,30 +75,23 @@ var process = function (req, res, testMode) {
 
 var saveEntry = function (mailEntry) {
     console.log('Saving claim entry');
-    entry = constructClaimEntry(mailEntry);
-    attachments = mailEntry.attachments;
-
-    for (var i = 0; i < attachments.length; i++) {
-        var metadata = {
-            id: attachments[i].id,
-            name: attachments[i].name,
-            size: attachments[i].size
-        };
-        entry.attachments.push(metadata);
-    }
     var d = jQuery.Deferred();
-    claimsService.saveOrUpdateClaimEntryObject(entry)
-        .then(function (obj) {
-            if (obj.status == 'Success') {
-                mailEntry._id = obj.data._id;
-                d.resolve(mailEntry);
-            }
-            // saveOrUpdateClaimEntryObject always returns 'resolved'
-            // 'error' message is transmitted via 'status' flag.
-            else {
-                mailEntry.error = obj.details;
-                d.reject(mailEntry);
-            }
+
+    constructClaimEntry(mailEntry, mailEntry.attachments)
+        .then(function (entry) {
+            claimsService.saveOrUpdateClaimEntryObject(entry)
+                .then(function (obj) {
+                    if (obj.status == 'Success') {
+                        mailEntry._id = obj.data._id;
+                        d.resolve(mailEntry);
+                    }
+                    // saveOrUpdateClaimEntryObject always returns 'resolved'
+                    // 'error' message is transmitted via 'status' flag.
+                    else {
+                        mailEntry.error = obj.details;
+                        d.reject(mailEntry);
+                    }
+                });
         });
     return d.promise();
 };
@@ -129,7 +123,7 @@ var notifySuccess = function (sendEmail, mailEntry) {
     broadcastNoHTTP(
         Consts.NotificationName.NEW_MSG,
         Consts.NotificationType.INFO,
-        '<b>Email processed</b> ' + mailEntry.mail.subject + '  <a href="#/claimEntry/' + mailEntry.claimId + '/' + mailEntry._id + '">Goto task</a>',
+        '<b>Email processed</b> ' + mailEntry.mail.subject + '<a href="#/claimEntry/' + mailEntry.claimId + '/' + mailEntry._id + '">Goto task</a>',
         mailEntry.owner)
         .always(function email() {
             if (sendEmail) {
@@ -162,23 +156,67 @@ var notifyFailure = function (sendEmail, mailEntry) {
 
 // **** Helpers ****
 
-function constructClaimEntry(data) {
-    var entry = new ClaimEntry();
-    entry.entryDate = (new Date()).getTime();
-    entry.dueDate = (DateUtils.startOfToday()).getTime();
-    entry.updateDate = (new Date()).getTime();
-    entry.summary = data.mail.subject;
-    entry.from = data.mail.from;
-    entry.description = data.mail['body-html'];
-    entry.claimId = data.claimId;
-    entry.tag = data.tags || [];
-    entry.tag.push('email');
-    entry.state = States.TODO;
-    entry.owner = data.owner;
+function constructClaimEntry(data, attachments) {
+    var d = jQuery.Deferred();
 
-    // Service does the linking to the ClaimEntry
-    entry.billingItem = new BillingItem();
-    return entry;
+    // Get user profile
+    mongoUtils.getEntityById(data.owner, mongoUtils.USERPROFILE_COL_NAME, data.owner)
+        .then(function (err, profile) {
+            var defer = jQuery.Deferred();
+            if (!err) {
+                defer.resolve(profile);
+            } else {
+                console.error('Fatal. Could not fund profile for user: ' + data.owner);
+                defer.reject(err);
+            }
+            return defer;
+        })
+        // Get TZ for zipcode in profile
+        .then(function (profile) {
+            mongoUtils
+                .connect()
+                .then(function (db) {
+                    mongoUtils.findEntities(mongoUtils.ZIPCODES_COL_NAME, {'zip': profile.contactInfo.zip}, db, false)
+                        .then(function (zipCodesInfo) {
+                            var zipInfo = zipCodesInfo[0];
+                            console.log('User in TZ: ' + zipInfo.timezone);
+
+                            // UI stores dates in local TZ
+                            // Use Moment TZ to resolve offset
+                            var zone = moment.tz.zone(zipInfo.timezone);
+                            var zoneOffsetInMinutes = zone.offset((DateUtils.startOfToday()).getTime());
+
+                            var entry = new ClaimEntry();
+                            entry.entryDate = (new Date()).getTime();
+                            entry.dueDate = (DateUtils.startOfTodayUTC()).getTime() + (zoneOffsetInMinutes * 60 * 1000);
+                            entry.updateDate = (new Date()).getTime();
+                            entry.summary = data.mail.subject;
+                            entry.from = data.mail.from;
+                            entry.description = data.mail['body-html'];
+                            entry.claimId = data.claimId;
+                            entry.tag = data.tags || [];
+                            entry.tag.push('email');
+                            entry.state = States.TODO;
+                            entry.owner = data.owner;
+
+                            // Service does the linking to the ClaimEntry
+                            entry.billingItem = new BillingItem();
+
+                            // Associate attachment metadata
+                            for (var i = 0; i < attachments.length; i++) {
+                                var metadata = {
+                                    id: attachments[i].id,
+                                    name: data.fileNum + '-' + attachments[i].name,
+                                    size: attachments[i].size
+                                };
+                                entry.attachments.push(metadata);
+                            }
+
+                            d.resolve(entry);
+                        })
+                })
+        })
+    return d.promise();
 }
 
 function sendEmailViaMailgun(recipient, subject, header, body) {
@@ -190,11 +228,12 @@ function sendEmailViaMailgun(recipient, subject, header, body) {
     var compiled = _.template(emailTemplate);
     header = lodash.trim(header, '"');
     body = lodash.trim(body, '"');
-    var htmlBody = compiled({header : header, body: body});
+    var htmlBody = compiled({header: header, body: body});
 
     var mailgun = new Mailgun({
         apiKey: config.mailgun.api_key,
-        domain: config.mailgun.domain});
+        domain: config.mailgun.domain
+    });
     var data = {
         from: 'MyClaimsHelper <no-reply@myclaimshelper.com>',
         to: recipient,
@@ -213,11 +252,11 @@ function sendEmailViaMailgun(recipient, subject, header, body) {
 }
 
 var emailTemplate = '<body style="font-family: ""Arial", sans-serif">' +
-'<h3 style="color: #045FB4">MyClaimsHelper</h3>' +
-'<strong><%= header %></strong>' +
-'<br/>' +
-'<br/>' +
-'<%= body %>' +
-'</body>'
+    '<h3 style="color: #045FB4">MyClaimsHelper</h3>' +
+    '<strong><%= header %></strong>' +
+    '<br/>' +
+    '<br/>' +
+    '<%= body %>' +
+    '</body>'
 
 exports.process = process;

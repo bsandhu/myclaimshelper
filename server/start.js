@@ -168,10 +168,19 @@ function setupBillingServiceRoutes() {
 
 function setupProfileServiceRoutes() {
     server.post('/userProfile', authenticate, profileService.saveOrUpdateUserProfileREST);
+    server.post('/userProfile/modify', authenticate, profileService.modifyUserProfileREST);
     server.get('/userProfile/:id', authenticate, profileService.checkAndGetUserProfileREST);
 }
 
 function setupStaticRoutes() {
+    // Static site
+    server.get(/\/myclaimshelper\/.*/, serveStaticWith304({
+        directory: 'site',
+        'default': 'index.html',
+        'file': 'index.html',
+        maxAge: 60 * 60 * 24
+    }));
+
     // Server side code shared with the client
     server.get(/\/model\/.*/, restify.serveStatic({
         directory: 'server'
@@ -192,7 +201,15 @@ function setupStaticRoutes() {
         directory: 'client',
         maxAge: 60 * 60 * 24
     }));
+    server.get(/\/fonts\/.*/, serveStaticWith304({
+        directory: 'client',
+        maxAge: 60 * 60 * 24
+    }));
     server.get(/\/img\/.*/, serveStaticWith304({
+        directory: 'client',
+        maxAge: 60 * 60 * 24
+    }));
+    server.get(/\/audio\/.*/, serveStaticWith304({
         directory: 'client',
         maxAge: 60 * 60 * 24
     }));
@@ -201,8 +218,8 @@ function setupStaticRoutes() {
         maxAge: 60 * 60 * 24
     }));
     server.get('/.*/ ', serveStaticWith304({
-        'directory': 'client',
-        'default': '/app/components/index.html',
+        'directory': 'site',
+        'default': 'myclaimshelper/redirect.html',
         maxAge: 60 * 60 * 24
     }));
 }
@@ -216,7 +233,7 @@ function setUpWSConn() {
         console.log("Web Socket connection established");
 
         // UserId is used as roomName
-        socket.on('joinRoom', function(userId){
+        socket.on('joinRoom', function (userId) {
             console.log('WS addToRoom: ' + userId);
             socket.join(userId);
         });

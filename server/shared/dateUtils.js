@@ -145,6 +145,10 @@ define([],
             return new Date(now().getFullYear(), now().getMonth(), now().getDate(), 0, 0);
         }
 
+        function startOfTodayUTC() {
+            return new Date(now().getUTCFullYear(), now().getUTCMonth(), now().getUTCDate(), 0, 0);
+        }
+
         function endOfToday() {
             return new Date(now().getFullYear(), now().getMonth(), now().getDate(), 23, 59, 59);
         }
@@ -179,19 +183,20 @@ define([],
         }
 
         return {
-            'niceDate': niceDate,
-            'stripTime': stripTime,
-            'niceLocaleDate': niceLocaleDate,
-            'toDatePickerFormat': toDatePickerFormat,
-            'toTimePickerFormat': toTimePickerFormat,
-            'fromDatetimePickerFormat': fromDatetimePickerFormat,
-            'enableJSONDateHandling': enableJSONDateHandling,
-            'DATE_PICKER_FORMAT': 'm/d/Y',
+            'niceDate'              : niceDate,
+            'stripTime'             : stripTime,
+            'niceLocaleDate'        : niceLocaleDate,
+            'toDatePickerFormat'    : toDatePickerFormat,
+            'toTimePickerFormat'    : toTimePickerFormat,
+            'fromDatetimePickerFormat'  : fromDatetimePickerFormat,
+            'enableJSONDateHandling'    : enableJSONDateHandling,
+            'DATE_PICKER_FORMAT'    : 'm/d/Y',
             'TIME_PICKER_FORMAT'    : 'H:i',
             'DEFAULT_TIME_VALUE'    : '09:00',
             'MILLIS_IN_A_DAY'       : millisInADay,
             'isYesterdayOrBefore'   : isYesterdayOrBefore,
             'startOfToday'          : startOfToday,
+            'startOfTodayUTC'       : startOfTodayUTC,
             'endOfToday'            : endOfToday,
             'now'                   : now,
             'startOfWeekInMillis'   : startOfWeekInMillis,

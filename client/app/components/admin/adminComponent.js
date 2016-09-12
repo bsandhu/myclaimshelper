@@ -67,7 +67,7 @@ define(['jquery', 'knockout', 'amplify',
         }
 
         AdminVM.prototype.getUnreadMsgCount = function () {
-            ajaxUtils.getJSON('notification/unreadMsgCount')
+            ajaxUtils.getJSON('/notification/unreadMsgCount')
                 .done(function (resp) {
                     console.log('Unread msg count: ' + resp);
                     amplify.publish(Events.UPDATE_UNREAD_MSGS_COUNT, resp.data);
@@ -86,7 +86,7 @@ define(['jquery', 'knockout', 'amplify',
         AdminVM.prototype.onShowMsgs = function () {
             this.readyToRender(true);
             $('#msgs-modal').modal('show');
-            ajaxUtils.getJSON('notification/unreadMsgs')
+            ajaxUtils.getJSON('/notification/unreadMsgs')
                 .done(function (resp) {
                     console.log('Loaded unread msgs: ' + JSON.stringify(resp));
                     this.msgs(resp.data);

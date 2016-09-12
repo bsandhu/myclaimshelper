@@ -13,6 +13,7 @@ describe('profileService', function () {
     up.billingProfile.distanceUnit = 'mile';
     up.billingProfile.timeRate = 1.2;
     up.billingProfile.distanceRate = 0.3;
+    up.owner = "TestOwner";
 
     var tempTestId = 'TestUser' + new Date().getTime();
 
@@ -79,6 +80,23 @@ describe('profileService', function () {
             done();
         }
         profileService.checkAndGetUserProfileREST(req, res);
+    });
+
+    it('modify existing', function (done) {
+        profileService
+            ._modifyUserProfile(tempTestId, {'claimsTourDone': true})
+            .then(function () {
+                mongoUtils
+                    .connect()
+                    .then(function (db) {
+                        mongoUtils.findEntities(mongoUtils.USERPROFILE_COL_NAME, {"_id": tempTestId}, db, false)
+                            .then(function (profiles) {
+                                var profile = profiles[0];
+                                assert.equal(profile.claimsTourDone, true);
+                                done();
+                            });
+                    })
+            });
     });
 
 });

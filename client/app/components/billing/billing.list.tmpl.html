@@ -37,13 +37,14 @@
                 </div>
                 -->
                 <div class="col-lg-3 col-md-3 col-sm-4 col-xs-12"
-                     style="padding: 0px;">
+                     style="padding: 0;">
                     <div class="inline" style="padding: 0;">
                         <div class="form-group rightBorderSolid inline rightMargin5 dropdown-container">
                             <!-- Group selection -->
                             <div class="inline text-between-dropdown leftMargin5 rightMargin5 topMargin5">Status</div>
                             <div class="inline">
                                 <select class="form-control input dropdown topMargin5"
+                                        id="billingListStatusFilter"
                                         data-bind="value: groupBy,
                                                options: groupByOptions"></select></div>
                         </div>
@@ -74,7 +75,7 @@
                         </th>
                         <th data-field="id" data-sortable="true">Bill Id</th>
                         <th>Status</th>
-                        <th data-field="submissionDate" data-sortable="true">Submitted on</th>
+                        <th data-field="submissionDate" data-sortable="true" id="billigListSubmitHeader">Submitted on</th>
                         <th data-field="paidDate" data-sortable="true">Paid on</th>
                         <th data-field="total" class="billAmount" data-sortable="true">Total</th>
                         <th data-field="totaTime" class="billAmount hidden-xs" data-sortable="true">Time</th>

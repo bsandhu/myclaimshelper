@@ -12,16 +12,17 @@ function uploadFile(req, res) {
     assert.ok(req.files.uploadedFile, 'Expecting uploadedFile as a parameter');
 
     var file = req.files.uploadedFile;
-    console.info('Got file: ' + file.name + ', ' + file.path);
+    var fileName = req.params.fileName;
+    console.info('Got file: ' + fileName + ', ' + file.path);
 
-    saveToDB(file.name, file.path)
+    saveToDB(fileName, file.path)
         .done(function okResponse(seqNum) {
             var fileMetadata = {
                id   : seqNum,
-               name : file.name,
+               name : fileName,
                size : file.size
             };
-            console.log('Processes file. Metadata: ' + JSON.stringify(fileMetadata));
+            console.log('Processed file. Metadata: ' + JSON.stringify(fileMetadata));
             res.statusCode = 200;
             res.setHeader('content-type', 'application/json');
             res.end(JSON.stringify(fileMetadata));

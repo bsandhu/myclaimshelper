@@ -6,6 +6,7 @@ define([], function(){
         SHOW_CLAIMS_LIST     : 'ShowClaimsList',
         CLAIMS_LIST_STATUS_CHANGE : 'CLAIMS_LIST_STATUS_CHANGE',
         SHOW_DASHBOARD       : 'ShowDashboard',
+        SHOW_WELCOME_MSG     : 'SHOW_WELCOME_MSG',
 
         SHOW_CONTACT         : 'SHOW_CONTACT',
         SHOW_CONTACTS        : 'SHOW_CONTACTS',

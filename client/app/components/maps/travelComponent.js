@@ -2,11 +2,11 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore',
         'app/components/summary/summaryVM',
         'text!app/components/maps/travelComponent.tmpl.html',
         'model/tags', 'model/claimEntry',
-        'shared/dateUtils', 'app/utils/ajaxUtils', 'app/utils/events',
+        'shared/dateUtils', 'app/utils/ajaxUtils', 'app/utils/events', 'app/utils/audit',
         'app/utils/responsive',
         'async!https://maps.googleapis.com/maps/api/js?key=AIzaSyBB-Qincf0sNQcsu5PzZh7znG3GiB98GRU&libraries=places&signed_in=true&v=3.exp'],
 
-    function ($, ko, KOMap, amplify, _, SummaryVM, viewHtml, Tags, ClaimEntry, DateUtils, AjaxUtils, Events, Responsive) {
+    function ($, ko, KOMap, amplify, _, SummaryVM, viewHtml, Tags, ClaimEntry, DateUtils, AjaxUtils, Events, Audit, Responsive) {
         'use strict';
 
         function TravelVM(params) {
@@ -183,11 +183,13 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore',
             }, function (res, status) {
                 if (status == google.maps.DirectionsStatus.OK) {
                     self.dirDisplay.setDirections(res);
+                    Audit.info('TravelShowRoutes');
                 } else {
                     console.error('Error fetching directions. ' + status);
                     console.error(res);
+                    Audit.error('TravelShowRoutes');
                 }
-            })
+            });
         }
 
         /***************************************************************/
@@ -346,6 +348,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore',
             if (!directionsVisible) {
                 self.showDirections(false);
             }
+            Audit.info('TravelMapPrint');
             return false;
         }
 
@@ -359,6 +362,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore',
                     {scrollTop: $(parent).scrollTop() + $(element).offset().top},
                     {duration: 'slow', easing: 'easeInQuart'});
             }
+            Audit.info('TravelDirections');
         }
 
         return {viewModel: TravelVM, template: viewHtml};

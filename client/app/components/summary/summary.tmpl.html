@@ -53,19 +53,20 @@
 
     <div class="panel-body">
         <div>
-            <table class="table table-hover summaryTable">
-                <thead class="hidden-xs">
-                <th>&nbsp;</th>
-                <th>File num.</th>
-                <th>Insured</th>
-                <th>Claimant</th>
-                <th>Task</th>
-                <th>Due Date</th>
-                <th>Status</th>
+            <table class="table table-hover summaryTable" id="summaryTable">
+                <thead class="hidden-xs" id="summaryTableHeader">
+                    <th>&nbsp;</th>
+                    <th>File num.</th>
+                    <th>Insured</th>
+                    <th id="summaryTableHeader3">Claimant</th>
+                    <th id="summaryTableHeader4">Task</th>
+                    <th>Due Date</th>
+                    <th>Status</th>
                 </thead>
 
                 <tbody data-bind="foreach : {data: arrangeByKeys, as: 'groupKey'}"
-                       class="summaryGroupTableBody">
+                       class="summaryGroupTableBody"
+                       id="summaryTableBody">
 
                 <!-- Header row -->
                 <tr class="summaryGroupHeaderRow">

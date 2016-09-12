@@ -1,3 +1,4 @@
+var SampleData = require('./sampleData.js');
 var config = require('./../config.js');
 var mongoUtils = require('./../mongoUtils.js');
 var sendResponse = require('./claimsService.js').sendResponse;
@@ -27,6 +28,18 @@ function _getUserProfile(search, db) {
     return result;
 }
 
+function _modifyUserProfile(id, attrsAsJson) {
+    var defer = jQuery.Deferred();
+    mongoUtils.modifyEntityAttr(id, mongoUtils.USERPROFILE_COL_NAME, attrsAsJson)
+        .then(function (results) {
+            defer.resolve(results);
+        })
+        .fail(function (err) {
+            defer.reject(err);
+        });
+    return defer;
+}
+
 
 // REST ------------------------------
 
@@ -38,8 +51,19 @@ function getUserProfileREST(req, res) {
 
     db.then(_.partial(_getUserProfile, search))
         .then(
-        _.partial(sendResponse, res, null),
-        _.partial(sendResponse, res, 'Failed to get UserProfile  ' + req.params.id));
+            _.partial(sendResponse, res, null),
+            _.partial(sendResponse, res, 'Failed to get UserProfile  ' + req.params.id));
+}
+
+function modifyUserProfileREST(req, res) {
+    var reqBody = req.body;
+    var id = reqBody.id;
+    var attrsAsJson = reqBody.attrsAsJson;
+    console.log("Modify profile " + id+ ". Attrs: " + attrsAsJson);
+    
+    _modifyUserProfile(id, attrsAsJson)
+        .then(_.partial(sendResponse, res, null, {}),
+              _.partial(sendResponse, res, 'Failed to modify profile ' + id));
 }
 
 // :: Dict -> Dict -> None
@@ -49,9 +73,9 @@ function saveOrUpdateUserProfileREST(req, res) {
 
     _saveOrUpdateUserProfile(userProfile)
         .then(function () {
-            sendResponse(res, null, userProfile)
-        },
-        _.partial(sendResponse, res, 'Failled to save ' + userProfile));
+                sendResponse(res, null, userProfile)
+            },
+            _.partial(sendResponse, res, 'Failled to save ' + userProfile));
 }
 
 function checkAndGetUserProfileREST(req, res) {
@@ -67,8 +91,12 @@ function checkAndGetUserProfileREST(req, res) {
 
     // If not make a copy of the default profile
     function copyDefaultProfile() {
-        mongoUtils.getEntityById(DEFAULT_USER, USERPROFILE_COL_NAME, DEFAULT_USER)
 
+        // Setup sample data for new user
+        SampleData.setupFor(userId)
+            .then(function getDefaultProfile() {
+                return mongoUtils.getEntityById(DEFAULT_USER, USERPROFILE_COL_NAME, DEFAULT_USER)
+            })
             .then(function copyDefaultProfile(err, defaultProfile) {
                 console.log('Creating new profile for: ' + userId);
                 if (err) {
@@ -89,4 +117,6 @@ function checkAndGetUserProfileREST(req, res) {
 exports.saveOrUpdateUserProfileREST = saveOrUpdateUserProfileREST;
 exports.getUserProfileREST = getUserProfileREST;
 exports.checkAndGetUserProfileREST = checkAndGetUserProfileREST;
+exports._modifyUserProfile = _modifyUserProfile;
+exports.modifyUserProfileREST = modifyUserProfileREST;
 exports.DEFAULT_USER = DEFAULT_USER;

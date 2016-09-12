@@ -11,12 +11,12 @@
     <!-- Favicons -->
     <link rel="shortcut icon" href="img/favicon/favicon.ico" type="image/x-icon">
     <link rel="icon" href="img/favicon/favicon.ico" type="image/x-icon">
-    <audio id="msgAlertAudio" src="audio/messagebox.mp3" preload="auto"></audio>
+    <audio id="msgAlertAudio" src="/audio/messagebox.mp3" preload="auto"></audio>
 
     <!-- CSS -->
     <link rel="stylesheet" type="text/css" href='https://fonts.googleapis.com/css?family=Lato'>
-    <link rel="stylesheet" type="text/css" href="css/index-lib-built.css">
-    <link rel="stylesheet" type="text/css" href="css/app.css">
+    <link rel="stylesheet" type="text/css" href="/css/index-lib-built.css">
+    <link rel="stylesheet" type="text/css" href="/css/app.css">
 
     <script src="../../../lib/lock-9.1.min.js"></script>
     <script src="../../../lib/require.js"></script>
@@ -37,16 +37,22 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
+                <span class="icon-bar hidden-xs"></span>
             </button>
-            <a class="navbar-brand" href="#/home" style="font-size: 26px">
+            <a class="navbar-brand"
+               id="navbar-brand-logo"
+               href="#/home" style="font-size: 26px">
                 Claims<span class="secondary">Helper</span>
             </a>
         </div>
         <div id="navbar" class="navbar-collapse collapse" aria-expanded="false" style="height: 1px;">
             <ul class="nav navbar-nav">
-                <li><a href="#/home" data-toggle="collapse" data-target=".navbar-collapse">Tasks</a></li>
-                <li><a href="#/claim/list" data-toggle="collapse" data-target=".navbar-collapse">Claims</a></li>
-                <li><a href="#/billing" data-toggle="collapse" data-target=".navbar-collapse">Billing</a></li>
+                <li id="index-tasks-list"><a href="#/home" data-toggle="collapse"
+                                             data-target=".navbar-collapse">Tasks</a></li>
+                <li id="index-claims-list"><a href="#/claim/list" data-toggle="collapse" data-target=".navbar-collapse">Claims</a>
+                </li>
+                <li id="index-billing"><a href="#/billing" data-toggle="collapse"
+                                          data-target=".navbar-collapse">Billing</a></li>
                 <li><a href="#/travel" data-toggle="collapse" data-target=".navbar-collapse">Travel</a></li>
                 <li><a href="#/contacts" data-toggle="collapse" data-target=".navbar-collapse">Contacts</a></li>
                 <li><a href=""
@@ -62,10 +68,26 @@
                        data-toggle="collapse" data-target=".navbar-collapse"
                        data-bind="click: onUserNameLinkClick"
                        style="padding-right: 10px; padding-left: 0">
+                        <!-- Hide separator on mobile -->
+                        <span class="hidden-xs"
+                              style="border-left: 1px solid white;"></span>
                         <span data-bind="text: userNameLinkText"
-                              style="border-left: 1px solid white; padding-left: 5px"></span>
+                              style="padding-left: 5px"></span>
                     </a>
                 </li>
+                <li id="index-help" class="hidden-xs">
+                    <a data-bind="click: onShowHelp">
+                        <i class="fa fa-lg fa-question-circle" style="cursor: pointer;"></i>
+                    </a>
+                </li>
+                <div class="hide slideout-menu hidden-xs" id="help-panel">
+                    <div class="header">Quick tours</div>
+                    <div class="items">
+                        <div class="item"><a href="" data-bind="click: onStartClaimsTour">Claims</a></div>
+                        <div class="item"><a href="" data-bind="click: onStartBillingTour">Billing</a></div>
+                        <div class="item"><a href="" data-bind="click: onStartTravelTour">Travel</a></div>
+                    </div>
+                </div>
             </ul>
         </div><!--/.nav-collapse -->
     </div>
@@ -169,8 +191,34 @@
 <!-- END #MAIN CONTENT -->
 </body>
 
-<script type="application/javascript">
+<!-- Welcome splash -->
+<div id="welcomeModal"
+     data-backdrop="static"
+     class="modal fade modal-lg hidden-xs" role="dialog" aria-labelledby="welcomeModal" aria-hidden="true"
+     style="top:20%; margin: auto;">
 
+    <div class="welcome modal-dialog">
+        <div class="welcome modal-content">
+            <div class="welcome modal-body">
+                <div class="container-fluid">
+                    <div class="text-center">
+                        <div class="welcome banner">Welcome to MyClaimsHelper</div>
+                        <div>Would you like a quick tour of the basics?</div>
+                        <div>Takes less than a minute</div>
+                    </div>
+                </div>
+            </div>
+            <div class="welcome modal-footer">
+                <button type="button" class="welcome btn btn-default btn-link no" data-dismiss="modal">Not now</button>
+                <button type="button" class="welcome btn btn-default btn-link" data-dismiss="modal"
+                        data-bind="click: onWelcomeAccept">Yes please
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="application/javascript">
     require.config({
         paths: {
             // Load optimized file

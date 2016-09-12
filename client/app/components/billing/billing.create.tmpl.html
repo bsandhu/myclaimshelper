@@ -21,6 +21,7 @@
                 <!-- ko if: bill().status() === BillingStatus.NOT_SUBMITTED -->
                 <a href="javascript:void(0);"
                    class="btn btn-default ghost-button pull-right leftMargin hidden-xs"
+                   id="billCreationProfileBtn"
                    data-bind="click: onBillingProfileClick">
                     <span class="btn-label"><i class="fa fa-cogs"></i></span> Billing Rates
                 </a>
@@ -101,7 +102,7 @@
             </div>
 
             <div class="pull-right">
-                <h1>Invoice</h1>
+                <h1 id="billingInvoiceHeader">Invoice</h1>
             </div>
             <div class="clearfix"></div>
             <br>
@@ -203,7 +204,8 @@
                                 </span>
                                 <a>
                                     <span data-bind="if: $parent.isBillEditable">
-                                        <span data-bind="editable: billingItem.mileage,
+                                        <span data-bind="attr: {id: 'billingCreationMileage' + $index()},
+                                                         editable: billingItem.mileage,
                                                          editableOptions: {mode: 'popup',
                                                                           title: 'Edit Mileage',
                                                                           success: $parent.onMileageUpdate.bind($parent, billingItem)}"></span>
@@ -287,7 +289,8 @@
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                     <div class="pull-right">
                         <a href="javascript:void(0);" class="btn btn-labeled btn-info"
-                           data-bind="click: updateBill">
+                           data-bind="click: updateBill"
+                           id="billCreationSaveDraftBtn">
                             <span class="btn-label"><i class="glyphicon glyphicon-ok"></i></span>Save draft
                         </a>
                         <a href="javascript:void(0);" class="btn btn-labeled btn-success" data-bind="click: submitBill">

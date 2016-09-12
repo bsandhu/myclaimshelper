@@ -1,7 +1,8 @@
-define(['knockout', 'KOMap', 'jquery',
+define(['knockout', 'KOMap', 'jquery', 'underscore', 'bootbox',
         'amplify', 'app/utils/events',
+        'shared/objectUtils',
         'text!app/components/fileUpload/fileUploadComponent.tmpl.html'],
-    function (ko, KOMap, $, amplify, Events, viewHtml) {
+    function (ko, KOMap, $, _, bootbox, amplify, Events, ObjectUtils, viewHtml) {
         'use strict';
 
         function FileUploadComponentVM(params) {
@@ -64,14 +65,18 @@ define(['knockout', 'KOMap', 'jquery',
                         })
                         .fail(function (msg) {
                             amplify.publish(Events.FAILURE_NOTIFICATION,
-                                {msg: "<strong>Error </strong> while uploading files. Please retry." +
-                                    "<br>Techinal details: " + msg})
+                                {
+                                    msg: "<strong>Error </strong> while uploading files. Please retry." +
+                                    "<br>Techinal details: " + msg
+                                })
                         });
                 }
             } catch (e) {
                 amplify.publish(Events.FAILURE_NOTIFICATION,
-                    {msg: "<strong>Error</strong> while processing your request. Please retry." +
-                        "<br>Techinal details: " + e})
+                    {
+                        msg: "<strong>Error</strong> while processing your request. Please retry." +
+                        "<br>Techinal details: " + e
+                    })
             }
         };
 
@@ -106,11 +111,44 @@ define(['knockout', 'KOMap', 'jquery',
                 }
             };
             fd.append('uploadedFile', file);
+            // The JS file object is immutable, hence we need to send this through separately
+            fd.append('fileName', this.enrichedFileName(file));
 
             // Initiate a multipart/form-data upload
             xhr.send(fd);
             return defer;
         };
+
+        FileUploadComponentVM.prototype.enrichedFileName = function (file) {
+            var fileNum = ObjectUtils.nullSafe.bind(this, 'this.claimEntry().fileNum()', '')();
+            return (!ObjectUtils.isBlank(fileNum)
+            && fileNum != '-'
+            && file.name.indexOf(fileNum) == -1)
+                ? fileNum + '-' + file.name
+                : file.name;
+        }
+
+        FileUploadComponentVM.prototype.onRemoveClick = function (attachment) {
+            bootbox.dialog({
+                size: 'medium', backdrop: 'true', title: "Confirm",
+                message: "Delete attachment <br/><br/><i>" + attachment.name() + "</i> ?",
+                buttons: {
+                    yes: {label: "Yes, delete", className: "btn-danger", callback: removeAttachment},
+                    no: {label: "No", className: "btn-info", callback: $.noop}
+                }
+            });
+
+            var _this = this;
+
+            function removeAttachment() {
+                var allAttachments = _this.claimEntry().attachments();
+                var sansRemovedAttachment =
+                    _.filter(allAttachments, function (attach) {
+                        return attach.id() != attachment.id();
+                    });
+                _this.claimEntry().attachments(sansRemovedAttachment);
+            }
+        }
 
         return {viewModel: FileUploadComponentVM, template: viewHtml};
     });
