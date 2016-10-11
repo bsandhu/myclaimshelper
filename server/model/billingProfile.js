@@ -16,7 +16,8 @@ define([], function () {
         this.timeRate = undefined; // $ per unit.
         this.distanceRate = undefined;
         this.taxRate = undefined;
-        this.billingTypes = {}; // billing codes or custom types
+        this.billingTypes = {};
+        this.codes = {};
     }
 
     return BillingProfile;

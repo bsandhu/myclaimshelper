@@ -1,9 +1,9 @@
-define(['jquery', 'knockout', 'KOMap', 'amplify',
+define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox',
         'app/utils/events', 'app/utils/session', 'app/utils/responsive',
         'text!app/components/userProfile/userProfile.tmpl.html', 'model/profiles',
         'app/utils/audit', 'app/utils/consts', 'app/utils/ajaxUtils'],
 
-    function ($, ko, KOMap, amplify, Events, Session, Responsive, viewHtml, UserProfile,
+    function ($, ko, KOMap, amplify, bootbox, Events, Session, Responsive, viewHtml, UserProfile,
               Audit, Consts, AjaxUtils) {
         'use strict';
 
@@ -11,9 +11,19 @@ define(['jquery', 'knockout', 'KOMap', 'amplify',
             console.log('Init UserProfile');
             this.readyToRender = ko.observable(false);
             this.userProfile = KOMap.fromJS(new UserProfile());
+
             this.editingUserProfile = ko.observable(false);
             this.editingBillingProfile = ko.observable(false);
+
+            this.billCodesTypesUnderEdit = ko.observableArray([]);
+            this.billCodesUnderDelete = ko.observableArray([]);
+            this.billCodeTypesDisplayed = ko.observableArray([]);
+            this.codesInUse = [];
             this.setupEvListeners();
+
+            this.newCode = ko.observable();
+            this.newCodeDesc = ko.observable();
+            this.isAddingNew = ko.observable(false);
 
             this.login();
         }
@@ -35,11 +45,107 @@ define(['jquery', 'knockout', 'KOMap', 'amplify',
             $('#billingProfileEditView').fadeToggle();
         }
 
+        UserProfileComponent.prototype.onEditBillingCode = function (vm, codeType, ev) {
+            vm.billCodesTypesUnderEdit.push(codeType);
+        }
+
+        UserProfileComponent.prototype.onAddNewCode = function (vm, codeType, ev) {
+            var codes = vm.userProfile.billingProfile.codes;
+            vm.isAddingNew(true);
+        }
+
+        UserProfileComponent.prototype.onShowBillingCodes = function (evData) {
+            var userProfileModal = $('#userProfileModal');
+            userProfileModal.modal('hide');
+            this.loadCodes();
+            setTimeout(function () {
+                $('#billingCodesModal').modal();
+            }, 300);
+        }
+
         UserProfileComponent.prototype.onShowUserProfile = function (evData) {
             console.log('UserProfileComponent - SHOW_USER_PROFILE ev ' + JSON.stringify(evData));
             this.readyToRender(true);
             $('#userProfileModal').modal();
         };
+
+        UserProfileComponent.prototype.onUserProfileClose = function (evData) {
+            var userProfileModal = $('#userProfileModal');
+            userProfileModal.modal('hide');
+        };
+
+        /**************************************************/
+        /**** Billing codes ****/
+        /**************************************************/
+
+        UserProfileComponent.prototype.onToggleClick = function (vm, codeType) {
+            console.log('Toggle ' + codeType);
+            var isVisible = vm.billCodeTypesDisplayed().indexOf(codeType) >= 0;
+
+            if (isVisible) {
+                vm.billCodeTypesDisplayed([]);
+            } else {
+                vm.billCodeTypesDisplayed([codeType]);
+                var elemId = '#' + codeType + 'Section';
+                $(elemId).slideDown(300);
+            }
+            vm.stopEditingCodes();
+        }
+
+        UserProfileComponent.prototype.stopEditingCodes = function () {
+            this.billCodesTypesUnderEdit([]);
+            this.isAddingNew(null);
+            this.newCode(null);
+            this.newCodeDesc(null);
+        }
+
+        UserProfileComponent.prototype.isEditing = function (codeType) {
+            return this.billCodesTypesUnderEdit().indexOf(codeType) >= 0;
+        }
+
+        /**** Deleting codes ****/
+
+        UserProfileComponent.prototype.isDeleting = function (codeKey) {
+            return this.billCodesUnderDelete().indexOf(codeKey) >= 0;
+        }
+
+        UserProfileComponent.prototype.onDeleteCode = function (codeKey) {
+            this.billCodesUnderDelete.push(codeKey);
+        }
+
+        UserProfileComponent.prototype.isCodeInUse = function (codeKey) {
+            return this.codesInUse.indexOf(codeKey) >= 0;
+        }
+
+        UserProfileComponent.prototype.loadCodes = function (codeKey) {
+            var _this = this;
+            $.getJSON('/billing/codes')
+                .done(function (resp) {
+                    console.info('Loaded billing codes');
+                    _this.codesInUse = resp.data.codes;
+                });
+        }
+
+        UserProfileComponent.prototype.onDeleteCodeConfirm = function (codeType, codeKey) {
+            var codes = this.userProfile.billingProfile.codes[codeType];
+            delete codes[codeKey];
+            $('#' + codeKey + 'Code').hide();
+        }
+
+        UserProfileComponent.prototype.onDeleteCodeReject = function (codeKey) {
+            // Remove from deletion tracker
+            var array = this.billCodesUnderDelete();
+            var i = array.indexOf(codeKey);
+            if (i != -1) {
+                array.splice(i, 1);
+            }
+            this.billCodesUnderDelete(array);
+        }
+
+        /**************************************************/
+        /**** End - Billing codes ****/
+        /**************************************************/
+
 
         UserProfileComponent.prototype.getCurrentUserId = function () {
             return amplify.store.sessionStorage(SessionKeys.USER_ID);
@@ -77,6 +183,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify',
         }
 
         UserProfileComponent.prototype.onSaveUserProfile = function () {
+            var _this = this;
             this.editingUserProfile(false);
             $('#userProfileStaticView').fadeToggle();
             $('#userProfileEditView').hide();
@@ -95,7 +202,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify',
                 JSON.stringify({id: Session.getCurrentUserId(), attrsAsJson: attrs}),
                 function onSuccess(response) {
                     console.log("Saved profile");
-                    refreshUserProfile();
+                    refreshUserProfile.call(_this);
                 },
                 function onError(response) {
                     console.error("Failed to update profile");
@@ -103,11 +210,45 @@ define(['jquery', 'knockout', 'KOMap', 'amplify',
                 });
         }
 
+        UserProfileComponent.prototype.onSaveBillingCode = function (vm, codeType, ev) {
+            vm.isAddingNew(false);
+
+            // Manually add the new code
+            var codesInType = vm.userProfile.billingProfile.codes[codeType];
+            if (vm.newCode() != null) {
+                codesInType[vm.newCode()] = vm.newCodeDesc();
+            }
+            var updates = KOMap.toJS(vm.userProfile.billingProfile.codes[codeType]);
+            var codeTypeAttr = 'billingProfile.codes.' + codeType;
+            console.log('Updated codes: ' + updates);
+
+            var attrs = {}
+            attrs[codeTypeAttr] = updates;
+            AjaxUtils.post(
+                '/userProfile/modify',
+                JSON.stringify({id: Session.getCurrentUserId(), attrsAsJson: attrs}),
+                function onSuccess(response) {
+                    console.log("Saved billing code");
+                    refreshUserProfile.call(vm);
+                    vm.stopEditingCodes();
+
+                    // Force re-render
+                    var tmp = vm.billCodeTypesDisplayed();
+                    vm.billCodeTypesDisplayed([]);
+                    vm.billCodeTypesDisplayed(tmp);
+                },
+                function onError(response) {
+                    console.error("Failed to update " + codeType);
+                    amplify.publish(Events.FAILURE_NOTIFICATION, {msg: 'Error while saving ' + codeType});
+                });
+        }
+
         function refreshUserProfile() {
+            var _this = this;
             $.getJSON('/userProfile/' + Session.getCurrentUserId())
                 .done(function (resp) {
                     console.debug('Refreshed billing profile ' + JSON.stringify(resp.data).substr(0, 100));
-                    KOMap.fromJS(resp.data, {}, this.userProfile);
+                    KOMap.fromJS(resp.data, {}, _this.userProfile);
                     Session.setCurrentUserProfile(resp.data);
                 })
         }
@@ -194,4 +335,3 @@ define(['jquery', 'knockout', 'KOMap', 'amplify',
 
         return {viewModel: UserProfileComponent, template: viewHtml};
     })
-;

@@ -199,7 +199,7 @@ function getEntityById(entityId, colName, owner) {
             } else if (_.isEmpty(item)) {
                 defer.resolve('No records with id ' + entityId);
             } else {
-                defer.resolve(err, item);
+                defer.resolve(err, item);   
             }
         }
     });
