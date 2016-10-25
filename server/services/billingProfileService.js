@@ -1,3 +1,4 @@
+var Set = require('Set');
 var assert = require('assert');
 var BillingProfile = require('./../model/billingProfile.js');
 var mongoUtils = require('./../mongoUtils.js');
@@ -49,6 +50,31 @@ function saveOrUpdateEntityObject(entityObj) {
 /********************************************************/
 /* BillingProfile - Read API                                  */
 /********************************************************/
+
+function codesInUse(req, res) {
+    assert.ok(req.headers.userid, 'Expecting userId in headers');
+    var owner = req.headers.userid;
+
+    mongoUtils.connect()
+        .then(function (db) {
+            db.collection(mongoUtils.BILLING_ITEMS_COL_NAME)
+                .find({'owner': owner}, {fields: {'_id': 0, 'mileageCode': 1, 'timeCode': 1, 'expenseCode': 1}})
+                .toArray(function (err, resp) {
+                    if (err) {
+                        sendResponse(res, 'Failed to find usages of BillingCode ' + code, {});
+                    } else {
+                        var result = new Set([]);
+                        _.each(resp, function (val) {
+                            result.add(val.mileageCode);
+                            result.add(val.timeCode);
+                            result.add(val.expenseCode);
+                        })
+                        result.remove(null);
+                        sendResponse(res, null, {codes: result.toArray()});
+                    }
+                });
+        })
+}
 
 /**
  * Create one by copying user profile default if one is not present
@@ -102,3 +128,4 @@ function checkAndGetBillingProfileForClaimREST(req, res) {
 exports.saveOrUpdateEntityObject = saveOrUpdateEntityObject;
 exports.saveOrUpdateREST = saveOrUpdateREST;
 exports.checkAndGetBillingProfileForClaimREST = checkAndGetBillingProfileForClaimREST;
+exports.codesInUse = codesInUse;

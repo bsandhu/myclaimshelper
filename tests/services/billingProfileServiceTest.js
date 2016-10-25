@@ -68,4 +68,17 @@ describe('BillingProfile Service', function () {
         };
         billingProfileService.checkAndGetBillingProfileForClaimREST(req, res);
     });
+
+    it('isCodeInUse', function (done) {
+        var req = {params: {billingCode: '100'}, headers: {userid: 'TestUser'}};
+        var res = {};
+
+        res.json = function (data) {
+            assert(data);
+            assert.equal(data.status, 'Success');
+            assert.ok(data.data.codes);
+            done();
+        };
+        billingProfileService.codesInUse(req, res);
+    });
 });

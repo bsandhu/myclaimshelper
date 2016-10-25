@@ -164,6 +164,7 @@ function setupBillingServiceRoutes() {
     server.post('/billingItem', authenticate, billingServices.saveOrUpdateBillingItemsREST);
     server.get('/billing/profile/:claimId', authenticate, billingProfileService.checkAndGetBillingProfileForClaimREST);
     server.post('/billing/profile', authenticate, billingProfileService.saveOrUpdateREST);
+    server.get('/billing/codes', authenticate, billingProfileService.codesInUse);
 }
 
 function setupProfileServiceRoutes() {

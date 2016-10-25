@@ -1,102 +1,374 @@
-<div data-bind="if: readyToRender"
-     id="userProfileModal"
-     class="notification modal modal-lg fade"
-     role="dialog"
-     aria-labelledby="userProfileModalLabel"
-     aria-hidden="true"
-     style="top:40px; margin: auto">
+<!-- ********************************** -->
+<!-- **** Billing codes management **** -->
+<!-- ********************************** -->
+<div data-bind="if: readyToRender">
 
-    <div class="modal-dialog">
-        <div class="modal-content">
+    <div id="billingCodesModal"
+         class="notification modal modal-lg fade"
+         role="dialog"
+         aria-labelledby="billingCodesModalLabel"
+         aria-hidden="true"
+         style="top:40px; margin: auto; overflow: auto">
+        <div class="modal-dialog">
+            <div class="modal-content" style="overflow-y: auto">
 
-            <!-- Header -->
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-                <h4 class="modal-title" id="userProfileModalLabel">
-                    <span data-bind="text: userProfile._id"></span></h4>
-            </div>
+                <!-- Header -->
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title">
+                        <span data-bind="text: 'Billing Codes'"></span>
+                    </h4>
+                </div>
 
-            <!-- Body -->
-            <div class="modal-body">
-                <div class="container-fluid">
-                    <form class="form-horizontal">
-                        <fieldset>
-                            <div class="row bottomMargin5">
-                                <div class="col-md-2 col-sm-4 col-xs-4">
-                                    <div class="pull-right">
-                                        <i class="fa fa-user fa-4x"></i>
+                <!-- Body -->
+                <div class="modal-body">
+                    <div class="container-fluid" id="codeTypesContainer">
+                        <!-- Code types listing -->
+                        <div class="row"
+                             data-bind="foreach: {data: Object.keys(userProfile.billingProfile.codes), as: 'codeType'}">
+
+                            <!-- Section header -->
+                            <div>
+                                <a data-bind="click: $parent.onToggleClick.bind(codeType, $parent)" href="">
+                                    <h4 data-bind="text: codeType"></h4>
+                                </a>
+                            </div>
+
+                            <!-- Code type container -->
+                            <div data-bind="attr: {'id': codeType + 'Section'},
+                                            if: $parent.billCodeTypesDisplayed().indexOf(codeType) >= 0">
+
+                                <!-- Codes listing -->
+                                <div data-bind="foreach: {data: Object.keys($parent.userProfile.billingProfile.codes[codeType]), as: 'code'}">
+                                    <div class="inline col-md-6 col-lg-6 noPadding"
+                                         data-bind="attr: {'id': code + 'Code'}">
+                                        <!-- Code edit -->
+                                        <div class="inline" data-bind="if: $parents[1].isEditing(codeType),
+                                                               css: {'col-md-3 col-lg-3': $parents[1].isEditing(codeType)}">
+                                            <input type="text" class="inline form-control input-sm"
+                                                   data-bind="value: code"/>
+                                        </div>
+                                        <div class="inline"
+                                             data-bind="ifnot: $parents[1].isEditing(codeType),
+                                                css: {'col-md-3 col-lg-3': $parents[1].isEditing(codeType)}">
+                                            <span class="inline" data-bind="text: code"></span>
+                                        </div>
+                                        <!-- Code desc edit -->
+                                        <div class="inline" data-bind="if: $parents[1].isEditing(codeType)">
+                                            <div class="inline">
+                                                <input type="text" class="inline form-control input-sm"
+                                                       data-bind="value: $parents[1].userProfile.billingProfile.codes[codeType][code],
+                                                          css: {'col-md-9 col-lg-9': $parents[1].isEditing(codeType)}"/>
+                                            </div>
+                                            <!-- Delete -->
+                                            <div class="inline">
+                                                <span class="fa fa-times clearSearchIcon"
+                                                      style="position: relative; top: -10px; cursor: pointer;"
+                                                      data-bind="click: $parents[1].onDeleteCode.bind($parents[1], code)"></span>
+                                            </div>
+                                        </div>
+                                        <!-- Delete confirm -->
+                                        <div data-bind="if: $parents[1].isEditing(codeType)" class="inline">
+                                            <div data-bind="if: $parents[1].isDeleting(code)"
+                                                 class="col-lg-12 col-md-12 col-md-offset-1 col-lg-offset-1">
+
+                                                <!-- Can delete check -->
+                                                <span data-bind="ifnot: $parents[1].isCodeInUse(code)"
+                                                      class="paddingRight5 color-red">Delete this code?</span>
+                                                <span data-bind="if: $parents[1].isCodeInUse(code)"
+                                                      class="paddingRight5 color-red">This code is in use, can not delete</span>
+
+                                                <a data-bind="click: $parents[1].onDeleteCodeConfirm.bind($parents[1], codeType),
+                                                              ifnot: $parents[1].isCodeInUse(code)"
+                                                   href="" class="paddingRight5">Yes</a>
+                                                <a data-bind="click: $parents[1].onDeleteCodeReject.bind($parents[1]),
+                                                              text:  $parents[1].isCodeInUse(code) ? 'Ok' : 'No'" href=""></a>
+                                            </div>
+                                        </div>
+                                        <div class="inline"
+                                             data-bind="ifnot: $parents[1].isEditing(codeType)">
+                                            <span class="inline"
+                                                  data-bind="text: $parents[1].userProfile.billingProfile.codes[codeType][code],
+                                                             css: {'col-md-9 col-lg-9': $parents[1].isEditing(codeType)}"></span>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="col-md-10 col-sm-8 col-xs-8">
-                                    <div data-bind="text: userProfile.contactInfo.businessName"></div>
-                                    <div data-bind="text: userProfile.contactInfo.streetAddress"></div>
-                                    <div data-bind="text: userProfile.contactInfo.city() + ' ' + userProfile.contactInfo.zip()"></div>
-                                </div>
-                            </div>
-                        </fieldset>
-                        <fieldset>
-                            <legend>Billing Profile</legend>
-                            <div class="row bottomMargin5">
-                                <div class="col-md-4 col-sm-6 col-xs-8"><span class="pull-right">Tax rate</span></div>
-                                <div class="col-md-8 col-sm-6 col-xs-4" data-bind="text: userProfile.billingProfile.taxRate"></div>
-                            </div>
-                            <div class="row bottomMargin5">
-                                <div class="col-md-4 col-sm-6 col-xs-8"><span class="pull-right">Track time in</span></div>
-                                <div class="col-md-8 col-sm-6 col-xs-4" data-bind="text: userProfile.billingProfile.timeUnit"></div>
-                            </div>
-                            <div class="row bottomMargin5">
-                                <div class="col-md-4 col-sm-6 col-xs-8">
-                                    <span class="pull-right"
-                                          data-bind="text: 'Rate/' + userProfile.billingProfile.timeUnit()"></span>
-                                </div>
-                                <div class="col-md-8 col-sm-6 col-xs-4"
-                                     data-bind="text: '$ ' + userProfile.billingProfile.timeRate()"></div>
-                            </div>
-                            <div class="row bottomMargin5">
-                                <div class="col-md-4 col-sm-6 col-xs-8">
-                                    <span class="pull-right">Track distance in</span>
-                                </div>
-                                <div class="col-md-8 col-sm-6 col-xs-4" data-bind="text: userProfile.billingProfile.distanceUnit"></div>
-                            </div>
-                            <div class="row bottomMargin5">
-                                <div class="col-md-4 col-sm-6 col-xs-8">
-                                    <span class="pull-right"
-                                          data-bind="text: 'Rate/' + userProfile.billingProfile.distanceUnit()"></span>
-                                </div>
-                                <div class="col-md-8 col-sm-6 col-xs-4"
-                                     data-bind="text: '$ ' + userProfile.billingProfile.distanceRate()"></div>
-                            </div>
 
-                        </fieldset>
-                    </form>
+                                <div class="clear"/>
 
-                    <!--<div class="row">
-                        <div class="col-sm-9">
-                            Level 1: .col-sm-9
-                            <div class="row">
-                                <div class="col-xs-8 col-sm-6">
-                                    Level 2: .col-xs-8 .col-sm-6
+                                <div data-bind="if: $parent.isAddingNew" class="inline col-md-6 col-lg-6 noPadding">
+                                    <div class="inline col-md-3 col-lg-3">
+                                        <input type="text" class="inline form-control input-sm"
+                                               data-bind="value: $parent.newCode"/>
+                                    </div>
+                                    <div class="inline col-md-9 col-lg-9 noPadding">
+                                        <input type="text" class="inline form-control input-sm"
+                                               data-bind="value: $parent.newCodeDesc"/>
+                                    </div>
                                 </div>
-                                <div class="col-xs-4 col-sm-6">
-                                    Level 2: .col-xs-4 .col-sm-6
+                                <!-- End Codes listing -->
+
+                                <div class="clear"/>
+
+                                <!-- Edit/Save buttons -->
+                                <div class="row topMargin1pc">
+                                    <div class="col-md-offset-8 col-lg-offset-8">
+                                        <!-- Edit -->
+                                        <div class="inline col-md-offset-2 col-lg-offset-2">
+                                            <div data-bind="ifnot: $parents[0].isEditing(codeType)">
+                                                <a class="fa fa-edit"
+                                                   style="cursor: pointer; font-size: 1.1em"
+                                                   data-bind="click: $parents[0].onEditBillingCode.bind(codeType, $parents[0])">
+                                                    &nbsp;Edit</a>
+                                            </div>
+                                        </div>
+                                        <!-- Add new -->
+                                        <div class="inline">
+                                            <div data-bind="if: $parents[0].isEditing(codeType)">
+                                                <button type="button" class="btn btn-xs btn-default pull-right"
+                                                        data-bind="click: $parents[0].onAddNewCode.bind(codeType, $parents[0])">
+                                                    <span class="fa fa-plus"></span>
+                                                    New
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <!-- Save -->
+                                        <div class="inline leftMargin5">
+                                            <div data-bind="if: $parents[0].isEditing(codeType)">
+                                                <button type="button" class="btn btn-xs btn-info pull-right"
+                                                        data-bind="click: $parents[0].onSaveBillingCode.bind(codeType, $parents[0])">Save</button>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
+                                <!-- End buttons -->
                             </div>
                         </div>
-                    </div>-->
+                    </div>
                 </div>
             </div>
-
-            <!-- Footer -->
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-default" data-dismiss="modal" data-bind="click: onLogoff">Logoff
-                </button>
-            </div>
-
         </div>
-        <!-- modal-content -->
+
     </div>
-    <!-- modal-dialog -->
+
+    <!-- ********************************** -->
+    <!-- **** User profile             **** -->
+    <!-- ********************************** -->
+    <div id="userProfileModal"
+         class="notification modal modal-lg fade"
+         role="dialog"
+         aria-labelledby="userProfileModalLabel"
+         aria-hidden="true"
+         style="top:40px; margin: auto">
+
+        <div class="modal-dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+
+                    <!-- Header -->
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <h4 class="modal-title" id="userProfileModalLabel">
+                            <span data-bind="text: userProfile._id"></span></h4>
+                    </div>
+
+                    <!-- Body -->
+                    <div class="modal-body">
+                        <div class="container-fluid">
+                            <form class="form-horizontal">
+                                <fieldset>
+                                    <div class="row bottomMargin5">
+                                        <div class="col-md-2 col-sm-2 col-xs-2">
+                                            <div class="pull-right">
+                                                <i class="fa fa-user fa-4x"></i>
+                                            </div>
+                                        </div>
+                                        <!-- Static view -->
+                                        <div class="col-md-10 col-sm-8 col-xs-10" id="userProfileStaticView">
+                                            <div data-bind="text: userProfile.contactInfo.businessName"></div>
+                                            <div data-bind="text: userProfile.contactInfo.streetAddress"></div>
+                                            <div data-bind="text: userProfile.contactInfo.city() + ' ' + userProfile.contactInfo.zip()"></div>
+                                            <div data-bind="text: userProfile.contactInfo.phone"></div>
+                                        </div>
+
+                                        <!-- Edit view -->
+                                        <div class="col-md-10 col-sm-8 col-xs-10" id="userProfileEditView"
+                                             style="display: none">
+                                            <div class="col-md-10 col-sm-8 col-xs-8 bottomMargin noPadding">
+                                                <input class="form-control"
+                                                       placeholder="Business name"
+                                                       data-bind="value: userProfile.contactInfo.businessName"/>
+                                            </div>
+                                            <div class="col-md-10 col-sm-8 col-xs-8 bottomMargin noPadding">
+                                                <input class="form-control"
+                                                       placeholder="Street address"
+                                                       data-bind="value: userProfile.contactInfo.streetAddress"/>
+                                            </div>
+                                            <div class="col-md-5 col-sm-6 col-xs-6 bottomMargin noPadding">
+                                                <input class="form-control"
+                                                       placeholder="City"
+                                                       data-bind="value: userProfile.contactInfo.city"/>
+                                            </div>
+                                            <div class="col-md-5 col-sm-5 col-xs-5 bottomMargin noPadding">
+                                                <input class="form-control"
+                                                       placeholder="Zip"
+                                                       data-bind="value: userProfile.contactInfo.zip"/>
+                                            </div>
+                                            <div class="col-md-5 col-sm-6 col-xs-6 bottomMargin noPadding">
+                                                <input class="form-control"
+                                                       placeholder="Phone"
+                                                       data-bind="value: userProfile.contactInfo.phone"/>
+                                            </div>
+                                        </div>
+
+                                        <!-- Buttons -->
+                                        <div class="col-md-6 col-sm-6 col-xs-6 pull-right"
+                                             data-bind="ifnot: editingUserProfile">
+                                            <a class="fa fa-edit"
+                                               style="cursor: pointer; font-size: 1.1em"
+                                               data-bind="click: onEditUserProfile">
+                                                &nbsp;Edit</a>
+                                        </div>
+                                        <div class="col-md-11 col-sm-11 col-xs-11" data-bind="if: editingUserProfile">
+                                            <button type="button" class="btn btn-xs btn-info pull-right"
+                                               data-bind="click: onSaveUserProfile">Save</button>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                                <fieldset>
+                                    <legend>Billing Profile</legend>
+
+                                    <!-- Billing static -->
+                                    <div id="billingProfileStaticView">
+                                        <div class="row bottomMargin5">
+                                            <div class="col-md-4 col-sm-4 col-xs-5"><span
+                                                    class="pull-right">Tax rate</span>
+                                            </div>
+                                            <div class="col-md-8 col-sm-6 col-xs-4"
+                                                 data-bind="text: userProfile.billingProfile.taxRate"></div>
+                                        </div>
+                                        <div class="row bottomMargin5">
+                                            <div class="col-md-4 col-sm-4 col-xs-5"><span
+                                                    class="pull-right">Track time in</span>
+                                            </div>
+                                            <div class="col-md-8 col-sm-6 col-xs-4"
+                                                 data-bind="text: userProfile.billingProfile.timeUnit"></div>
+                                        </div>
+                                        <div class="row bottomMargin5">
+                                            <div class="col-md-4 col-sm-4 col-xs-5">
+                                    <span class="pull-right"
+                                          data-bind="text: 'Rate/' + userProfile.billingProfile.timeUnit()"></span>
+                                            </div>
+                                            <div class="col-md-8 col-sm-6 col-xs-4"
+                                                 data-bind="text: '$ ' + userProfile.billingProfile.timeRate()"></div>
+                                        </div>
+                                        <div class="row bottomMargin5">
+                                            <div class="col-md-4 col-sm-4 col-xs-5">
+                                                <span class="pull-right">Track distance in</span>
+                                            </div>
+                                            <div class="col-md-8 col-sm-6 col-xs-4"
+                                                 data-bind="text: userProfile.billingProfile.distanceUnit"></div>
+                                        </div>
+                                        <div class="row bottomMargin5">
+                                            <div class="col-md-4 col-sm-4 col-xs-5">
+                                    <span class="pull-right"
+                                          data-bind="text: 'Rate/' + userProfile.billingProfile.distanceUnit()"></span>
+                                            </div>
+                                            <div class="col-md-8 col-sm-6 col-xs-4"
+                                                 data-bind="text: '$ ' + userProfile.billingProfile.distanceRate()"></div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Billing edit view -->
+                                    <div id="billingProfileEditView" style="display: none">
+                                        <div class="row bottomMargin5">
+                                            <div class="col-md-4 col-sm-4 col-xs-5"><span
+                                                    class="pull-right">Tax rate</span>
+                                            </div>
+                                            <div class="col-md-3 col-sm-3 col-xs-4">
+                                                <input class="form-control"
+                                                       data-bind="value: userProfile.billingProfile.taxRate"/>
+                                            </div>
+                                        </div>
+                                        <div class="row bottomMargin5">
+                                            <div class="col-md-4 col-sm-4 col-xs-5"><span
+                                                    class="pull-right">Track time in</span>
+                                            </div>
+                                            <div class="col-md-8 col-sm-6 col-xs-4"
+                                                 data-bind="text: userProfile.billingProfile.timeUnit"></div>
+                                        </div>
+                                        <div class="row bottomMargin5">
+                                            <div class="col-md-4 col-sm-4 col-xs-5">
+                                    <span class="pull-right"
+                                          data-bind="text: 'Rate/' + userProfile.billingProfile.timeUnit()"></span>
+                                            </div>
+                                            <div class="col-md-3 col-sm-3 col-xs-4">
+                                                <input class="form-control"
+                                                       placeholder="$"
+                                                       data-bind="value: userProfile.billingProfile.timeRate"/>
+                                            </div>
+                                        </div>
+                                        <div class="row bottomMargin5">
+                                            <div class="col-md-4 col-sm-4 col-xs-5">
+                                                <span class="pull-right">Track distance in</span>
+                                            </div>
+                                            <div class="col-md-8 col-sm-6 col-xs-4"
+                                                 data-bind="text: userProfile.billingProfile.distanceUnit"></div>
+                                        </div>
+                                        <div class="row bottomMargin5">
+                                            <div class="col-md-4 col-sm-4 col-xs-5">
+                                    <span class="pull-right"
+                                          data-bind="text: 'Rate/' + userProfile.billingProfile.distanceUnit()"></span>
+                                            </div>
+                                            <div class="col-md-3 col-sm-3 col-xs-4">
+                                                <input class="form-control"
+                                                       placeholder="$"
+                                                       data-bind="value: userProfile.billingProfile.distanceRate"/>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Billing profile buttons -->
+                                    <div class="col-md-6 col-sm-6 col-xs-6 pull-right"
+                                         data-bind="ifnot: editingBillingProfile">
+                                        <a class="fa fa-edit"
+                                           style="cursor: pointer; font-size: 1.1em"
+                                           data-bind="click: onEditBillingProfile">
+                                            &nbsp;Edit</a>
+                                    </div>
+                                    <div class="col-md-11 col-sm-11 col-xs-11" data-bind="if: editingBillingProfile">
+                                        <button type="button" class="btn btn-xs btn-info pull-right"
+                                           data-bind="click: onSaveBillingProfile">Save</button>
+                                    </div>
+                                </fieldset>
+                            </form>
+                            <div class="col-md-6 col-sm-6 col-xs-6 pull-right">
+                                <a data-bind="click: onShowBillingCodes"
+                                   class="fa fa-edit"
+                                   style="cursor: pointer; font-size: 1.1em">&nbsp;&nbsp;Edit billing codes</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Footer -->
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal" data-bind="click: onLogoff">
+                            <span class="fa fa-power-off">&nbsp;Logoff</span>
+                        </button>
+                        <button type="button" class="btn btn-default" data-bind="click: onUserProfileClose">Close
+                        </button>
+                    </div>
+
+                </div>
+                <!-- modal-content -->
+            </div>
+            <!-- modal-dialog -->
+        </div>
+
+    </div>
+
 </div>
