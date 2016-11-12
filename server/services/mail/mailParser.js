@@ -124,6 +124,9 @@ MailParser.prototype._getUserId = function (senderEmail, allUserIds) {
     var incomingUserId = senderEmail.split('@')[0];
 
     // Remove any spurious quotes around email addr
+    if (incomingUserId.startsWith("<")) {
+        incomingUserId = incomingUserId.substring(1, incomingUserId.length);
+    }
     incomingUserId = incomingUserId.replace('"', '');
     incomingUserId = incomingUserId.replace("'", '');
 
