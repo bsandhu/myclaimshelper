@@ -126,6 +126,9 @@ MailParser.prototype._getUserId = function (senderEmail, allUserIds) {
     // Remove any spurious quotes around email addr
     incomingUserId = incomingUserId.replace('"', '');
     incomingUserId = incomingUserId.replace("'", '');
+    if (incomingUserId && incomingUserId.indexOf("<") == 0) {
+        incomingUserId = incomingUserId.substring(1, incomingUserId.length);
+    }
 
     return _.find(allUserIds, function (userId) {
         return userId.toUpperCase() === incomingUserId.toUpperCase();
