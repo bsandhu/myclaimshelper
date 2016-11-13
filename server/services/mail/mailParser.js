@@ -126,7 +126,7 @@ MailParser.prototype._getUserId = function (senderEmail, allUserIds) {
     // Remove any spurious quotes around email addr
     incomingUserId = incomingUserId.replace('"', '');
     incomingUserId = incomingUserId.replace("'", '');
-    if (incomingUserId.startsWith("<")) {
+    if (incomingUserId && incomingUserId.startsWith("<")) {
         incomingUserId = incomingUserId.substring(1, incomingUserId.length);
     }
 
