@@ -90,10 +90,11 @@
                 <label for="claimEntry-dueDate" class="control-label">Attachments</label>
                 <div>
                     <!-- File upload component -->
-                    <file-upload-component params="'claimEntry': claimEntry"></file-upload-component>
+                    <file-upload-component params="'claimEntry': claimEntry, domElemId: 'file-input-2'"></file-upload-component>
                 </div>
             </div>
 
+            <!-- ko if:isBillingEnabled -->
             <div class="form-group">
                 <!-- Billing status label -->
                 <label class="control-label">
@@ -108,6 +109,8 @@
                                                     'disable'    : claimEntry().isClosed() || isBilled() "></billing-item-component>
                 </div>
             </div>
+            <!-- /ko -->
+
         </form>
 
         <!-- Buttons -->

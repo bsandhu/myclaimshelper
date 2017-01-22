@@ -6,7 +6,7 @@
             <input type="radio"
                    value=true
                    data-bind="attr: {id: 1 + idSuffix(), name: 3 + idSuffix()},
-                              checked: contact().isBusiness"/>
+                              checked: contact.isBusiness"/>
             <label data-bind="attr: {for: 1 + idSuffix()}">Business</label>
         </div>
 
@@ -16,7 +16,7 @@
             <input type="radio"
                    value=false
                    data-bind="attr: {id: 2 + idSuffix(), name: 3 + idSuffix()},
-                              checked: contact().isBusiness"/>
+                              checked: contact.isBusiness"/>
             <label data-bind="attr: {for: 2 + idSuffix()}">Individual</label>
         </div>
     </div>
@@ -26,22 +26,22 @@
     <div class="inline bottomMargin">
 
         <!--Individual-->
-        <div class="inline bottomMargin" data-bind="if: contact().isBusiness() != 'true'">
+        <div class="inline bottomMargin" data-bind="if: isNotBusiness()">
             <div class="inline">
                 <!-- Auto complete -->
                 <input type="text"
                        class="form-control wide input-sm"
                        data-bind="autoComplete: contact,
-                                  value: contact().name,
+                                  value: contact.name,
                                   attr: {'placeholder': placeholder}"/>
             </div>
         </div>
 
         <!--Business-->
-        <div class="inline bottomMargin" data-bind="if: contact().isBusiness() == 'true'">
+        <div class="inline bottomMargin" data-bind="if: isBusiness()">
             <div class="inline">
                 <input type="text" class="form-control normal input-sm" placeholder="Business name"
-                       data-bind="value: contact().businessName"/>
+                       data-bind="value: contact.businessName"/>
             </div>
         </div>
 
@@ -58,7 +58,7 @@
         <div>
             <div class="inline bottomMargin">
                 <input type="text" class="form-control wider input-sm" placeholder="Address"
-                       data-bind="value: contact().streetAddress"/>
+                       data-bind="value: contact.streetAddress"/>
             </div>
         </div>
 
@@ -66,18 +66,18 @@
         <div>
             <div class="inline bottomMargin">
                 <input type="text" class="form-control normal input-sm" placeholder="City"
-                       data-bind="value: contact().city"/>
+                       data-bind="value: contact.city"/>
             </div>
             <div class="inline bottomMargin">
                 <select class="form-control narrow input-sm"
-                        data-bind="value: contact().state,
+                        data-bind="value: contact.state,
                                    options: states,
                                    optionsCaption: '...'">
                 </select>
             </div>
             <div class="inline bottomMargin">
                 <input type="text" class="form-control narrow input-sm" placeholder="Zip"
-                       data-bind="value: contact().zip"/>
+                       data-bind="value: contact.zip"/>
             </div>
         </div>
 
@@ -86,11 +86,11 @@
             <div class="inline bottomMargin">
                 <div class="inline bottomMargin">
                     <input type="tel" class="form-control normal input-sm" placeholder="Phone"
-                           data-bind="value: contact().phone"/>
+                           data-bind="value: contact.phone"/>
                 </div>
                 <div class="inline narrow bottomMargin">
                     <input class="form-control narrower input-sm" placeholder="Ext"
-                           data-bind="value: contact().ext"/>
+                           data-bind="value: contact.ext"/>
                 </div>
             </div>
         </div>
@@ -99,7 +99,7 @@
         <div>
             <div class="inline bottomMargin">
                 <input type="tel" class="form-control normal input-sm" placeholder="Cell"
-                       data-bind="value: contact().cell"/>
+                       data-bind="value: contact.cell"/>
             </div>
         </div>
 
@@ -107,25 +107,25 @@
         <div>
             <div class="inline bottomMargin">
                 <input type="email" class="form-control wide input-sm" placeholder="Email"
-                       data-bind="value: contact().email"/>
+                       data-bind="value: contact.email"/>
             </div>
         </div>
 
         <!--Notes-->
         <div class="bottomMargin">
             <textarea class="form-control" placeholder="Notes"
-                      data-bind="value: contact().notes"/>
+                      data-bind="value: contact.notes"></textarea>
         </div>
     </div>
 
     <!-- **** Details view only **** -->
     <div data-bind="visible: showDetails() && !allowEdits()">
-        <div data-bind="if: contact()">
-            <span data-bind="text: contact().streetAddress"></span><br>
-            <span data-bind="text: contact().city"></span>
-            <span data-bind="text: contact().zip"></span><br>
+        <div data-bind="if: contact">
+            <span data-bind="text: contact.streetAddress"></span><br>
+            <span data-bind="text: contact.city"></span>
+            <span data-bind="text: contact.zip"></span><br>
             <a>
-                <span data-bind="text: contact().phone"></span>
+                <span data-bind="text: contact.phone"></span>
             </a>
         </div>
     </div>

@@ -9,7 +9,7 @@ define(['jquery', 'app/utils/session', 'loggly'],
             var _this = this;
             var defer = $.Deferred();
 
-            $.getJSON('/config')
+            $.getJSON('/config', true)
                 .then(function (resp) {
                     _this.env = resp.data.Env;
 

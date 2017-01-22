@@ -1,12 +1,12 @@
-var MongoClient = require('mongodb').MongoClient;
-var jQuery = require('jquery-deferred');
-var config = require('./config.js');
-var Consts = require('./shared/consts.js');
-var _ = require('underscore');
-var assert = require('assert');
+let MongoClient = require('mongodb').MongoClient;
+let jQuery = require('jquery-deferred');
+let config = require('./config.js');
+let Consts = require('./shared/consts.js');
+let _ = require('underscore');
+let assert = require('assert');
 
 
-var dbConn;
+let dbConn;
 
 // :: Promise -> a -> b -> none
 function _onResult(result, err, ok) {
@@ -21,16 +21,16 @@ function _onResult(result, err, ok) {
 // :: f -> Dict -> [Obj]
 // convert a dict into an Object with dot-accessible attributes
 function hydrate(type, objects) {
-    var objs = _.isArray(objects) ? objects : [objects];
-    var fn = function (obj) {
+    let objs = _.isArray(objects) ? objects : [objects];
+    let fn = function (obj) {
         return _.extend(new type(), obj)
     };
-    var hydrated = _.map(objs, fn);
+    let hydrated = _.map(objs, fn);
     return hydrated;
 }
 
 function initConnPool() {
-    var deferred = jQuery.Deferred();
+    let deferred = jQuery.Deferred();
     console.log('**** DB **** ' + config.db);
     MongoClient.connect(config.db, function (err, db) {
         if (!err) {
@@ -65,17 +65,17 @@ function initCollection(collectionName) {
 }
 
 function incrementAndGet(sequenceName) {
-    var deferred = jQuery.Deferred();
+    let deferred = jQuery.Deferred();
 
     run(function (db) {
-        var col = db.collection('Sequences');
+        let col = db.collection('Sequences');
 
         col.findAndModify(
-            { _id: sequenceName },
+            {_id: sequenceName},
             [
                 ['_id', 1]
             ],
-            { $inc: { seq: 1 } },
+            {$inc: {seq: 1}},
             {upsert: true},
             {new: true},
             function onUpdate(err, doc) {
@@ -84,17 +84,23 @@ function incrementAndGet(sequenceName) {
                     deferred.reject(err);
                     return;
                 }
-                console.log('Generated Seq number for: ' + sequenceName + '. ' + doc.seq);
-                deferred.resolve(doc.seq);
+                console.log('Generated Seq number for: ' + sequenceName + '. ' + doc.value.seq);
+                deferred.resolve(doc.value.seq);
             });
     });
     return deferred.promise();
 }
 
-function saveOrUpdateEntity(entity, colName, owner) {
+function saveOrUpdateEntity(entity, colName, deleteIngroupsAttr = true) {
     console.log('saveOrUpdateEntity. ' + JSON.stringify(entity) + '. Collection name: ' + colName);
-    checkOwnerPresent(entity);
-    var defer = jQuery.Deferred();
+    checkOwnerPresent(entity.owner);
+    checkGroupPresent(entity.group);
+    if (deleteIngroupsAttr){
+        delete entity.inGroups;
+        delete entity.ingroups;
+    }
+
+    let defer = jQuery.Deferred();
 
     function getSeqNum() {
         return incrementAndGet(colName);
@@ -102,15 +108,15 @@ function saveOrUpdateEntity(entity, colName, owner) {
 
     function dbCall(seqNum) {
         run(function update(db) {
-            var entityCol = db.collection(colName);
+            let entityCol = db.collection(colName);
             if (!entity._id) {
                 // Note: Ids are always Strings .. not numbers
                 entity._id = String(seqNum);
                 entityCol.insert(entity,
                     {w: 1},
                     function onInsert(err, results) {
-                        console.log('Added to Mongo collection ' + colName + '. Id: ' + results[0]._id);
-                        defer.resolve(err, results[0]);
+                        console.log('Added to Mongo collection ' + colName + '. Id: ' + results.ops[0]._id);
+                        defer.resolve(err, results.ops[0]);
 
                     });
             } else {
@@ -130,13 +136,13 @@ function saveOrUpdateEntity(entity, colName, owner) {
 }
 
 function modifyEntityAttr(entityId, colName, attributesAsJson) {
-    var defer = jQuery.Deferred();
+    let defer = jQuery.Deferred();
     if (!entityId) {
         defer.reject("EntityId not specified");
     }
 
     run(function update(db) {
-        var entityCol = db.collection(colName);
+        let entityCol = db.collection(colName);
         entityCol.update(
             {'_id': entityId},
             {$set: attributesAsJson},
@@ -152,13 +158,13 @@ function modifyEntityAttr(entityId, colName, attributesAsJson) {
 function modifyAttr(colName, attributesAsJson, search) {
     search = search || {};
     console.log(
-            'Modifing ' + JSON.stringify(colName)
-          + ' with ' + JSON.stringify(attributesAsJson)
-          + ' Search: ' + search);
+        'Modifing ' + JSON.stringify(colName)
+        + ' with ' + JSON.stringify(attributesAsJson)
+        + ' Search: ' + search);
 
-    var defer = jQuery.Deferred();
+    let defer = jQuery.Deferred();
     run(function update(db) {
-        var entityCol = db.collection(colName);
+        let entityCol = db.collection(colName);
         entityCol.update(
             search,
             {$set: attributesAsJson},
@@ -178,20 +184,38 @@ function modifyAttr(colName, attributesAsJson, search) {
 
 function checkOwnerPresent(obj) {
     if (_.isObject(obj)) {
-        assert(obj.owner != null && obj.owner != undefined, 'Owner attr must be present');
+        assert(obj != null && obj != undefined, 'Owner attr must be present');
     } else {
         assert(obj.length > 0, 'Owner attr must be present');
     }
 }
+function checkGroupPresent(obj) {
+    if (_.isObject(obj)) {
+        assert(obj != null && obj != undefined, 'Group attr must be present');
+    } else {
+        assert(obj.length > 0, 'Group attr must be present');
+    }
+}
 
-function getEntityById(entityId, colName, owner) {
-    assert(owner, 'Owner attr must be present');
-    var defer = jQuery.Deferred();
+function checkInGroups(ingroups) {
+    assert(_.isArray(ingroups) || _.isString(ingroups), 'ingroups attr must be present for search');
+}
+
+function toArray(ingroups) {
+    return _.isArray(ingroups)
+        ? ingroups
+        : _.map(ingroups.split(','), x => x.trim());
+}
+
+
+function getEntityById(entityId, colName, owner, ingroups) {
     checkOwnerPresent(owner);
+    checkInGroups(ingroups);
+    let defer = jQuery.Deferred();
 
     run(function (db) {
-        var entityCol = db.collection(colName);
-        entityCol.findOne({'_id': entityId, 'owner': owner}, onResults);
+        let entityCol = db.collection(colName);
+        entityCol.findOne({'_id': entityId, $or: [{'owner': owner}, {'group': {$in: toArray(ingroups)}}]}, onResults);
 
         function onResults(err, item) {
             if (err) {
@@ -199,7 +223,7 @@ function getEntityById(entityId, colName, owner) {
             } else if (_.isEmpty(item)) {
                 defer.resolve('No records with id ' + entityId);
             } else {
-                defer.resolve(err, item);   
+                defer.resolve(err, item);
             }
         }
     });
@@ -208,11 +232,11 @@ function getEntityById(entityId, colName, owner) {
 
 // :: Object -> String -> Promise
 function deleteEntity(predicate, colName) {
-    var defer = jQuery.Deferred();
+    let defer = jQuery.Deferred();
     console.log('Delete ' + JSON.stringify(predicate) + ' . Col: ' + colName);
 
     run(function remove(db) {
-        var entityCol = db.collection(colName);
+        let entityCol = db.collection(colName);
         entityCol.remove(predicate,
             {w: 1},
             function onRemove(err, result) {
@@ -228,8 +252,8 @@ function deleteEntity(predicate, colName) {
 }
 
 // :: None -> Promise
-var connect = function () {
-    var result = jQuery.Deferred();
+const connect = function () {
+    let result = jQuery.Deferred();
     if (!dbConn) {
         MongoClient.connect(config.db, _.partial(_onResult, result));
     } else {
@@ -239,24 +263,36 @@ var connect = function () {
 }
 
 // :: String -> Dict -> DB -> Promise
-var findEntities = function (collectionName, search, db, checkOwnerAttr) {
-    // Default to checking the owner attr
-    if (checkOwnerAttr === null || checkOwnerAttr === undefined) {
-        checkOwnerAttr = true;
-    }
-    if (checkOwnerAttr) {
-        checkOwnerPresent(search);
-    }
-    //console.log('Find entities: ' + collectionName + ', Search: ' + JSON.stringify(search));
+const findEntities = function (collectionName, search, db) {
+    checkOwnerPresent(search.owner);
+    checkInGroups(search.ingroups);
 
-    var result = jQuery.Deferred();
-    var collection = db.collection(collectionName);
-    collection.find(search).toArray(function (err, resp) {
-        _onResult(result, err, resp);
-    });
+    let result = jQuery.Deferred();
+    let collection = db.collection(collectionName);
+
+    // Make a copy
+    search = _.assign({}, search);
+    let owner = search.owner;
+    let ingroups = search.ingroups;
+    delete search.owner;
+    delete search.group;
+    delete search.ingroups;
+    search['$or'] = [{'owner': owner}, {'group': {$in: toArray(ingroups)}}];
+
+    collection
+        .find(search)
+        .toArray(function (err, resp) {
+            _onResult(result, err, resp);
+        });
     return result;
-}
+};
 
+function addOwnerInfo(req, obj) {
+    obj.owner = req.headers.userid;
+    obj.group = req.headers.group;
+    obj.ingroups = toArray(req.headers.ingroups);
+    return obj;
+}
 
 function initCollections() {
     initCollection('Bills');
@@ -283,6 +319,8 @@ exports.getEntityById = getEntityById;
 exports.deleteEntity = deleteEntity;
 exports.findEntities = findEntities;
 exports.connect = connect;
+exports.addOwnerInfo = addOwnerInfo;
+exports.toArray = toArray;
 
 exports.CLAIMS_COL_NAME = 'Claims';
 exports.CLAIM_ENTRIES_COL_NAME = 'ClaimEntries';
@@ -293,3 +331,4 @@ exports.BILLING_PROFILE_COL_NAME = 'BillingProfiles';
 exports.USERPROFILE_COL_NAME = 'UserProfiles';
 exports.NOTIFICATIONS_COL_NAME = 'Notifications';
 exports.ZIPCODES_COL_NAME = 'ZipCodes';
+exports.REFDATA_COL_NAME = 'RefData';

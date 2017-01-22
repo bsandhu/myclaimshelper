@@ -1,54 +1,55 @@
-var restify = require('restify');
-var serveStaticWith304 = require('./static');
+let restify = require('restify');
+let serveStaticWith304 = require('./static');
 
-var socketio = require('socket.io');
-var config = require('./config.js');
-var EventEmitter = require('events').EventEmitter;
+let socketio = require('socket.io');
+let config = require('./config.js');
+let EventEmitter = require('events').EventEmitter;
 
-var claimsService = require('./services/claimsService.js');
-var billingServices = require('./services/billingServices.js');
-var billingProfileService = require('./services/billingProfileService.js');
-var contactService = require('./services/contactService.js');
-var contactSyncService = require('./services/contactSyncService.js');
-var profileService = require('./services/profileService.js');
-var uploadService = require('./services/uploadService.js');
-var entityExtractionService = require('./services/entityExtractionService.js');
-var notificationService = require('./services/notificationService.js');
-var statsService = require('./services/statsService');
-var configservice = require('./services/configService');
+let claimsService = require('./services/claimsService.js');
+let refDataService = require('./services/refDataService.js');
+let billingServices = require('./services/billingServices.js');
+let billingProfileService = require('./services/billingProfileService.js');
+let contactService = require('./services/contactService.js');
+let contactSyncService = require('./services/contactSyncService.js');
+let profileService = require('./services/profileService.js');
+let uploadService = require('./services/uploadService.js');
+let entityExtractionService = require('./services/entityExtractionService.js');
+let notificationService = require('./services/notificationService.js');
+let statsService = require('./services/statsService');
+let configservice = require('./services/configService');
 
-var processMail = require('./services/mail/mailHandler.js').process;
-var mongoUtils = require('./mongoUtils.js');
-var Consts = require('./shared/consts.js');
-var serviceUtils = require('./serviceUtils.js');
-var os = require('os');
-var jwt = require('jsonwebtoken');
-var assert = require('assert');
+let processMail = require('./services/mail/mailHandler.js').process;
+let mongoUtils = require('./mongoUtils.js');
+let Consts = require('./shared/consts.js');
+let serviceUtils = require('./serviceUtils.js');
+let os = require('os');
+let jwt = require('jsonwebtoken');
+let assert = require('assert');
 
 
 // Auto0 keys
-var JWT_SECRET = config.auth0_client_secret;
-var DECODED_JWT_SECRET = new Buffer(JWT_SECRET, 'base64');
+let JWT_SECRET = config.auth0_client_secret;
+let DECODED_JWT_SECRET = new Buffer(JWT_SECRET, 'base64');
 
 // Testing hooks
-var DISABLE_AUTH = config.disable_auth;
-var USE_SSL = config.use_ssl;
-var TEST_USER = config.test_user;
+let DISABLE_AUTH = config.disable_auth;
+let USE_SSL = config.use_ssl;
+let TEST_USER = config.test_user;
 
 // Restify server
-var server = restify.createServer();
-var io = socketio.listen(server);
+let server = restify.createServer();
+let io = socketio.listen(server.server);
 
 
 function init() {
-    server = restify.createServer();
+    // server = restify.createServer();
 
     // Wrap with socket io instance
-    io = socketio.listen(server);
+    // io = socketio.listen(server);
 
     server.use(function httpsRedirect(req, res, next) {
-        var securityNotNeeded = USE_SSL === false;
-        var isSecure = req.isSecure() === true || req.headers['x-forwarded-proto'] == 'https';
+        let securityNotNeeded = USE_SSL === false;
+        let isSecure = req.isSecure() === true || req.headers['x-forwarded-proto'] == 'https';
         if (securityNotNeeded || isSecure) {
             next();
         } else {
@@ -129,7 +130,6 @@ function authenticate(req, res, next) {
 }
 
 function setupClaimsServiceRoutes() {
-    server.get('/claim', authenticate, claimsService.getAllClaims);
     server.get('/claim/:id', authenticate, claimsService.getClaim);
     server.get('/claim/:id/entries', authenticate, claimsService.getAllEntriesForClaim);
     server.post('/claim', authenticate, claimsService.saveOrUpdateClaim);
@@ -146,6 +146,8 @@ function setupClaimsServiceRoutes() {
     server.get('/download', uploadService.downloadFile);
 
     server.post('/extract/entity', authenticate, entityExtractionService.extract);
+    server.get('/refData/:type', authenticate, refDataService.getRefData);
+    server.post('/refData', authenticate, refDataService.addRefData);
 }
 
 function setupContactServiceRoutes() {
@@ -191,6 +193,10 @@ function setupStaticRoutes() {
     }));
 
     server.get(/\/app\/.*/, serveStaticWith304({
+        directory: 'client',
+        maxAge: 60 * 60 * 24
+    }));
+    server.get(/\/built\/.*/, serveStaticWith304({
         directory: 'client',
         maxAge: 60 * 60 * 24
     }));

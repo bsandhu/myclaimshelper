@@ -1,7 +1,8 @@
-var assert = require('assert');
-var mongoUtils = require('./../mongoUtils.js');
-var GridStore = require('mongodb').GridStore;
-var jQuery = require('jquery-deferred');
+let assert = require('assert');
+let mongoUtils = require('./../mongoUtils.js');
+let ObjectUtils = require('./../shared/objectUtils.js');
+let GridStore = require('mongodb').GridStore;
+let jQuery = require('jquery-deferred');
 
 /**
  *  The uploaded file is in the form of multi part form data
@@ -10,17 +11,22 @@ var jQuery = require('jquery-deferred');
  */
 function uploadFile(req, res) {
     assert.ok(req.files.uploadedFile, 'Expecting uploadedFile as a parameter');
+    assert.ok(req.headers.userid, 'Expecting userid in the req header');
 
-    var file = req.files.uploadedFile;
-    var fileName = req.params.fileName;
+    let file = req.files.uploadedFile;
+    let fileName = req.params.fileName;
+    let fileType = ObjectUtils.defaultValue(fileName.split('.')[1], '');
     console.info('Got file: ' + fileName + ', ' + file.path);
 
     saveToDB(fileName, file.path)
         .done(function okResponse(seqNum) {
-            var fileMetadata = {
-               id   : seqNum,
-               name : fileName,
-               size : file.size
+            let fileMetadata = {
+                id: seqNum,
+                name: fileName,
+                size: file.size,
+                lastModifiedDate: req.params.lastModifiedDate,
+                createdBy: req.headers.userid,
+                type: fileType
             };
             console.log('Processed file. Metadata: ' + JSON.stringify(fileMetadata));
             res.statusCode = 200;
@@ -35,7 +41,7 @@ function uploadFile(req, res) {
 }
 
 function downloadFile(req, res) {
-    var id = Number(req.params.id);
+    let id = Number(req.params.id);
 
     jQuery
         .when(getFileMetadata(id), readFromDB(id))
@@ -68,7 +74,7 @@ function downloadFile(req, res) {
 /******************************************************/
 
 function saveToDB(fileName, filePath) {
-    var saveDeferred = jQuery.Deferred();
+    let saveDeferred = jQuery.Deferred();
 
     function getSeqNum() {
         return mongoUtils.incrementAndGet('Files');
@@ -76,7 +82,7 @@ function saveToDB(fileName, filePath) {
 
     function save(seqNum) {
         mongoUtils.run(function (db) {
-            var gridStore = new GridStore(db, seqNum, fileName, "w+");
+            let gridStore = new GridStore(db, seqNum, fileName, "w+");
 
             // Open the file
             gridStore.open(function (err, gridStore) {
@@ -113,11 +119,11 @@ function saveToDB(fileName, filePath) {
  * @see uploadServiceTest.js
  */
 function readFromDB(_id) {
-    var defer = jQuery.Deferred();
+    let defer = jQuery.Deferred();
 
     mongoUtils.run(function (db) {
-        var gridStore = new GridStore(db, _id, '', "r");
-        var gotEnd = false;
+        let gridStore = new GridStore(db, _id, '', "r");
+        let gotEnd = false;
 
         gridStore.open(function (err, gs) {
             if (err) {
@@ -125,7 +131,7 @@ function readFromDB(_id) {
             }
 
             // Create a stream to the file
-            var stream = gs.stream(true);
+            let stream = gs.stream(true);
 
             stream.on("end", function () {
                 gotEnd = true;
@@ -144,7 +150,7 @@ function readFromDB(_id) {
  * @returns MetaData document for the file from the GirdFS `fs.files` collection
  */
 function getFileMetadata(id) {
-    var defer = jQuery.Deferred();
+    let defer = jQuery.Deferred();
 
     mongoUtils.run(function (db) {
         var col = db.collection('fs.files');

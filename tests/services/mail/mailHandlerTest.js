@@ -1,26 +1,26 @@
-var assert = require('assert');
-var fs = require('fs');
-var _ = require('lodash');
-var ms = require('../../../server/services/mail/mailHandler.js');
-var mongoUtils = require('../../../server/mongoUtils.js');
-var Claim = require("../../../server/model/claim.js");
-var claimsService = require("../../../server/services/claimsService.js");
-var jQuery = require('jquery-deferred');
+let assert = require('assert');
+let fs = require('fs');
+let _ = require('lodash');
+let ms = require('../../../server/services/mail/mailHandler.js');
+let mongoUtils = require('../../../server/mongoUtils.js');
+let Claim = require("../../../server/model/claim.js");
+let claimsService = require("../../../server/services/claimsService.js");
+let jQuery = require('jquery-deferred');
 
 
 describe('mailHandler', function(){
 
-    var file = __dirname + '/data/sent-mail.json';
-    var req = JSON.parse(fs.readFileSync(file, 'utf8'));
-    var res = {'send':function(){}};
+    let file = __dirname + '/data/sent-mail.json';
+    let req = JSON.parse(fs.readFileSync(file, 'utf8'));
+    let res = {'send':function(){}};
     fs.writeFileSync('/tmp/67e8f84cf7851523cb5f8635cf7208ed', 'whatever');
 
     before(function(done){
-        var testClaim = new Claim();
+        let testClaim = new Claim();
         testClaim.insuranceCompanyFileNum = "123";
         testClaim.fileNum = "04-12345";
-        var req = {body: testClaim, headers: {userid: 'testuser1'}};
-        var res = {};
+        let req = {body: testClaim, headers: {userid: 'testuser1', group: 'TestGroup', ingroups: ['TestGroup']}};
+        let res = {};
         res.json = function (data) {
             assert(data);
             assert.equal(data.status, 'Success');
@@ -36,7 +36,7 @@ describe('mailHandler', function(){
     });
 
     it('processRequest succeeds for Insurance co', function (done) {
-        var assertSuccess = function (data) {
+        let assertSuccess = function (data) {
             assert.ok(data);
             assert.ok(data.claimId);
             assert.ok(data.owner);
@@ -46,7 +46,7 @@ describe('mailHandler', function(){
             assert.equal(data.mail['body-plain'], 'the body\r\n#tag1\r\n#tag2');
             assert.equal(data.mail.From, 'plato@nonsense.foo');
 
-            var ce = mongoUtils.getEntityById(data._id, 'ClaimEntries', 'TestUser');
+            let ce = mongoUtils.getEntityById(data._id, 'ClaimEntries', 'TestUser');
             ce.then(function (entry) {
                 console.log(arguments);
                 assert.ok(arguments)
@@ -59,7 +59,7 @@ describe('mailHandler', function(){
     });
 
     it('processRequest succeeds for file num', function (done) {
-        var assertSuccess = function (data) {
+        let assertSuccess = function (data) {
             assert.ok(data);
             assert.ok(data.claimId);
             assert.ok(data.owner);
@@ -68,7 +68,7 @@ describe('mailHandler', function(){
             assert.equal(data.mail.subject, 'the subject of email is 04-12345');
             assert.equal(data.mail.From, 'plato@nonsense.foo');
 
-            var ce = mongoUtils.getEntityById(data._id, 'ClaimEntries', 'TestUser');
+            let ce = mongoUtils.getEntityById(data._id, 'ClaimEntries', 'TestUser');
             ce.then(function (entry) {
                 console.log(arguments);
                 assert.ok(arguments)
@@ -82,7 +82,7 @@ describe('mailHandler', function(){
     });
     
     it('fails to save attachments', function(done){
-      var assertFailure = function(data){
+      let assertFailure = function(data){
         console.log(data);
         assert.ok(data.error);
         done();
@@ -93,7 +93,7 @@ describe('mailHandler', function(){
     });
     
     it('fails to find matching claim', function(done){
-      var assertFailure = function(data){
+      let assertFailure = function(data){
         console.log(data);
         assert.ok(_.isString(data.errors[0]));
         assert.ok(_.startsWith(data.errors[0], 'Could not find a Claim to add this task to'));

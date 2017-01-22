@@ -24,6 +24,9 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
             this.loadContacts = ko.observable(false);
             this.loadClaimsList = ko.observable(false);
 
+            // Profile based access
+            this.isBillingEnabled = ko.observable(false);
+
             // Model
             this.stateChoice = ko.observable();
             this.states = [
@@ -115,6 +118,9 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
             amplify.subscribe(Events.UPDATE_UNREAD_MSGS_COUNT, this, function (count) {
                 console.log('AppVM - UPDATE_UNREAD_MSGS_COUNT ev');
                 this.unreadMsgCount(count);
+            });
+            amplify.subscribe(Events.LOADED_USER_PROFILE, this, function () {
+                this.isBillingEnabled(Session.getCurrentUserProfile().isBillingEnabled);
             });
             amplify.subscribe(Events.LOGGED_IN, this, function () {
                 console.log('AppVM - LOGGED_IN ev');

@@ -1,9 +1,9 @@
-var assert = require('assert');
-var contactService = require('./../../server/services/contactService.js');
-var Contact = require('./../../server/model/contact.js');
+let assert = require('assert');
+let contactService = require('./../../server/services/contactService.js');
+let Contact = require('./../../server/model/contact.js');
 
-describe('Contact Service', function () {
-    var testContact = new Contact();
+describe('ContactService', function () {
+    let testContact = new Contact();
     testContact.name = 'Test Contact' + new Date().getTime();
     testContact.job = 'Test Job';
     testContact.company = 'Test Company';
@@ -11,6 +11,7 @@ describe('Contact Service', function () {
     testContact.phone = 'Test Phone';
     testContact.cell = 'Test Cell';
     testContact.owner = 'TestUser';
+    testContact.group = 'TestGroup';
 
     after(function(done) {
         assert.ok(testContact._id);
@@ -21,8 +22,8 @@ describe('Contact Service', function () {
     });
 
     it('Add Contact', function (done) {
-        var req = {body: testContact, headers: {userid: 'TestUser'}};
-        var res = {};
+        let req = {body: testContact, headers: {userid: 'TestUser', ingroups: ['TestGroup']}};
+        let res = {};
 
         res.json = function (data) {
             assert(data);
@@ -35,7 +36,7 @@ describe('Contact Service', function () {
                 assert(data);
                 assert.equal(data.status, 'Success');
 
-                var contact = data.data;
+                let contact = data.data;
                 assert.ok(contact._id);
                 assert.equal(contact.job, 'Test Job');
                 done();
@@ -43,12 +44,24 @@ describe('Contact Service', function () {
     });
 
     it('List All Contacts', function (done) {
-        var req = {headers: {userid: 'TestUser'}};
-        var res = {};
+        let req = {headers: {userid: 'TestUser', ingroups: ['TestGroup']}};
+        let res = {};
         res.json = function (data) {
             assert(data);
             assert.equal(data.status, 'Success');
             assert(data.data.length >= 1);
+            done();
+        };
+        contactService.listAllContacts(req, res);
+    });
+
+    it('Filter contacts by group', function (done) {
+        let req = {headers: {userid: 'TestUser', ingroups: ['NonExistent']}};
+        let res = {};
+        res.json = function (data) {
+            assert(data);
+            assert.equal(data.status, 'Success');
+            assert(data.data.length, 0);
             done();
         };
         contactService.listAllContacts(req, res);

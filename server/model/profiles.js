@@ -11,6 +11,13 @@ define(['./contact', './billingProfile'], function (Contact, BillingProfile) {
     this._id = undefined;
     this.contactInfo = new Contact();
 
+      this.owner = undefined;
+      // Primary group the user belongs to
+      this.group = undefined;
+      // secondary groups the user belongs to
+      this.ingroups = undefined;
+
+
     // Default profile
     this.billingProfile = new BillingProfile();
   }

@@ -12,6 +12,9 @@ define([], function () {
         this.fileNum = undefined;
 
         this.description = undefined;
+        // Location is stored a Google maps data structure
+        this.location = undefined;
+        this.lossType = undefined;
         this.isClosed = false;
 
         this.dateReceived = undefined;
@@ -21,36 +24,20 @@ define([], function () {
         this.updateDate = undefined;
         this.entryDate = undefined;
 
-        this.locationStreetAddress = undefined;
-        this.locationCity = undefined;
-        this.locationZip = undefined;
+        // Contacts added by the user
+        // Array of ContactInfp: {category, subCategory, contact}
+        // Note: the service links the contact object to the Contact collection
+        this.contacts = [];
 
-        // All the contacts are instances of 'Contact'
-        this.insuredContact = undefined;
-        this.insuredContactId = undefined;
-
-        this.insuredAttorneyContact = undefined;
-        this.insuredAttorneyContactId = undefined;
-
-        this.claimantContact = undefined;
-        this.claimantContactId = undefined;
-
-        this.claimantsAttorneyContact = undefined;
-        this.claimantsAttorneyContactId = undefined;
-
-        this.insuranceCoContactId = undefined;
-        this.insuranceCoContact = undefined;
-
-        // Additional contacts added by the user
-        // Instance of Contact object(s)
-        this.otherContacts = [];
-        this.otherContactIds = [];
+        // Attachments descriptors - the content is stored in Momgo GridFS
+        this.attachments = [];
 
         this.insuranceCompanyFileNum = undefined;
         this.insuranceCompanyName = undefined;
 
         // TODO, Complete, Pending
         this.state = undefined;
+        this.owner = undefined;
     }
 
     return Claim;

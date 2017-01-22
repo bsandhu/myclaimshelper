@@ -1,13 +1,18 @@
 define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox', 'underscore',
-        'shared/dateUtils', 'shared/NumberUtils', 'shared/objectUtils', 'app/utils/ajaxUtils', 'app/utils/events', 'app/utils/consts', 'app/utils/router',
+        'shared/dateUtils', 'shared/NumberUtils', 'shared/objectUtils', 'app/utils/ajaxUtils', 'app/utils/events',
+        'app/utils/consts', 'app/utils/router',
         'app/utils/session', 'app/utils/sessionKeys',
         'model/bill', 'model/billingItem', 'model/billingStatus', 'model/contact',
         'text!app/components/billing/billing.tmpl.html',
         'text!app/components/billing/billing.print.tmpl.html',
+        'text!app/components/billing/billing.create.tmpl.html',
+        'text!app/components/billing/billing.list.tmpl.html',
         'app/utils/audit'
     ],
     function ($, ko, KOMap, amplify, bootbox, _, DateUtils, NumberUtils, ObjectUtils, ajaxUtils, Events,
-              Consts, router, Session, SessionKeys, Bill, BillingItem, BillingStatus, Contact, viewHtml, printHtml, Audit) {
+              Consts, router, Session, SessionKeys, Bill, BillingItem, BillingStatus, Contact,
+              viewHtml, printHtml, createHtml, listHtml,
+              Audit) {
 
         function BillingVM() {
             console.log('Init BillingVM.');
@@ -27,6 +32,8 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox', 'underscore',
             this.showClosedClaims = ko.observable(false);
             this.billRecipient = ko.observable(KOMap.fromJS(new Contact()));
             this.groupedByCode = ko.observableArray([]);
+            this.createHtml = createHtml;
+            this.listHtml = listHtml;
 
             // Grouping
             this.groupBy = ko.observable('Not Submitted');

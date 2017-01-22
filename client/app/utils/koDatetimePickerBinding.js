@@ -12,18 +12,26 @@ define(['jquery', 'knockout', 'KOMap', 'shared/dateUtils', 'datetimepicker'],
                 var config = ko.utils.unwrapObservable(valueAccessor());
                 var showTime = config.timepicker;
 
+                // Should timepicker be shown as input or icon?
+                var showTimeLink = config.timepicker;
+
+                // Do not show timepicker icon or input
+                var hideTimepicker = config.hideTimepicker != undefined
+                    ? config.hideTimepicker
+                    : false;
+
                 if (!$(element).parent().is('div')){
                     throw 'Datetime picker must have a container div as parent';
                 }
 
-                // Config for DatePicker
+                // Config for DatePicker lib
                 config.mask = true;
                 config.datepicker = true;
                 config.timepicker = false;
                 config.format = DateUtils.DATE_PICKER_FORMAT;
                 $(element).datetimepicker(config);
 
-                // Config for TimePicker
+                // Config for TimePicker lib
                 var configForTimepicker = $.extend({}, config);
                 configForTimepicker.datepicker = false;
                 configForTimepicker.timepicker = true;
@@ -64,9 +72,13 @@ define(['jquery', 'knockout', 'KOMap', 'shared/dateUtils', 'datetimepicker'],
 
                 $(element).parent().append(containerDiv);
 
-                showTime
-                    ? showTimeInput()
-                    : hideTimeInput();
+                if (hideTimepicker) {
+                    hideTimepickerIconAndInput();
+                } else {
+                    showTime
+                        ? showTimeInput()
+                        : hideTimeInput();
+                }
 
                 // Listeners
                 $(timePickerInput).change(function () {
@@ -97,6 +109,12 @@ define(['jquery', 'knockout', 'KOMap', 'shared/dateUtils', 'datetimepicker'],
                     $(addTimeLink).hide();
                     $(hideTimeLink).show();
                     $(timePickerDiv).show();
+                }
+
+                function hideTimepickerIconAndInput(){
+                    $(addTimeLink).hide();
+                    $(hideTimeLink).hide();
+                    $(timePickerDiv).hide();
                 }
             },
 

@@ -39,6 +39,16 @@ function populateContacts() {
     });
 }
 
+function populateContacts() {
+    _.each(testContacts.data, function (contact) {
+        contact.owner = TEST_USER_ID;
+        mongoUtils.saveOrUpdateEntity(contact, mongoUtils.CONTACTS_COL_NAME, TEST_USER_ID)
+            .always(function (err) {
+                console.info(!err ? 'Saved contact' : err);
+            });
+    });
+}
+
 function populateClaimEntries() {
     _.each(testClaimEntries.data, function (entry) {
         entry.owner = TEST_USER_ID;
@@ -90,4 +100,4 @@ function populateUserProfiles() {
 //populateContacts()
 //populateClaimEntries();
 //populateBillingItems();
-populateClaims()
+// populateClaims()

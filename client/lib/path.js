@@ -190,3 +190,5 @@ Path.core.route.prototype = {
         }
     }
 };
+
+exports=Path;

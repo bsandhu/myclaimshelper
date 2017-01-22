@@ -10,6 +10,9 @@ define([], function () {
     function Contact() {
         this._id = undefined;
 
+        this.category = undefined;
+        this.subCategory = undefined;
+
         this.isBusiness = undefined;
         this.role = undefined;
 

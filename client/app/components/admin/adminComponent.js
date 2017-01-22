@@ -1,6 +1,6 @@
 define(['jquery', 'knockout', 'amplify',
         'app/utils/events', 'app/utils/ajaxUtils',
-        'socketio',
+        'socket.io-client',
         'app/utils/session',
         'shared/consts',
         'text!app/components/admin/admin.tmpl.html'],
@@ -21,7 +21,7 @@ define(['jquery', 'knockout', 'amplify',
             // Delay the subscription to allow faster initial rendering
             var _this = this;
             setTimeout(function initWebSocket() {
-                var host = window.location.protocol + "//" + window.location.hostname;
+                var host = window.location.protocol + "//" + window.location.hostname + ":" + window.location.port;
                 socket = io.connect(host);
 
                 socket.on('connect', function () {

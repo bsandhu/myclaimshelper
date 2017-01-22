@@ -6,8 +6,8 @@
     Drag n drop files here or
     <label class="btn btn-info btn-md">
         <input type="file" class="topMargin leftMargin" multiple
-               id="fileUpload-input"
-               data-bind="event: {'change': handleFilesSelection}">
+               data-bind="attr: {id: domElemId},
+                          event: {'change': handleFilesSelection}">
         Choose file ...
     </label>
 
@@ -18,6 +18,7 @@
     </div>
 
     <!-- List attachments -->
+    <!-- ko if: listFiles -->
     <ol class="topMargin5" data-bind="foreach: {data: claimEntry().attachments, as: 'file'}">
         <li>
             <span class="leftMargin">
@@ -30,4 +31,5 @@
             </span>
         </li>
     </ol>
+    <!-- /ko -->
 </div>

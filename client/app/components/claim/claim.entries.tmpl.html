@@ -7,6 +7,60 @@
                 style: {'max-height': screenHeight()+ 'px'}"
      class="rightMargin topMargin5 overflowY">
 
+    <!-- New task btn -->
+    <div class="btn-group inline leftMargin5"
+         data-bind="ifnot: isClaimClosed">
+        <button type="button"
+                id="claim-newtask-btn"
+                class="btn btn-default dropdown-toggle btn-info"
+                data-toggle="dropdown">
+            <span class="fa fa-plus"></span>
+            New Task <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu" role="menu">
+            <li>
+                <a href="#/claimEntry/new/phone">
+                    <span class="glyphicon glyphicon-earphone"></span>
+                    <span class="leftMargin5">Phone</span>
+                </a>
+            </li>
+            <li>
+                <a href="#/claimEntry/new/visit">
+                    <span class="glyphicon glyphicon-map-marker"></span>
+                    <span class="leftMargin5">Site visit</span>
+                </a>
+            </li>
+            <li>
+                <a href="#/claimEntry/new/photos">
+                    <span class="glyphicon glyphicon-camera"></span>
+                    <span class="leftMargin5">Photos</span>
+                </a>
+            </li>
+            <li>
+                <a href="#/claimEntry/new/other">
+                    <span class="fa fa-tag"></span>
+                    <span class="leftMargin5">Other</span>
+                </a>
+            </li>
+            <li class="divider"></li>
+            <li>
+                <a href="#/claimEntry/new/other" data-toggle="modal" data-target="#emailTaskTypeModal">
+                    <span class="fa fa-mail-forward"></span>
+                    <span class="leftMargin5">From Email</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Email task btn -->
+    <!-- ko ifnot: inEditMode && isPartiallyCollapsed -->
+    <div class="btn btn-default inline btn-info hidden-xs"
+         data-toggle="modal" data-target="#emailTaskTypeModal">
+        <span class="fa fa-mail-forward"></span>
+        <span class="leftMargin5">From Email</span>
+    </div>
+    <!-- /ko -->
+
     <table class="table table-hover" id="claimEntriesList">
         <thead>
         <tr>
@@ -40,8 +94,8 @@
             <tr
                 data-bind="css: {info: $parent.activeClaimEntryId() === entry._id},
                            click: $parent.onClaimEntryClick.bind($parent),
-                           event: {mouseover: function(){$('#claimEntryArrowCell' + $index()).css('font-size', '1.2em');},
-                                   mouseout : function(){$('#claimEntryArrowCell' + $index()).css('font-size', '1em');}}">
+                           event: {mouseover: function(){$parent.$('#claimEntryArrowCell' + $index()).css('font-size', '1.2em');},
+                                   mouseout : function(){$parent.$('#claimEntryArrowCell' + $index()).css('font-size', '1em');}}">
                 <td style="min-width: 15px">
                     <!-- Tag -->
                     <i class="leftMargin"

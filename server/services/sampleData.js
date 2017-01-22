@@ -1,27 +1,27 @@
-var tags = require('./../model/tags.js');
-var DateUtils = require('./../shared/dateUtils.js');
-var mongoUtils = require('./../../server/mongoUtils.js');
-var _ = require('underscore');
-var jQuery = require('jquery-deferred');
+let tags = require('./../model/tags.js');
+let DateUtils = require('./../shared/dateUtils.js');
+let mongoUtils = require('./../../server/mongoUtils.js');
+let _ = require('underscore');
+let jQuery = require('jquery-deferred');
 
 
-var now = new Date().getTime();
+let now = new Date().getTime();
 
-var sampleClaimId = String(now);
-var sampleClaimantId = sampleClaimId + '0';
-var sampleInsuredId = sampleClaimId + '1';
-var sampleTask1Id = sampleClaimId + '5';
-var sampleTask2Id = sampleClaimId + '6';
-var sampleTask3Id = sampleClaimId + '7';
-var sampleBillId = sampleClaimId + '111';
+let sampleClaimId = String(now);
+let sampleClaimantId = sampleClaimId + '0';
+let sampleInsuredId = sampleClaimId + '1';
+let sampleTask1Id = sampleClaimId + '5';
+let sampleTask2Id = sampleClaimId + '6';
+let sampleTask3Id = sampleClaimId + '7';
+let sampleBillId = sampleClaimId + '111';
 
-var tenDaysFromNow = DateUtils.daysFromNowInMillis(10);
-var tomorrow = DateUtils.daysFromNowInMillis(1);
-var anHourFromNow = now + (86400000/24);
-var tenDaysEarlier = now - (DateUtils.MILLIS_IN_A_DAY * 10);
-var twentyDaysEarlier = now - (DateUtils.MILLIS_IN_A_DAY * 20);
+let tenDaysFromNow = DateUtils.daysFromNowInMillis(10);
+let tomorrow = DateUtils.daysFromNowInMillis(1);
+let anHourFromNow = now + (86400000/24);
+let tenDaysEarlier = now - (DateUtils.MILLIS_IN_A_DAY * 10);
+let twentyDaysEarlier = now - (DateUtils.MILLIS_IN_A_DAY * 20);
 
-var data = {
+let data = {
     claim: {
         "_id": sampleClaimId,
         "fileNum": "02-88767AC",
@@ -199,36 +199,41 @@ var data = {
 }
 
 function setupSampleDataFor(userId) {
-    var defer = jQuery.Deferred();
-    var defereds = [];
+    let defer = jQuery.Deferred();
+    let defereds = [];
 
     // Contacts
     _.each(data.contacts, function (contact) {
         contact.owner = userId;
-        defereds.push(mongoUtils.saveOrUpdateEntity(contact, mongoUtils.CONTACTS_COL_NAME, userId));
+        contact.group = userId;
+        defereds.push(mongoUtils.saveOrUpdateEntity(contact, mongoUtils.CONTACTS_COL_NAME));
     });
 
     // Tasks
     _.each(data.tasks, function (entry) {
         entry.owner = userId;
-        defereds.push(mongoUtils.saveOrUpdateEntity(entry, mongoUtils.CLAIM_ENTRIES_COL_NAME, userId));
+        entry.group = userId;
+        defereds.push(mongoUtils.saveOrUpdateEntity(entry, mongoUtils.CLAIM_ENTRIES_COL_NAME));
     });
 
     // Billing item
     _.each(data.billingItems, function (billItem) {
         billItem.owner = userId;
-        defereds.push(mongoUtils.saveOrUpdateEntity(billItem, mongoUtils.BILLING_ITEMS_COL_NAME, userId));
+        billItem.group = userId;
+        defereds.push(mongoUtils.saveOrUpdateEntity(billItem, mongoUtils.BILLING_ITEMS_COL_NAME));
     });
 
     // Claim
-    var claim = data.claim;
+    let claim = data.claim;
     claim.owner = userId;
-    defereds.push(mongoUtils.saveOrUpdateEntity(claim, mongoUtils.CLAIMS_COL_NAME, userId));
+    claim.group = userId;
+    defereds.push(mongoUtils.saveOrUpdateEntity(claim, mongoUtils.CLAIMS_COL_NAME));
 
     // Bill
-    var bill = data.bill;
+    let bill = data.bill;
     bill.owner = userId;
-    defereds.push(mongoUtils.saveOrUpdateEntity(bill, mongoUtils.BILL_COL_NAME, userId));
+    bill.group = userId;
+    defereds.push(mongoUtils.saveOrUpdateEntity(bill, mongoUtils.BILL_COL_NAME));
 
     jQuery.when(defereds)
         .then(function () {

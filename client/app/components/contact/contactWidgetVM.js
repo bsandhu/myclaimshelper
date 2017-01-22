@@ -48,6 +48,7 @@ define(['knockout', 'underscore',
         }
 
         ContactWidgetVM.prototype.initContacts = function () {
+            console.log('Reloading contacts from session');
             this.contacts(_.sortBy(Session.getContacts(), 'name'));
             this.filteredContacts(_.sortBy(Session.getContacts(), 'name'));
         }

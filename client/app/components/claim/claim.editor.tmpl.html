@@ -10,7 +10,6 @@
     <form class="form-horizontal">
         <div class="form-group">
             <label class="col-sm-2 control-label">File num.</label>
-
             <div class="col-sm-3">
                 <input type="text" class="form-control input-sm"
                        data-bind="value: claim().fileNum">
@@ -18,7 +17,6 @@
         </div>
         <div class="form-group">
             <label class="col-sm-2 control-label">Description</label>
-
             <div class="col-sm-6">
                 <textarea style="display: table-cell;"
                           class="form-control" rows="4" id="claimEntry-textArea"
@@ -26,137 +24,248 @@
                           placeholder="Note"></textarea>
             </div>
         </div>
+        <!-- Loss location -->
+        <div class="form-group">
+            <label class="col-sm-2 control-label">Loss location</label>
+            <div class="col-sm-6">
+                <!-- Maps component -->
+                <maps-component params="'claimEntry': claim"></maps-component>
+            </div>
+        </div>
+        <!-- Loss type -->
+        <div class="form-group">
+            <label class="col-sm-2 control-label">Loss type</label>
+            <div class="col-sm-4">
+                <input type="text"
+                       class="form-control input-sm sub-heading"
+                       data-bind="refDataAutoComplete: claim().lossType,
+                                  type: 'ClaimTypes'"
+                       placeholder="Loss Type"
+                       autocomplete="on">
+            </div>
+        </div>
 
         <!-- **** Insurance Co **** -->
-        <form class="form-inline">
-            <div class="form-group">
-                <label class="col-sm-2 control-label">Insurance Co.</label>
-
-                <div class="col-sm-3">
-                    <input type="text" class="form-control input-sm"
-                           data-bind="value: claim().insuranceCompanyName"
-                           placeholder="Name"
-                           autocomplete="on">
+        <fieldset>
+            <legend>Insurance co.</legend>
+            <form class="form-inline">
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Company</label>
+                    <div class="col-sm-3">
+                        <input type="text" class="form-control input-sm"
+                               id="claimInsuranceCo"
+                               data-bind="refDataAutoComplete: claim().insuranceCompanyName,
+                                          type: 'InsuranceCompanies'"
+                               placeholder="Name"
+                               autocomplete="on">
+                    </div>
+                    <div class="col-sm-7">
+                        <label class="col-sm-3 control-label">Claim #</label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control input-sm"
+                                   data-bind="value: claim().insuranceCompanyFileNum"
+                                   placeholder="Claim number"
+                                   autocomplete="on">
+                        </div>
+                    </div>
                 </div>
-                <div class="col-sm-3">
-                    <input type="text" class="form-control input-sm"
-                           data-bind="value: claim().insuranceCompanyFileNum"
-                           placeholder="Claim number"
-                           autocomplete="on">
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Policy #</label>
+                    <div class="col-sm-3">
+                        <input type="text" class="form-control input-sm"
+                               placeholder="Name"
+                               autocomplete="on">
+                    </div>
+                    <div class="col-sm-7">
+                        <label class="col-sm-3 control-label">Valid from</label>
+                        <div class="col-sm-7">
+                            <input type="text" class="form-control input-sm"
+                                   style="width: 45%;"
+                                   data-bind="datetimePicker: {
+                                              datepicker: true,
+                                              timepicker: false,
+                                              hideTimepicker: true,
+                                              dateValue: claim().dateReceived}"/>
+                            to
+                            <input type="text" class="form-control input-sm"
+                                   style="width: 45%;"
+                                   data-bind="datetimePicker: {
+                                              datepicker: true,
+                                              timepicker: false,
+                                              hideTimepicker: true,
+                                              dateValue: claim().dateReceived}"/>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </form>
+            </form>
+        </fieldset>
 
         <!-- **** Important Dates **** -->
-        <form class="form-horizontal">
-            <form class="form-inline">
-                <div class=""><h5 class="color-dark-grey"></h5></div>
-                <div class="form-group">
-                    <label class="col-sm-2 control-label">Date Received</label>
+        <fieldset>
+            <legend>Dates</legend>
+            <form class="form-horizontal">
+                <form class="form-inline">
+                    <div class=""><h5 class="color-dark-grey"></h5></div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Received</label>
 
-                    <div class="col-sm-2">
-                        <input type="text" class="form-control input-sm"
-                               data-bind="datetimePicker: {
+                        <div class="col-sm-2">
+                            <input type="text" class="form-control input-sm"
+                                   style="width: 75%;"
+                                   data-bind="datetimePicker: {
                                               datepicker: true,
                                               timepicker: false,
                                               dateValue: claim().dateReceived}"/>
-                    </div>
+                        </div>
 
-                    <label class="col-sm-1 control-label">Date Due</label>
+                        <label class="col-sm-1 control-label">Due</label>
 
-                    <div class="col-sm-2">
-                        <input type="text" class="form-control input-sm" id="dateDueInput"
-                               data-bind="datetimePicker: {
+                        <div class="col-sm-2">
+                            <input type="text" class="form-control input-sm" id="dateDueInput"
+                                   style="width: 75%;"
+                                   data-bind="datetimePicker: {
                                               datepicker: true,
                                               timepicker: false,
                                               dateValue: claim().dateDue}"/>
-                    </div>
+                        </div>
 
-                    <label class="col-sm-1 control-label">Date of Loss</label>
+                        <label class="col-sm-1 control-label">Loss</label>
 
-                    <div class="col-sm-2">
-                        <input type="text" class="form-control input-sm" id="dateOfLossInput"
-                               data-bind="datetimePicker: {
+                        <div class="col-sm-2">
+                            <input type="text" class="form-control input-sm" id="dateOfLossInput"
+                                   style="width: 75%;"
+                                   data-bind="datetimePicker: {
                                               datepicker: true,
                                               timepicker: false,
                                               dateValue: claim().dateOfLoss}"/>
+                        </div>
                     </div>
-                </div>
+                </form>
             </form>
-        </form>
+        </fieldset>
 
         <!-- **** Insured **** -->
-        <form class="form-horizontal">
-            <form class="form-inline">
-                <div class=""><h5 class="color-dark-grey"></h5></div>
-                <div class="form-group">
-                    <label class="col-sm-2 control-label">Insured</label>
+        <fieldset>
+            <legend>Insured</legend>
+            <!-- ko foreach: {data: claim().contacts, as: 'otherContact'} -->
+            <div data-bind="if: otherContact.category() == 'Insured'">
+                <form class="form-horizontal">
+                    <form class="form-inline">
+                        <div class="form-group">
 
-                    <div class="col-sm-4" style="display: table-cell">
-                        <contact-component params="contact : claim().insuredContact,
-                                                   idSuffix: 'claim-insuredContact',
-                                                   isBusinessOptionApplicable: false"></contact-component>
-                    </div>
-                    <div class="col-sm-4">
-                        <div class="bottomMargin5">
-                            <a href=""
-                               data-bind="click: onToggleAtty.bind(this, '#insuredAttorneyContact')"
-                               class="bottomMargin5"><strong>+</strong> Insured attorney</a>
+                            <!-- SubCategory -->
+                            <div class="col-sm-2 fieldLabel" style="display: table-cell">
+                                <span data-bind="if: subCategory() != 'Insured'">
+                                    <span data-bind="text: subCategory"></span>
+                                </span>
+                            </div>
+
+                            <!-- Contact -->
+                            <div class="col-sm-4" style="display: table-cell">
+                                <contact-component
+                                        params="contact : contact,
+                                                idSuffix: 'claimContact-' + $index,
+                                                isBusinessOptionApplicable: false"></contact-component>
+                            </div>
+                            <div class="col-sm-1"
+                                 data-bind="click: $parent.onDeleteContact.bind($parent, $index())">
+                                <i class="fa fa-times-circle clearSearchIcon"></i>
+                            </div>
                         </div>
-                        <div id="insuredAttorneyContact"
-                             data-bind="style: { display: Number(claim().insuredAttorneyContactId()) > 0 ? '' : 'none'}">
-                            <contact-component params="contact : claim().insuredAttorneyContact,
-                                                   idSuffix: 'claim-insuredAttny',
-                                                   isBusinessOptionApplicable: true"></contact-component>
-                        </div>
-                    </div>
-                </div>
-            </form>
-        </form>
+                    </form>
+                </form>
+            </div>
+            <!-- /ko -->
+
+            <div class="col-sm-offset-2 col-sm-4" style="display: table-cell">
+                <a href="" data-bind="click: onAddNewInsuredContact" class="rightMargin2pc">
+                    <i class="fa fa-lg fa-plus-circle"></i> Add insured
+                </a>
+                <a href="" data-bind="click: onAddNewInsuredAttyContact">
+                    <i class="fa fa-lg fa-plus-circle"></i> Add attorney
+                </a>
+            </div>
+        </fieldset>
 
         <!-- **** Claimant **** -->
-        <form class="form-horizontal">
-            <form class="form-inline">
-                <div class=""><h5 class="color-dark-grey"></h5></div>
-                <div class="form-group">
-                    <label class="col-sm-2 control-label">Claimant</label>
+        <fieldset>
+            <legend>Claimant</legend>
+            <!-- ko foreach: {data: claim().contacts, as: 'otherContact'} -->
+            <div data-bind="if: otherContact.category() == 'Claimant'">
+                <form class="form-horizontal">
+                    <form class="form-inline">
+                        <div class="form-group">
 
-                    <div class="col-sm-4" style="display: table-cell">
-                        <contact-component params="contact : claim().claimantContact,
-                                                   idSuffix: 'claim-claimantContact',
-                                                   isBusinessOptionApplicable: false"></contact-component>
-                    </div>
-                    <div class="col-sm-4">
-                        <div class="bottomMargin5">
-                            <a href=""
-                               data-bind="click: onToggleAtty.bind(this, '#claimantAttorneyContact')"
-                               class="bottomMargin5"><strong>+</strong> Claimant attorney</a>
-                        </div>
-                        <div id="claimantAttorneyContact"
-                             data-bind="style: { display: Number(claim().claimantsAttorneyContactId()) > 0 ? '' : 'none'}">
-                            <contact-component params="contact : claim().claimantsAttorneyContact,
-                                                       idSuffix: 'claim-claimantAttny',
-                                                       isBusinessOptionApplicable: true"></contact-component>
-                        </div>
-                    </div>
-                </div>
-            </form>
-        </form>
+                            <!-- SubCategory -->
+                            <div class="col-sm-2 fieldLabel" style="display: table-cell">
+                                <span data-bind="if: subCategory() != 'Claimant'">
+                                    <span data-bind="text: subCategory"></span>
+                                </span>
+                            </div>
 
-        <!-- **** Insurance co. contact **** -->
-        <form class="form-horizontal">
-            <form class="form-inline">
-                <div class=""><h5 class="color-dark-grey"></h5></div>
-                <div class="form-group">
-                    <label class="col-sm-2 control-label">Insured co. adjuster</label>
-                    <div class="col-sm-4" style="display: table-cell">
-                        <contact-component params="contact : claim().insuranceCoContact,
-                                                   idSuffix: 'claim-insuranceCoContact',
-                                                   isBusinessOptionApplicable: false"></contact-component>
-                    </div>
-                </div>
-            </form>
-        </form>
+                            <!-- Contact -->
+                            <div class="col-sm-4" style="display: table-cell">
+                                <contact-component
+                                        params="contact : contact,
+                                                idSuffix: 'claimContact-' + $index,
+                                                isBusinessOptionApplicable: false"></contact-component>
+                            </div>
+                            <div class="col-sm-1"
+                                 data-bind="click: $parent.onDeleteContact.bind($parent, $index())">
+                                <i class="fa fa-times-circle clearSearchIcon"></i>
+                            </div>
+                        </div>
+                    </form>
+                </form>
+            </div>
+            <!-- /ko -->
+
+            <div class="col-sm-offset-2 col-sm-4" style="display: table-cell">
+                <a href="" data-bind="click: onAddNewClaimantContact" class="rightMargin2pc">
+                    <i class="fa fa-lg fa-plus-circle"></i> Add claimant
+                </a>
+                <a href="" data-bind="click: onAddNewClaimantAttyContact">
+                    <i class="fa fa-lg fa-plus-circle"></i> Add attorney
+                </a>
+            </div>
+        </fieldset>
+
+        <!-- **** Other **** -->
+        <fieldset>
+            <legend>Contacts</legend>
+            <!-- ko foreach: {data: claim().contacts, as: 'otherContact'} -->
+            <div data-bind="if: otherContact.category() == 'Other'">
+                <form class="form-horizontal">
+                    <form class="form-inline">
+                        <div class="form-group">
+                            <div class="col-sm-1" style="display: table-cell"></div>
+
+                            <!-- Sub category -->
+                            <div class="col-sm-2" style="display: table-cell">
+                                <input type="text"
+                                       class="form-control input-sm sub-heading"
+                                       data-bind="refDataAutoComplete: subCategory,
+                                                  type: 'ContactSubCategory'"
+                                       placeholder="Name"
+                                       autocomplete="on">
+                            </div>
+
+                            <!-- Contact -->
+                            <div class="col-sm-4" style="display: table-cell">
+                                <contact-component
+                                        params="contact : contact,
+                                            idSuffix: 'claimContact-' + $index,
+                                            isBusinessOptionApplicable: false"></contact-component>
+                            </div>
+                        </div>
+                    </form>
+                </form>
+            </div>
+            <!-- /ko -->
+            <a href="" data-bind="click: onAddNewOtherContact">
+                <i class="fa fa-lg fa-plus-circle"></i> Add
+            </a>
+        </fieldset>
     </form>
 
     <div class="topMargin"/>
@@ -168,5 +277,5 @@
             <button type="button" class="btn btn-default" data-bind="click: onCancel">Cancel</button>
         </div>
     </div>
-
 </div>
+

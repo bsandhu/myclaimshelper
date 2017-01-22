@@ -64,323 +64,287 @@
 
                 <div class="bottomMargin5 bottomBorderDashed"></div>
 
-                <!-- Contacts -->
+                <div class="row bottomMargin5">
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                        <strong>Insured</strong>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                        <strong>Claimant</strong>
+                    </div>
+                </div>
+                <!-- Insured -->
+                <div class="row">
+                    <div data-bind="foreach: {data: claim().contacts(), as: 'contactInfo'}">
+                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                            <div data-bind="if: contactInfo.category() == 'Insured'">
+                                <div class="row bottomMargin5">
+                                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6">
+                                        <span data-bind="text: contactInfo.subCategory"></span>
+                                    </div>
+                                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6">
+                                        <a href=""
+                                           data-bind="click: function(){$parent.onShowContact(contactInfo.contact)}">
+                                            <span data-bind="text: $parent.niceName(contactInfo.contact)"></span>
+                                        </a>
+                                    </div>
+                                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6">
+                                        <span data-bind="text: contactInfo.contact.phone"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Claimant -->
+                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                            <div data-bind="if: contactInfo.category() == 'Claimant'">
+                                <div class="row bottomMargin5">
+                                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6">
+                                        <span data-bind="text: contactInfo.subCategory"></span>
+                                    </div>
+                                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6">
+                                        <a href=""
+                                           data-bind="click: function(){$parent.onShowContact(contactInfo.contact)}">
+                                            <span data-bind="text: $parent.niceName(contactInfo.contact)"></span>
+                                        </a>
+                                    </div>
+                                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6">
+                                        <span data-bind="text: contactInfo.contact.phone"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="bottomMargin5 bottomBorderDashed"></div>
+
+                <!-- Other contacts -->
                 <div class="row">
                     <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
                         <strong>Contacts</strong>
                     </div>
-                    <!--
-                    <div class="col-lg-2 col-md-2 col-lg-offset-2 col-md-offset-2 col-sm-4 col-xs-4 col-sm-offset-4 col-xs-offset-4">
-                        <div data-bind="text: 'Show all (' + Number(claim().otherContacts().length) + 2 + ')'" class="font-sm"></div>
-                    </div>
-                    -->
                 </div>
-
                 <div class="row">
-                    <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                        <span>Claimant</span>
-                    </div>
-                    <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                        <a href=""
-                           data-bind="click: function(){onShowContact(claim().claimantContact)},
-                                  text: niceName(claim().claimantContact)">
-                        </a>
-                    </div>
-                    <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                        <span data-bind="text: claim().claimantContact.phone"></span>
-                    </div>
-                    <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                        <span>Claimant Attorney</span>
-                    </div>
-                    <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                        <a href=""
-                           data-bind="click: function(){onShowContact(claim().claimantsAttorneyContact)},
-                                  text: niceName(claim().claimantsAttorneyContact)"></a>
-                    </div>
-                    <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                        <span data-bind="text: claim().claimantsAttorneyContact.phone"></span>
-                    </div>
-                </div>
-
-                <div class="row ">
-                    <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                        <span>Insured</span>
-                    </div>
-                    <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                        <a href=""
-                           data-bind="click: function(){onShowContact(claim().insuredContact)},
-                                  text: niceName(claim().insuredContact)"></a>
-                    </div>
-                    <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                        <span data-bind="text: claim().insuredContact.phone"></span>
-                    </div>
-                    <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                        <span>Insured Attorney</span>
-                    </div>
-                    <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                        <a href=""
-                           data-bind="click: function(){onShowContact(claim().insuredAttorneyContact)},
-                                  text: niceName(claim().insuredAttorneyContact)"></a>
-                    </div>
-                    <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                        <span data-bind="text: claim().insuredAttorneyContact.phone"></span>
-                    </div>
-                </div>
-
-                <div class="row ">
-                    <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                        <span>Insurance co. adjuster</span>
-                    </div>
-                    <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                        <a href=""
-                           data-bind="click: function(){onShowContact(claim().insuranceCoContact)},
-                                  text: niceName(claim().insuranceCoContact)"></a>
-                    </div>
-                    <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                        <span data-bind="text: claim().insuranceCoContact.phone"></span>
-                    </div>
-                </div>
-
-                <!-- Other contacts -->
-                <div data-bind="foreach: claim().otherContacts()">
-                    <div class="row bottomBorder">
-                        <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                            &nbsp;
-                        </div>
-                        <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                            <a><!--data-bind="click: $parent.onShowContact($data._id)">-->
-                                <!--<span data-bind="text: $parent.niceName($data)"></span>-->
-                                Foo
-                            </a>
-                        </div>
-                        <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                            <span data-bind="text: '616 112 9889'"></span>
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                        <div data-bind="foreach: {data: claim().contacts(), as: 'contactInfo'}">
+                            <div data-bind="if: contactInfo.category() == 'Other'">
+                                <div class="row bottomMargin5">
+                                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6">
+                                        <span data-bind="text: contactInfo.subCategory"></span>
+                                    </div>
+                                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6">
+                                        <a href=""
+                                           data-bind="click: function(){$parent.onShowContact(contactInfo.contact)}">
+                                            <span data-bind="text: $parent.niceName(contactInfo.contact)"></span>
+                                        </a>
+                                    </div>
+                                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6">
+                                        <span data-bind="text: contactInfo.contact.phone"></span>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
+                <div class="bottomMargin5 bottomBorderDashed"></div>
+
             </div>
         </div>
-        <div class="bottomMargin5 bottomBorderDashed"></div>
     </div>
 
     <!-- *** Editor *** -->
-    <div data-bind="template: {name: 'app/components/claim/claim.editor'}"></div>
+    <div data-bind="template: {name: editorViewHtml}"></div>
 
     <!-- ************************************************ -->
     <!-- Buttons -->
     <!-- ************************************************ -->
 
     <div data-bind="ifnot: inEditMode" class="row">
-        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="panel-body">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 
-            <!-- ko if: isClaimClosed -->
-            <div class="row">
-                <div class="col-lg-offset-2 col-md-offset-2 col-sm-offset-1 col-lg-8 col-md-8 col-sm-10 col-xs-12">
-                    <div class="alert alert-info" role="alert"
-                         data-bind="html: '<i class=\'fa fa-lock fa-2x\'></i><b>  Claim closed on ' + DateUtils.niceDate(claim().dateClosed()) + '</b>. Please re-open the Claim if you wish to make further changes.'">
+                <!-- ko if: isClaimClosed -->
+                <div class="row">
+                    <div class="col-lg-offset-2 col-md-offset-2 col-sm-offset-1 col-lg-8 col-md-8 col-sm-10 col-xs-12">
+                        <div class="alert alert-info" role="alert"
+                             data-bind="html: '<i class=\'fa fa-lock fa-2x\'></i><b>  Claim closed on ' + DateUtils.niceDate(claim().dateClosed()) + '</b>. Please re-open the Claim if you wish to make further changes.'">
+                        </div>
                     </div>
                 </div>
-            </div>
-            <!-- /ko -->
+                <!-- /ko -->
 
-            <!-- New task btn -->
-            <div class="btn-group inline leftMargin5"
-                 data-bind="ifnot: isClaimClosed">
-                <button type="button"
-                        id="claim-newtask-btn"
-                        class="btn btn-default dropdown-toggle btn-info"
-                        data-toggle="dropdown">
-                    <span class="fa fa-plus"></span>
-                    New Task <span class="caret"></span>
-                </button>
-                <ul class="dropdown-menu" role="menu">
-                    <li>
-                        <a href="#/claimEntry/new/phone">
-                            <span class="glyphicon glyphicon-earphone"></span>
-                            <span class="leftMargin5">Phone</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#/claimEntry/new/visit">
-                            <span class="glyphicon glyphicon-map-marker"></span>
-                            <span class="leftMargin5">Site visit</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#/claimEntry/new/photos">
-                            <span class="glyphicon glyphicon-camera"></span>
-                            <span class="leftMargin5">Photos</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#/claimEntry/new/other">
-                            <span class="fa fa-tag"></span>
-                            <span class="leftMargin5">Other</span>
-                        </a>
-                    </li>
-                    <li class="divider"></li>
-                    <li>
-                        <a href="#/claimEntry/new/other" data-toggle="modal" data-target="#emailTaskTypeModal">
-                            <span class="fa fa-mail-forward"></span>
-                            <span class="leftMargin5">From Email</span>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-            <!-- Email task btn -->
-            <!-- ko ifnot: inEditMode && isPartiallyCollapsed -->
-            <div class="btn btn-default inline btn-info hidden-xs"
-                 data-toggle="modal" data-target="#emailTaskTypeModal">
-                <span class="fa fa-mail-forward"></span>
-                <span class="leftMargin5">From Email</span>
-            </div>
-            <!-- /ko -->
+                <!-- **** Left side buttons ***** -->
+                <div class="pull-left col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li role="presentation" class="active">
+                            <a aria-controls="claimDocs" href="#claimDocs" role="tab" data-toggle="tab"
+                               class="squareCorners" id="claimDocsTabLink">Docs</a>
+                        </li>
+                        <li role="presentation">
+                            <a aria-controls="claimTasks" href="#claimTasks" role="tab" data-toggle="tab"
+                               class="squareCorners">Tasks</a>
+                        </li>
+                    </ul>
+                </div>
 
-            <div class="pull-right">
-                <!-- `Close claim` button -->
-                <div data-bind="ifnot: inEditMode && isPartiallyCollapsed" class="inline hidden-xs">
-                    <!-- ko ifnot: isClaimClosed -->
-                    <div class="btn btn-default inline btn-info"
-                         data-bind="click: onCloseClaimClick.bind($data)">
-                        <i class="fa fa-check-square-o"></i>
-                        Close
+                <!-- **** Right side buttons ***** -->
+                <div class="pull-right" style="position: relative; top: -44px;">
+                    <!-- `Close claim` button -->
+                    <div data-bind="ifnot: inEditMode && isPartiallyCollapsed" class="inline hidden-xs">
+                        <!-- ko ifnot: isClaimClosed -->
+                        <div class="btn btn-default inline btn-info"
+                             data-bind="click: onCloseClaimClick.bind($data)">
+                            <i class="fa fa-check-square-o"></i>
+                            Close file
+                        </div>
+                        <!-- /ko -->
+                        <!-- ko if: isClaimClosed -->
+                        <div class="btn btn-default inline btn-info"
+                             data-bind="click: onReOpenClaimClick.bind($data)">
+                            <i class="fa fa-share-square-o"></i>
+                            Re-open
+                        </div>
+                        <!-- /ko -->
+                    </div>
+
+                    <!-- Edit claim button -->
+                    <div data-bind="ifnot: inEditMode && isPartiallyCollapsed" class="inline">
+                        <!-- ko ifnot: isClaimClosed -->
+                        <div class="btn btn-default inline btn-info"
+                             data-bind="click: onEditModeClick.bind($data)">
+                            <i class="fa fa-pencil"></i>
+                            Edit
+                        </div>
+                        <!-- /ko -->
+                    </div>
+
+                    <!-- Billing Button -->
+                    <!-- ko if:isBillingEnabled -->
+                    <div data-bind="ifnot: inEditMode && isPartiallyCollapsed" class="inline">
+                        <div class="btn-group inline">
+                            <button type="button"
+                                    id="claim-billing-btn"
+                                    class="btn btn-default dropdown-toggle btn-info"
+                                    data-toggle="dropdown">
+                                <span class="fa fa-fw fa-credit-card"></span>
+                                Billing <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" role="menu">
+                                <!-- ko ifnot: isClaimClosed -->
+                                <li>
+                                    <a data-bind="attr: {href: '#/claim/' + claim()._id() + '/newbill'}">
+                                        <span class="fa fa-plus"></span>
+                                        <span class="leftMargin5">New</span>
+                                    </a>
+                                </li>
+                                <!-- /ko -->
+                                <li>
+                                    <a data-bind="attr: {href: '#/billing/history/' + claim()._id()}">
+                                        <span class="fa fa-history"></span>
+                                        <span class="leftMargin5">History</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a data-bind="click: onBillingProfileClick">
+                                        <span class="fa fa-cogs"></span>
+                                        <span class="leftMargin5">Rates</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                     <!-- /ko -->
-                    <!-- ko if: isClaimClosed -->
-                    <div class="btn btn-default inline btn-info"
-                         data-bind="click: onReOpenClaimClick.bind($data)">
-                        <i class="fa fa-share-square-o"></i>
-                        Re-open
-                    </div>
-                    <!-- /ko -->
+
                 </div>
 
-                <!-- Edit claim button -->
-                <div data-bind="ifnot: inEditMode && isPartiallyCollapsed" class="inline">
-                    <!-- ko ifnot: isClaimClosed -->
-                    <div class="btn btn-default inline btn-info"
-                         data-bind="click: onEditModeClick.bind($data)">
-                        <i class="fa fa-pencil"></i>
-                        Edit
-                    </div>
-                    <!-- /ko -->
-                </div>
+                <div class="clear"></div>
 
-                <!-- Billing Button -->
-                <div data-bind="ifnot: inEditMode && isPartiallyCollapsed" class="inline">
-                    <div class="btn-group inline">
-                        <button type="button"
-                                id="claim-billing-btn"
-                                class="btn btn-default dropdown-toggle btn-info"
-                                data-toggle="dropdown">
-                            <span class="fa fa-fw fa-credit-card"></span>
-                            Billing <span class="caret"></span>
-                        </button>
-                        <ul class="dropdown-menu" role="menu">
-                            <!-- ko ifnot: isClaimClosed -->
-                            <li>
-                                <a data-bind="attr: {href: '#/claim/' + claim()._id() + '/newbill'}">
-                                    <span class="fa fa-plus"></span>
-                                    <span class="leftMargin5">New</span>
-                                </a>
-                            </li>
-                            <!-- /ko -->
-                            <li>
-                                <a data-bind="attr: {href: '#/billing/history/' + claim()._id()}">
-                                    <span class="fa fa-history"></span>
-                                    <span class="leftMargin5">History</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a data-bind="click: onBillingProfileClick">
-                                    <span class="fa fa-cogs"></span>
-                                    <span class="leftMargin5">Rates</span>
-                                </a>
-                            </li>
-                        </ul>
+                <!-- **** Entries **** -->
+                <div data-bind="ifnot: inEditMode" class="row">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="top: -20px;">
+                        <div class="tab-content">
+                            <div role="tabpanel" class="tab-pane active" id="claimDocs">
+                                <div data-bind="template: {name: docsViewHtml,
+                                                           afterRender: afterTabRender}"></div>
+                            </div>
+                            <div role="tabpanel" class="tab-pane fade" id="claimTasks">
+                                <div data-bind="template: {name: entriesViewHtml,
+                                                           afterRender: afterTabRender}"></div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="clear"></div>
-            <!-- *** Entries *** -->
-            <div data-bind="ifnot: inEditMode" class="row">
-                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                    <div data-bind="template: {name: 'app/components/claim/claim.entries',
-                                               afterRender: initTooltipComponent}"></div>
-                </div>
             </div>
         </div>
+        <!-- *** Claim Panel - end -->
     </div>
-    <!-- *** Claim Panel - end -->
-</div>
 
-<!-- *** Modal with the email instructions *** -->
-<div class="modal modal-lg fade centered" role="dialog" tabindex="-1" id="emailTaskTypeModal" data-bind="if: readyToRender">
-    <div class="modal-dialog">
-        <div class="modal-content">
+    <!-- *** Modal with the email instructions *** -->
+    <div class="modal modal-lg fade centered" role="dialog" tabindex="-1" id="emailTaskTypeModal"
+         data-bind="if: readyToRender">
+        <div class="modal-dialog">
+            <div class="modal-content">
 
-            <!-- Header -->
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-                <h4 class="modal-title">Create Tasks from Emails</h4>
-            </div>
+                <!-- Header -->
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title">Create Tasks from Emails</h4>
+                </div>
 
-            <!-- Body -->
-            <div class="modal-body">
+                <!-- Body -->
+                <div class="modal-body">
 
-                <div class="container container-fluid" style="line-height: 275%">
-                    <div class="row bottomMargin5">
-                        <div class="col-md-10">
-                            Tasks can be created automatically from emails sent to <i>MyClaimsHelper</i>.
-                            You can also forward emails you receive from your associates.
+                    <div class="container container-fluid" style="line-height: 275%">
+                        <div class="row bottomMargin5">
+                            <div class="col-md-10">
+                                Tasks can be created automatically from emails sent to <i>MyClaimsHelper</i>.
+                                You can also forward emails you receive from your associates.
+                            </div>
+                        </div>
+                        <div class="row ">
+                            <div class="col-md-10">
+                                <span class="stepBulletPoint">1</span>
+                                Forward or send email to
+                                <a data-bind="attr: {href: 'mailto:' + Session.getCurrentUserId() + '@myclaimshelper.com'}"
+                                   target="_blank">
+                                    <span data-bind="text: Session.getCurrentUserId() + '@myclaimshelper.com'"></span>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-10">
+                                <span class="stepBulletPoint">2</span>
+                                Mention Claim file number or the insurance company file number in the Subject line.
+                                Example:
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-offset-1 col-md-10 topMargin5">
+                                <i><span
+                                        data-bind="text: 'Witness statement ' + (claim().fileNum() || claim().insuranceCompanyFileNum() || '04-92998')"/></i>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-10">
+                                <span class="stepBulletPoint">3</span>
+                                You will get a notification in a few seconds!
+                                <img class="topMargin5 boxShadow" src="/img/EmailNotification.png"/><br/>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-10">
+                                <span class="stepBulletPoint" style="visibility: hidden"></span>
+                                The email will appear as a Task under the relevant claim
+                            </div>
                         </div>
                     </div>
-                    <div class="row ">
-                        <div class="col-md-10">
-                            <span class="stepBulletPoint">1</span>
-                            Forward or send email to
-                            <a data-bind="attr: {href: 'mailto:' + Session.getCurrentUserId() + '@myclaimshelper.com'}"
-                               target="_blank">
-                                <span data-bind="text: Session.getCurrentUserId() + '@myclaimshelper.com'"></span>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-10">
-                            <span class="stepBulletPoint">2</span>
-                            Mention Claim file number or the insurance company file number in the Subject line.
-                            Example:
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-offset-1 col-md-10 topMargin5">
-                            <i><span
-                                    data-bind="text: 'Witness statement ' + (claim().fileNum() || claim().insuranceCompanyFileNum() || '04-92998')"/></i>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-10">
-                            <span class="stepBulletPoint">3</span>
-                            You will get a notification in a few seconds!
-                            <img class="topMargin5 boxShadow" src="/img/EmailNotification.png"/><br/>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-10">
-                            <span class="stepBulletPoint" style="visibility: hidden"></span>
-                            The email will appear as a Task under the relevant claim
-                        </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                </div>
-            </div>
 
+            </div>
         </div>
-    </div>
-</div><!-- /.modal -->
+    </div><!-- /.modal -->
 

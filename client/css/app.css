@@ -137,6 +137,10 @@ div {
     margin-bottom: 5px;
 }
 
+.bottomMargin10 {
+    margin-bottom: 10px;
+}
+
 .leftMargin {
     margin-left: 2px;
 }
@@ -195,6 +199,10 @@ div {
 
 .noBorder {
     border: 0;
+}
+
+.squareCorners {
+    border-radius: 0px;
 }
 
 .noRightBorder {
@@ -291,7 +299,19 @@ input[type="file"] {
 
 .control-label {
     font-weight: 300;
-    font-size: 18px;
+    font-size: 16px;
+}
+
+.control-label .sub-heading {
+    font-weight: 600;
+}
+
+.control-label.sub-heading {
+    font-weight: 600;
+}
+
+.sub-heading {
+    font-weight: 600;
 }
 
 /****  Borders on input elements ****/
@@ -333,6 +353,10 @@ input.no-border {
 .color-dark-grey {
     color: rgb(85, 85, 85);
 !important;
+}
+
+.color-light-blue {
+    color: #039cdb;
 }
 
 .color-dark-green {
@@ -590,6 +614,11 @@ input.no-border {
 /**** Bootstrap overrides ****/
 /**********************************************************/
 
+/* Square tabs */
+.nav-tabs > li.active > a {
+    border-radius: 0px;
+}
+
 /* Narrow to avoid excessive whitespace on XS devices */
 .container {
     padding-right: 3px;
@@ -669,7 +698,7 @@ h3.panel-title {
 }
 
 .panel-default .panel-heading {
-    background-color: white;
+    background-color: rgba(173, 216, 230, 0.22);
     border-bottom: 0px;
 }
 
@@ -853,10 +882,6 @@ h3.panel-title {
         padding-left: 10px;
         padding-right: 10px;
     }
-}
-
-.nav > li {
-    background-color: #34495e;
 }
 
 .navbar-default {

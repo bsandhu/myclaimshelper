@@ -32,13 +32,9 @@
             amplify.subscribe(Events.SAVED_CLAIM, this, this.loadClaims);
         }
 
-        ClaimsListVM.prototype.onClaimSelect = function (vm, event, data) {
-            Router.routeToClaim(data.claimId);
-        };
-
         ClaimsListVM.prototype.loadClaims = function () {
-            var _this = this;
-            var postReq = _this.groupBy() === 'Open'
+            let _this = this;
+            let postReq = _this.groupBy() === 'Open'
                 ? {query: {isClosed: false}}
                 : {query: {isClosed: true}};
 
@@ -46,42 +42,42 @@
                 '/claim/search',
                 JSON.stringify(postReq),
                 function onDone(resp) {
-                    var data = resp.data;
+                    let data = resp.data;
                     console.log('Loaded Claims ' + JSON.stringify(data).substring(1, 25) + '...');
 
-                    var tempArray = [];
+                    let tempArray = [];
 
                     $.each(data, function (index, claim) {
-                        var claimDesc = claim.description || '';
-                        var insuranceCoName = claim.insuranceCompanyName || '';
-                        var insuranceCoName = insuranceCoName.length > 40 ? insuranceCoName.substr(0, 40) + '...' : insuranceCoName;
-                        var insuranceCompanyFileNum = claim.insuranceCompanyFileNum || '';
+                        let claimDesc = claim.description || '';
+                        let insuranceCoName = claim.insuranceCompanyName || '';
+                        insuranceCoName = insuranceCoName.length > 40 ? insuranceCoName.substr(0, 40) + '...' : insuranceCoName;
+                        let insuranceCompanyFileNum = claim.insuranceCompanyFileNum || '';
 
-                        var age = Math.floor((new Date().getTime() - claim.dateReceived) / (1000 * 60 * 60 * 24));
-                        var ageText = age + ' days';
+                        let age = Math.floor((new Date().getTime() - claim.dateReceived) / (1000 * 60 * 60 * 24));
+                        let ageText = age + ' days';
 
-                        var claimantName = ObjectUtils.nullSafe.bind(claim, 'this.claimantContact.name', 'None')();
-                        var claimantId = Number(ObjectUtils.nullSafe.bind(claim, 'this.claimantContact._id', '')());
-                        var claimant =
+                        let claimantName = ObjectUtils.nullSafe.bind(claim, 'this.claimantContact.name', 'None')();
+                        let claimantId = Number(ObjectUtils.nullSafe.bind(claim, 'this.claimantContact._id', '')());
+                        let claimant =
                             _.isNumber(claimantId) && claimantId > 0
-                                ? '<a onclick="var event = arguments[0] || window.event; ' +
+                                ? '<a onclick="let event = arguments[0] || window.event; ' +
                             'event.stopPropagation(); ' +
                             'amplify.publish(\'SHOW_CONTACT\', {contactId:' + claimantId + '});">' +
                             claimantName +
                             '</a>'
                                 : claimantName;
 
-                        var insuredName = ObjectUtils.nullSafe.bind(claim, 'this.insuredContact.name', 'None')();
-                        var insuredId = Number(ObjectUtils.nullSafe.bind(claim, 'this.insuredContact._id', '')());
-                        var insured =
+                        let insuredName = ObjectUtils.nullSafe.bind(claim, 'this.insuredContact.name', 'None')();
+                        let insuredId = Number(ObjectUtils.nullSafe.bind(claim, 'this.insuredContact._id', '')());
+                        let insured =
                             _.isNumber(insuredId) && insuredId > 0
-                                ? '<a onclick="var event = arguments[0] || window.event; ' +
+                                ? '<a onclick="let event = arguments[0] || window.event; ' +
                             'event.stopPropagation(); ' +
                             'amplify.publish(\'SHOW_CONTACT\', {contactId:' + insuredId + '});">' +
                             insuredName +
                             '</a>'
                                 : insuredName;
-                        var insuranceCo = "<span>" + insuranceCompanyFileNum + "</span><span class='secondary'>" + insuranceCoName + "</span>";
+                        let insuranceCo = "<span>" + insuranceCompanyFileNum + "</span><span class='secondary'>" + insuranceCoName + "</span>";
 
                         tempArray.push({
                             claimId: claim._id,
@@ -107,13 +103,18 @@
         };
 
         ClaimsListVM.prototype.onclaimsListTmplRender = function () {
-            var _this = this;
+            let _this = this;
             _this.panelContentHeight = $(window).height();
 
             $('#claimListTable').bootstrapTable({
                 "height": _this.panelContentHeight,
                 "cardView": _this.Responsive.onXSDevice(),
-                "showExport": !_this.Responsive.onXSDevice()
+                "showExport": !_this.Responsive.onXSDevice(),
+
+                // *** Add ev listener to the Bootstrap table ***
+                "onClickRow": function (data) {
+                    Router.routeToClaim(data.claimId);
+                }
             });
             $('#claimListTable').bootstrapTable('showLoading');
         }

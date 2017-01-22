@@ -75,9 +75,17 @@ define(['knockout', 'maskedInput', 'text!app/components/contact/contactComponent
             this.setupBusinessTypeOption(params.isBusinessOptionApplicable);
 
             // Add phone number input mask
-            $().ready(function maskTelFields(){
-                $('input[type=tel]').mask("999-999-9999");
-            });
+            // $().ready(function maskTelFields(){
+            //     $('input[type=tel]').mask("999-999-9999");
+            // });
+        }
+
+        ContactComponentVM.prototype.isBusiness = function() {
+            return this.contact.isBusiness() == 'true';
+        }
+
+        ContactComponentVM.prototype.isNotBusiness = function() {
+            return this.contact.isBusiness() != 'true';
         }
 
         ContactComponentVM.prototype.setupBusinessTypeOption = function(bizTypeApplicable) {
@@ -85,7 +93,7 @@ define(['knockout', 'maskedInput', 'text!app/components/contact/contactComponent
                 this.isBusinessOptionApplicable(true);
             } else {
                 this.isBusinessOptionApplicable(false);
-                this.contact().isBusiness(false);
+                this.contact.isBusiness(false);
             }
         };
 

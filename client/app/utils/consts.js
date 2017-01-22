@@ -2,6 +2,8 @@ define([], function(){
 
     return {
         CLAIMS_TAB : 'ClaimTab',
+        CLAIMS_TAB_DOCS : 'ClaimTabDocs',
+        CLAIMS_TAB_TASKS : 'ClaimTabTasks',
         BILLING_TAB : 'BillingTab',
 
         BILLING_TAB_HISTORY_MODE : 'BILLING_TAB_HISTORY_MODE',

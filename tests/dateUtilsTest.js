@@ -53,8 +53,8 @@ describe('DateUtils', function () {
     });
 
     it('Make nice date', function () {
-        assert.equal(dateUtils.niceDate(new Date(2016, 0, 2, 10, 10)), 'Jan 2  10:10');
-        assert.equal(dateUtils.niceDate(new Date(2016, 8, 20, 10, 10)), 'Sep 20  10:10');
+        assert.equal(dateUtils.niceDate(new Date(2017, 0, 2, 10, 10)), 'Jan 2  10:10');
+        assert.equal(dateUtils.niceDate(new Date(2017, 8, 20, 10, 10)), 'Sep 20  10:10');
         assert.equal(dateUtils.niceDate(new Date(2014, 8, 20, 10, 10)), 'Sep 20 2014 10:10');
         assert.equal(dateUtils.niceDate(undefined), 'None');
         assert.equal(dateUtils.niceDate(null), 'None');
@@ -66,8 +66,8 @@ describe('DateUtils', function () {
 
     it('Make nice date without time', function () {
         assert.equal(dateUtils.niceDate(new Date(2015, 0, 2, 0, 0)), 'Jan 2 2015');
-        assert.equal(dateUtils.niceDate(new Date(2016, 0, 2, 0, 0)), 'Jan 2');
-        assert.equal(dateUtils.niceDate(new Date(2016, 8, 20, 0, 0)), 'Sep 20');
+        assert.equal(dateUtils.niceDate(new Date(2017, 0, 2, 0, 0)), 'Jan 2');
+        assert.equal(dateUtils.niceDate(new Date(2017, 8, 20, 0, 0)), 'Sep 20');
     });
 
     it('IsYesterdayOrBefore', function () {

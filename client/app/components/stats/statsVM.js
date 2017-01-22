@@ -1,6 +1,6 @@
 define(['jquery', 'underscore', 'knockout', 'KOMap', 'amplify',
         'app/utils/events', 'shared/NumberUtils', 'app/utils/ajaxUtils',
-        'text!app/components/stats/stats.tmpl.html', 'chartjs'],
+        'text!app/components/stats/stats.tmpl.html', 'chart.js'],
     function ($, _, ko, KOMap, amplify, Events, NumberUtils, AjaxUtils, statsView, Chart) {
 
         var N = Number;

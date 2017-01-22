@@ -1,24 +1,25 @@
-var Claim = require('./../model/claim.js');
-var Contact = require('./../model/contact.js');
-var ClaimEntry = require('./../model/claimEntry.js');
-var BillingItem = require('./../model/billingItem.js');
-var BillingStatus = require('../model/billingStatus.js');
-var mongoUtils = require('./../mongoUtils.js');
-var serviceUtils = require('./../serviceUtils.js');
-var contactService = require('./contactService.js');
-var entityExtractionService = require('./entityExtractionService.js');
+let Claim = require('./../model/claim.js');
+let Contact = require('./../model/contact.js');
+let ClaimEntry = require('./../model/claimEntry.js');
+let BillingItem = require('./../model/billingItem.js');
+let BillingStatus = require('../model/billingStatus.js');
+let Consts = require('../shared/consts.js');
+let mongoUtils = require('./../mongoUtils.js');
+let serviceUtils = require('./../serviceUtils.js');
+let contactService = require('./contactService.js');
+let entityExtractionService = require('./entityExtractionService.js');
 
-var jQuery = require('jquery-deferred');
-var assert = require('assert');
-var _ = require('underscore');
-
+let jQuery = require('jquery-deferred');
+let assert = require('assert');
+let _ = require('underscore');
+let addOwnerInfo = mongoUtils.addOwnerInfo;
 
 /********************************************************/
 /* Delete API                                      */
 /********************************************************/
 
 function deleteClaim(claimId) {
-    var defer = jQuery.Deferred();
+    let defer = jQuery.Deferred();
 
     jQuery.when(
         mongoUtils.deleteEntity({_id: claimId}, mongoUtils.CLAIMS_COL_NAME),
@@ -30,7 +31,7 @@ function deleteClaim(claimId) {
 
 function deleteClaimEntryREST(req, res) {
     console.log('Delete ClaimEntry');
-    var claimEntryId = req.body.claimEntryId;
+    let claimEntryId = req.body.claimEntryId;
     assert.ok(claimEntryId, 'Expecting claimEntryId in req body');
 
     jQuery.when(
@@ -53,17 +54,16 @@ function saveOrUpdateClaim(req, res) {
 
     // Invoke Contact service to update the Contact object
     function setReferenceToContactObj(contactJSON, callBack) {
-        var defer = jQuery.Deferred();
-        var contactObj = _.extend(new Contact(), contactJSON);
+        let defer = jQuery.Deferred();
+        let contactObj = _.extend(new Contact(), contactJSON);
 
         if (_.isEmpty(contactObj.name)) {
             console.log('No ' + contactJSON + ' set. Skip setting Mongo reference');
             defer.reject();
             return;
         }
-        contactObj.owner = req.headers.userid;
         contactService
-            .saveOrUpdateContactObject(contactObj)
+            .saveOrUpdateContactObject(addOwnerInfo(req, contactObj))
             .always(function (result) {
                 if (result.status.toLowerCase() === 'success') {
                     defer.resolve(result.data._id);
@@ -73,7 +73,7 @@ function saveOrUpdateClaim(req, res) {
                 }
             });
 
-        var chainedDefer = jQuery.Deferred();
+        let chainedDefer = jQuery.Deferred();
         defer.done(function (contactId) {
             callBack(contactId);
             chainedDefer.resolve();
@@ -89,32 +89,17 @@ function saveOrUpdateClaim(req, res) {
             {claimId: claimId});
     }
 
-    var claim = req.body;
+    let claim = req.body;
     claim = _.extend(new Claim(), claim);
 
     // Aggregate contact update calls
-    var contactUpdateRequests = [];
-    contactUpdateRequests.push(
-        setReferenceToContactObj(claim.insuredContact, function (contactId) {
-            claim.insuredContactId = contactId;
-        }),
-        setReferenceToContactObj(claim.insuredAttorneyContact, function (contactId) {
-            claim.insuredAttorneyContactId = contactId;
-        }),
-        setReferenceToContactObj(claim.claimantContact, function (contactId) {
-            claim.claimantContactId = contactId;
-        }),
-        setReferenceToContactObj(claim.claimantsAttorneyContact, function (contactId) {
-            claim.claimantsAttorneyContactId = contactId;
-        }),
-        setReferenceToContactObj(claim.insuranceCoContact, function (contactId) {
-            claim.insuranceCoContactId = contactId;
-        })
-    );
-    _.each(claim.otherContacts, function (contactJSON, index) {
-        setReferenceToContactObj(contactJSON, function (contactId) {
-            claim.otherContactIds[index] = contactId;
-        });
+    let contactUpdateRequests = [];
+    _.each(claim.contacts, function (contactJSON, index) {
+        contactUpdateRequests.push(
+            setReferenceToContactObj(contactJSON.contact, function (contactId) {
+                delete claim.contacts[index].contact
+                claim.contacts[index].contactId = contactId;
+            }));
     });
     // Update related entries for existing claim
     if (claim._id) {
@@ -123,13 +108,8 @@ function saveOrUpdateClaim(req, res) {
 
     jQuery.when.apply(jQuery, contactUpdateRequests)
         .then(function () {
-            delete claim.insuredContact;
-            delete claim.insuredAttorneyContact;
-            delete claim.claimantContact;
-            delete claim.claimantsAttorneyContact;
-            delete claim.insuranceCoContact;
-            delete claim.otherContacts;
             claim.owner = req.headers.userid;
+            claim.group = req.headers.group;
 
             mongoUtils.saveOrUpdateEntity(claim, mongoUtils.CLAIMS_COL_NAME)
                 .always(function (err, results) {
@@ -139,10 +119,10 @@ function saveOrUpdateClaim(req, res) {
 }
 
 function saveOrUpdateClaimEntry(req, res) {
-    var entity = req.body;
-    entity.owner = req.headers.userid;
-    var description = entity.description;
-    var billingItem = entity.billingItem;
+    let entity = req.body;
+    entity = addOwnerInfo(req, entity);
+    let description = entity.description;
+    let billingItem = entity.billingItem;
 
     // Persisted separately
     delete entity.billingItem;
@@ -156,7 +136,7 @@ function saveOrUpdateClaimEntry(req, res) {
 
     entityExtractionService.extractEntities(description)
         .then(function (people) {
-            for (var i = 0; i < people.length; i++) {
+            for (let i = 0; i < people.length; i++) {
                 description = description.replace(people[i], '<b>$&</b>');
             }
             entity.description = description;
@@ -165,13 +145,14 @@ function saveOrUpdateClaimEntry(req, res) {
             // Save Claim Entry
             mongoUtils.saveOrUpdateEntity(entity, mongoUtils.CLAIM_ENTRIES_COL_NAME)
                 .then(function (err, results) {
-                    var defer = jQuery.Deferred();
+                    let defer = jQuery.Deferred();
 
                     // Save BillingItem
                     if (billingItem && !err) {
                         billingItem.claimEntryId = results._id;
                         billingItem.claimEntryId
                         billingItem.owner = req.headers.userid;
+                        billingItem.group = req.headers.group;
                         // Ensure numeric values
                         billingItem.mileage = Number(billingItem.mileage || 0)
                         billingItem.time = Number(billingItem.time || 0)
@@ -190,7 +171,7 @@ function saveOrUpdateClaimEntry(req, res) {
                     return defer;
                 })
                 .then(function (err, results) {
-                    var defer = jQuery.Deferred();
+                    let defer = jQuery.Deferred();
                     if (!err) {
                         // Set display order to be same as _id
                         if (!Boolean(entity.displayOrder)) {
@@ -228,9 +209,9 @@ function modifyClaim(req, res) {
 }
 
 function closeClaim(req, res) {
-    var search = {};
-    var ignoreUnsubmittedBills = req.body.ignoreUnsubmittedBills;
-    search.owner = req.headers.userid;
+    let search = {};
+    let ignoreUnsubmittedBills = req.body.ignoreUnsubmittedBills;
+    search = addOwnerInfo(req, search);
     search.claimId = req.body.claimId;
     search.status = BillingStatus.NOT_SUBMITTED;
 
@@ -276,7 +257,7 @@ function closeClaim(req, res) {
 function saveOrUpdateClaimEntryObject(claimEntry) {
     assert.ok(claimEntry instanceof ClaimEntry, 'Expecting instance of ClaimEntry object');
 
-    var defer = jQuery.Deferred();
+    let defer = jQuery.Deferred();
     mongoUtils.saveOrUpdateEntity(claimEntry, mongoUtils.CLAIM_ENTRIES_COL_NAME)
         .always(function (err, results) {
             defer.resolve(serviceUtils.createResponse(err, results));
@@ -296,15 +277,15 @@ function claimEntriesCollection(db) {
 /* Claims - Read API                                    */
 /********************************************************/
 
-function populateContactRef(entityId, contactId, callback) {
-    var defer = jQuery.Deferred();
-    contactService.getContactObject(contactId, entityId)
+function populateContactRef(owner, ingroups, contactId, callback) {
+    let defer = jQuery.Deferred();
+    contactService.getContactObject(contactId, owner, ingroups)
         .done(function (result) {
-            var contactObj = result.status.toLowerCase() === 'success' ? result.data : new Contact();
+            let contactObj = result.status.toLowerCase() === 'success' ? result.data : new Contact();
             defer.resolve(contactObj);
         });
 
-    var chainedDefer = jQuery.Deferred();
+    let chainedDefer = jQuery.Deferred();
     defer.done(function (contactObj) {
         callback(contactObj);
         chainedDefer.resolve();
@@ -314,111 +295,101 @@ function populateContactRef(entityId, contactId, callback) {
 
 function getClaim(req, res) {
     assert.ok(req.params.id, 'Expecting ClaimId as a parameter');
-    var entityId = req.params.id;
-    var owner = req.headers.userid;
+    let entityId = req.params.id;
+    let owner = req.headers.userid;
+    let ingroups = req.headers.ingroups;
 
-    mongoUtils.getEntityById(entityId, mongoUtils.CLAIMS_COL_NAME, owner)
+    function sanityCheck() {
+
+    };
+
+    mongoUtils.getEntityById(entityId, mongoUtils.CLAIMS_COL_NAME, owner, ingroups)
         .always(function (err, results) {
             if (err) {
                 sendResponse(res, err, results);
             } else {
-                var claim = results;
-                claim.otherContactIds = claim.otherContactIds || [];
-                claim.otherContacts = claim.otherContacts || [];
+                let claim = results;
+                let sanityCheckPass = true;
+                claim.contacts = claim.contacts || [];
 
                 // Create Dynamic callbacks for saving all the contact objects
-                var requests = [];
-                requests.push(
-                    populateContactRef(owner, claim.insuredContactId, function (contactObj) {
-                        claim.insuredContact = contactObj;
-                    }),
-                    populateContactRef(owner, claim.insuredAttorneyContactId, function (contactObj) {
-                        claim.insuredAttorneyContact = contactObj;
-                    }),
-                    populateContactRef(owner, claim.claimantContactId, function (contactObj) {
-                        claim.claimantContact = contactObj;
-                    }),
-                    populateContactRef(owner, claim.claimantsAttorneyContactId, function (contactObj) {
-                        claim.claimantsAttorneyContact = contactObj;
-                    }),
-                    populateContactRef(owner, claim.insuranceCoContactId, function (contactObj) {
-                        claim.insuranceCoContact = contactObj;
-                    })
-                );
-
-                _.each(claim.otherContactIds, function (contactId, index) {
+                let requests = [];
+                _.each(claim.contacts, function (contactInfo, index) {
                     requests.push(
-                        populateContactRef(contactId, function (contactObj) {
+                        populateContactRef(owner, ingroups, contactInfo.contactId, function (contactObj) {
                             if (!Boolean(contactObj) || _.isEmpty(contactObj)) {
                                 console.warn("Could not populate Contact for Id: " + contactId);
                             }
-                            claim.otherContacts[index] = contactObj;
+                            claim.contacts[index].contact = contactObj;
                         })
                     );
                 });
 
+                // Sanity check
+                for (let contactInfo of claim.contacts) {
+                    if (_.isEmpty(contactInfo.category) || _.isEmpty(contactInfo.subCategory) || _.isEmpty(contactInfo.contactId)) {
+                        sanityCheckPass = false;
+                        sendResponse(res, 'Sanity check fail for: ' + JSON.stringify(contactInfo));
+                        break;
+                    }
+                }
+
                 // Call When the Deferreds array
-                jQuery.when.apply(jQuery, requests)
-                    .done(function () {
-                        sendResponse(res, err, results);
-                    });
+                if (sanityCheckPass) {
+                    jQuery.when.apply(jQuery, requests)
+                        .done(function () {
+                            sendResponse(res, err, results);
+                        });
+                }
             }
         });
 }
 
-function getAllClaims(req, res) {
-    console.log('Get all Claims');
+/**
+ * Pick first insured and claimant from Claim contacts
+ */
+function getInsuredAndClaimant(claim) {
+    let isInsured = con => con.category == Consts.CONTACT_CATEGORY_INSURED && con.subCategory == Consts.CONTACT_SUBCATEGORY_INSURED;
+    let insured = claim.contacts.find(isInsured);
+    let insuredContactId = _.isObject(insured) && _.has(insured, 'contactId') ? insured.contactId : undefined;
 
-    mongoUtils.run(function (db) {
-        claimsCollection(db).find({owner: req.headers.userid}).toArray(onResults);
-
-        function onResults(err, items) {
-            var modelObjs = _.map(items, convertToModel);
-            sendResponse(res, err, modelObjs);
-
-        }
-
-        function convertToModel(item) {
-            return _.extend(new Claim(), item);
-        }
-    });
+    let isClaimant = con => con.category == Consts.CONTACT_CATEGORY_CLAIMANT && con.subCategory == Consts.CONTACT_SUBCATEGORY_CLAIMANT;
+    let claimant = claim.contacts.find(isClaimant);
+    let claimantContactId = _.isObject(claimant) && _.has(claimant, 'contactId') ? claimant.contactId : undefined;
+    return {insuredContactId, claimantContactId};
 }
 
 function searchClaims(req, res) {
-    var query = req.body.query;
-    var owner = req.headers.userid;
-    query.owner = owner;
+    let query = req.body.query;
+    query = addOwnerInfo(req, query);
 
     console.log('Searching for Claim with query: ' + query);
     mongoUtils.run(function (db) {
-        claimsCollection(db).find(query).toArray(onResults);
+        mongoUtils
+            .findEntities(mongoUtils.CLAIMS_COL_NAME, query, db)
+            .then(onResults)
+            .fail(err => sendResponse(res, err, []));
 
-        function onResults(err, claims) {
-            if (err || claims.length == 0) {
-                console.log('Error: ' + err);
-                sendResponse(res, err, []);
-            } else if (claims.length == 0) {
-                console.log('No claims match this search ' + query);
-                sendResponse(res, err, []);
-            } else {
-                // Aggregate the contactLookups for the contact details
-                var contactLookups = [];
-                _.each(claims, function (claim) {
-                    contactLookups.push(
-                        populateContactRef(owner, claim.insuredContactId, function (contactObj) {
-                            claim.insuredContact = contactObj;
-                        }),
-                        populateContactRef(owner, claim.claimantContactId, function (contactObj) {
-                            claim.claimantContact = contactObj;
-                        })
-                    );
+        function onResults(claims) {
+            // Aggregate the contactLookups for the contact details
+            let contactLookups = [];
+            _.each(claims, function (claim) {
+                let {insuredContactId, claimantContactId} = getInsuredAndClaimant(claim);
+
+                contactLookups.push(
+                    populateContactRef(query.owner, query.ingroups, insuredContactId, function (contactObj) {
+                        claim.insuredContact = contactObj;
+                    }),
+                    populateContactRef(query.owner, query.ingroups, claimantContactId, function (contactObj) {
+                        claim.claimantContact = contactObj;
+                    })
+                );
+            });
+
+            jQuery.when.apply(jQuery, contactLookups)
+                .done(function () {
+                    sendResponse(res, null, claims);
                 });
-
-                jQuery.when.apply(jQuery, contactLookups)
-                    .done(function () {
-                        sendResponse(res, err, claims);
-                    });
-            }
         }
     });
 }
@@ -429,7 +400,7 @@ function searchClaims(req, res) {
 
 function getClaimEntry(req, res) {
     assert.ok(req.params.id, 'Expecting ClaimEntryId as a parameter');
-    var entityId = req.params.id;
+    let entityId = req.params.id;
 
     req.body = req.body || {};
     req.body.query = {'_id': entityId};
@@ -438,7 +409,7 @@ function getClaimEntry(req, res) {
 
 function getAllEntriesForClaim(req, res) {
     assert.ok(req.params.id, 'Expecting ClaimId as a parameter');
-    var claimId = req.params.id;
+    let claimId = req.params.id;
     console.log('Get all entries for Claim: ' + claimId);
 
     req.body = req.body || {};
@@ -447,27 +418,28 @@ function getAllEntriesForClaim(req, res) {
 }
 
 function searchClaimEntries(req, res) {
-    var query = req.body.query;
-    query.owner = req.headers.userid;
+    let query = req.body.query;
+    query = addOwnerInfo(req, query);
 
-    var options = req.body.options || {};
+    let options = req.body.options || {};
 
     console.log('Searching for ClaimEntries. Req: ' + JSON.stringify(req.body));
     mongoUtils.run(function (db) {
-        claimEntriesCollection(db)
-            .find(query, options)
-            .toArray(onResults);
+        mongoUtils
+            .findEntities(mongoUtils.CLAIM_ENTRIES_COL_NAME, query, db)
+            .then(onResults)
+            .fail(err => sendResponse(res, err));
 
-        function onResults(err, items) {
-            var defereds = [];
+        function onResults(items) {
+            let defereds = [];
             _.each(items, function (item) {
                 defereds.push(populateBillingItem(item));
                 defereds.push(populateClaimFileNumber(item));
             });
             jQuery.when.apply(jQuery, defereds)
                 .then(function () {
-                    var modelObjs = _.map(items, convertToModel);
-                    sendResponse(res, err, modelObjs);
+                    let modelObjs = _.map(items, convertToModel);
+                    sendResponse(res, null, modelObjs);
                 })
         }
 
@@ -477,24 +449,24 @@ function searchClaimEntries(req, res) {
 
         // Helper functions to populate Claima and BillingItem attributes
 
-        function populateContact(contactId, owner) {
-            var defer = jQuery.Deferred();
+        function populateContact(contactId) {
+            let defer = jQuery.Deferred();
             if (contactId == null || contactId === undefined) {
                 defer.resolve(new Contact());
             } else {
-                contactService.getContactObject(contactId, owner)
+                contactService.getContactObject(contactId, query.owner, query.ingroups)
                     .done(function (result) {
-                        var contactObj = result.status.toLowerCase() === 'success' ? result.data : new Contact();
+                        let contactObj = result.status.toLowerCase() === 'success' ? result.data : new Contact();
                         defer.resolve(contactObj);
                     });
             }
             return defer;
         }
 
-        var claimsCache = {};
+        let claimsCache = {};
 
         function populateClaimFileNumber(claimEntry) {
-            var defer = jQuery.Deferred();
+            let defer = jQuery.Deferred();
 
             // Set defaults
             claimEntry.fileNum = '-';
@@ -504,7 +476,7 @@ function searchClaimEntries(req, res) {
             claimEntry.claimantContact = new Contact();
 
             // Try to get from cache
-            var cacheEntry = claimsCache[claimEntry.claimId];
+            let cacheEntry = claimsCache[claimEntry.claimId];
             if (cacheEntry != undefined) {
                 claimEntry.fileNum = cacheEntry[0];
                 claimEntry.insuranceCompanyFileNum = cacheEntry[1];
@@ -516,19 +488,24 @@ function searchClaimEntries(req, res) {
 
             // Get from DB
             mongoUtils
-                .findEntities(mongoUtils.CLAIMS_COL_NAME, {_id: claimEntry.claimId, owner: req.headers.userid}, db)
+                .findEntities(
+                    mongoUtils.CLAIMS_COL_NAME,
+                    addOwnerInfo(req, {_id: claimEntry.claimId}),
+                    db)
                 .then(function (claims) {
                     // ClaimEntry has only one Claim
-                    var claim = _.first(claims);
+                    let claim = _.first(claims);
                     if (claim) {
                         // Note: remember to delete these on ClaimEntry save
                         claimEntry.fileNum = claim.fileNum || claimEntry.fileNum;
                         claimEntry.insuranceCompanyFileNum = claim.insuranceCompanyFileNum || claimEntry.insuranceCompanyFileNum;
                         claimEntry.insuranceCompanyName = claim.insuranceCompanyName || claimEntry.insuranceCompanyName;
 
+                        let {insuredContactId, claimantContactId} = getInsuredAndClaimant(claim);
+
                         jQuery.when(
-                            populateContact(claim.insuredContactId, claim.owner),
-                            populateContact(claim.claimantContactId, claim.owner))
+                            populateContact(insuredContactId),
+                            populateContact(claimantContactId))
                             .then(function (insured, claimant) {
                                 claimEntry.insuredContact = insured;
                                 claimEntry.claimantContact = claimant;
@@ -544,15 +521,14 @@ function searchClaimEntries(req, res) {
         }
 
         function populateBillingItem(claimEntry) {
-            var defer = jQuery.Deferred();
+            let defer = jQuery.Deferred();
             mongoUtils
-                .findEntities(mongoUtils.BILLING_ITEMS_COL_NAME, {
-                    claimEntryId: claimEntry._id,
-                    owner: req.headers.userid
-                }, db)
+                .findEntities(mongoUtils.BILLING_ITEMS_COL_NAME,
+                    addOwnerInfo(req, {claimEntryId: claimEntry._id}),
+                    db)
                 .then(function (billingItems) {
                     // ClaimEntry has only one BilingItem
-                    var billingItem = _.first(billingItems);
+                    let billingItem = _.first(billingItems);
                     if (billingItem) {
                         claimEntry.billingItem = mongoUtils.hydrate(BillingItem, billingItem)[0];
                     }
@@ -587,7 +563,6 @@ exports.modifyClaim = modifyClaim;
 exports.saveOrUpdateClaimEntryObject = saveOrUpdateClaimEntryObject;
 exports.getClaim = getClaim;
 exports.getClaimEntry = getClaimEntry;
-exports.getAllClaims = getAllClaims;
 exports.getAllEntriesForClaim = getAllEntriesForClaim;
 exports.deleteClaim = deleteClaim;
 exports.searchClaims = searchClaims;

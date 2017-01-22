@@ -17,7 +17,8 @@
                     data-bind="text: popupTitle"></h4>
             </div>
 
-            <div class="modal-body">
+            <!-- Force re-render when the contact obj is changed -->
+            <div class="modal-body" data-bind="foreach: {data: contacts, as: 'contact'}">
                 <contact-component params="contact : contact,
                                            idSuffix: 'newContact',
                                            isBusinessOptionApplicable: true,

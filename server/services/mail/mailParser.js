@@ -1,9 +1,9 @@
-var EventEmitter = require('events').EventEmitter;
-var util = require('util');
-var mongoUtils = require('../../mongoUtils.js');
-var jQuery = require('jquery-deferred');
-var _ = require('underscore');
-var assert = require('assert');
+let EventEmitter = require('events').EventEmitter;
+let util = require('util');
+let mongoUtils = require('../../mongoUtils.js');
+let jQuery = require('jquery-deferred');
+let _ = require('underscore');
+let assert = require('assert');
 
 
 function MailParser() {
@@ -12,13 +12,15 @@ function MailParser() {
 util.inherits(MailParser, EventEmitter);
 
 MailParser.prototype.parseRequest = function (req, allKnownClaims, allKnownUserIds) {
+    let errors = [];
+    let claimId, fileNum, userId, attachments, tags;
+
     try {
         allKnownClaims = allKnownClaims || [];
         allKnownUserIds = allKnownUserIds || [];
-        var errors = [];
 
         // Match user
-        var userId = this._getUserId(req.params.To, allKnownUserIds);
+        userId = this._getUserId(req.params.To, allKnownUserIds);
         console.log('Incoming user Id: ' + userId);
         if (!userId) {
             errors.push('User <i>' + req.params.To.split('@')[0] + '</i> is not registered with the MyClaimsHelper.com');
@@ -28,16 +30,17 @@ MailParser.prototype.parseRequest = function (req, allKnownClaims, allKnownUserI
 
         // Match claim
         if (userId) {
-            var matchInfo = this._getClaimId(req.params.subject, allKnownClaims, userId);
-            var claimId = matchInfo[0];
-            var fileNum = matchInfo[1];
+            let firstKnownClaimId;
+            let matchInfo = this._getClaimId(req.params.subject, allKnownClaims, userId);
+            claimId = matchInfo[0];
+            fileNum = matchInfo[1];
             if (!claimId) {
                 console.log('Failed to match to known claim');
                 try {
-                    var firstKnownClaimId = allKnownClaims[0]['insuranceCompanyFileNum'] || allKnownClaims[0]['fileNum'];
+                    firstKnownClaimId = allKnownClaims[0]['insuranceCompanyFileNum'] || allKnownClaims[0]['fileNum'];
                     firstKnownClaimId = firstKnownClaimId || '04-92998';
                 } catch (e) {
-                    var firstKnownClaimId = '04-92998';
+                    firstKnownClaimId = '04-92998';
                 }
 
                 errors.push('Could not find a Claim to add this task to. ' +
@@ -51,8 +54,8 @@ MailParser.prototype.parseRequest = function (req, allKnownClaims, allKnownUserI
         }
 
         // More parsing
-        var attachments = this._getEmbeddedAttachmentInfo(req);
-        var tags = this._getTags(req.params['body-plain']);
+        attachments = this._getEmbeddedAttachmentInfo(req);
+        tags = this._getTags(req.params['body-plain']);
     } catch (e) {
         errors.push(e);
     }
@@ -73,11 +76,11 @@ MailParser.prototype.parseRequest = function (req, allKnownClaims, allKnownUserI
 MailParser.prototype._getAllKnownClaims = function (owner) {
     assert.ok(owner, 'Expecting owner param');
     console.log('Get all known claims for user: ' + owner);
-    var defer = jQuery.Deferred();
+    let defer = jQuery.Deferred();
     mongoUtils
         .connect()
         .then(function (db) {
-            var ignoreCaseRegex = new RegExp(["^", owner, "$"].join(""), "i");
+            let ignoreCaseRegex = new RegExp(["^", owner, "$"].join(""), "i");
             db.collection(mongoUtils.CLAIMS_COL_NAME)
                 .find({owner: ignoreCaseRegex}, {fileNum: 1, insuranceCompanyFileNum: 1, owner: 1, _id: 1})
                 .toArray(function (err, docs) {
@@ -95,7 +98,7 @@ MailParser.prototype._getAllKnownClaims = function (owner) {
 };
 
 MailParser.prototype._getAllKnownUserIds = function () {
-    var defer = jQuery.Deferred();
+    let defer = jQuery.Deferred();
     mongoUtils
         .connect()
         .then(function (db) {
@@ -105,7 +108,7 @@ MailParser.prototype._getAllKnownUserIds = function () {
                     if (err) {
                         defer.reject(err);
                     } else {
-                        var allUserIds = _.map(docs, function (x) {
+                        let allUserIds = _.map(docs, function (x) {
                             return x._id;
                         });
                         console.log(allUserIds.length + ' known users');
@@ -121,7 +124,7 @@ MailParser.prototype._getAllKnownUserIds = function () {
  * Sender email expected to be of the form: foo@myclaimshelper.com
  */
 MailParser.prototype._getUserId = function (senderEmail, allUserIds) {
-    var incomingUserId = senderEmail.split('@')[0];
+    let incomingUserId = senderEmail.split('@')[0];
 
     // Remove any spurious quotes around email addr
     incomingUserId = incomingUserId.replace('"', '');
@@ -138,9 +141,9 @@ MailParser.prototype._getUserId = function (senderEmail, allUserIds) {
 MailParser.prototype._getClaimId = function (subject, allClaimsByOwner, owner) {
     assert(owner, 'Must specify owner');
     console.log('Matching known claims to subject: ' + subject);
-    var tokens = subject.split(' ');
-    var claimId = null;
-    var fileNum = null;
+    let tokens = subject.split(' ');
+    let claimId = null;
+    let fileNum = null;
 
     _.each(tokens, function (token) {
         token = token.trim();
@@ -150,11 +153,11 @@ MailParser.prototype._getClaimId = function (subject, allClaimsByOwner, owner) {
 
         _.each(allClaimsByOwner, function (claimByOwner) {
             // Note: owner is filtered out by mongo query
-            var insuranceCoOnClaim = claimByOwner.insuranceCompanyFileNum
+            let insuranceCoOnClaim = claimByOwner.insuranceCompanyFileNum
                 ? claimByOwner.insuranceCompanyFileNum.trim()
                 : claimByOwner.insuranceCompanyFileNum;
 
-            var fileNumOnClaim = claimByOwner.fileNum
+            let fileNumOnClaim = claimByOwner.fileNum
                 ? claimByOwner.fileNum.trim()
                 : claimByOwner.fileNum;
 
@@ -173,8 +176,8 @@ MailParser.prototype._getClaimId = function (subject, allClaimsByOwner, owner) {
  * body of the text.
  */
 MailParser.prototype._getTags = function (body) {
-    var regex = RegExp('#[A-Za-z0-9_]+', 'g');
-    var tags = body.match(regex);
+    let regex = RegExp('#[A-Za-z0-9_]+', 'g');
+    let tags = body.match(regex);
     return tags;
 };
 
@@ -182,8 +185,8 @@ MailParser.prototype._getTags = function (body) {
  * @param {http request}
  */
 MailParser.prototype._getEmbeddedAttachmentInfo = function (req) {
-    var attachments = [];
-    for (var i = 1; i <= req.params['attachment-count']; i++) {
+    let attachments = [];
+    for (let i = 1; i <= req.params['attachment-count']; i++) {
         attachments.push(req.files['attachment-' + i]);
     }
     console.log('Attachments:');

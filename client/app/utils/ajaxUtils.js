@@ -1,5 +1,5 @@
-define(['jquery', 'amplify', 'app/utils/events', 'app/utils/session'],
-    function ($, amplify, Events, Session) {
+define(['jquery', 'amplify', 'underscore', 'app/utils/events', 'app/utils/session'],
+    function ($, amplify, _, Events, Session) {
 
         /**
          * When the app starts up, we do no want to make any requests till the
@@ -22,23 +22,35 @@ define(['jquery', 'amplify', 'app/utils/events', 'app/utils/session'],
             }
         });
 
-        $.ajaxSetup({
-            'beforeSend': function (xhr) {
-                if (Session.getCurrentUserAuthToken()) {
+        $.ajaxSetup({'beforeSend': setReqHeaders});
+
+        function setReqHeaders(xhr) {
+            if (Session.getCurrentUserAuthToken()) {
+                xhr.setRequestHeader(
+                    'Authorization',
+                    'Bearer ' + Session.getCurrentUserAuthToken());
+                xhr.setRequestHeader(
+                    'UserId',
+                    Session.getCurrentUserId());
+
+                if (Session.getCurrentUserProfile()) {
                     xhr.setRequestHeader(
-                        'Authorization',
-                        'Bearer ' + Session.getCurrentUserAuthToken());
+                        'group',
+                        Session.getCurrentUserProfile().group);
                     xhr.setRequestHeader(
-                        'UserId',
-                        Session.getCurrentUserId());
+                        'ingroups',
+                        Session.getCurrentUserProfile().ingroups);
                 }
             }
-        });
+        }
 
-        function getJSON(url) {
-            if (!Session.getCurrentUserId()) {
-                var defer = $.Deferred();
-                var innerDefer = $.Deferred();
+        function getJSON(url, skipAuthHeader) {
+            if (!_.isBoolean(skipAuthHeader)) {
+                skipAuthHeader = false;
+            }
+            if (!skipAuthHeader && !Session.getCurrentUserProfile()) {
+                let defer = $.Deferred();
+                let innerDefer = $.Deferred();
                 defer
                     .then(function () {
                         return $.getJSON(url)
@@ -56,7 +68,7 @@ define(['jquery', 'amplify', 'app/utils/events', 'app/utils/session'],
         }
 
         function post(url, json, onDone, onFail) {
-            if (!Session.getCurrentUserId()) {
+            if (!Session.getCurrentUserProfile()) {
                 postReqQueue.push({fn: post, url: url, json: json, onDone: onDone, onFail: onFail});
                 return;
             }
@@ -82,6 +94,7 @@ define(['jquery', 'amplify', 'app/utils/events', 'app/utils/session'],
 
         return {
             'post': post,
-            'getJSON': getJSON
+            'getJSON': getJSON,
+            'setReqHeaders': setReqHeaders
         };
     });

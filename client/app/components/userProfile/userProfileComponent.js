@@ -25,6 +25,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox',
             this.newCodeDesc = ko.observable();
             this.isAddingNew = ko.observable(false);
 
+            // *** Trigger login ****
             this.login();
         }
 
@@ -260,7 +261,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox',
             var userProfileId = Session.getCurrentUserId();
             var _this = this;
 
-            return $.getJSON('/userProfile/' + userProfileId)
+            return $.getJSON('/userProfile/' + userProfileId, true)
                 .done(function (resp) {
                     console.debug('Loaded UserProfile ' + JSON.stringify(resp.data).substr(0, 100));
                     KOMap.fromJS(resp.data, {}, this.userProfile);
@@ -289,7 +290,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox',
             if (!Session.getCurrentUserAuthProfile()) {
 
                 // Delegate to Auth0 service
-                $.getJSON('/config')
+                $.getJSON('/config', true)
                     .then(function (resp) {
                         return resp.data.Auth0;
                     })
