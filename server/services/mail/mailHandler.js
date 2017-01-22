@@ -21,13 +21,14 @@ let broadcastNoHTTP = require('../../services/notificationService.js').broadcast
  */
 let process = function (req, res, testMode) {
     res.send(200, 'Request received successfully.');
+    let sendSuccessEmail, sendErrorEmail;
 
     if (_.isBoolean(testMode) && testMode == true) {
-        let sendSuccessEmail = false
-        let sendErrorEmail = false;
+        sendSuccessEmail = false
+        sendErrorEmail = false;
     } else {
-        let sendSuccessEmail = config.send_success_email_reply;
-        let sendErrorEmail = config.send_failure_email_reply;
+        sendSuccessEmail = config.send_success_email_reply;
+        sendErrorEmail = config.send_failure_email_reply;
     }
 
     // Remove any spurious quotes around email addr
@@ -124,7 +125,8 @@ let notifySuccess = function (sendEmail, mailEntry) {
         Consts.NotificationName.NEW_MSG,
         Consts.NotificationType.INFO,
         '<b>Email processed</b> ' + mailEntry.mail.subject + '<a href="#/claimEntry/' + mailEntry.claimId + '/' + mailEntry._id + '">Goto task</a>',
-        mailEntry.owner)
+        mailEntry.owner,
+        mailEntry.group)
         .always(function email() {
             if (sendEmail) {
                 let header = 'Email <i>' + mailEntry.mail.subject + '</i> processed';
@@ -143,7 +145,8 @@ let notifyFailure = function (sendEmail, mailEntry) {
         Consts.NotificationName.NEW_MSG,
         Consts.NotificationType.ERROR,
         header,
-        mailEntry.owner);
+        mailEntry.owner,
+        mailEntry.group);
 
     if (mailEntry.owner) {
         notifyFn();
@@ -160,7 +163,7 @@ function constructClaimEntry(data, attachments) {
     let d = jQuery.Deferred();
 
     // Get user profile
-    mongoUtils.getEntityById(data.owner, mongoUtils.USERPROFILE_COL_NAME, data.owner)
+    mongoUtils.getEntityById(data.owner, mongoUtils.USERPROFILE_COL_NAME, data.owner, [data.owner])
         .then(function (err, profile) {
             let defer = jQuery.Deferred();
             if (!err) {
@@ -198,7 +201,8 @@ function constructClaimEntry(data, attachments) {
                             entry.tag.push('email');
                             entry.state = States.TODO;
                             entry.owner = data.owner;
-                            entry.group = profile.group;
+                            // Do not show notification to group
+                            entry.group = data.owner;
 
                             // Service does the linking to the ClaimEntry
                             entry.billingItem = new BillingItem();

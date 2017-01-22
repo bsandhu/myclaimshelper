@@ -94,4 +94,4 @@ function changeToUserProfileSchema() {
 }
 
 // changeToNewContactsSchema();
-changeToUserProfileSchema();
+// changeToUserProfileSchema();

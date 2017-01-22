@@ -54,7 +54,7 @@ describe('mailParser', function () {
                 assert.equal(entry.errors.length, 0);
                 assert.deepEqual(entry.claimId, testClaim._id);
                 assert.deepEqual(entry.owner, 'DefaultUser');
-                assert.deepEqual(Object.keys(entry), ['claimId', 'fileNum', 'owner', 'attachments', 'tags', 'mail', 'errors']);
+                assert.deepEqual(Object.keys(entry), ['claimId', 'fileNum', 'owner', 'group', 'attachments', 'tags', 'mail', 'errors']);
                 done();
             })
     });

@@ -95,7 +95,7 @@ function saveOrUpdateEntity(entity, colName, deleteIngroupsAttr = true) {
     console.log('saveOrUpdateEntity. ' + JSON.stringify(entity) + '. Collection name: ' + colName);
     checkOwnerPresent(entity.owner);
     checkGroupPresent(entity.group);
-    if (deleteIngroupsAttr){
+    if (deleteIngroupsAttr) {
         delete entity.inGroups;
         delete entity.ingroups;
     }
@@ -263,21 +263,26 @@ const connect = function () {
 }
 
 // :: String -> Dict -> DB -> Promise
-const findEntities = function (collectionName, search, db) {
-    checkOwnerPresent(search.owner);
-    checkInGroups(search.ingroups);
+const findEntities = function (collectionName, search, db, checkOwner = true) {
+    if (checkOwner) {
+        console.info('Skipping ownership check for ' + collectionName);
+        checkOwnerPresent(search.owner);
+        checkInGroups(search.ingroups);
+    }
 
     let result = jQuery.Deferred();
     let collection = db.collection(collectionName);
 
     // Make a copy
     search = _.assign({}, search);
-    let owner = search.owner;
-    let ingroups = search.ingroups;
+    let owner = _.has(search, 'owner') ? search.owner : '';
+    let ingroups = _.has(search, 'ingroups') ? search.ingroups : '';
     delete search.owner;
     delete search.group;
     delete search.ingroups;
-    search['$or'] = [{'owner': owner}, {'group': {$in: toArray(ingroups)}}];
+    if (checkOwner) {
+        search['$or'] = [{'owner': owner}, {'group': {$in: toArray(ingroups)}}];
+    }
 
     collection
         .find(search)
@@ -305,6 +310,7 @@ function initCollections() {
     initCollection('Sequences');
     initCollection('UserProfiles');
     initCollection('Notifications');
+    initCollection('RefData');
 }
 
 exports.run = run;

@@ -46,7 +46,7 @@ describe('mailHandler', function(){
             assert.equal(data.mail['body-plain'], 'the body\r\n#tag1\r\n#tag2');
             assert.equal(data.mail.From, 'plato@nonsense.foo');
 
-            let ce = mongoUtils.getEntityById(data._id, 'ClaimEntries', 'TestUser');
+            let ce = mongoUtils.getEntityById(data._id, 'ClaimEntries', 'TestUser', ['TestUser']);
             ce.then(function (entry) {
                 console.log(arguments);
                 assert.ok(arguments)
@@ -68,7 +68,7 @@ describe('mailHandler', function(){
             assert.equal(data.mail.subject, 'the subject of email is 04-12345');
             assert.equal(data.mail.From, 'plato@nonsense.foo');
 
-            let ce = mongoUtils.getEntityById(data._id, 'ClaimEntries', 'TestUser');
+            let ce = mongoUtils.getEntityById(data._id, 'ClaimEntries', 'TestUser', ['TestUser']);
             ce.then(function (entry) {
                 console.log(arguments);
                 assert.ok(arguments)

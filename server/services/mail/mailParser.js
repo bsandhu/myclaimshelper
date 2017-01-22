@@ -63,6 +63,7 @@ MailParser.prototype.parseRequest = function (req, allKnownClaims, allKnownUserI
         'claimId': claimId,
         'fileNum': fileNum,
         'owner': userId,
+        'group': userId,
         'attachments': attachments,
         'tags': tags,
         'mail': req.params,
