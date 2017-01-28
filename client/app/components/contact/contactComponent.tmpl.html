@@ -1,133 +1,130 @@
-<div class="ui-front">
-
-    <!--Is a Business?-->
-    <div class="inline wide bottomMargin" data-bind="visible: isBusinessOptionApplicable">
-        <div class="inline">
-            <input type="radio"
-                   value=true
-                   data-bind="attr: {id: 1 + idSuffix(), name: 3 + idSuffix()},
-                              checked: contact.isBusiness"/>
-            <label data-bind="attr: {for: 1 + idSuffix()}">Business</label>
-        </div>
-
-        <div class="inline" style="min-width: 5px"></div>
-
-        <div class="inline">
-            <input type="radio"
-                   value=false
-                   data-bind="attr: {id: 2 + idSuffix(), name: 3 + idSuffix()},
-                              checked: contact.isBusiness"/>
-            <label data-bind="attr: {for: 2 + idSuffix()}">Individual</label>
-        </div>
+<!-- **** Name **** -->
+<div style="width: 100%;">
+    <div class="inline narrowest contactFormIcon" data-bind="visible: showDetails() && allowEdits()">
+        <i class="fa fa-user"></i>
     </div>
-    <div class="clear"></div>
-
-    <!--Name-->
     <div class="inline bottomMargin">
-
-        <!--Individual-->
-        <div class="inline bottomMargin" data-bind="if: isNotBusiness()">
-            <div class="inline">
-                <!-- Auto complete -->
-                <input type="text"
-                       class="form-control wide input-sm"
-                       data-bind="autoComplete: contact,
+        <!-- Auto complete -->
+        <input class="form-control wider input-sm"
+               data-bind="autoComplete: contact,
                                   value: contact.name,
                                   attr: {'placeholder': placeholder}"/>
-            </div>
-        </div>
+    </div>
+    <div class="inline">
+        <strong><a href="#" data-bind="click: onDetailsClick" style="font-size: 1.25em">...</a></strong>
+    </div>
+</div>
 
-        <!--Business-->
-        <div class="inline bottomMargin" data-bind="if: isBusiness()">
-            <div class="inline">
-                <input type="text" class="form-control normal input-sm" placeholder="Business name"
-                       data-bind="value: contact.businessName"/>
-            </div>
-        </div>
+<!-- **** Details form - allow editing **** -->
+<div data-bind="visible: showDetails() && allowEdits()">
 
-        <div class="inline">
-            <strong><a href="#" data-bind="click: onDetailsClick">...</a></strong>
+    <!--Business-->
+    <div style="width: 100%;">
+        <div class="inline narrowest contactFormIcon">
+            <i class="fa fa-power-off" style="visibility: hidden"></i>
         </div>
-
+        <div class="inline bottomMargin">
+            <input class="form-control wide input-sm" placeholder="Business name"
+                   data-bind="value: contact.businessName"/>
+        </div>
+        <div class="inline bottomMargin">
+            <input class="form-control normal input-sm" placeholder="Job title"
+                   data-bind="value: contact.businessName"/>
+        </div>
     </div>
 
-    <!-- **** Details form - allow editing **** -->
-    <div data-bind="visible: showDetails() && allowEdits()">
-
-        <!--Address-->
-        <div>
-            <div class="inline bottomMargin">
-                <input type="text" class="form-control wider input-sm" placeholder="Address"
-                       data-bind="value: contact.streetAddress"/>
-            </div>
+    <!--Address-->
+    <div style="width: 100%;">
+        <div class="inline narrowest contactFormIcon">
+            <i class="fa fa-map-marker"></i>
         </div>
+        <div class="inline bottomMargin">
+            <input class="form-control wider input-sm" placeholder="Address"
+                   data-bind="value: contact.streetAddress"/>
+        </div>
+    </div>
 
-        <!--City/State/Zip-->
-        <div>
-            <div class="inline bottomMargin">
-                <input type="text" class="form-control normal input-sm" placeholder="City"
-                       data-bind="value: contact.city"/>
-            </div>
-            <div class="inline bottomMargin">
-                <select class="form-control narrow input-sm"
-                        data-bind="value: contact.state,
+    <!--City/State/Zip-->
+    <div style="width: 100%;">
+        <div class="inline narrowest contactFormIcon">
+            <i class="fa fa-power-off" style="visibility: hidden"></i>
+        </div>
+        <div class="inline bottomMargin">
+            <input class="form-control normal input-sm" placeholder="City"
+                   data-bind="value: contact.city"/>
+        </div>
+        <div class="inline bottomMargin">
+            <select class="form-control narrow input-sm"
+                    data-bind="value: contact.state,
                                    options: states,
-                                   optionsCaption: '...'">
-                </select>
-            </div>
-            <div class="inline bottomMargin">
-                <input type="text" class="form-control narrow input-sm" placeholder="Zip"
-                       data-bind="value: contact.zip"/>
-            </div>
+                                   optionsCaption: 'State'">
+            </select>
         </div>
-
-        <!--Phone-->
-        <div>
-            <div class="inline bottomMargin">
-                <div class="inline bottomMargin">
-                    <input type="tel" class="form-control normal input-sm" placeholder="Phone"
-                           data-bind="value: contact.phone"/>
-                </div>
-                <div class="inline narrow bottomMargin">
-                    <input class="form-control narrower input-sm" placeholder="Ext"
-                           data-bind="value: contact.ext"/>
-                </div>
-            </div>
+        <div class="inline bottomMargin">
+            <input class="form-control narrow input-sm" placeholder="Zip"
+                   data-bind="value: contact.zip"/>
         </div>
+    </div>
 
-        <!--Cell-->
-        <div>
-            <div class="inline bottomMargin">
-                <input type="tel" class="form-control normal input-sm" placeholder="Cell"
-                       data-bind="value: contact.cell"/>
-            </div>
+    <!--Email-->
+    <div style="width: 100%;">
+        <div class="inline narrowest contactFormIcon">
+            <i class="fa fa-envelope"></i>
         </div>
-
-        <!--Email-->
-        <div>
-            <div class="inline bottomMargin">
-                <input type="email" class="form-control wide input-sm" placeholder="Email"
-                       data-bind="value: contact.email"/>
-            </div>
+        <div class="inline bottomMargin">
+            <input type="email" class="form-control wider input-sm" placeholder="Email"
+                   data-bind="value: contact.email"/>
         </div>
+    </div>
 
-        <!--Notes-->
-        <div class="bottomMargin">
-            <textarea class="form-control" placeholder="Notes"
+    <!--Phone-->
+    <div style="width: 100%;">
+        <div class="inline narrowest contactFormIcon">
+            <i class="fa fa-phone"></i>
+        </div>
+        <div class="inline bottomMargin">
+            <input type="tel" class="form-control normal input-sm" placeholder="Phone"
+                   data-bind="value: contact.phone"/>
+        </div>
+        <div class="inline narrow bottomMargin">
+            <input class="form-control narrower input-sm" placeholder="Ext"
+                   data-bind="value: contact.ext"/>
+        </div>
+    </div>
+
+    <!--Cell-->
+    <div style="width: 100%;">
+        <div class="inline narrowest contactFormIcon">
+            <i class="fa fa-power-off" style="visibility: hidden"></i>
+        </div>
+        <div class="inline bottomMargin">
+            <input type="tel" class="form-control normal input-sm" placeholder="Cell"
+                   data-bind="value: contact.cell"/>
+        </div>
+    </div>
+
+    <!--Notes-->
+    <div style="width: 100%;">
+        <div class="inline narrowest contactFormIcon">
+            <i class="fa fa-power-off" style="visibility: hidden"></i>
+        </div>
+        <div class="inline bottomMargin">
+            <textarea class="form-control widest" placeholder="Notes"
                       data-bind="value: contact.notes"></textarea>
         </div>
     </div>
+</div>
 
-    <!-- **** Details view only **** -->
-    <div data-bind="visible: showDetails() && !allowEdits()">
-        <div data-bind="if: contact">
-            <span data-bind="text: contact.streetAddress"></span><br>
-            <span data-bind="text: contact.city"></span>
-            <span data-bind="text: contact.zip"></span><br>
-            <a>
-                <span data-bind="text: contact.phone"></span>
-            </a>
-        </div>
+<!-- **** Details view only **** -->
+<div data-bind="visible: showDetails() && !allowEdits()">
+    <div data-bind="if: contact">
+        <span data-bind="text: contact.streetAddress"></span><br>
+        <span data-bind="text: contact.city"></span>
+        <span data-bind="text: contact.zip"></span><br>
+        <a>
+            <span data-bind="text: contact.phone"></span>
+        </a>
     </div>
+</div>
 
 </div>

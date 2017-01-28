@@ -19,7 +19,6 @@ xdescribe('GoogleContactsClient', function () {
 
     var contact = new Contact();
     contact._id = 101;
-    contact.isBusiness = false;
     contact.role = undefined;
     contact.name = 'Test Contact II';
     contact.businessName = undefined;

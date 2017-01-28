@@ -38,18 +38,19 @@ define(['jquery', 'underscore', 'amplify', 'knockout', 'KOMap',
                                 return;
                             }
                             // Get user entered value
-                            let value = ko.unwrap(valueAccessor());
                             let newValue = event.target.value;
 
                             let existingInDS = _.find(dataSrc, function (val) {
                                 return newValue.toLowerCase() == val.toLowerCase()
                             });
 
+                            let value = valueAccessor();
                             if (existingInDS) {
-                                valueAccessor(existingInDS);
+                                value(existingInDS);
                             } else {
                                 addToRefData(newValue, dataSrc);
-                                valueAccessor(newValue);
+                                valueujn
+                                ui(newValue);
                             }
                             console.log("Change: " + newValue);
                         },

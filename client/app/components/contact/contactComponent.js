@@ -10,10 +10,6 @@ define(['knockout', 'maskedInput', 'text!app/components/contact/contactComponent
                 throw 'Expecting Contact obj as a param';
             }
 
-            if (!params.hasOwnProperty('isBusinessOptionApplicable')) {
-                throw 'Expecting `isBusinessOptionApplicable` as a param';
-            }
-
             this.placeholder = ko.observable(params.hasOwnProperty('placeholder') ? params.placeholder : 'Name');
             this.showDetails = ko.observable(params.hasOwnProperty('showDetails') ? params.showDetails : false);
             this.allowEdits  = ko.observable(params.hasOwnProperty('allowEdits') ? params.allowEdits : true);
@@ -71,31 +67,11 @@ define(['knockout', 'maskedInput', 'text!app/components/contact/contactComponent
                 'WI',
                 'WY']);
 
-            this.isBusinessOptionApplicable = ko.observable();
-            this.setupBusinessTypeOption(params.isBusinessOptionApplicable);
-
             // Add phone number input mask
             // $().ready(function maskTelFields(){
             //     $('input[type=tel]').mask("999-999-9999");
             // });
         }
-
-        ContactComponentVM.prototype.isBusiness = function() {
-            return this.contact.isBusiness() == 'true';
-        }
-
-        ContactComponentVM.prototype.isNotBusiness = function() {
-            return this.contact.isBusiness() != 'true';
-        }
-
-        ContactComponentVM.prototype.setupBusinessTypeOption = function(bizTypeApplicable) {
-            if (bizTypeApplicable) {
-                this.isBusinessOptionApplicable(true);
-            } else {
-                this.isBusinessOptionApplicable(false);
-                this.contact.isBusiness(false);
-            }
-        };
 
         ContactComponentVM.prototype.onDetailsClick = function () {
             this.showDetails(!this.showDetails());

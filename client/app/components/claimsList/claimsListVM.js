@@ -1,4 +1,4 @@
-    define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore', 'model/claim', 'model/claimEntry', 'app/utils/events',
+define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore', 'model/claim', 'model/claimEntry', 'app/utils/events',
         'app/utils/router', 'shared/dateUtils', 'app/utils/ajaxUtils', 'shared/objectUtils', 'app/utils/responsive',
         'text!app/components/claimsList/claimsList.tmpl.html'],
     function ($, ko, KOMap, amplify, _, Claim, ClaimEntry, Events, Router, DateUtils, AjaxUtils, ObjectUtils, responsive, claimsListView) {
@@ -7,6 +7,7 @@
         function ClaimsListVM() {
             console.log('Init ClaimsListVM');
             this.Responsive = responsive;
+            this.amplify = amplify;
             this.init();
         }
 
@@ -58,25 +59,11 @@
 
                         let claimantName = ObjectUtils.nullSafe.bind(claim, 'this.claimantContact.name', 'None')();
                         let claimantId = Number(ObjectUtils.nullSafe.bind(claim, 'this.claimantContact._id', '')());
-                        let claimant =
-                            _.isNumber(claimantId) && claimantId > 0
-                                ? '<a onclick="let event = arguments[0] || window.event; ' +
-                            'event.stopPropagation(); ' +
-                            'amplify.publish(\'SHOW_CONTACT\', {contactId:' + claimantId + '});">' +
-                            claimantName +
-                            '</a>'
-                                : claimantName;
+                        let claimant = claimantName;
 
                         let insuredName = ObjectUtils.nullSafe.bind(claim, 'this.insuredContact.name', 'None')();
                         let insuredId = Number(ObjectUtils.nullSafe.bind(claim, 'this.insuredContact._id', '')());
-                        let insured =
-                            _.isNumber(insuredId) && insuredId > 0
-                                ? '<a onclick="let event = arguments[0] || window.event; ' +
-                            'event.stopPropagation(); ' +
-                            'amplify.publish(\'SHOW_CONTACT\', {contactId:' + insuredId + '});">' +
-                            insuredName +
-                            '</a>'
-                                : insuredName;
+                        let insured = insuredName;
                         let insuranceCo = "<span>" + insuranceCompanyFileNum + "</span><span class='secondary'>" + insuranceCoName + "</span>";
 
                         tempArray.push({
@@ -118,7 +105,7 @@
             });
             $('#claimListTable').bootstrapTable('showLoading');
         }
-       
+
         return {viewModel: ClaimsListVM, template: claimsListView};
     });
 

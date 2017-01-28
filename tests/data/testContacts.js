@@ -1,7 +1,6 @@
 var data = [
     {
         "_id": "154",
-        "isBusiness": false,
         "role": null,
         "name": "Diane Bensinger",
         "businessName": null,
@@ -14,7 +13,6 @@ var data = [
     },
     {
         "_id": "155",
-        "isBusiness": false,
         "role": null,
         "name": "Kaitlyn Korb",
         "businessName": null,
@@ -27,7 +25,6 @@ var data = [
     },
     {
         "_id": "299",
-        "isBusiness": "false",
         "role": null,
         "name": "Hanna Edmunds",
         "businessName": null,
@@ -40,7 +37,6 @@ var data = [
     },
     {
         "_id": "300",
-        "isBusiness": "false",
         "role": null,
         "name": "ACOB FLEISHMAN",
         "businessName": null,

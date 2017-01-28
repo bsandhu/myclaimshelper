@@ -187,23 +187,6 @@
 
                 <!-- **** Right side buttons ***** -->
                 <div class="pull-right" style="position: relative; top: -44px;">
-                    <!-- `Close claim` button -->
-                    <div data-bind="ifnot: inEditMode && isPartiallyCollapsed" class="inline hidden-xs">
-                        <!-- ko ifnot: isClaimClosed -->
-                        <div class="btn btn-default inline btn-info"
-                             data-bind="click: onCloseClaimClick.bind($data)">
-                            <i class="fa fa-check-square-o"></i>
-                            Close file
-                        </div>
-                        <!-- /ko -->
-                        <!-- ko if: isClaimClosed -->
-                        <div class="btn btn-default inline btn-info"
-                             data-bind="click: onReOpenClaimClick.bind($data)">
-                            <i class="fa fa-share-square-o"></i>
-                            Re-open
-                        </div>
-                        <!-- /ko -->
-                    </div>
 
                     <!-- Edit claim button -->
                     <div data-bind="ifnot: inEditMode && isPartiallyCollapsed" class="inline">
@@ -253,11 +236,30 @@
                     </div>
                     <!-- /ko -->
 
+                    <!-- `Close claim` button -->
+                    <div data-bind="ifnot: inEditMode && isPartiallyCollapsed" class="inline hidden-xs myTooltip"
+                        mytitle="File may be closed once all work on this Claim is finished"
+                        myTitleWidth="180px">
+                        <!-- ko ifnot: isClaimClosed -->
+                        <div class="btn btn-default inline btn-info"
+                             data-bind="click: onCloseClaimClick.bind($data)">
+                            <i class="fa fa-check-square-o"></i>
+                            Close file
+                        </div>
+                        <!-- /ko -->
+                        <!-- ko if: isClaimClosed -->
+                        <div class="btn btn-default inline btn-info"
+                             data-bind="click: onReOpenClaimClick.bind($data)">
+                            <i class="fa fa-share-square-o"></i>
+                            Re-open
+                        </div>
+                        <!-- /ko -->
+                    </div>
                 </div>
 
                 <div class="clear"></div>
 
-                <!-- **** Entries **** -->
+                <!-- **** Docs/Tasks **** -->
                 <div data-bind="ifnot: inEditMode" class="row">
                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="top: -20px;">
                         <div class="tab-content">
@@ -321,8 +323,7 @@
                         </div>
                         <div class="row">
                             <div class="col-md-offset-1 col-md-10 topMargin5">
-                                <i><span
-                                        data-bind="text: 'Witness statement ' + (claim().fileNum() || claim().insuranceCompanyFileNum() || '04-92998')"/></i>
+                                <i><span data-bind="text: 'Witness statement ' + (claim().fileNum() || claim().insuranceCompanyFileNum() || '04-92998')"></span></i>
                             </div>
                         </div>
                         <div class="row">

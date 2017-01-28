@@ -13,11 +13,9 @@ define([], function () {
         this.category = undefined;
         this.subCategory = undefined;
 
-        this.isBusiness = undefined;
-        this.role = undefined;
-
         this.name = undefined;
         this.businessName = undefined;
+        this.jobTitle = undefined;
 
         this.streetAddress = undefined;
         this.city = undefined;

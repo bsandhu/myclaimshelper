@@ -17,12 +17,17 @@ define([], function () {
         this.lossType = undefined;
         this.isClosed = false;
 
+        // Dates
         this.dateReceived = undefined;
-        this.dateClosed = undefined;
         this.dateDue = undefined;
         this.dateOfLoss = undefined;
+
+        this.validFromDate = undefined;
+        this.validToDate = undefined;
+
         this.updateDate = undefined;
         this.entryDate = undefined;
+        this.dateClosed = undefined;
 
         // Contacts added by the user
         // Array of ContactInfp: {category, subCategory, contact}
@@ -32,6 +37,7 @@ define([], function () {
         // Attachments descriptors - the content is stored in Momgo GridFS
         this.attachments = [];
 
+        this.insuranceCompanyPolicyNum = undefined;
         this.insuranceCompanyFileNum = undefined;
         this.insuranceCompanyName = undefined;
 

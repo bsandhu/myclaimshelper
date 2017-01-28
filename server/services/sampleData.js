@@ -48,7 +48,6 @@ let data = {
     contacts: [
         {
             "_id": sampleClaimantId,
-            "isBusiness": false,
             "role": null,
             "name": "Sample Claimant",
             "businessName": null,
@@ -61,7 +60,6 @@ let data = {
         },
         {
             "_id": sampleInsuredId,
-            "isBusiness": true,
             "role": null,
             "name": "Sample Insured",
             "businessName": "ABC corp",

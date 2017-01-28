@@ -1,3 +1,4 @@
+<!-- ko ifnot: isClaimClosed -->
 <div class="col-lg-12 col-md-12 col-sm-12" style="margin-bottom: 20px">
     <!-- File upload component -->
     <file-upload-component params="'claimEntry': claim,
@@ -5,9 +6,20 @@
                                     onUpload: onSave.bind(vm),
                                     listFiles: false"></file-upload-component>
 </div>
+<!-- /ko -->
+
+<!-- No docs msg -->
+<!-- ko ifnot: isClaimClosed -->
+<div data-bind="if: claim().attachments().length == 0"
+     class="col-lg-offset-2 col-md-offset-2 col-sm-offset-1 col-lg-8 col-md-8 col-sm-10 col-xs-12">
+    <div class="text-info topMargin5pc text-center">
+        You may attach documents to a Claim for safekeeping<br/>No documents for this Claim yet
+    </div>
+</div>
+<!-- /ko -->
 
 <!-- **** List files **** -->
-<div class="col-lg-12 col-md-12 col-sm-12">
+<div class="col-lg-12 col-md-12 col-sm-12" data-bind="if: claim().attachments().length > 0">
     <table id="claimDocsTable"
            data-sortable
            data-bind="sortable"

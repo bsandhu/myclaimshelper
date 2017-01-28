@@ -55,6 +55,8 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore', 'bootbox',
             jsClaimObject.dateOfLoss = DateUtils.startOfToday();
             jsClaimObject.dateDue = DateUtils.startOfToday();
             jsClaimObject.dateReceived = DateUtils.startOfToday();
+            jsClaimObject.validFromDate = DateUtils.startOfToday();
+            jsClaimObject.validToDate = DateUtils.startOfToday();
             jsClaimObject.attachments = [];
             jsClaimObject.location = undefined;
             jsClaimObject.lossType = undefined;
@@ -188,6 +190,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore', 'bootbox',
         };
 
         ClaimVM.prototype.onAddNewOtherContact = function () {
+            // Sub-category is added by the selection ui
             this._onAddNewContact(SharedConsts.CONTACT_CATEGORY_OTHER);
         };
 
@@ -361,7 +364,11 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore', 'bootbox',
                     amplify.publish(Events.ADDED_CONTACT);
 
                     Audit.info('ViewClaim', {_id: this.claim()._id(), fileNum: this.claim().fileNum()});
-                }.bind(this));
+                }.bind(this))
+                .fail(err => {
+                    Audit.error('ViewClaim', {_id: claimId, Details: err.responseText});
+                    amplify.publish(Events.FAILURE_NOTIFICATION, {msg: 'Error while displaying claim'});
+                });
         };
 
         ClaimVM.prototype.loadEntriesForClaim = function (claimId) {

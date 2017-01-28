@@ -73,7 +73,7 @@
                     <label class="col-sm-2 control-label">Policy #</label>
                     <div class="col-sm-3">
                         <input type="text" class="form-control input-sm"
-                               placeholder="Name"
+                               data-bind="value: claim().insuranceCompanyPolicyNum"
                                autocomplete="on">
                     </div>
                     <div class="col-sm-7">
@@ -85,7 +85,7 @@
                                               datepicker: true,
                                               timepicker: false,
                                               hideTimepicker: true,
-                                              dateValue: claim().dateReceived}"/>
+                                              dateValue: claim().validFromDate}"/>
                             to
                             <input type="text" class="form-control input-sm"
                                    style="width: 45%;"
@@ -93,7 +93,7 @@
                                               datepicker: true,
                                               timepicker: false,
                                               hideTimepicker: true,
-                                              dateValue: claim().dateReceived}"/>
+                                              dateValue: claim().validToDate}"/>
                         </div>
                     </div>
                 </div>
@@ -161,11 +161,10 @@
                             </div>
 
                             <!-- Contact -->
-                            <div class="col-sm-4" style="display: table-cell">
+                            <div class="col-sm-8" style="display: table-cell">
                                 <contact-component
                                         params="contact : contact,
-                                                idSuffix: 'claimContact-' + $index,
-                                                isBusinessOptionApplicable: false"></contact-component>
+                                                idSuffix: 'claimContact-' + $index"></contact-component>
                             </div>
                             <div class="col-sm-1"
                                  data-bind="click: $parent.onDeleteContact.bind($parent, $index())">
@@ -204,11 +203,10 @@
                             </div>
 
                             <!-- Contact -->
-                            <div class="col-sm-4" style="display: table-cell">
+                            <div class="col-sm-8" style="display: table-cell">
                                 <contact-component
                                         params="contact : contact,
-                                                idSuffix: 'claimContact-' + $index,
-                                                isBusinessOptionApplicable: false"></contact-component>
+                                                idSuffix: 'claimContact-' + $index"></contact-component>
                             </div>
                             <div class="col-sm-1"
                                  data-bind="click: $parent.onDeleteContact.bind($parent, $index())">
@@ -244,18 +242,17 @@
                             <div class="col-sm-2" style="display: table-cell">
                                 <input type="text"
                                        class="form-control input-sm sub-heading"
-                                       data-bind="refDataAutoComplete: subCategory,
+                                       data-bind="refDataAutoComplete: otherContact.subCategory,
                                                   type: 'ContactSubCategory'"
                                        placeholder="Name"
                                        autocomplete="on">
                             </div>
 
                             <!-- Contact -->
-                            <div class="col-sm-4" style="display: table-cell">
+                            <div class="col-sm-8" style="display: table-cell">
                                 <contact-component
                                         params="contact : contact,
-                                            idSuffix: 'claimContact-' + $index,
-                                            isBusinessOptionApplicable: false"></contact-component>
+                                            idSuffix: 'claimContact-' + $index"></contact-component>
                             </div>
                         </div>
                     </form>
