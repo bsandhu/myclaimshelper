@@ -7,6 +7,7 @@ let EventEmitter = require('events').EventEmitter;
 
 let claimsService = require('./services/claimsService.js');
 let refDataService = require('./services/refDataService.js');
+let formService = require('./services/formService.js');
 let billingServices = require('./services/billingServices.js');
 let billingProfileService = require('./services/billingProfileService.js');
 let contactService = require('./services/contactService.js');
@@ -132,6 +133,7 @@ function authenticate(req, res, next) {
 function setupClaimsServiceRoutes() {
     server.get('/claim/:id', authenticate, claimsService.getClaim);
     server.get('/claim/:id/entries', authenticate, claimsService.getAllEntriesForClaim);
+    server.get('/claim/:id/forms', authenticate, formService.getAllFormsForClaim);
     server.post('/claim', authenticate, claimsService.saveOrUpdateClaim);
     server.post('/claim/search', authenticate, claimsService.searchClaims);
     server.post('/claim/close', authenticate, claimsService.closeClaim);
@@ -148,6 +150,9 @@ function setupClaimsServiceRoutes() {
     server.post('/extract/entity', authenticate, entityExtractionService.extract);
     server.get('/refData/:type', authenticate, refDataService.getRefData);
     server.post('/refData', authenticate, refDataService.addRefData);
+
+    server.get('/form/:id', authenticate, formService.getFormData);
+    server.post('/form', authenticate, formService.addFormData);
 }
 
 function setupContactServiceRoutes() {

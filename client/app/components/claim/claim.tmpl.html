@@ -171,7 +171,7 @@
                 </div>
                 <!-- /ko -->
 
-                <!-- **** Left side buttons ***** -->
+                <!-- **** Left side tabs ***** -->
                 <div class="pull-left col-lg-12 col-md-12 col-sm-12 col-xs-12">
                     <ul class="nav nav-tabs" role="tablist">
                         <li role="presentation" class="active">
@@ -181,6 +181,10 @@
                         <li role="presentation">
                             <a aria-controls="claimTasks" href="#claimTasks" role="tab" data-toggle="tab"
                                class="squareCorners">Tasks</a>
+                        </li>
+                        <li role="presentation">
+                            <a aria-controls="claimForms" href="#claimForms" role="tab" data-toggle="tab"
+                               class="squareCorners">Forms</a>
                         </li>
                     </ul>
                 </div>
@@ -259,7 +263,7 @@
 
                 <div class="clear"></div>
 
-                <!-- **** Docs/Tasks **** -->
+                <!-- **** Docs/Tasks/Froms **** -->
                 <div data-bind="ifnot: inEditMode" class="row">
                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="top: -20px;">
                         <div class="tab-content">
@@ -269,6 +273,10 @@
                             </div>
                             <div role="tabpanel" class="tab-pane fade" id="claimTasks">
                                 <div data-bind="template: {name: entriesViewHtml,
+                                                           afterRender: afterTabRender}"></div>
+                            </div>
+                            <div role="tabpanel" class="tab-pane fade" id="claimForms">
+                                <div data-bind="template: {name: formsViewHtml,
                                                            afterRender: afterTabRender}"></div>
                             </div>
                         </div>

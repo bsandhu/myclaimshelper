@@ -26,12 +26,18 @@ define([], function(){
         SELECT_CLAIM         : 'SELECT_CLAIM',
         SELECTED_CLAIM       : 'SELECTED_CLAIM',
 
+        CREATE_NEW_FORM      : 'CREATE_NEW_FORM',
+
         SHOW_CLAIM_ENTRY     : 'ShowClaimEntry',
         NEW_CLAIM_ENTRY      : 'NewClaimEntry',
         SAVED_CLAIM_ENTRY    : 'SavedClaimEntry',
         UPDATE_CLAIM_ENTRY_STATUS : 'UpdateClaimEntryStatus',
 
         SHOW_BILLING         : 'SHOW_BILLING',
+
+        SHOW_CLAIM_FORM      : 'SHOW_CLAIM_FORM',
+        NEW_CLAIM_FORM       : 'NEW_CLAIM_FORM',
+        SAVED_CLAIM_FORM     : 'SAVED_CLAIM_FORM',
 
         SUCCESS_NOTIFICATION : 'SuccessNotification',
         FAILURE_NOTIFICATION : 'FailureNotification',

@@ -6,6 +6,7 @@ let BillingStatus = require('../model/billingStatus.js');
 let Consts = require('../shared/consts.js');
 let mongoUtils = require('./../mongoUtils.js');
 let serviceUtils = require('./../serviceUtils.js');
+let sendResponse = serviceUtils.sendResponse;
 let contactService = require('./contactService.js');
 let entityExtractionService = require('./entityExtractionService.js');
 
@@ -537,20 +538,6 @@ function searchClaimEntries(req, res) {
             return defer;
         }
     });
-}
-
-/********************************************************/
-/* Utils                                                */
-/********************************************************/
-
-function sendResponse(res, err, jsonData) {
-    if (err) {
-        console.error('Error: ' + err);
-        res.json(500, {'Status': 'Fail', 'Details': err});
-    } else {
-        console.info('Success response: ' + JSON.stringify(jsonData).substr(0, 100));
-        res.json({'status': 'Success', 'data': jsonData});
-    }
 }
 
 

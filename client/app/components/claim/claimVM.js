@@ -7,10 +7,11 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore', 'bootbox',
         'text!app/components/claim/claim.editor.tmpl.html',
         'text!app/components/claim/claim.docs.tmpl.html',
         'text!app/components/claim/claim.entries.tmpl.html',
+        'text!app/components/claim/claim.forms.tmpl.html',
         'app/utils/audit'],
     function ($, ko, KOMap, amplify, _, bootbox, Claim, ClaimEntry, Contact, States, ajaxUtils,
               Events, Consts, Router, SessionKeys, Session, ContactClient, DateUtils, SharedConsts,
-              viewHtml, editorViewHtml, docsViewHtml, entriesViewHtml, Audit) {
+              viewHtml, editorViewHtml, docsViewHtml, entriesViewHtml, formsViewHtml, Audit) {
 
         function ClaimVM() {
             console.log('Init ClaimVM');
@@ -25,6 +26,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore', 'bootbox',
             this.Session = Session;
             this.claim = ko.observable(this.newEmptyClaim());
             this.claimEntries = ko.observableArray();
+            this.claimForms = ko.observableArray();
             this.sortDir = ko.observable('desc');
             this.activeTab = ko.observable(Consts.CLAIMS_TAB);
             this.activeClaimEntryId = ko.observable();
@@ -32,6 +34,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore', 'bootbox',
             this.entriesViewHtml = entriesViewHtml;
             this.editorViewHtml = editorViewHtml;
             this.docsViewHtml = docsViewHtml;
+            this.formsViewHtml = formsViewHtml;
             this.vm = this;
 
             // View state
@@ -74,6 +77,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore', 'bootbox',
             amplify.subscribe(Events.NEW_CLAIM, this, this.onNewClaim);
             amplify.subscribe(Events.SHOW_CLAIM_ENTRY, this, this.onShowClaimEntry);
             amplify.subscribe(Events.SAVED_CLAIM_ENTRY, this, this.refreshClaimEntriesListing);
+            amplify.subscribe(Events.SAVED_CLAIM_FORM, this, this.refreshFormsListing);
             amplify.subscribe(Events.EXPAND_CLAIM_PANEL, this, function () {
                 this.isPartiallyCollapsed(false)
             });
@@ -123,6 +127,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore', 'bootbox',
             // Re-load
             this.loadClaim(evData.claimId);
             this.loadEntriesForClaim(evData.claimId);
+            this.loadFormsForClaim(evData.claimId);
             this.inEditMode(false);
             this.readyToRender(true);
         };
@@ -187,6 +192,10 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore', 'bootbox',
         ClaimVM.prototype.onClaimEntryClick = function (entry, ev) {
             this.activeClaimEntryId(entry._id);
             Router.routeToClaimEntry(this.claim()._id(), entry._id);
+        };
+
+        ClaimVM.prototype.onClaimFormClick = function (form, ev) {
+            Router.routeToClaimForm(form._id);
         };
 
         ClaimVM.prototype.onAddNewOtherContact = function () {
@@ -281,6 +290,12 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore', 'bootbox',
             let claimId = this.claim()._id();
             console.log('Refresh entries list. ClaimId ' + claimId);
             this.loadEntriesForClaim(claimId);
+        };
+
+        ClaimVM.prototype.refreshFormsListing = function () {
+            let claimId = this.claim()._id();
+            console.log('Refresh forms list. ClaimId ' + claimId);
+            this.loadFormsForClaim(claimId);
         };
 
         ClaimVM.prototype.niceName = function (contact) {
@@ -378,6 +393,14 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore', 'bootbox',
                     this.claimEntries(resp.data);
                     this.activeClaimEntryId(null);
                     this.sortEntries();
+                }.bind(this));
+        };
+
+        ClaimVM.prototype.loadFormsForClaim = function (claimId) {
+            ajaxUtils.getJSON('/claim/' + claimId + '/forms')
+                .done(function (resp) {
+                    console.log('Loaded claim forms. ClaimId: ' + JSON.stringify(resp.data.length));
+                    this.claimForms(resp.data);
                 }.bind(this));
         };
 

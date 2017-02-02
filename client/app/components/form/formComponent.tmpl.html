@@ -1,0 +1,57 @@
+<div class="panel panel-default" data-bind="if: readyToRender">
+    <div class="panel-heading">
+        <h3>
+            <i class="fa fa-file-text-o"></i>
+            <div class="inline"
+                 id="claimFormHeading"
+                 data-bind="text: ObjectUtils.camelcaseToSpaces(form().type())"></div>
+            <div class="pull-right">
+                <a href="javascript:void(0);"
+                   class="btn btn-default ghost-button pull-right hidden-xs"
+                   style="top: -5px; position: relative;"
+                   data-bind="click: printForm">
+                    <span class="btn-label"><i class="fa fa-print"></i></span> Print
+                </a>
+            </div>
+            <div class="pull-right">
+                <a href="javascript:void(0);"
+                   class="btn btn-default ghost-button pull-right hidden-xs"
+                   style="top: -5px; position: relative;"
+                   data-bind="click: saveForm">
+                    <span class="btn-label"><i class="fa fa-save"></i></span> Save
+                </a>
+            </div>
+        </h3>
+    </div>
+
+    <div class="panel-body">
+        <!-- Form template -->
+        <div id="claimFormPrintContainer"
+             data-bind="template: { name: activeFormTmpl, data: form().data()}"></div>
+
+        <!-- Footer buttons -->
+        <!--<div class="col-lg-5">
+            <button id="task-entry-close"
+                    type="button"
+                    class="btn btn-default pull-right"
+                    data-bind="click: onCancel">Close</button>
+
+            &lt;!&ndash; ko if: isClosed &ndash;&gt;
+            <span class="text-primary leftMargin5">
+                <i class="fa fa-lock">   Claim is closed</i>
+            </span>
+            &lt;!&ndash; /ko &ndash;&gt;
+
+            &lt;!&ndash; ko ifnot: isClosed &ndash;&gt;
+            <button type="button" class="btn pull-right leftMargin2pc rightMargin5"
+                    data-bind="click: onSave,
+                                   css: { 'btn-info' : stateChange(),
+                                          'btn-default' : !stateChange()}">Save
+            </button>
+            &lt;!&ndash; /ko &ndash;&gt;
+        </div>-->
+    </div>
+</div>
+
+<!-- Print tmpl is dynamically populated by the VM -->
+<script type="text/html" id="form-print-template"></script>

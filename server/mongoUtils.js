@@ -311,6 +311,7 @@ function initCollections() {
     initCollection('UserProfiles');
     initCollection('Notifications');
     initCollection('RefData');
+    initCollection('FormData');
 }
 
 exports.run = run;
@@ -338,3 +339,4 @@ exports.USERPROFILE_COL_NAME = 'UserProfiles';
 exports.NOTIFICATIONS_COL_NAME = 'Notifications';
 exports.ZIPCODES_COL_NAME = 'ZipCodes';
 exports.REFDATA_COL_NAME = 'RefData';
+exports.FORMDATA_COL_NAME = 'FormData';

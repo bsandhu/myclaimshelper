@@ -979,6 +979,10 @@ h3.panel-title {
 /**** Contacts ****/
 /**********************************************************/
 
+.stepBulletPoint.color-teal {
+    background: #00bebe;
+}
+
 .stepBulletPoint {
     background: #0091d9;
     color: #fff;
@@ -1265,3 +1269,74 @@ div.hopscotch-bubble .hopscotch-bubble-arrow-container.right .hopscotch-bubble-a
 div.hopscotch-bubble .hopscotch-bubble-arrow-container.right .hopscotch-bubble-arrow-border {
     border-left: 17px solid rgb(171, 175, 176);
 }
+
+/**********************************************************/
+/**** Form styling ****/
+/**********************************************************/
+
+.formContainer span {
+    display: none;
+}
+
+.formContainer input {
+    width: 100%;
+    border: none;
+    box-shadow: none;
+    border-bottom: 1px solid darkgrey;
+    color: #2b669a;
+    font-family: Lato, sans-serif;
+    font-size: 14px;
+    font-weight: normal;
+    line-height: 20px;
+    min-height: 20px;
+    margin-right: 3px;
+}
+
+@media print {
+    .formContainer input {
+        display: none;
+    }
+
+    .formContainer span {
+        display: inline-flex;
+        width: 100%;
+        border: none;
+        box-shadow: none;
+        border-bottom: 1px solid darkgrey;
+        font-family: Lato, sans-serif;
+        font-size: 14px;
+        font-weight: normal;
+        line-height: 20px;
+        min-height: 20px;
+        margin-right: 3px;
+    }
+}
+
+.formRow {
+    display: flex;
+    flex-direction: row;
+    min-height: 1em;
+}
+
+.formRowCentered {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.formColumn {
+    display: flex;
+    flex-flow: column;
+}
+
+.formTextBox {
+    flex-basis: 50%;
+    flex-grow: 0;
+    align-content: flex-start;
+    border: 1px solid darkgray;
+    padding: 5px;
+    margin: 5px;
+    font-weight: 800;
+}
+
+

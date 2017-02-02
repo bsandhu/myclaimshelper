@@ -1,0 +1,406 @@
+<div class="formContainer">
+
+    <!-- ************************************************************************************************* -->
+    <!-- NOTE: Input fields do not render in the print layout since the content is not in the DOM -->
+    <!-- Hence there is a span for every input. In the @media print css inputs are hidden and spans shown -->
+    <!-- ************************************************************************************************* -->
+
+    <!-- **** Top section **** -->
+    <div class="formRow">
+        <div class="formColumn" style="flex-basis: 25%; flex-grow: 0; align-content: flex-start;">
+            <div class="formRow">
+                <input data-bind="value: _id">
+                <span data-bind="text: _id"></span>
+            </div>
+            <div class="formRowCentered">POLICY NUMBER</div>
+            <div class="formRow">
+                <input data-bind="value: b"/>
+                <span data-bind="text: b"></span>
+            </div>
+            <div class="formRowCentered" style="font-size: .75em">AMOUNT OF POLICY AT TIME OF LOSS</div>
+            <div class="formRow">
+                <input data-bind="value: c"/>
+                <span data-bind="text: c"></span>
+            </div>
+            <div class="formRowCentered">DATE ISSUED</div>
+            <div class="formRow">
+                <input data-bind="value: d"/>
+                <span data-bind="text: d"></span>
+            </div>
+            <div class="formRowCentered">DATE EXPIRES</div>
+        </div>
+        <div class="formTextBox">
+            ANY PERSON WHO KNOWINGLY AND WITH INTENT TO DEFRAUD ANY INSURANCE COMPANY OR OTHER PERSON FILES A STATMENT
+            OF CLAIM CONTAINING ANY MATERIALLY FALSE INFORMATION, OR CONCEALS FOR THE PURPOSE OF MISLEADING, INFORMATION
+            CONCERNING ANY FACT MATERIAL THERETO, COMMITS A FRAUDULENT INSURANCE ACT, WHICH IS A CRIME.
+        </div>
+        <div class="formColumn" style="flex-basis: 25%; flex-grow: 0; align-content: flex-end;">
+            <div class="formRow">
+                <input data-bind="value: e"/>
+                <span data-bind="text: e"></span>
+            </div>
+            <div class="formRowCentered">OUR FILE No.</div>
+            <div class="formRow">
+                <input data-bind="value: f"/>
+                <span data-bind="text: f"></span>
+            </div>
+            <div class="formRowCentered">COMPANY CLAIM NO.</div>
+            <div class="formRow">
+                <input data-bind="value: g"/>
+                <span data-bind="text: g"></span>
+            </div>
+            <div class="formRowCentered">AGENCY AT</div>
+            <div class="formRow">
+                <input data-bind="value: h"/>
+                <span data-bind="text: h"></span>
+            </div>
+            <div class="formRowCentered">AGENT</div>
+        </div>
+    </div>
+    <div class="formRow" style="padding-bottom: 10px"></div>
+
+    <!-- **** Text start **** -->
+    <div class="formRow">
+        <div style="order: 1">To the</div>
+        <div style="flex-grow: 1; order: 2">
+            <input data-bind="value: i"/>
+            <span data-bind="text: i"></span>
+        </div>
+    </div>
+    <div class="formRow">
+        <div style="order: 1">of</div>
+        <div style="flex-grow: 1; order: 2">
+            <input data-bind="value: j"/>
+            <span data-bind="text: j"></span>
+        </div>
+    </div>
+    <div class="formRow">
+        <div style="order: 1">At the time of loss, by the above indicated policy of insurance you insured</div>
+        <div style="flex-grow: 1; order: 2">
+            <input data-bind="value: k">
+            <span data-bind="text: k"></span>
+        </div>
+    </div>
+    <div class="formRow">
+        <div style="order: 1">against loss by</div>
+        <div style="flex-grow: 1; order: 2">
+            <input data-bind="value: l"/>
+            <span data-bind="text: l"></span>
+        </div>
+        <div style="order: 3;">to the property described under schedule "A" according to</div>
+    </div>
+    <div class="formRow">
+        <div style="order: 1">the terms and conditions of the said policy and all forms, endorsements, transfers and
+            assignments attached thereto
+        </div>
+    </div>
+
+    <!-- **** Time and origin **** -->
+    <div class="formRow">
+        <div style="order: 1"><strong>1. Time and Origin:</strong> A</div>
+        <div style="flex-grow: 1; order: 2">
+            <input data-bind="value: m"/>
+            <span data-bind="text: m"></span>
+        </div>
+        <div style="order: 3;">loss occured about the hour of</div>
+        <div style="flex-grow: 1; order: 4; flex-basis: 3em">
+            <input data-bind="value: n"/>
+            <span data-bind="text: n"></span>
+        </div>
+        <div style="order: 5;">o' clock</div>
+        <div style="flex-grow: 1; order: 6; flex-basis: 3em">
+            <input data-bind="value: o"/>
+            <span data-bind="text: o"></span>
+        </div>
+        <div style="order: 7;">M.</div>
+    </div>
+    <div class="formRow">
+        <div style="order: 1">on the</div>
+        <div style="order: 2; flex-grow: 1; flex-basis: 1em">
+            <input data-bind="value: p"/>
+            <span data-bind="text: p"></span>
+        </div>
+        <div style="order: 3;">day of</div>
+        <div style="order: 4; flex-grow: 1; flex-basis: 1em">
+            <input data-bind="value: q"/>
+            <span data-bind="text: q"></span>
+        </div>
+        <div style="order: 5;">19</div>
+        <div style="order: 6; flex-grow: 1; flex-basis: 1em">
+            <input data-bind="value: r"/>
+            <span data-bind="text: r"></span>
+        </div>
+        <div style="order: 7;">. The cause and origin of the said loss were:</div>
+        <div style="order: 8; flex-grow: 1; flex-basis: 5em">
+            <input data-bind="value: s"/>
+            <span data-bind="text: s"></span>
+        </div>
+    </div>
+    <div class="formRow">
+        <div style="order: 1; flex-grow: 1;">
+            <input data-bind="value: t"/>
+            <span data-bind="text: t"></span>
+        </div>
+    </div>
+    <div class="formRow">
+        <div style="order: 1; flex-grow: 1;">
+            <input data-bind="value: u"/>
+            <span data-bind="text: u"></span>
+        </div>
+    </div>
+
+    <!-- **** Occupancy **** -->
+    <div class="formRow">
+        <div style="order: 1"><strong>2. Occupancy:</strong> The building described, or containing the property
+            described, was occupied at the time of the loss as follows,
+        </div>
+    </div>
+    <div class="formRow">
+        <div style="order: 1">and for no other purpose whatever:</div>
+        <div style="order: 2; flex-grow: 1;">
+            <input data-bind="value: v"/>
+            <span data-bind="text: v"></span>
+        </div>
+    </div>
+    <div class="formRow">
+        <div style="order: 1; flex-grow: 1;">
+            <input data-bind="value: w"/>
+            <span data-bind="text: w"></span>
+        </div>
+    </div>
+    <div class="formRow">
+        <div style="order: 1; flex-grow: 1;">
+            <input data-bind="value: x"/>
+            <span data-bind="text: x"></span>
+        </div>
+    </div>
+
+    <!-- **** Title and interest **** -->
+    <div class="formRow">
+        <div style="order: 1"><strong>3. Title and Interest:</strong> At the time of the loss the interest of your
+            insured in the property described therin was
+        </div>
+        <div style="order: 2; flex-grow: 1; flex-basis: 2em">
+            <input data-bind="value: y"/>
+            <span data-bind="text: y"></span>
+        </div>
+    </div>
+    <div class="formRow">
+        <div style="order: 1; flex-grow: 1; flex-basis: 5em">
+            <input data-bind="value: z"/>
+            <span data-bind="text: z"></span>
+        </div>
+        <div style="order: 2">No other person or persons had any interest therein or</div>
+    </div>
+    <div class="formRow">
+        <div style="order: 1">incumbrance thereon, except:</div>
+        <div style="order: 2; flex-grow: 1;">
+            <input data-bind="value: aa"/>
+            <span data-bind="text: aa"></span>
+        </div>
+    </div>
+    <div class="formRow">
+        <div style="order: 1; flex-grow: 1;">
+            <input data-bind="value: ab"/>
+            <span data-bind="text: ab"></span>
+        </div>
+    </div>
+
+    <!-- **** Changes **** -->
+    <div class="formRow">
+        <div style="order: 1"><strong>3. Changes:</strong> Since the said policy was issued there has been no assignment
+            thereof, or change of interest, use, occupancy
+        </div>
+    </div>
+    <div class="formRow">
+        <div style="order: 1">possession, location or exposure of the property described, except:</div>
+        <div style="order: 2; flex-grow: 1;">
+            <input data-bind="value: ac"/>
+            <span data-bind="text: ac"></span>
+        </div>
+    </div>
+    <div class="formRow">
+        <div style="order: 1; flex-grow: 1;">
+            <input data-bind="value: ad"/>
+            <span data-bind="text: ad"></span>
+        </div>
+    </div>
+    <div class="formRow">
+        <div style="order: 1; flex-grow: 1;">
+            <input data-bind="value: ae"/>
+            <span data-bind="text: ae"></span>
+        </div>
+    </div>
+
+    <!-- **** Total insurance **** -->
+    <div class="formRow">
+        <div style="order: 1"><strong>5. Total Insurance:</strong> The total amount of insurance upon the property
+            descrobed by this policy was, at the time of the loss,
+        </div>
+    </div>
+    <div class="formRow">
+        <div style="order: 2">$</div>
+        <div style="order: 3; flex-grow: 1; flex-basis: 3em">
+            <input data-bind="value: af"/>
+            <span data-bind="text: af"></span>
+        </div>
+        <div style="order: 4">, as more particularly specified in the apportionment attached under Schedule "C", besides
+            which
+        </div>
+    </div>
+    <div class="formRow">
+        <div style="order: 5">there was no policy or other contract of insurance, written or oral, valid or invalid.
+        </div>
+    </div>
+
+    <!-- **** Cash Value **** -->
+    <div class="formRow">
+        <div style="order: 1"><strong>6. The Actual Cash Value</strong> of the said property at the time of the loss was
+        </div>
+        <div style="order: 2; flex-grow: 1" class="bottomBorderDashed"></div>
+        <div style="order: 3;">$</div>
+        <div style="order: 4; flex-grow: 0; flex-basis: 10em;">
+            <input data-bind="value: ag"/>
+            <span data-bind="text: ag"></span>
+        </div>
+    </div>
+
+    <!-- **** Whole loss and damage **** -->
+    <div class="formRow">
+        <div style="order: 1"><strong>7. The Whole Loss and Damage </strong> was
+        </div>
+        <div style="order: 2; flex-grow: 1" class="bottomBorderDashed"></div>
+        <div style="order: 3;">$</div>
+        <div style="order: 4; flex-grow: 0; flex-basis: 10em;">
+            <input data-bind="value: ah"/>
+            <span data-bind="text: ah"></span>
+        </div>
+    </div>
+
+    <!-- **** Less amt **** -->
+    <div class="formRow">
+        <div style="order: 1"><strong>8. Less Amount of Deductible </strong>
+        </div>
+        <div style="order: 2; flex-grow: 1" class="bottomBorderDashed"></div>
+        <div style="order: 3;">$</div>
+        <div style="order: 4; flex-grow: 0; flex-basis: 10em;">
+            <input data-bind="value: ai"/>
+            <span data-bind="text: ai"></span>
+        </div>
+    </div>
+
+    <!-- **** Amt claimed **** -->
+    <div class="formRow">
+        <div style="order: 1"><strong>9. The Amount Claimed </strong> under the above numbered policy is
+        </div>
+        <div style="order: 2; flex-grow: 1" class="bottomBorderDashed"></div>
+        <div style="order: 3;">$</div>
+        <div style="order: 4; flex-grow: 0; flex-basis: 10em;">
+            <input data-bind="value: aj"/>
+            <span data-bind="text: aj"></span>
+        </div>
+    </div>
+
+    <!-- **** Disclaimer **** -->
+    <div class="formRow">
+        <div style="order: 1; margin-left: 1em">
+            <strong>The said loss did not originate by any act, design or procurement on the part
+                of your insured, or this affiant; nothing has </strong>
+        </div>
+    </div>
+    <div class="formRow">
+        <div style="order: 1;">
+            <strong>been done by or with the privity or consent of your insured or this affiant, to violate the
+                conditions of the policy, or render it void;</strong>
+        </div>
+    </div>
+    <div class="formRow">
+        <div style="order: 1;">
+            <strong>no articles are mentioned herein or in annexed schedules but such as were destroyed or damaged at
+                the time of the said loss; no</strong>
+        </div>
+    </div>
+    <div class="formRow">
+        <div style="order: 1;">
+            <strong>property saved has in any manner been concealed, and no attempt to deceive the said company, as to
+                the extent of said loss, has</strong>
+        </div>
+    </div>
+    <div class="formRow">
+        <div style="order: 1;">
+            <strong>in any manner been made. Any other information that may be required will be furnished and considered
+                a part of this proof.</strong>
+        </div>
+    </div>
+    <div class="formRow" style="padding-bottom: 10px"></div>
+    <div class="formRow">
+        <div style="order: 1; margin-left: 1em">
+            <strong>The furnishing of this blank or the preparation of proofs by a representative of the above insurance
+                company is not a waiver </strong>
+        </div>
+    </div>
+    <div class="formRow">
+        <div style="order: 1;">
+            <strong>of any of its rights.</strong>
+        </div>
+    </div>
+
+    <!-- **** State of **** -->
+    <div class="formRow" style="padding-bottom: 15px"></div>
+    <div class="formRow">
+        <div style="order: 1">State of</div>
+        <div style="order: 2; flex-grow: 0; flex-basis: 15em">
+            <input data-bind="value: ak"/>
+            <span data-bind="text: ak"></span>
+        </div>
+        <div style="order: 3; flex-grow: 1;"></div>
+        <div style="order: 4; flex-grow: 0; flex-basis: 25em">
+            <input data-bind="value: al"/>
+            <span data-bind="text: al"></span>
+        </div>
+    </div>
+
+    <!-- **** County of **** -->
+    <div class="formRow" style="padding-bottom: 15px"></div>
+    <div class="formRow">
+        <div style="order: 1">County of</div>
+        <div style="order: 2; flex-grow: 0; flex-basis: 15em">
+            <input data-bind="value: am"/>
+            <span data-bind="text: am"></span>
+        </div>
+        <div style="order: 3; flex-grow: 1;"></div>
+        <div style="order: 4; flex-grow: 0; flex-basis: 22em">
+            <input data-bind="value: an"/>
+            <span data-bind="text: an"></span>
+        </div>
+        <div style="order: 5; flex-grow: 0; flex-basis: 2em">Insured</div>
+    </div>
+
+    <!-- **** Subscribed and sworn **** -->
+    <div class="formRow">
+        <div style="order: 1">Subscribed and sworn to before me this</div>
+        <div style="order: 2; flex-grow: 0; flex-basis: 5em">
+            <input data-bind="value: ao"/>
+            <span data-bind="text: ao"></span>
+        </div>
+        <div style="order: 3;">day of</div>
+        <div style="order: 4; flex-grow: 0; flex-basis: 10em">
+            <input data-bind="value: ap"/>
+            <span data-bind="text: ap"></span>
+        </div>
+        <div style="order: 5;">19</div>
+        <div style="order: 6; flex-grow: 0; flex-basis: 5em">
+            <input data-bind="value: aq"/>
+            <span data-bind="text: aq"></span>
+        </div>
+        <div style="order: 7; flex-grow: 1;"></div>
+    </div>
+    <div class="formRow">
+        <div style="order: 1; flex-grow: 0; flex-basis: 20em">
+            <input data-bind="value: ar"/>
+            <span data-bind="text: ar"></span>
+        </div>
+        <div style="order: 2">Notary Public</div>
+        <div style="order: 3; flex-grow: 1;"></div>
+    </div>
+</div>

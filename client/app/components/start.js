@@ -46,7 +46,8 @@ require(['jquery',
         'app/components/admin/adminComponent',
         'app/components/billing/billingComponent',
         'app/components/billingItem/billingItemComponent',
-        'app/components/billingProfile/billingProfileComponent'],
+        'app/components/billingProfile/billingProfileComponent',
+        'app/components/form/formComponent'],
     function ($, ko, KOAmd, amplify, AppVM, DateUtils, Session, Audit, hopscotch, Chart) {
         console.log('Init App');
 
@@ -85,6 +86,7 @@ require(['jquery',
         ko.components.register('billing-item-component', require('app/components/billingItem/billingItemComponent'));
         ko.components.register('billing-profile-component', require('app/components/billingProfile/billingProfileComponent'));
         ko.components.register('contact-sync-component', require('app/components/contactSync/contactSyncComponent'));
+        ko.components.register('claim-form-component', require('app/components/form/formComponent'));
 
         // Knockout bindings init
         ko.applyBindings(new AppVM());
