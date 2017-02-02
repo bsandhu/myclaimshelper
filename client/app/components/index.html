@@ -19,7 +19,8 @@
     <link rel="stylesheet" type="text/css" href="/css/app.css">
 
     <script src="../../../lib/lock-9.1.min.js"></script>
-    <script async defer  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBB-Qincf0sNQcsu5PzZh7znG3GiB98GRU&libraries=places&signed_in=true&v=3.exp"></script>
+    <script async defer
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBB-Qincf0sNQcsu5PzZh7znG3GiB98GRU&libraries=places&signed_in=true&v=3.exp"></script>
 </head>
 <body>
 
@@ -99,28 +100,26 @@
 <div data-bind="component: 'user-profile-component'"></div>
 
 <!-- #MAIN PANEL -->
-<div style="position: relative; top: 85px;">
+<div style="position: relative; top: 85px;" class="container">
 
     <!-- **** Dashboard **** -->
-    <div class="container">
-        <div id="dashboardPanel" class="row dashboardPanel">
-            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                <div class="row hidden-xs">
-                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                        <div data-bind="component: 'stats-component'"></div>
-                    </div>
+    <div id="dashboardPanel" class="row dashboardPanel">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <div class="row hidden-xs">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <div data-bind="component: 'stats-component'"></div>
                 </div>
-                <div class="row">
-                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                        <div data-bind="component: 'summary-component'"></div>
-                    </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <div data-bind="component: 'summary-component'"></div>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- **** Billing **** -->
-    <div id="billingPanel" class="billingPanel container">
+    <div id="billingPanel" class="billingPanel">
         <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                 <div data-bind="component: {name: 'billing-component'}"></div>
@@ -138,7 +137,7 @@
     </div>
 
     <!-- **** Contacts **** -->
-    <div id="contactsPanel" class="contactsPanel container" data-bind="if: loadContacts">
+    <div id="contactsPanel" class="contactsPanel" data-bind="if: loadContacts">
         <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 ">
                 <div data-bind="component: 'contact-widget-component'"></div>
@@ -147,7 +146,7 @@
     </div>
 
     <!-- **** Claims list **** -->
-    <div id="claimsListPanel" class="claimsListPanel container" data-bind="if: loadClaimsList">
+    <div id="claimsListPanel" class="claimsListPanel" data-bind="if: loadClaimsList">
         <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                 <div data-bind="component: 'claims-list-component'"></div>
@@ -156,26 +155,24 @@
     </div>
 
     <!-- **** Claim edit/entry module **** -->
-    <div class="container">
-        <div class="row">
-            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                <div id="claimPanel" class="claimPanel inline pull-top">
-                    <!-- Note: Still using module for the afterRender fn -->
-                    <div data-bind="component: 'claims-component'"></div>
-                </div>
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <div id="claimPanel" class="claimPanel inline pull-top">
+                <!-- Note: Still using module for the afterRender fn -->
+                <div data-bind="component: 'claims-component'"></div>
+            </div>
 
-                <!-- **** Task edit/entry module **** -->
-                <div id="claimEntryPanel" class="claimEntryPanel inline">
-                    <div id="claimEntryPanelContent" class="claimEntryPanelContent">
-                        <div data-bind="component: 'task-entry-component'"></div>
-                    </div>
+            <!-- **** Task edit/entry module **** -->
+            <div id="claimEntryPanel" class="claimEntryPanel inline">
+                <div id="claimEntryPanelContent" class="claimEntryPanelContent">
+                    <div data-bind="component: 'task-entry-component'"></div>
                 </div>
+            </div>
 
-                <!-- **** From edit/entry module **** -->
-                <div id="claimFormPanel" class="claimFormPanel inline">
-                    <div id="claimFormPanelContent" class="claimFormPanelContent">
-                        <div data-bind="component: 'claim-form-component'"></div>
-                    </div>
+            <!-- **** From edit/entry module **** -->
+            <div id="claimFormPanel" class="claimFormPanel inline">
+                <div id="claimFormPanelContent" class="claimFormPanelContent">
+                    <div data-bind="component: 'claim-form-component'"></div>
                 </div>
             </div>
         </div>
@@ -208,7 +205,7 @@
     <div class="welcome modal-dialog">
         <div class="welcome modal-content">
             <div class="welcome modal-body">
-                <div class="container-fluid">
+                <div class="container">
                     <div class="text-center">
                         <div class="welcome banner">Welcome to MyClaimsHelper</div>
                         <div>Would you like a quick tour of the basics?</div>

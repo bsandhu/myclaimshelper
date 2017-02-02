@@ -13,14 +13,6 @@
                     <span class="btn-label"><i class="fa fa-print"></i></span> Print
                 </a>
             </div>
-            <div class="pull-right">
-                <a href="javascript:void(0);"
-                   class="btn btn-default ghost-button pull-right hidden-xs"
-                   style="top: -5px; position: relative;"
-                   data-bind="click: saveForm">
-                    <span class="btn-label"><i class="fa fa-save"></i></span> Save
-                </a>
-            </div>
         </h3>
     </div>
 
@@ -30,28 +22,15 @@
              data-bind="template: { name: activeFormTmpl, data: form().data()}"></div>
 
         <!-- Footer buttons -->
-        <!--<div class="col-lg-5">
-            <button id="task-entry-close"
+        <div class="col-lg-5">
+            <button id="claim-form-close"
                     type="button"
                     class="btn btn-default pull-right"
-                    data-bind="click: onCancel">Close</button>
+                    data-bind="click: onClose">Close</button>
 
-            &lt;!&ndash; ko if: isClosed &ndash;&gt;
-            <span class="text-primary leftMargin5">
-                <i class="fa fa-lock">   Claim is closed</i>
-            </span>
-            &lt;!&ndash; /ko &ndash;&gt;
-
-            &lt;!&ndash; ko ifnot: isClosed &ndash;&gt;
-            <button type="button" class="btn pull-right leftMargin2pc rightMargin5"
-                    data-bind="click: onSave,
-                                   css: { 'btn-info' : stateChange(),
-                                          'btn-default' : !stateChange()}">Save
+            <button type="button" class="btn btn-info pull-right leftMargin2pc rightMargin5"
+                    data-bind="click: onSave">Save
             </button>
-            &lt;!&ndash; /ko &ndash;&gt;
-        </div>-->
+        </div>
     </div>
 </div>
-
-<!-- Print tmpl is dynamically populated by the VM -->
-<script type="text/html" id="form-print-template"></script>

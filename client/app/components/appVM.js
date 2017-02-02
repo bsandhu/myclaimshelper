@@ -245,6 +245,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
         AppVM.prototype.transitionToDashboard = function () {
             this.collapseClaimPanel();
             this.collapseClaimEntryPanel();
+            this.collapseClaimFormPanel();
             this.collapseClaimsListPanel();
             this.collapseTravelPanel();
             this.collapseBillingPanel();
@@ -255,6 +256,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
         AppVM.prototype.transitionToTravel = function () {
             this.collapseClaimPanel();
             this.collapseClaimEntryPanel();
+            this.collapseClaimFormPanel();
             this.collapseClaimsListPanel();
             this.collapseDashboardPanel();
             this.collapseBillingPanel();
@@ -265,6 +267,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
         AppVM.prototype.transitionToContacts = function () {
             this.collapseClaimPanel();
             this.collapseClaimEntryPanel();
+            this.collapseClaimFormPanel();
             this.collapseClaimsListPanel();
             this.collapseDashboardPanel();
             this.collapseBillingPanel();
@@ -275,6 +278,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
         AppVM.prototype.transitionToBilling = function () {
             this.collapseClaimPanel();
             this.collapseClaimEntryPanel();
+            this.collapseClaimFormPanel();
             this.collapseClaimsListPanel();
             this.collapseDashboardPanel();
             this.collapseTravelPanel();
@@ -285,6 +289,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
         AppVM.prototype.transitionToClaimsList = function () {
             this.collapseClaimPanel();
             this.collapseClaimEntryPanel();
+            this.collapseClaimFormPanel();
             this.collapseDashboardPanel();
             this.collapseTravelPanel();
             this.collapseBillingPanel();
@@ -298,6 +303,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
             this.collapseTravelPanel();
             this.collapseBillingPanel();
             this.collapseContactsPanel();
+            this.collapseClaimFormPanel();
             if (Responsive.onXSDevice()) {
                 this.collapseClaimPanel();
                 this.expandClaimEntryPanel();
@@ -327,6 +333,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
             this.collapseClaimsListPanel();
             this.collapseDashboardPanel();
             this.collapseClaimEntryPanel();
+            this.collapseClaimFormPanel();
             this.collapseTravelPanel();
             this.collapseBillingPanel();
             this.collapseContactsPanel();
@@ -345,7 +352,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
         /* Panels animation                              */
         /*************************************************/
 
-        // Expand
+        // **** Expand ****
 
         AppVM.prototype.expandDashboardPanel = function () {
             this._expandPanel('dashboardPanel');
@@ -371,17 +378,23 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
             this._expandPanel('claimFormPanel');
         }
 
+        AppVM.prototype.expandClaimEntryPanel = function () {
+            this._expandPanel('claimEntryPanel');
+        }
+
         AppVM.prototype._expandPanel = function (panelId) {
             let panelSelector = '#' + panelId;
             let stateTracker = panelId + 'State';
 
             if (this[stateTracker] !== 'expanded') {
+                $(panelSelector).width('100%');
                 $(panelSelector).show();
+                $(panelSelector+ "Content").velocity("fadeIn", {duration: this.gridNavDelay});
                 this[stateTracker] = 'expanded';
             }
         };
 
-        // Collapse
+        // **** Collapse ****
 
         AppVM.prototype.collapseDashboardPanel = function () {
             this._collapsePanel('dashboardPanel');
@@ -405,6 +418,10 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
 
         AppVM.prototype.collapseClaimFormPanel = function () {
             this._collapsePanel('claimFormPanel');
+        }
+
+        AppVM.prototype.collapseClaimEntryPanel = function () {
+            this._collapsePanel('claimEntryPanel');
         }
 
         AppVM.prototype._collapsePanel = function (panelId) {
@@ -448,7 +465,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
             }
         };
 
-        // Claim Entry panel
+        // **** Partial expand ****
 
         AppVM.prototype.partiallyExpandClaimEntryPanel = function () {
             this._partiallyExpandPanel('claimEntryPanel');
@@ -461,28 +478,13 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
         AppVM.prototype._partiallyExpandPanel = function (panelId) {
             if (this[panelId + 'State'] !== 'expanded') {
                 $("#" + panelId).width('70%');
+                $("#" + panelId).show();
                 $("#" + panelId + "Content").velocity("fadeIn", {duration: this.gridNavDelay});
+
                 this[panelId + 'State'] = 'expanded';
-            }
-        };
-
-        AppVM.prototype.expandClaimEntryPanel = function () {
-            if (this.claimEntryPanelState !== 'expanded') {
-                $("#claimEntryPanel").width('100%');
-                $("#claimEntryPanelContent").velocity("fadeIn", {duration: this.gridNavDelay});
-                this.claimEntryPanelState = 'expanded';
-            }
-        };
-
-        AppVM.prototype.collapseClaimEntryPanel = function () {
-            if (this.claimEntryPanelState !== 'collapsed') {
-                $("#claimEntryPanel").velocity({width: '0%'}, {duration: this.gridNavDelay}, this.gridNavEffect);
-                $("#claimEntryPanelContent").velocity("fadeOut", {duration: this.gridNavDelay});
-                this.claimEntryPanelState = 'collapsed';
             }
         };
 
         return AppVM;
     }
-)
-;
+);

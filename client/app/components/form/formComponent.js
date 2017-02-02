@@ -1,10 +1,10 @@
 define(['knockout', 'KOMap', 'jquery', 'underscore', 'bootbox',
-        'amplify', 'app/utils/events', 'app/utils/ajaxUtils',
-        'shared/objectUtils', 'app/utils/ajaxUtils', 'app/utils/audit', 'app/utils/session',
+        'amplify', 'app/utils/events', 'app/utils/ajaxUtils', 'app/utils/router',
+        'shared/objectUtils', 'app/utils/audit', 'app/utils/session',
         'model/form',
         'text!app/components/form/proofOfLoss.tmpl.html',
         'text!app/components/form/formComponent.tmpl.html'],
-    function (ko, KOMap, $, _, bootbox, amplify, Events, ajaxUtils, ObjectUtils, AjaxUtils, Audit, Session,
+    function (ko, KOMap, $, _, bootbox, amplify, Events, ajaxUtils, Router, ObjectUtils, Audit, Session,
               Form, proofOfLossTmpl, viewHtml) {
         'use strict';
 
@@ -76,6 +76,10 @@ define(['knockout', 'KOMap', 'jquery', 'underscore', 'bootbox',
             this.readyToRender(true);
         };
 
+        FormsComponentVM.prototype.onClose = function () {
+            Router.routeToClaim(Session.getActiveClaimId());
+        };
+
         /***********************************************************/
         /* Server calls                                            */
         /***********************************************************/
@@ -101,7 +105,7 @@ define(['knockout', 'KOMap', 'jquery', 'underscore', 'bootbox',
             return defer;
         }
 
-        FormsComponentVM.prototype.saveForm = function () {
+        FormsComponentVM.prototype.onSave = function () {
             let defer = $.Deferred();
             this.form().updateDate(new Date());
 
