@@ -197,6 +197,10 @@ div {
     border-bottom-color: #ccc;
 }
 
+.border {
+    border: 1px solid black;
+}
+
 .noBorder {
     border: 0;
 }
@@ -1339,4 +1343,47 @@ div.hopscotch-bubble .hopscotch-bubble-arrow-container.right .hopscotch-bubble-a
     font-weight: 800;
 }
 
+.formTableCell {
+    padding: 0;
+    border: none;
+    border-right: 1px solid black;
+}
+
+.formTableHeaderCell {
+    padding: 0;
+    border: none;
+    border-bottom: 1px solid black;
+    border-right: 1px solid black;
+}
+
+.formTableFooterCell {
+    padding: 0;
+    border: none;
+    border-right: 1px solid black;
+}
+
+.width3pc {
+    width: 3%;
+}
+.width7pc {
+    width: 7%;
+}
+.width10pc {
+    width: 10%;
+}
+.width15pc {
+    width: 15%;
+}
+.width40pc {
+    width: 40%;
+}
+.width50pc {
+    width: 50%;
+}
+.width60pc {
+    width: 60%;
+}
+.width100pc {
+    width: 100%;
+}
 

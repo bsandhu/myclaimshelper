@@ -20,6 +20,18 @@ define(['knockout', 'KOMap', 'jquery', 'underscore', 'bootbox',
             this.setupEvListeners();
         }
 
+        FormsComponentVM.prototype.sum = function (fields) {
+            let result = 0;
+            fields.forEach((field) => {
+                let fieldObsrv = this.form().data()[field];
+                let fieldVal = Number(fieldObsrv());
+                if (_.isNumber(fieldVal)) {
+                    result = result + fieldVal;
+                }
+            });
+            return result;
+        }
+
         FormsComponentVM.prototype.newEmptyClaimForm = function (type) {
             let activeClaim = Session.getActiveClaim();
             let newForm = KOMap.fromJS(new Form());
@@ -67,7 +79,7 @@ define(['knockout', 'KOMap', 'jquery', 'underscore', 'bootbox',
             if (!evData.hasOwnProperty('claimId')) {
                 throw "ClaimId must be specified";
             }
-            if(Session.getActiveClaimId() != evData.claimId) {
+            if (Session.getActiveClaimId() != evData.claimId) {
                 throw "Form can be added only to active claim";
             }
 
@@ -91,7 +103,7 @@ define(['knockout', 'KOMap', 'jquery', 'underscore', 'bootbox',
                     console.log('Loaded claim form ' + JSON.stringify(resp.data).substr(0, 100));
 
                     // Populate with JSON data
-                    let formJSON = resp.data[0];
+                    let formJSON = resp.data;
                     let formData = formJSON.data;
                     delete formJSON.data;
 
@@ -138,14 +150,6 @@ define(['knockout', 'KOMap', 'jquery', 'underscore', 'bootbox',
             let container = document.createElement("div");
             let _this = this;
 
-            // Render the print
-            ko.renderTemplate(
-                proofOfLossTmpl,
-                _this.form().data(),
-                {
-                    afterRender: function print() {
-                        console.log(container.innerHTML);
-
                         // Add frame
                         let frame = document.createElement('iframe');
                         document.body.appendChild(frame);
@@ -155,17 +159,13 @@ define(['knockout', 'KOMap', 'jquery', 'underscore', 'bootbox',
                         frameContent.document.open();
                         frameContent.document.write('<head><link rel=stylesheet href=../../css/app.css type=text/css ></head>');
                         frameContent.document.write('<head><link rel=stylesheet href=../../css/formPrint.css type=text/css ></head>');
-                        frameContent.document.write(container.innerHTML);
+                        frameContent.document.write($('#claimFormPrintContainer')[0].innerHTML);
                         frameContent.document.close();
                         setTimeout(function afterFrameRender() {
                             frameContent.focus();
                             frameContent.print();
                             document.body.removeChild(frame);
                         }, 500);
-                    }
-                },
-                container
-            );
             Audit.info('Print' + this.activeFormTmplNames, {});
         }
 
