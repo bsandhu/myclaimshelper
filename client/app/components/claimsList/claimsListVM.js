@@ -85,7 +85,6 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore', 'model/claim', '
                 },
                 function onFail() {
                     amplify.publish(Events.FAILURE_NOTIFICATION, {msg: 'Error while refreshing Claims'});
-                    defer.reject();
                 });
         };
 

@@ -1,6 +1,7 @@
 let tags = require('./../model/tags.js');
 let DateUtils = require('./../shared/dateUtils.js');
 let mongoUtils = require('./../../server/mongoUtils.js');
+let SharedConsts = require('./../shared/consts.js');
 let _ = require('underscore');
 let jQuery = require('jquery-deferred');
 
@@ -17,7 +18,7 @@ let sampleBillId = sampleClaimId + '111';
 
 let tenDaysFromNow = DateUtils.daysFromNowInMillis(10);
 let tomorrow = DateUtils.daysFromNowInMillis(1);
-let anHourFromNow = now + (86400000/24);
+let anHourFromNow = now + (86400000 / 24);
 let tenDaysEarlier = now - (DateUtils.MILLIS_IN_A_DAY * 10);
 let twentyDaysEarlier = now - (DateUtils.MILLIS_IN_A_DAY * 20);
 
@@ -36,11 +37,27 @@ let data = {
         "locationStreetAddress": "100 Rodeo Drive",
         "locationCity": "East Meadow",
         "locationZip": 11554,
-        "insuredContactId": sampleInsuredId,
-        "insuredAttorneyContactId": sampleClaimantId,
-        "claimantContactId": sampleClaimantId,
-        "claimantsAttorneyContactId": sampleClaimantId,
-        "insuranceCoContactId": sampleClaimantId,
+        "contacts": [
+            {
+                category: SharedConsts.CONTACT_CATEGORY_INSURED,
+                subCategory: SharedConsts.CONTACT_SUBCATEGORY_INSURED,
+                contactId: sampleInsuredId
+            },
+            {
+                category: SharedConsts.CONTACT_CATEGORY_INSURED_ATTY,
+                subCategory: SharedConsts.CONTACT_CATEGORY_INSURED_ATTY,
+                contactId: sampleInsuredId
+            },
+            {
+                category: SharedConsts.CONTACT_CATEGORY_CLAIMANT,
+                subCategory: SharedConsts.CONTACT_SUBCATEGORY_CLAIMANT,
+                contactId: sampleClaimantId
+            },
+            {
+                category: SharedConsts.CONTACT_CATEGORY_CLAIMANT_ATTY,
+                subCategory: SharedConsts.CONTACT_CATEGORY_CLAIMANT_ATTY,
+                contactId: sampleClaimantId
+            }],
         "insuranceCompanyFileNum": "60001870845",
         "insuranceCompanyName": "Gieco",
         "state": "NY"
@@ -96,16 +113,16 @@ let data = {
             "dueDate": anHourFromNow,
             "summary": "Sample visit task",
             "description": "This is a sample travel task. Typically you would use this when you travel for business purposes. <br><br>" +
-                           "Travel taska are automatically shown on a map in the 'Travel' section.",
+            "Travel taska are automatically shown on a map in the 'Travel' section.",
             "attachments": [],
             "state": "ToDo",
-            "location" : {
-                "formatted_address" : "2550 Hempstead Turnpike, East Meadow, NY 11554, USA",
-                "name" : "2550 Hempstead Turnpike",
-                "geometry" : {
-                    "location" : {
-                        "lat" : 40.723888,
-                        "lng" : -73.541483
+            "location": {
+                "formatted_address": "2550 Hempstead Turnpike, East Meadow, NY 11554, USA",
+                "name": "2550 Hempstead Turnpike",
+                "geometry": {
+                    "location": {
+                        "lat": 40.723888,
+                        "lng": -73.541483
                     }
                 }
             }
