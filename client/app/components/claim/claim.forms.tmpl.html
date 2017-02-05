@@ -66,7 +66,7 @@
                 <span class="stepBulletPoint color-teal" style="font-size: 1.25em"
                       data-bind="text: form.type.substr(0,1).toUpperCase()"></span>
             </td>
-            <td data-bind="text: form.type"></td>
+            <td data-bind="text: $parent.ObjectUtils.camelcaseToSpaces(form.type)"></td>
             <!-- ko ifnot: $parent.isPartiallyCollapsed -->
             <td class="hidden-xs">
                 <div data-bind="text: $parent.DateUtils.niceDate(form.updateDate ? form.updateDate : '-')"></div>

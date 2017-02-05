@@ -159,11 +159,12 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox',
         }
 
         UserProfileComponent.prototype.onSaveBillingProfile = function () {
+            let _this = this;
             this.editingBillingProfile(false);
             $('#billingProfileStaticView').fadeToggle();
             $('#billingProfileEditView').hide();
 
-            var attrs = {};
+            let attrs = {};
             attrs = {
                 'billingProfile.timeRate': Number(this.userProfile.billingProfile.timeRate()),
                 'billingProfile.distanceRate': Number(this.userProfile.billingProfile.distanceRate()),
@@ -175,7 +176,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox',
                 JSON.stringify({id: Session.getCurrentUserId(), attrsAsJson: attrs}),
                 function onSuccess(response) {
                     console.log("Saved billing profile");
-                    refreshUserProfile();
+                    refreshUserProfile.call(_this);
                 },
                 function onError(response) {
                     console.error("Failed to update profile");
@@ -184,7 +185,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox',
         }
 
         UserProfileComponent.prototype.onSaveUserProfile = function () {
-            var _this = this;
+            let _this = this;
             this.editingUserProfile(false);
             $('#userProfileStaticView').fadeToggle();
             $('#userProfileEditView').hide();
@@ -215,15 +216,15 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox',
             vm.isAddingNew(false);
 
             // Manually add the new code
-            var codesInType = vm.userProfile.billingProfile.codes[codeType];
+            let codesInType = vm.userProfile.billingProfile.codes[codeType];
             if (vm.newCode() != null) {
                 codesInType[vm.newCode()] = vm.newCodeDesc();
             }
-            var updates = KOMap.toJS(vm.userProfile.billingProfile.codes[codeType]);
-            var codeTypeAttr = 'billingProfile.codes.' + codeType;
+            let updates = KOMap.toJS(vm.userProfile.billingProfile.codes[codeType]);
+            let codeTypeAttr = 'billingProfile.codes.' + codeType;
             console.log('Updated codes: ' + updates);
 
-            var attrs = {}
+            let attrs = {};
             attrs[codeTypeAttr] = updates;
             AjaxUtils.post(
                 '/userProfile/modify',
@@ -245,7 +246,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox',
         }
 
         function refreshUserProfile() {
-            var _this = this;
+            let _this = this;
             $.getJSON('/userProfile/' + Session.getCurrentUserId())
                 .done(function (resp) {
                     console.debug('Refreshed billing profile ' + JSON.stringify(resp.data).substr(0, 100));

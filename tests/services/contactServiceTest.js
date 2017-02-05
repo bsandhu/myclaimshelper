@@ -55,16 +55,4 @@ describe('ContactService', function () {
         contactService.listAllContacts(req, res);
     });
 
-    it('Filter contacts by group', function (done) {
-        let req = {headers: {userid: 'TestUser', ingroups: ['NonExistent']}};
-        let res = {};
-        res.json = function (data) {
-            assert(data);
-            assert.equal(data.status, 'Success');
-            assert(data.data.length, 0);
-            done();
-        };
-        contactService.listAllContacts(req, res);
-    });
-
 });

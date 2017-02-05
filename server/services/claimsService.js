@@ -177,8 +177,13 @@ function saveOrUpdateClaimEntry(req, res) {
                         // Set display order to be same as _id
                         if (!Boolean(entity.displayOrder)) {
                             entity.displayOrder = Number(entity._id);
+
+                            let billItem = results.billingItem;
+                            delete results.billingItem;
+
                             mongoUtils.saveOrUpdateEntity(entity, mongoUtils.CLAIM_ENTRIES_COL_NAME)
                                 .always(function (entryErr, itemResults) {
+                                    results.billingItem = billItem;
                                     defer.resolve(entryErr, results);
                                 });
                         } else {

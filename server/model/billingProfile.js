@@ -8,6 +8,9 @@ if (typeof define !== 'function') {
 define([], function () {
 
     function BillingProfile() {
+        // Billing Profile is per Claim. The BillingComponent creates one via the
+        // billingProfileService#checkAndGetBillingProfileForClaimREST
+
         // Same as the claim id
         this._id;
 

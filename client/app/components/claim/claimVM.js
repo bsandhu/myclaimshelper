@@ -2,7 +2,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore', 'bootbox',
         'model/claim', 'model/claimEntry', 'model/contact', 'model/states',
         'app/utils/ajaxUtils', 'app/utils/events', 'app/utils/consts', 'app/utils/router',
         'app/utils/sessionKeys', 'app/utils/session', 'app/components/contact/contactClient',
-        'shared/dateUtils', 'shared/consts',
+        'shared/dateUtils', 'shared/consts', 'shared/objectUtils',
         'text!app/components/claim/claim.tmpl.html',
         'text!app/components/claim/claim.editor.tmpl.html',
         'text!app/components/claim/claim.docs.tmpl.html',
@@ -10,7 +10,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore', 'bootbox',
         'text!app/components/claim/claim.forms.tmpl.html',
         'app/utils/audit'],
     function ($, ko, KOMap, amplify, _, bootbox, Claim, ClaimEntry, Contact, States, ajaxUtils,
-              Events, Consts, Router, SessionKeys, Session, ContactClient, DateUtils, SharedConsts,
+              Events, Consts, Router, SessionKeys, Session, ContactClient, DateUtils, SharedConsts, ObjectUtils,
               viewHtml, editorViewHtml, docsViewHtml, entriesViewHtml, formsViewHtml, Audit) {
 
         function ClaimVM() {
@@ -22,6 +22,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore', 'bootbox',
             this.States = States;
             this.Consts = Consts;
             this.DateUtils = DateUtils;
+            this.ObjectUtils = ObjectUtils;
             this.Router = Router;
             this.Session = Session;
             this.claim = ko.observable(this.newEmptyClaim());
@@ -341,7 +342,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore', 'bootbox',
         };
 
         ClaimVM.prototype.onSave = function () {
-            console.log('Saving Claim: ' + KOMap.toJSON(this.claim));
+            console.log(`Saving Claim: ${KOMap.toJSON(this.claim)}`);
 
             ajaxUtils.post(
                 '/claim',
@@ -352,7 +353,12 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore', 'bootbox',
                     // Update Ids gen. by the server
                     this.claim()._id(response.data._id);
 
-                    amplify.publish(Events.SUCCESS_NOTIFICATION, {msg: 'Updated Claim ' + this.claim().insuranceCompanyFileNum()});
+                    let fileNum = this.claim().insuranceCompanyFileNum()
+                        || this.claim().insuranceCompanyPolicyNum()
+                        || this.claim().fileNum()
+                        || this.claim()._id();
+
+                    amplify.publish(Events.SUCCESS_NOTIFICATION, {msg: `Updated Claim ${fileNum}`});
                     amplify.publish(Events.SAVED_CLAIM, {'claim': KOMap.toJS(this.claim())});
 
                     this.storeInSession(this.claim()._id(), KOMap.toJS(this.claim()));

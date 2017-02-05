@@ -39,6 +39,6 @@ describe('MongoUtils', function () {
 
         assert.equal(dest.owner, 'TestOwner');
         assert.equal(dest.group, 'TestGroup');
-        assert.equal(dest.ingroups.length, 1);
+        assert.equal(dest.ingroups.length, 2);
     });
 });

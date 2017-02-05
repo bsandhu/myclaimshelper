@@ -37,6 +37,10 @@ define([], function () {
         // Attachments descriptors - the content is stored in Momgo GridFS
         this.attachments = [];
 
+        // ClaimEntry - FK via the ClaimEntries collection
+        // Forms - FK via the FormData collection
+        // BillingProfile - FK via the BillingProfiles collection
+
         this.insuranceCompanyPolicyNum = undefined;
         this.insuranceCompanyFileNum = undefined;
         this.insuranceCompanyName = undefined;

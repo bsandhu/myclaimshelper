@@ -87,7 +87,8 @@ module.exports = {
             {test: /KOAmd/, loader: 'imports?knockout!exports=KOAmd'},
             {test: /amplify/, loader: 'imports?jquery!exports?amplify'},
             {test: /path/, loader: 'exports?Path'},
-            {test: /xeditable/, loader: 'imports?bootstrap'},
+            {test: /x-editable/, loader: 'imports?bootstrap,jquery'},
+            {test: /ko.xeditable/, loader: 'imports?xeditable'},
             {
                 test: /\.js$/,
                 exclude: /(node_modules|lib)/,

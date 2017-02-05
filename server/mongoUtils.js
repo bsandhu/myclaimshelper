@@ -281,9 +281,23 @@ const findEntities = function (collectionName, search, db, checkOwner = true) {
     delete search.group;
     delete search.ingroups;
     if (checkOwner) {
-        search['$or'] = [{'owner': owner}, {'group': {$in: toArray(ingroups)}}];
+        let hasANDClause = search.hasOwnProperty('$and');
+        let hasORClause = search.hasOwnProperty('$or');
+
+        if (hasANDClause && hasORClause) {
+            throw `Can\'t add ownership filter to this query ${JSON.stringify(search)}`;
+        }
+        else if (!hasANDClause && hasORClause) {
+            search['$and'] = [];
+            search['$and'].push({'$or': [{'owner': owner}, {'group': {$in: toArray(ingroups)}}]});
+            search['$and'].push({'$or': search['$or']});
+            delete search['$or'];
+        } else {
+            search['$or'] = [{'owner': owner}, {'group': {$in: toArray(ingroups)}}];
+        }
     }
 
+    console.log(`Search query: ${JSON.stringify(search)}`);
     collection
         .find(search)
         .toArray(function (err, resp) {
@@ -296,6 +310,7 @@ function addOwnerInfo(req, obj) {
     obj.owner = req.headers.userid;
     obj.group = req.headers.group;
     obj.ingroups = toArray(req.headers.ingroups);
+    obj.ingroups.push(obj.group);
     return obj;
 }
 
