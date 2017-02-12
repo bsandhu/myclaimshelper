@@ -21,6 +21,7 @@ let broadcastNoHTTP = require('../../services/notificationService.js').broadcast
  */
 let process = function (req, res, testMode) {
     res.send(200, 'Request received successfully.');
+    console.log('*** Starting email processing ***')
     let sendSuccessEmail, sendErrorEmail;
 
     if (_.isBoolean(testMode) && testMode == true) {

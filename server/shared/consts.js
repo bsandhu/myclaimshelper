@@ -26,6 +26,8 @@ define([], function () {
 
         CONTACT_CATEGORY_CLAIMANT: "Claimant",
         CONTACT_CATEGORY_CLAIMANT_ATTY: "Claimant attorney",
-        CONTACT_SUBCATEGORY_CLAIMANT: "Claimant"
+        CONTACT_SUBCATEGORY_CLAIMANT: "Claimant",
+
+        EXPENSE_CATEGORY: "Expense"
     }
 });

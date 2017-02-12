@@ -38,34 +38,40 @@
         </thead>
 
         <!-- Body -->
-        <tbody data-bind="foreach: { data: claim().attachments, as: 'attachment' }">
-        <tr style="cursor: default">
-            <td data-bind="text: attachment.name"></td>
-            <td>
-                <a data-bind="attr: {href: '/download?id=' + attachment.id()}"
-                   class="color-light-blue myTooltip" myTitle="Download file">
+        <!-- **** List out docs attached to claim directly **** -->
+        <tbody data-bind='template: { name: "claimDocsRowTmpl",
+                                      foreach: docsToList,
+                                      afterRender: sortDocsList}'></tbody>
+    </table>
+</div>
+
+<!--- **** Tmpl for docs table row **** -->
+<script type="text/html" id="claimDocsRowTmpl">
+    <tr style="cursor: default">
+        <td data-bind="text: attachment.name"></td>
+        <td>
+            <a data-bind="attr: {href: '/download?id=' + attachment.id()}"
+               class="color-light-blue myTooltip" myTitle="Download file">
                     <span class="fa-stack fa-lg">
                       <i class="fa fa-circle fa-stack-2x"></i>
                       <i class="fa fa-download fa-stack-1x fa-inverse"></i>
                     </span>
-                </a>
-            </td>
-            <td data-bind="attr: {'data-value': attachment.size()}">
-                <span data-bind="text: Math.round(attachment.size()/1024, 2) + ' K'"></span>
-            </td>
-            <td class="hidden-xs">
-                <div data-bind="text: attachment.type"></div>
-            </td>
-            <td class="hidden-xs">
-                <div data-bind="text: $parent.DateUtils.niceDate(attachment.lastModifiedDate ? attachment.lastModifiedDate() : '-')"></div>
-            </td>
-            <td class="hidden-xs hidden-sm">
-                <div class="tableCell" data-bind="text: attachment.createdBy"></div>
-            </td>
-            <td class="hidden-sm hidden-xs hidden-md hidden-lg">
-                <div class="tableCell" data-bind="text: attachment.id"></div>
-            </td>
-        </tr>
-        </tbody>
-    </table>
-</div>
+            </a>
+        </td>
+        <td data-bind="attr: {'data-value': attachment.size()}">
+            <span data-bind="text: Math.round(attachment.size()/1024, 2) + ' K'"></span>
+        </td>
+        <td class="hidden-xs">
+            <div data-bind="text: attachment.type"></div>
+        </td>
+        <td class="hidden-xs">
+            <div data-bind="text: $parent.DateUtils.niceDate(attachment.lastModifiedDate ? attachment.lastModifiedDate() : '-')"></div>
+        </td>
+        <td class="hidden-xs hidden-sm">
+            <div class="tableCell" data-bind="text: attachment.createdBy"></div>
+        </td>
+        <td class="hidden-sm hidden-xs hidden-md hidden-lg">
+            <div class="tableCell" data-bind="text: attachment.id"></div>
+        </td>
+    </tr>
+</script>

@@ -49,8 +49,7 @@ define(['jquery', 'underscore', 'amplify', 'knockout', 'KOMap',
                                 value(existingInDS);
                             } else {
                                 addToRefData(newValue, dataSrc);
-                                valueujn
-                                ui(newValue);
+                                value(newValue);
                             }
                             console.log("Change: " + newValue);
                         },

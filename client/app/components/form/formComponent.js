@@ -3,9 +3,10 @@ define(['knockout', 'KOMap', 'jquery', 'underscore', 'bootbox',
         'shared/objectUtils', 'app/utils/audit', 'app/utils/session',
         'model/form',
         'text!app/components/form/proofOfLoss.tmpl.html',
+        'text!app/components/form/anotherForm.tmpl.html',
         'text!app/components/form/formComponent.tmpl.html'],
     function (ko, KOMap, $, _, bootbox, amplify, Events, ajaxUtils, Router, ObjectUtils, Audit, Session,
-              Form, proofOfLossTmpl, viewHtml) {
+              Form, proofOfLossTmpl, anotherForm, viewHtml) {
         'use strict';
 
         function FormsComponentVM(params) {
@@ -53,6 +54,9 @@ define(['knockout', 'KOMap', 'jquery', 'underscore', 'bootbox',
         FormsComponentVM.prototype.initFormTmpl = function () {
             if (this.form().type() == 'proofOfLoss') {
                 this.activeFormTmpl(proofOfLossTmpl);
+            }
+            if (this.form().type() == 'anotherForm') {
+                this.activeFormTmpl(anotherForm);
             }
         }
 

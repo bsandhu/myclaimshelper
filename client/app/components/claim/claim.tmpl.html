@@ -19,15 +19,40 @@
         <!-- Claim top level info -->
         <!-- ************************************************ -->
 
-        <div data-bind="ifnot: inEditMode"s>
+        <div data-bind="ifnot: inEditMode" s>
             <div data-bind="ifnot: isPartiallyCollapsed">
 
-                <!-- Insured/claimant/Description -->
+                <!-- Loss location/type/dateOfLoss -->
                 <div class="row">
                     <div class="col-lg-10 col-md-10 col-sm-12 col-xs-12">
-                        <strong>Description</strong>
+                        <strong>Location</strong>
+                        <span class="leftMargin5"
+                              data-bind="text: claim().location() ? claim().location().formatted_address : 'None'"></span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-3 col-md-4 col-sm-6 col-xs-6">
+                        <strong>Loss type</strong>
+                        <span class="leftMargin5"
+                              data-bind="text: claim().lossType()"></span>
+                    </div>
+                    <div class="col-lg-3 col-md-4 col-sm-6 col-xs-6">
+                        <strong>Date of loss</strong>
+                        <span class="leftMargin5"
+                              data-bind="text: DateUtils.niceDate(claim().dateOfLoss ? claim().dateOfLoss() : '')"></span>
+                    </div>
+                </div>
+                <div class="bottomMargin5 bottomBorderDashed"></div>
 
-                        <div data-bind="text: claim().description"></div>
+                <!-- Description -->
+                <div class="row">
+                    <div class="col-lg-10 col-md-10 col-sm-12 col-xs-12">
+                        <div class="col-lg-1 col-md-1 col-sm-1 col-xs-2 noPadding">
+                            <strong>Notes</strong>
+                        </div>
+                        <div class="col-lg-11 col-md-11 col-sm-10 col-xs-10 noPadding">
+                            <span data-bind="text: claim().description"></span>
+                        </div>
                     </div>
                 </div>
 
@@ -35,118 +60,165 @@
 
                 <!-- Dates -->
                 <div class="row">
-                    <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
+                    <div class="col-lg-3 col-md-4 col-sm-6 col-xs-6">
                         <strong>Received</strong>
-
-                        <div data-bind="text: DateUtils.niceDate(claim().dateReceived ? claim().dateReceived() : '')"></div>
+                        <span class="leftMargin5"
+                              data-bind="text: DateUtils.niceDate(claim().dateReceived ? claim().dateReceived() : '')"></span>
                     </div>
-                    <div class="col-lg-2 col-md-2 col-sm-4  col-xs-4">
+                    <span class="col-lg-3 col-md-4 col-sm-6 col-xs-6">
                         <strong>Due</strong>
-
-                        <div data-bind="text: DateUtils.niceDate(claim().dateReceived ? claim().dateDue() : '')"></div>
-                    </div>
-
-                    <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                        <strong>Date of loss</strong>
-
-                        <div data-bind="text: DateUtils.niceDate(claim().dateReceived ? claim().dateOfLoss() : '')"></div>
-                    </div>
-                    <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
-                        <strong>Insurance co.</strong>
-                        <div class="clear"></div>
-                        <div class="inline"
-                             data-bind="text: claim().insuranceCompanyFileNum ? claim().insuranceCompanyFileNum() : ''"></div>
-                        /
-                        <div class="inline"
-                             data-bind="text: claim().insuranceCompanyName ? claim().insuranceCompanyName() : ''"></div>
-                    </div>
+                        <span class="leftMargin5"
+                              data-bind="text: DateUtils.niceDate(claim().dateReceived ? claim().dateDue() : '')"></span>
                 </div>
-
-                <div class="bottomMargin5 bottomBorderDashed"></div>
-
-                <div class="row bottomMargin5">
-                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                        <strong>Insured</strong>
-                    </div>
-                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                        <strong>Claimant</strong>
-                    </div>
-                </div>
-                <!-- Insured -->
-                <div class="row">
-                    <div data-bind="foreach: {data: claim().contacts(), as: 'contactInfo'}">
-                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                            <div data-bind="if: contactInfo.category() == 'Insured'">
-                                <div class="row bottomMargin5">
-                                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6">
-                                        <span data-bind="text: contactInfo.subCategory"></span>
-                                    </div>
-                                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6">
-                                        <a href=""
-                                           data-bind="click: function(){$parent.onShowContact(contactInfo.contact)}">
-                                            <span data-bind="text: $parent.niceName(contactInfo.contact)"></span>
-                                        </a>
-                                    </div>
-                                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6">
-                                        <span data-bind="text: contactInfo.contact.phone"></span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- Claimant -->
-                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                            <div data-bind="if: contactInfo.category() == 'Claimant'">
-                                <div class="row bottomMargin5">
-                                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6">
-                                        <span data-bind="text: contactInfo.subCategory"></span>
-                                    </div>
-                                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6">
-                                        <a href=""
-                                           data-bind="click: function(){$parent.onShowContact(contactInfo.contact)}">
-                                            <span data-bind="text: $parent.niceName(contactInfo.contact)"></span>
-                                        </a>
-                                    </div>
-                                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6">
-                                        <span data-bind="text: contactInfo.contact.phone"></span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="bottomMargin5 bottomBorderDashed"></div>
-
-                <!-- Other contacts -->
-                <div class="row">
-                    <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                        <strong>Contacts</strong>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                        <div data-bind="foreach: {data: claim().contacts(), as: 'contactInfo'}">
-                            <div data-bind="if: contactInfo.category() == 'Other'">
-                                <div class="row bottomMargin5">
-                                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6">
-                                        <span data-bind="text: contactInfo.subCategory"></span>
-                                    </div>
-                                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6">
-                                        <a href=""
-                                           data-bind="click: function(){$parent.onShowContact(contactInfo.contact)}">
-                                            <span data-bind="text: $parent.niceName(contactInfo.contact)"></span>
-                                        </a>
-                                    </div>
-                                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6">
-                                        <span data-bind="text: contactInfo.contact.phone"></span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="bottomMargin5 bottomBorderDashed"></div>
-
             </div>
+            <div class="bottomMargin5 bottomBorderDashed"></div>
+
+            <!-- Insurance co -->
+            <div class="row">
+                <div class="col-lg-3 col-md-4 col-sm-12 col-xs-12">
+                    <strong>Insurance co.</strong>
+                    <span class="inline leftMargin5"
+                          data-bind="text: claim().insuranceCompanyName ? claim().insuranceCompanyName() : ''"></span>
+                </div>
+                <div class="col-lg-3 col-md-4 col-sm-6 col-xs-6">
+                    <strong>File #</strong>
+                    <span class="inline leftMargin5"
+                          data-bind="text: claim().insuranceCompanyFileNum ? claim().insuranceCompanyFileNum() : ''"></span>
+                </div>
+                <div class="col-lg-3 col-md-4 col-sm-6 col-xs-6">
+                    <strong>Policy #</strong>
+                    <span class="inline leftMargin5"
+                          data-bind="text: claim().insuranceCompanyFileNum ? claim().insuranceCompanyPolicyNum() : ''"></span>
+                </div>
+            </div>
+            <!-- Issued/Expires -->
+            <div class="row">
+                <div class="col-lg-3 col-md-4 col-sm-6 col-xs-6">
+                    <strong>Issued</strong>
+                    <span class="inline leftMargin5"
+                          data-bind="text: DateUtils.niceDate(claim().validFromDate ? claim().validFromDate() : '')"></span>
+                </div>
+                <div class="col-lg-3 col-md-4 col-sm-6 col-xs-6">
+                    <strong>Expires</strong>
+                    <span class="inline leftMargin5"
+                          data-bind="text: DateUtils.niceDate(claim().validToDate ? claim().validToDate() : '')"></span>
+                </div>
+            </div>
+            <div class="bottomMargin5 bottomBorderDashed"></div>
+
+            <!-- Insured -->
+            <div class="row bottomMargin5">
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                    <strong>Insured</strong>
+                </div>
+            </div>
+            <div class="row">
+                <div data-bind="foreach: {data: claim().contacts(), as: 'contactInfo'}">
+                    <div data-bind="if: contactInfo.category() == 'Insured'">
+                        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+                            <div class="row bottomMargin5">
+                                <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
+                                    <span data-bind="text: contactInfo.subCategory"></span>
+                                </div>
+                                <div class="col-lg-4 col-md-5 col-sm-4 col-xs-4">
+                                    <a href=""
+                                       data-bind="click: function(){$parent.onShowContact(contactInfo.contact)}">
+                                        <span data-bind="text: $parent.niceName(contactInfo.contact)"></span>
+                                    </a>
+                                </div>
+                                <div class="col-lg-4 col-md-5 col-sm-4 col-xs-4">
+                                    <span data-bind="text: contactInfo.contact.phone"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="bottomMargin5 bottomBorderDashed"></div>
+
+            <!-- Claimant -->
+            <div class="row bottomMargin5">
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                    <strong>Claimant</strong>
+                </div>
+            </div>
+            <div class="row">
+                <div data-bind="foreach: {data: claim().contacts(), as: 'contactInfo'}">
+                    <div data-bind="if: contactInfo.category() == 'Claimant'">
+                        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+                            <div class="row bottomMargin5">
+                                <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
+                                    <span data-bind="text: contactInfo.subCategory"></span>
+                                </div>
+                                <div class="col-lg-4 col-md-5 col-sm-4 col-xs-4">
+                                    <a href=""
+                                       data-bind="click: function(){$parent.onShowContact(contactInfo.contact)}">
+                                        <span data-bind="text: $parent.niceName(contactInfo.contact)"></span>
+                                    </a>
+                                </div>
+                                <div class="col-lg-4 col-md-5 col-sm-4 col-xs-4">
+                                    <span data-bind="text: contactInfo.contact.phone"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="bottomMargin5 bottomBorderDashed"></div>
+
+            <!-- Other contacts -->
+            <div class="row">
+                <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
+                    <strong>Contacts</strong>
+                </div>
+            </div>
+            <div class="row">
+                <div data-bind="foreach: {data: claim().contacts(), as: 'contactInfo'}">
+                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+                        <div data-bind="if: contactInfo.category() == 'Other'">
+                            <div class="row bottomMargin5">
+                                <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
+                                    <span data-bind="text: contactInfo.subCategory"></span>
+                                </div>
+                                <div class="col-lg-4 col-md-5 col-sm-4 col-xs-4">
+                                    <a href=""
+                                       data-bind="click: function(){$parent.onShowContact(contactInfo.contact)}">
+                                        <span data-bind="text: $parent.niceName(contactInfo.contact)"></span>
+                                    </a>
+                                </div>
+                                <div class="col-lg-4 col-md-5 col-sm-4 col-xs-4">
+                                    <span data-bind="text: contactInfo.contact.phone"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                </div>
+            </div>
+            <div class="bottomMargin5 bottomBorderDashed"></div>
+
+            <!-- Expenses -->
+            <div class="row">
+                <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
+                    <strong>Expenses</strong>
+                </div>
+            </div>
+            <div class="row">
+                <div data-bind="foreach: {data: claim().expenses(), as: 'expense'}">
+                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+                        <div class="row bottomMargin5">
+                            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6">
+                                <span data-bind="text: expense.subCategory"></span>
+                            </div>
+                            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6">
+                                <span data-bind="text: '$'+ $parent.NumberUtils.nice(expense.amount())"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="bottomMargin5 bottomBorderDashed"></div>
         </div>
     </div>
 
@@ -184,7 +256,7 @@
                         </li>
                         <li role="presentation">
                             <a aria-controls="claimForms" href="#claimForms" role="tab" data-toggle="tab"
-                               class="squareCorners">Forms</a>
+                               class="squareCorners">Insurance forms</a>
                         </li>
                     </ul>
                 </div>
@@ -242,8 +314,8 @@
 
                     <!-- `Close claim` button -->
                     <div data-bind="ifnot: inEditMode && isPartiallyCollapsed" class="inline hidden-xs myTooltip"
-                        mytitle="File may be closed once all work on this Claim is finished"
-                        myTitleWidth="180px">
+                         mytitle="File may be closed once all work on this Claim is finished"
+                         myTitleWidth="180px">
                         <!-- ko ifnot: isClaimClosed -->
                         <div class="btn btn-default inline btn-info"
                              data-bind="click: onCloseClaimClick.bind($data)">
@@ -305,33 +377,35 @@
                 <!-- Body -->
                 <div class="modal-body">
 
-                    <div style="line-height: 275%">
+                    <div>
                         <div class="row bottomMargin5">
                             <div class="col-md-10">
-                                Tasks can be created automatically from emails sent to <i>MyClaimsHelper</i>.
+                                Tasks can be created automatically from emails sent to <i>MyClaimsHelper</i>.<br/>
                                 You can also forward emails you receive from your associates.
                             </div>
                         </div>
-                        <div class="row ">
+                        <div class="row topMargin5">
                             <div class="col-md-10">
                                 <span class="stepBulletPoint">1</span>
                                 Forward or send email to
-                                <a data-bind="attr: {href: 'mailto:' + Session.getCurrentUserId() + '@myclaimshelper.com'}"
+                                <a data-bind="attr: {href: 'mailto:' + Session.getCurrentUserId() + '@myclaimshelper.com?subject=' + (claim().fileNum() || claim().insuranceCompanyFileNum() || '04-92998')}"
                                    target="_blank">
                                     <span data-bind="text: Session.getCurrentUserId() + '@myclaimshelper.com'"></span>
                                 </a>
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-10">
+                            <div class="col-md-12">
                                 <span class="stepBulletPoint">2</span>
-                                Mention Claim file number or the insurance company file number in the Subject line.
-                                Example:
+                                <span>
+                                Mention Claim file/insurance company file number in the Subject line. Example:
+                                </span>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-md-offset-1 col-md-10 topMargin5">
-                                <i><span data-bind="text: 'Witness statement ' + (claim().fileNum() || claim().insuranceCompanyFileNum() || '04-92998')"></span></i>
+                                <i><span class="text-info"
+                                        data-bind="text: 'Claim file# ' + (claim().fileNum() || claim().insuranceCompanyFileNum() || '04-92998')"></span></i>
                             </div>
                         </div>
                         <div class="row">

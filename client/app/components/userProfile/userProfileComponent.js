@@ -196,7 +196,11 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox',
                 'contactInfo.streetAddress': this.userProfile.contactInfo.streetAddress(),
                 'contactInfo.city': this.userProfile.contactInfo.city(),
                 'contactInfo.zip': this.userProfile.contactInfo.zip(),
-                'contactInfo.phone': this.userProfile.contactInfo.phone()
+                'contactInfo.phone': this.userProfile.contactInfo.phone(),
+                'isBillingEnabled': this.userProfile.isBillingEnabled(),
+                'isClaimNoteEnabled': this.userProfile.isClaimNoteEnabled(),
+                'isClaimClaimantEnabled': this.userProfile.isClaimClaimantEnabled(),
+                'isClaimDtEnabled': this.userProfile.isClaimDtEnabled()
             };
 
             AjaxUtils.post(

@@ -82,6 +82,10 @@ function changeToUserProfileSchema() {
                         profile.group = profile.owner;
                         profile.ingroups = [profile.owner, ProfileService.DEFAULT_GROUP];
                         profile.isBillingEnabled = true;
+                        profile.isClaimNoteEnabled = true;
+                        profile.isClaimClaimantEnabled = true;
+                        profile.isClaimDtEnabled = true;
+                        delete profile.isClaimDatesEnabled;
 
                         return mongoUtils.saveOrUpdateEntity(profile, mongoUtils.USERPROFILE_COL_NAME, false);
                     });

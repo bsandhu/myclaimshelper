@@ -3,6 +3,9 @@
 <!-- ********************************** -->
 <div data-bind="if: readyToRender">
 
+    <!-- ********************************** -->
+    <!-- **** Billing codes            **** -->
+    <!-- ********************************** -->
     <div id="billingCodesModal"
          class="notification modal modal-lg fade"
          role="dialog"
@@ -84,7 +87,8 @@
                                                               ifnot: $parents[1].isCodeInUse(code)"
                                                    href="" class="paddingRight5">Yes</a>
                                                 <a data-bind="click: $parents[1].onDeleteCodeReject.bind($parents[1]),
-                                                              text:  $parents[1].isCodeInUse(code) ? 'Ok' : 'No'" href=""></a>
+                                                              text:  $parents[1].isCodeInUse(code) ? 'Ok' : 'No'"
+                                                   href=""></a>
                                             </div>
                                         </div>
                                         <div class="inline"
@@ -138,7 +142,9 @@
                                         <div class="inline leftMargin5">
                                             <div data-bind="if: $parents[0].isEditing(codeType)">
                                                 <button type="button" class="btn btn-xs btn-info pull-right"
-                                                        data-bind="click: $parents[0].onSaveBillingCode.bind(codeType, $parents[0])">Save</button>
+                                                        data-bind="click: $parents[0].onSaveBillingCode.bind(codeType, $parents[0])">
+                                                    Save
+                                                </button>
                                             </div>
                                         </div>
                                     </div>
@@ -193,11 +199,40 @@
                                             <div data-bind="text: userProfile.contactInfo.streetAddress"></div>
                                             <div data-bind="text: userProfile.contactInfo.city() + ' ' + userProfile.contactInfo.zip()"></div>
                                             <div data-bind="text: userProfile.contactInfo.phone"></div>
+
+                                            <!-- Feature flags -->
+                                            <div class="topMargin5 sub-heading bottomBorderDashed">Features</div>
+                                            <div class="row topMargin">
+                                                <div class="col-sm-12">
+                                                    <span class="col-sm-5">Enable billing</span>
+                                                    <span data-bind="text: userProfile.isBillingEnabled() ? 'Yes' : 'No'"></span>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-sm-12">
+                                                    <span class="col-sm-5">Show Note on claim</span>
+                                                    <span data-bind="text: userProfile.isClaimNoteEnabled() ? 'Yes' : 'No'"></span>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-sm-12">
+                                                    <span class="col-sm-5">Show Claimant on Claim</span>
+                                                    <span data-bind="text: userProfile.isClaimClaimantEnabled() ? 'Yes' : 'No'"></span>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-sm-12">
+                                                    <span class="col-sm-5">Show Dates on Claim</span>
+                                                    <span data-bind="text: userProfile.isClaimDtEnabled() ? 'Yes' : 'No'"></span>
+                                                </div>
+                                            </div>
                                         </div>
 
                                         <!-- Edit view -->
                                         <div class="col-md-10 col-sm-8 col-xs-10" id="userProfileEditView"
                                              style="display: none">
+
+                                            <!-- Contact info -->
                                             <div class="col-md-10 col-sm-8 col-xs-8 bottomMargin noPadding">
                                                 <input class="form-control"
                                                        placeholder="Business name"
@@ -223,10 +258,40 @@
                                                        placeholder="Phone"
                                                        data-bind="value: userProfile.contactInfo.phone"/>
                                             </div>
+
+                                            <!-- Features -->
+                                            <div class="col-md-10 col-sm-10 col-xs-10 noPadding bottomMargin flexRowCenter">
+                                                <div style="flex-basis: 13em">Enable billing</div>
+                                                <div>
+                                                    <input type="checkbox"
+                                                           data-bind="checked: userProfile.isBillingEnabled"/>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-10 col-sm-10 col-xs-10 noPadding bottomMargin flexRowCenter">
+                                                <div style="flex-basis: 13em">Show Note on claim</div>
+                                                <div>
+                                                    <input type="checkbox"
+                                                           data-bind="checked: userProfile.isClaimNoteEnabled"/>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-10 col-sm-10 col-xs-10 noPadding bottomMargin flexRowCenter">
+                                                <div style="flex-basis: 13em">Show Claimant on claim</div>
+                                                <div>
+                                                    <input type="checkbox"
+                                                           data-bind="checked: userProfile.isClaimClaimantEnabled"/>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-10 col-sm-10 col-xs-10 noPadding bottomMargin flexRowCenter">
+                                                <div style="flex-basis: 13em">Show Dates on Claim</div>
+                                                <div>
+                                                    <input type="checkbox"
+                                                           data-bind="checked: userProfile.isClaimDtEnabled"/>
+                                                </div>
+                                            </div>
                                         </div>
 
                                         <!-- Buttons -->
-                                        <div class="col-md-6 col-sm-6 col-xs-6 pull-right"
+                                        <div class="col-md-6 col-sm-6 col-xs-6 pull-right topMargin5"
                                              data-bind="ifnot: editingUserProfile">
                                             <a class="fa fa-edit"
                                                style="cursor: pointer; font-size: 1.1em"
@@ -235,7 +300,8 @@
                                         </div>
                                         <div class="col-md-11 col-sm-11 col-xs-11" data-bind="if: editingUserProfile">
                                             <button type="button" class="btn btn-xs btn-info pull-right"
-                                               data-bind="click: onSaveUserProfile">Save</button>
+                                                    data-bind="click: onSaveUserProfile">Save
+                                            </button>
                                         </div>
                                     </div>
                                 </fieldset>
@@ -260,8 +326,8 @@
                                         </div>
                                         <div class="row bottomMargin5">
                                             <div class="col-md-4 col-sm-4 col-xs-5">
-                                    <span class="pull-right"
-                                          data-bind="text: 'Rate/' + userProfile.billingProfile.timeUnit()"></span>
+                                               <span class="pull-right"
+                                                     data-bind="text: 'Rate/' + userProfile.billingProfile.timeUnit()"></span>
                                             </div>
                                             <div class="col-md-8 col-sm-6 col-xs-4"
                                                  data-bind="text: '$ ' + userProfile.billingProfile.timeRate()"></div>
@@ -275,8 +341,8 @@
                                         </div>
                                         <div class="row bottomMargin5">
                                             <div class="col-md-4 col-sm-4 col-xs-5">
-                                    <span class="pull-right"
-                                          data-bind="text: 'Rate/' + userProfile.billingProfile.distanceUnit()"></span>
+                                                <span class="pull-right"
+                                                      data-bind="text: 'Rate/' + userProfile.billingProfile.distanceUnit()"></span>
                                             </div>
                                             <div class="col-md-8 col-sm-6 col-xs-4"
                                                  data-bind="text: '$ ' + userProfile.billingProfile.distanceRate()"></div>
@@ -303,8 +369,8 @@
                                         </div>
                                         <div class="row bottomMargin5">
                                             <div class="col-md-4 col-sm-4 col-xs-5">
-                                    <span class="pull-right"
-                                          data-bind="text: 'Rate/' + userProfile.billingProfile.timeUnit()"></span>
+                                            <span class="pull-right"
+                                                  data-bind="text: 'Rate/' + userProfile.billingProfile.timeUnit()"></span>
                                             </div>
                                             <div class="col-md-3 col-sm-3 col-xs-4">
                                                 <input class="form-control"
@@ -321,8 +387,8 @@
                                         </div>
                                         <div class="row bottomMargin5">
                                             <div class="col-md-4 col-sm-4 col-xs-5">
-                                    <span class="pull-right"
-                                          data-bind="text: 'Rate/' + userProfile.billingProfile.distanceUnit()"></span>
+                                                <span class="pull-right"
+                                                      data-bind="text: 'Rate/' + userProfile.billingProfile.distanceUnit()"></span>
                                             </div>
                                             <div class="col-md-3 col-sm-3 col-xs-4">
                                                 <input class="form-control"
@@ -342,7 +408,8 @@
                                     </div>
                                     <div class="col-md-11 col-sm-11 col-xs-11" data-bind="if: editingBillingProfile">
                                         <button type="button" class="btn btn-xs btn-info pull-right"
-                                           data-bind="click: onSaveBillingProfile">Save</button>
+                                                data-bind="click: onSaveBillingProfile">Save
+                                        </button>
                                     </div>
                                 </fieldset>
                             </form>

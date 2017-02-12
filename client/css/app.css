@@ -105,6 +105,12 @@ div {
     min-width: 350px;
 }
 
+.flexRowCenter {
+    display: flex;
+    flex-direction: row;
+    align-items: center
+}
+
 /**********************************************************/
 /**** Margins and borders ****/
 /**********************************************************/
@@ -257,6 +263,10 @@ div {
 /**********************************************************/
 /**** Form elements ****/
 /**********************************************************/
+
+input[type="text"] {
+    border-radius: 0;
+}
 
 input[type="file"] {
     display: none;
@@ -994,6 +1004,7 @@ h3.panel-title {
     padding: 7px 13px;
     font-size: 12px;
     border-radius: 50%;
+    line-height: 275%;
 }
 
 .contactFormIcon {
@@ -1365,24 +1376,31 @@ div.hopscotch-bubble .hopscotch-bubble-arrow-container.right .hopscotch-bubble-a
 .width3pc {
     width: 3%;
 }
+
 .width7pc {
     width: 7%;
 }
+
 .width10pc {
     width: 10%;
 }
+
 .width15pc {
     width: 15%;
 }
+
 .width40pc {
     width: 40%;
 }
+
 .width50pc {
     width: 50%;
 }
+
 .width60pc {
     width: 60%;
 }
+
 .width100pc {
     width: 100%;
 }

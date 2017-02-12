@@ -2,7 +2,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore', 'bootbox',
         'model/claim', 'model/claimEntry', 'model/contact', 'model/states',
         'app/utils/ajaxUtils', 'app/utils/events', 'app/utils/consts', 'app/utils/router',
         'app/utils/sessionKeys', 'app/utils/session', 'app/components/contact/contactClient',
-        'shared/dateUtils', 'shared/consts', 'shared/objectUtils',
+        'shared/dateUtils', 'shared/consts', 'shared/objectUtils', 'shared/NumberUtils',
         'text!app/components/claim/claim.tmpl.html',
         'text!app/components/claim/claim.editor.tmpl.html',
         'text!app/components/claim/claim.docs.tmpl.html',
@@ -10,7 +10,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore', 'bootbox',
         'text!app/components/claim/claim.forms.tmpl.html',
         'app/utils/audit'],
     function ($, ko, KOMap, amplify, _, bootbox, Claim, ClaimEntry, Contact, States, ajaxUtils,
-              Events, Consts, Router, SessionKeys, Session, ContactClient, DateUtils, SharedConsts, ObjectUtils,
+              Events, Consts, Router, SessionKeys, Session, ContactClient, DateUtils, SharedConsts, ObjectUtils, NumberUtils,
               viewHtml, editorViewHtml, docsViewHtml, entriesViewHtml, formsViewHtml, Audit) {
 
         function ClaimVM() {
@@ -23,10 +23,12 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore', 'bootbox',
             this.Consts = Consts;
             this.DateUtils = DateUtils;
             this.ObjectUtils = ObjectUtils;
+            this.NumberUtils = NumberUtils;
             this.Router = Router;
             this.Session = Session;
             this.claim = ko.observable(this.newEmptyClaim());
             this.claimEntries = ko.observableArray();
+
             this.claimForms = ko.observableArray();
             this.sortDir = ko.observable('desc');
             this.activeTab = ko.observable(Consts.CLAIMS_TAB);
@@ -52,6 +54,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore', 'bootbox',
             this.isBillingEnabled = ko.observable(false);
 
             this.setupEvListeners();
+            this.setupDocsToList();
         }
 
         ClaimVM.prototype.newEmptyClaim = function () {
@@ -234,7 +237,21 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore', 'bootbox',
             this.claim().contacts(arr.filter((elem, idx) => idx != index));
         }
 
-        ClaimVM.prototype.onCloseClaim = function (contact) {
+        ClaimVM.prototype.onAddNewExpense = function () {
+            this.claim().expenses.push(
+                KOMap.fromJS({
+                    category: SharedConsts.EXPENSE_CATEGORY,
+                    subCategory: null,
+                    amount: 0
+                }));
+        }
+
+        ClaimVM.prototype.onDeleteExpense = function (index, expense) {
+            let arr = this.claim().expenses();
+            this.claim().expenses(arr.filter((elem, idx) => idx != index));
+        }
+
+        ClaimVM.prototype.onCloseClaim = function () {
             Router.routeToHome();
         }
 
@@ -302,8 +319,33 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore', 'bootbox',
         ClaimVM.prototype.niceName = function (contact) {
             let nice = contact.name() || '';
             return nice.length > 0 ? nice : 'None';
-
         };
+
+        ClaimVM.prototype.setupDocsToList = function () {
+            this.docsToList = ko.computed(function () {
+                let allDocs = [];
+                this.claim().attachments().forEach(attach => {
+                    allDocs.push({origin: 'Claim', originId: this.claim()._id(), attachment: attach});
+                });
+                this.claimEntries().forEach(claimEntry => {
+                    claimEntry.attachments.forEach(attach => {
+                        allDocs.push({
+                            origin: 'ClaimEntry',
+                            originId: claimEntry._id,
+                            attachment: KOMap.fromJS(attach)
+                        });
+                    });
+                });
+                return allDocs;
+            }.bind(this));
+        }
+
+        ClaimVM.prototype.sortDocsList = function () {
+            setTimeout(() => {
+                $('#claimDocsTable thead tr th[data-field="lastModifiedDate"]').click();
+                $('#claimDocsTable thead tr th[data-field="lastModifiedDate"]').click();
+            }, 200);
+        }
 
         /***********************************************************/
         /* Server calls                                            */

@@ -34,6 +34,10 @@ define([], function () {
         // Note: the service links the contact object to the Contact collection
         this.contacts = [];
 
+        // Expenses added by the user
+        // Array of ExpenseInfp: {category, subCategory, amount}
+        this.expenses = [];
+
         // Attachments descriptors - the content is stored in Momgo GridFS
         this.attachments = [];
 
