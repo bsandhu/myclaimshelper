@@ -337,16 +337,16 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore', 'bootbox',
                     });
                 });
                 return allDocs.sort((doc1, doc2) => {
-                    let doc1Date =
-                        _.isFunction(doc1.attachment.lastModifiedDate)
-                        ? doc1.attachment.lastModifiedDate().getTime()
-                        : doc1.attachment.lastModifiedDate.getTime();
+                    function _getTime(doc) {
+                        if (doc.attachment.hasOwnProperty('lastModifiedDate')) {
+                            return _.isFunction(doc1.attachment.lastModifiedDate
+                                ? doc1.attachment.lastModifiedDate().getTime()
+                                : doc1.attachment.lastModifiedDate.getTime());
+                        }
+                        return 0;
+                    }
 
-                    let doc2Date =
-                        _.isFunction(doc2.attachment.lastModifiedDate)
-                            ? doc2.attachment.lastModifiedDate().getTime()
-                            : doc2.attachment.lastModifiedDate.getTime();
-                    return (doc2Date - doc1Date);
+                    return (_getTime(doc2) - _getTime(doc1));
                 });
             }, this);
         }
