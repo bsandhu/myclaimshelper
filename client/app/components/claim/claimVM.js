@@ -333,7 +333,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore', 'bootbox',
                             attach.type = 'Unknown';
                         }
                         if (!attach.hasOwnProperty('lastModifiedDate')) {
-                            attach.lastModifiedDate = 0;
+                            attach.lastModifiedDate = new Date();
                         }
                         if (!attach.hasOwnProperty('owner')) {
                             attach.owner = claimEntry.owner;
