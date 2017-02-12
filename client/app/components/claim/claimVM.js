@@ -337,8 +337,15 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore', 'bootbox',
                     });
                 });
                 return allDocs.sort((doc1, doc2) => {
-                    let doc1Date =  doc1.attachment.lastModifiedDate().getTime();
-                    let doc2Date =  doc2.attachment.lastModifiedDate().getTime();
+                    let doc1Date =
+                        _.isFunction(doc1.attachment.lastModifiedDate)
+                        ? doc1.attachment.lastModifiedDate().getTime()
+                        : doc1.attachment.lastModifiedDate.getTime();
+
+                    let doc2Date =
+                        _.isFunction(doc2.attachment.lastModifiedDate)
+                            ? doc2.attachment.lastModifiedDate().getTime()
+                            : doc2.attachment.lastModifiedDate.getTime();
                     return (doc2Date - doc1Date);
                 });
             }, this);
