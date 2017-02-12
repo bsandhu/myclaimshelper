@@ -10,7 +10,7 @@
 
 <!-- No docs msg -->
 <!-- ko ifnot: isClaimClosed -->
-<div data-bind="if: claim().attachments().length == 0"
+<div data-bind="if: docsToList().length == 0"
      class="col-lg-offset-2 col-md-offset-2 col-sm-offset-1 col-lg-8 col-md-8 col-sm-10 col-xs-12">
     <div class="text-info topMargin5pc text-center">
         You may attach documents to a Claim for safekeeping<br/>No documents for this Claim yet
@@ -19,7 +19,7 @@
 <!-- /ko -->
 
 <!-- **** List files **** -->
-<div class="col-lg-12 col-md-12 col-sm-12" data-bind="if: claim().attachments().length > 0">
+<div class="col-lg-12 col-md-12 col-sm-12" data-bind="if: docsToList().length > 0">
     <table id="claimDocsTable"
            data-sortable
            data-bind="sortable"
@@ -31,47 +31,48 @@
             <th data-field="name" data-sortable="true" colspan="2">File name</th>
             <th data-sortable="true" data-sortable-type="numeric">Size</th>
             <th data-field="type" data-sortable="true" class="hidden-xs">Type</th>
-            <th data-field="lastModifiedDate" data-sortable="true" class="hidden-xs">Last modified</th>
-            <th data-field="createdBy" data-sortable="true" class="hidden-xs hidden-sm">Created by</th>
+            <th data-field="lastModifiedDate" data-sortable="true" data-sortable-type="numeric" class="hidden-xs">Last modified</th>
+            <th data-field="owner" data-sortable="true" class="hidden-xs hidden-sm">Created by</th>
             <th data-field="id" data-sortable="true" class="hidden-sm hidden-xs hidden-md hidden-lg">Id</th>
         </tr>
         </thead>
 
         <!-- Body -->
         <!-- **** List out docs attached to claim directly **** -->
-        <tbody data-bind='template: { name: "claimDocsRowTmpl",
-                                      foreach: docsToList,
-                                      afterRender: sortDocsList}'></tbody>
+        <tbody data-bind='foreach: { data: docsToList() }'>
+        <tr style="cursor: default">
+            <td data-bind="text: attachment.name"></td>
+            <td>
+                <a data-bind="attr: {href: '/download?id=' + attachment.id()}"
+                   class="color-light-blue myTooltip" myTitle="Download file">
+                    <span class="fa-stack fa-lg">
+                      <i class="fa fa-circle fa-stack-2x"></i>
+                      <i class="fa fa-download fa-stack-1x fa-inverse"></i>
+                    </span>
+                </a>
+            </td>
+            <td data-bind="attr: {'data-value': attachment.size()}">
+                <span data-bind="text: Math.round(attachment.size()/1024, 2) + ' K'"></span>
+            </td>
+            <td class="hidden-xs">
+                <div data-bind="text: attachment.type"></div>
+            </td>
+            <td class="hidden-xs">
+                <div data-bind="text: $parent.DateUtils.niceDate(attachment.lastModifiedDate ? attachment.lastModifiedDate() : '-'),
+                                attr: {'data-value': attachment.lastModifiedDate().getTime()}"></div>
+            </td>
+            <td class="hidden-xs hidden-sm">
+                <div class="tableCell" data-bind="text: attachment.owner"></div>
+            </td>
+            <td class="hidden-sm hidden-xs hidden-md hidden-lg">
+                <div class="tableCell" data-bind="text: attachment.id"></div>
+            </td>
+        </tr>
+        </tbody>
     </table>
 </div>
 
 <!--- **** Tmpl for docs table row **** -->
 <script type="text/html" id="claimDocsRowTmpl">
-    <tr style="cursor: default">
-        <td data-bind="text: attachment.name"></td>
-        <td>
-            <a data-bind="attr: {href: '/download?id=' + attachment.id()}"
-               class="color-light-blue myTooltip" myTitle="Download file">
-                    <span class="fa-stack fa-lg">
-                      <i class="fa fa-circle fa-stack-2x"></i>
-                      <i class="fa fa-download fa-stack-1x fa-inverse"></i>
-                    </span>
-            </a>
-        </td>
-        <td data-bind="attr: {'data-value': attachment.size()}">
-            <span data-bind="text: Math.round(attachment.size()/1024, 2) + ' K'"></span>
-        </td>
-        <td class="hidden-xs">
-            <div data-bind="text: attachment.type"></div>
-        </td>
-        <td class="hidden-xs">
-            <div data-bind="text: $parent.DateUtils.niceDate(attachment.lastModifiedDate ? attachment.lastModifiedDate() : '-')"></div>
-        </td>
-        <td class="hidden-xs hidden-sm">
-            <div class="tableCell" data-bind="text: attachment.createdBy"></div>
-        </td>
-        <td class="hidden-sm hidden-xs hidden-md hidden-lg">
-            <div class="tableCell" data-bind="text: attachment.id"></div>
-        </td>
-    </tr>
+
 </script>

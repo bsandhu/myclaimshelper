@@ -337,14 +337,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore', 'bootbox',
                     });
                 });
                 return allDocs;
-            }.bind(this));
-        }
-
-        ClaimVM.prototype.sortDocsList = function () {
-            setTimeout(() => {
-                $('#claimDocsTable thead tr th[data-field="lastModifiedDate"]').click();
-                $('#claimDocsTable thead tr th[data-field="lastModifiedDate"]').click();
-            }, 200);
+            }, this);
         }
 
         /***********************************************************/
