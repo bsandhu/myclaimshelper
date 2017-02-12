@@ -339,9 +339,9 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore', 'bootbox',
                 return allDocs.sort((doc1, doc2) => {
                     function _getTime(doc) {
                         if (doc.attachment.hasOwnProperty('lastModifiedDate')) {
-                            let dt = _.isFunction(doc1.attachment.lastModifiedDate)
-                                        ? doc1.attachment.lastModifiedDate()
-                                        : doc1.attachment.lastModifiedDate;
+                            let dt = _.isFunction(doc.attachment.lastModifiedDate)
+                                        ? doc.attachment.lastModifiedDate()
+                                        : doc.attachment.lastModifiedDate;
                             return dt.hasOwnProperty('getTime')
                                 ? dt.getTime()
                                 : 0;
