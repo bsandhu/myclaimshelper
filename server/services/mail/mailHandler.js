@@ -213,7 +213,11 @@ function constructClaimEntry(data, attachments) {
                                 let metadata = {
                                     id: attachments[i].id,
                                     name: data.fileNum + '-' + attachments[i].name,
-                                    size: attachments[i].size
+                                    size: attachments[i].size,
+                                    type: attachments[i].type,
+                                    owner: data.owner,
+                                    group: data.owner,
+                                    lastModifiedDate: attachments[i].mtime.getTime()
                                 };
                                 entry.attachments.push(metadata);
                             }

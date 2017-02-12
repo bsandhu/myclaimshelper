@@ -38,7 +38,8 @@ define([], function () {
         // Array of ExpenseInfp: {category, subCategory, amount}
         this.expenses = [];
 
-        // Attachments descriptors - the content is stored in Momgo GridFS
+        // Attachments descriptors - the content is stored in Mongo GridFS
+        // Type: FileMetadata
         this.attachments = [];
 
         // ClaimEntry - FK via the ClaimEntries collection

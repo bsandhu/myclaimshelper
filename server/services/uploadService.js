@@ -1,6 +1,7 @@
 let assert = require('assert');
 let mongoUtils = require('./../mongoUtils.js');
 let ObjectUtils = require('./../shared/objectUtils.js');
+let FileMetadata = require('./../model/fileMetadata.js');
 let GridStore = require('mongodb').GridStore;
 let jQuery = require('jquery-deferred');
 
@@ -20,14 +21,15 @@ function uploadFile(req, res) {
 
     saveToDB(fileName, file.path)
         .done(function okResponse(seqNum) {
-            let fileMetadata = {
-                id: seqNum,
-                name: fileName,
-                size: file.size,
-                lastModifiedDate: req.params.lastModifiedDate,
-                createdBy: req.headers.userid,
-                type: fileType
-            };
+            let fileMetadata = new FileMetadata();
+            fileMetadata.id = seqNum;
+            fileMetadata.name = fileName;
+            fileMetadata.size = file.size;
+            fileMetadata.lastModifiedDate = req.params.lastModifiedDate;
+            fileMetadata.type = fileType;
+
+            mongoUtils.addOwnerInfo(req, fileMetadata);
+
             console.log('Processed file. Metadata: ' + JSON.stringify(fileMetadata));
             res.statusCode = 200;
             res.setHeader('content-type', 'application/json');

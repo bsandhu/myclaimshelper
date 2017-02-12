@@ -24,6 +24,7 @@ define([], function () {
         this.description = undefined;
 
         // Attachments descriptors - the content is stored in Momgo GridFS
+        // Type: FileMetadata
         this.attachments = [];
 
         // Status - one of states.ts

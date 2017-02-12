@@ -1,19 +1,18 @@
-var assert = require('assert');
-var path = require('path');
-var uploadService = require('./../../server/services/uploadService.js');
+let assert = require('assert');
+let path = require('path');
+let uploadService = require('./../../server/services/uploadService.js');
 
 
 describe('Upload Service', function () {
 
-    var fileId;
-    var FILE_NAME = 'testUpload.png';
+    let fileId;
+    let FILE_NAME = 'testUpload.png';
 
     it('Save file to DB', function (done) {
-
         uploadService
             .saveToDB(FILE_NAME, path.resolve(__dirname, '../services/testData/testUpload.png'))
             .then(function (seqNum) {
-                assert.ok(seqNum >= 0, 'Expectng seqNum on successful save');
+                assert.ok(seqNum >= 0, 'Expecting seqNum on successful save');
                 fileId = seqNum;
                 done();
             });
@@ -34,8 +33,8 @@ describe('Upload Service', function () {
     });
 
     it('Download file', function (done) {
-        var req = {params: {id: fileId, fileName: FILE_NAME}};
-        var res = {};
+        let req = {params: {id: fileId, fileName: FILE_NAME}};
+        let res = {};
         res.writeHead = function () {};
         res.write = function (chunk) {
             assert.ok(chunk);

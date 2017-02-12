@@ -184,6 +184,12 @@ MailParser.prototype._getTags = function (body) {
 
 /*
  * @param {http request}
+ * Attachmnet is of the shape:
+ * {"size":295301,
+ * "path":"/tmp/upload_d598ccdd8d6ce40977ff5e7961f94ba1",
+ * "name":"forefox.pdf",
+ * "type":"application/pdf",
+ * "mtime":"2017-02-12T17:44:52.009Z"}
  */
 MailParser.prototype._getEmbeddedAttachmentInfo = function (req) {
     let attachments = [];
