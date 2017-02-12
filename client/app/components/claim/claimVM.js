@@ -336,7 +336,11 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore', 'bootbox',
                         });
                     });
                 });
-                return allDocs;
+                return allDocs.sort((doc1, doc2) => {
+                    let doc1Date =  doc1.attachment.lastModifiedDate().getTime();
+                    let doc2Date =  doc2.attachment.lastModifiedDate().getTime();
+                    return (doc2Date - doc1Date);
+                });
             }, this);
         }
 

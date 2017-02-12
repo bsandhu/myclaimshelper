@@ -28,11 +28,12 @@
         <!-- Header -->
         <thead>
         <tr>
-            <th data-field="name" data-sortable="true" colspan="2">File name</th>
-            <th data-sortable="true" data-sortable-type="numeric">Size</th>
-            <th data-field="type" data-sortable="true" class="hidden-xs">Type</th>
+            <th data-field="name" data-sortable="true" data-sortable-type="alpha">File name</th>
+            <th></th>
+            <th data-sortable-type="numeric">Size</th>
+            <th data-sortable-type="alpha" class="hidden-xs">Type</th>
             <th data-field="lastModifiedDate" data-sortable="true" data-sortable-type="numeric" class="hidden-xs">Last modified</th>
-            <th data-field="owner" data-sortable="true" class="hidden-xs hidden-sm">Created by</th>
+            <th data-field="owner" data-sortable="true" data-sortable-type="alpha" class="hidden-xs hidden-sm">Created by</th>
             <th data-field="id" data-sortable="true" class="hidden-sm hidden-xs hidden-md hidden-lg">Id</th>
         </tr>
         </thead>
@@ -44,28 +45,26 @@
             <td data-bind="text: attachment.name"></td>
             <td>
                 <a data-bind="attr: {href: '/download?id=' + attachment.id()}"
-                   class="color-light-blue myTooltip" myTitle="Download file">
+                   class="color-light-blue myTooltip" myTitle="Click to Download file">
                     <span class="fa-stack fa-lg">
                       <i class="fa fa-circle fa-stack-2x"></i>
                       <i class="fa fa-download fa-stack-1x fa-inverse"></i>
                     </span>
                 </a>
             </td>
-            <td data-bind="attr: {'data-value': attachment.size()}">
-                <span data-bind="text: Math.round(attachment.size()/1024, 2) + ' K'"></span>
+            <td data-bind="attr: {'data-value': attachment.size()},
+                           text: Math.round(attachment.size()/1024, 2) + ' K'"></td>
+            <td class="hidden-xs"
+                data-bind="text: attachment.type,
+                            attr: {'data-value': attachment.type()}"></td>
+            <td class="hidden-xs"
+                data-bind="text: $parent.DateUtils.niceDate(attachment.lastModifiedDate ? attachment.lastModifiedDate() : '-'),
+                           attr: {'data-value': attachment.lastModifiedDate().getTime()}">
             </td>
-            <td class="hidden-xs">
-                <div data-bind="text: attachment.type"></div>
-            </td>
-            <td class="hidden-xs">
-                <div data-bind="text: $parent.DateUtils.niceDate(attachment.lastModifiedDate ? attachment.lastModifiedDate() : '-'),
-                                attr: {'data-value': attachment.lastModifiedDate().getTime()}"></div>
-            </td>
-            <td class="hidden-xs hidden-sm">
-                <div class="tableCell" data-bind="text: attachment.owner"></div>
-            </td>
-            <td class="hidden-sm hidden-xs hidden-md hidden-lg">
-                <div class="tableCell" data-bind="text: attachment.id"></div>
+            <td class="hidden-xs hidden-sm tableCell"
+                data-bind="text: attachment.owner"></td>
+            <td class="hidden-sm hidden-xs hidden-md hidden-lg tableCell"
+                data-bind="text: attachment.id">
             </td>
         </tr>
         </tbody>
