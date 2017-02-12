@@ -329,6 +329,15 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore', 'bootbox',
                 });
                 this.claimEntries().forEach(claimEntry => {
                     claimEntry.attachments.forEach(attach => {
+                        if (!attach.hasOwnProperty('type')) {
+                            attach.type = 'Unknown';
+                        }
+                        if (!attach.hasOwnProperty('lastModifiedDate')) {
+                            attach.lastModifiedDate = 0;
+                        }
+                        if (!attach.hasOwnProperty('owner')) {
+                            attach.owner = claimEntry.owner;
+                        }
                         allDocs.push({
                             origin: 'ClaimEntry',
                             originId: claimEntry._id,
@@ -338,15 +347,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore', 'bootbox',
                 });
                 return allDocs.sort((doc1, doc2) => {
                     function _getTime(doc) {
-                        if (doc.attachment.hasOwnProperty('lastModifiedDate')) {
-                            let dt = _.isFunction(doc.attachment.lastModifiedDate)
-                                        ? doc.attachment.lastModifiedDate()
-                                        : doc.attachment.lastModifiedDate;
-                            return dt.hasOwnProperty('getTime')
-                                ? dt.getTime()
-                                : 0;
-                        }
-                        return 0;
+                        return doc.attachment.lastModifiedDate().getTime();
                     }
 
                     return (_getTime(doc2) - _getTime(doc1));
