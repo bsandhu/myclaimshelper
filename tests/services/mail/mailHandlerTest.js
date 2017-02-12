@@ -41,7 +41,13 @@ describe('mailHandler', function(){
             assert.ok(data.claimId);
             assert.ok(data.owner);
             assert.deepEqual(data.tags, [ '#tag1', '#tag2', 'email' ]);
+
             assert.ok(data.attachments);
+            assert.ok(data.attachments[0].id);
+            assert.equal(data.attachments[0].name, 'test.txt');
+            assert.equal(data.attachments[0].path, '/tmp/67e8f84cf7851523cb5f8635cf7208ed');
+            assert.equal(data.attachments[0].type, 'text/plain');
+
             assert.equal(data.mail.subject, 'the subject claim id: 123');
             assert.equal(data.mail['body-plain'], 'the body\r\n#tag1\r\n#tag2');
             assert.equal(data.mail.From, 'plato@nonsense.foo');

@@ -217,7 +217,7 @@ function constructClaimEntry(data, attachments) {
                                     type: attachments[i].type,
                                     owner: data.owner,
                                     group: data.owner,
-                                    lastModifiedDate: attachments[i].mtime.getTime()
+                                    lastModifiedDate: attachments[i].mtime ? new Date(attachments[i].mtime).getTime() : new Date().getTime()
                                 };
                                 entry.attachments.push(metadata);
                             }
