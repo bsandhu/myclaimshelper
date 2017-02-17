@@ -30,11 +30,14 @@ function PDF_PARAMS(html) {
 
 function convertToPdf(req, res) {
     assert.ok(req.params.htmlContent, 'Expecting htmlContent as a parameter');
+    assert.ok(req.params.formName, 'Expecting formName as a parameter');
     console.log('Converting to pdf..');
     let html = req.params.htmlContent;
+    let fileName = req.params.formName;
 
     conversion = convertFactory({
-        converterPath: convertFactory.converters.PDF
+        converterPath: convertFactory.converters.PDF,
+        strategy: 'electron-server'
     });
     conversion(
         PDF_PARAMS(html),
@@ -45,7 +48,7 @@ function convertToPdf(req, res) {
             console.log(result.numberOfPages);
             uploadService.streamFileToClient(
                 res,
-                {filename: 'foo.pdf', contentType: 'application/download'},
+                {filename: fileName, contentType: 'application/pdf'},
                 result.stream
             );
         });
@@ -66,9 +69,11 @@ function emailPdf(req, res) {
                 return console.error(err);
             }
             console.log("Converted to Pdf. Pages: " + result.numberOfPages);
-            let stream = result.stream;
-            stream.pipe(fs.createWriteStream('/tmp/foo.pdf'));
-            stream.on('end', () => {
+            let inStream = result.stream;
+            let writer = fs.createWriteStream('/tmp/foo.pdf');
+            inStream.pipe(writer);
+            inStream.on('end', () => {
+                writer.end();
                 sendEmailViaMailgun().then(res.end());
             })
         });

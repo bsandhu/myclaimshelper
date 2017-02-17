@@ -170,9 +170,8 @@ define(['knockout', 'KOMap', 'jquery', 'underscore', 'bootbox',
 
         FormsComponentVM.prototype.onConvertToPdf = function (claimId) {
             let htmlContent = $('#claimFormPrintContainer')[0].innerHTML;
-
             let url = '/convertToPdf';
-            let params = {htmlContent: $('<div>').text(htmlContent).html()};
+            let _this = this;
 
             $.when($.get("/css/app.css"))
                 .then(css => {
@@ -181,6 +180,12 @@ define(['knockout', 'KOMap', 'jquery', 'underscore', 'bootbox',
                         .attr('type', 'hidden')
                         .attr('name', 'htmlContent')
                         .val('<style>' + css + '</style>' + htmlContent)
+                        .appendTo(form);
+
+                    $('<input>')
+                        .attr('type', 'hidden')
+                        .attr('name', 'formName')
+                        .val(_this.form().type() + '.pdf')
                         .appendTo(form);
                     $('body').append(form);
                     form.submit();
