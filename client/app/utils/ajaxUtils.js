@@ -67,7 +67,7 @@ define(['jquery', 'amplify', 'underscore', 'app/utils/events', 'app/utils/sessio
             return $.getJSON(url);
         }
 
-        function post(url, json, onDone, onFail) {
+        function post(url, json, onDone=$.noop, onFail) {
             if (!Session.getCurrentUserProfile()) {
                 postReqQueue.push({fn: post, url: url, json: json, onDone: onDone, onFail: onFail});
                 return;

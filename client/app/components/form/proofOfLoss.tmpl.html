@@ -5,6 +5,13 @@
     <!-- Hence there is a span for every input. In the @media print css inputs are hidden and spans shown -->
     <!-- ************************************************************************************************* -->
 
+    <!-- **** SWORN STATEMENT IN PROOF OF LOSS **** -->
+    <div class="formRowCentered">
+        <div class="header">
+            <div style="order: 1">SWORN STATEMENT IN PROOF OF LOSS</div>
+        </div>
+    </div>
+
     <!-- **** Top section **** -->
     <div class="formRow">
         <div class="formColumn" style="flex-basis: 25%; flex-grow: 0; align-content: flex-start;">
@@ -95,8 +102,8 @@
         </div>
     </div>
 
-    <!-- **** Time and origin **** -->
-    <div class="formRow">
+    <!-- **** 1. Time and origin **** -->
+    <div class="formRow topMargin10">
         <div style="order: 1"><strong>1. Time and Origin:</strong> A</div>
         <div style="flex-grow: 1; order: 2">
             <input data-bind="value: m"/>
@@ -149,7 +156,7 @@
         </div>
     </div>
 
-    <!-- **** Occupancy **** -->
+    <!-- **** 2. Occupancy **** -->
     <div class="formRow">
         <div style="order: 1"><strong>2. Occupancy:</strong> The building described, or containing the property
             described, was occupied at the time of the loss as follows,
@@ -175,7 +182,7 @@
         </div>
     </div>
 
-    <!-- **** Title and interest **** -->
+    <!-- **** 3. Title and interest **** -->
     <div class="formRow">
         <div style="order: 1"><strong>3. Title and Interest:</strong> At the time of the loss the interest of your
             insured in the property described therin was
@@ -206,7 +213,7 @@
         </div>
     </div>
 
-    <!-- **** Changes **** -->
+    <!-- **** 4. Changes **** -->
     <div class="formRow">
         <div style="order: 1"><strong>3. Changes:</strong> Since the said policy was issued there has been no assignment
             thereof, or change of interest, use, occupancy
@@ -232,7 +239,7 @@
         </div>
     </div>
 
-    <!-- **** Total insurance **** -->
+    <!-- **** 5. Total insurance **** -->
     <div class="formRow">
         <div style="order: 1"><strong>5. Total Insurance:</strong> The total amount of insurance upon the property
             descrobed by this policy was, at the time of the loss,
@@ -253,8 +260,8 @@
         </div>
     </div>
 
-    <!-- **** Cash Value **** -->
-    <div class="formRow">
+    <!-- **** 6. Actual Cash Value **** -->
+    <div class="formRow topMargin15">
         <div style="order: 1"><strong>6. The Actual Cash Value</strong> of the said property at the time of the loss was
         </div>
         <div style="order: 2; flex-grow: 1" class="bottomBorderDashed"></div>
@@ -265,8 +272,8 @@
         </div>
     </div>
 
-    <!-- **** Whole loss and damage **** -->
-    <div class="formRow">
+    <!-- **** 7. Whole loss and damage **** -->
+    <div class="formRow topMargin15">
         <div style="order: 1"><strong>7. The Whole Loss and Damage </strong> was
         </div>
         <div style="order: 2; flex-grow: 1" class="bottomBorderDashed"></div>
@@ -277,8 +284,8 @@
         </div>
     </div>
 
-    <!-- **** Less amt **** -->
-    <div class="formRow">
+    <!-- **** 8. Less amt **** -->
+    <div class="formRow topMargin15">
         <div style="order: 1"><strong>8. Less Amount of Deductible </strong>
         </div>
         <div style="order: 2; flex-grow: 1" class="bottomBorderDashed"></div>
@@ -289,8 +296,8 @@
         </div>
     </div>
 
-    <!-- **** Amt claimed **** -->
-    <div class="formRow">
+    <!-- **** 9. Amt claimed **** -->
+    <div class="formRow topMargin15">
         <div style="order: 1"><strong>9. The Amount Claimed </strong> under the above numbered policy is
         </div>
         <div style="order: 2; flex-grow: 1" class="bottomBorderDashed"></div>
@@ -302,44 +309,44 @@
     </div>
 
     <!-- **** Disclaimer **** -->
-    <div class="formRow">
+    <div class="formRow finePrint topMargin10">
         <div style="order: 1; margin-left: 1em">
             <strong>The said loss did not originate by any act, design or procurement on the part
                 of your insured, or this affiant; nothing has </strong>
         </div>
     </div>
-    <div class="formRow">
+    <div class="formRow finePrint">
         <div style="order: 1;">
             <strong>been done by or with the privity or consent of your insured or this affiant, to violate the
                 conditions of the policy, or render it void;</strong>
         </div>
     </div>
-    <div class="formRow">
+    <div class="formRow finePrint">
         <div style="order: 1;">
             <strong>no articles are mentioned herein or in annexed schedules but such as were destroyed or damaged at
                 the time of the said loss; no</strong>
         </div>
     </div>
-    <div class="formRow">
+    <div class="formRow finePrint">
         <div style="order: 1;">
             <strong>property saved has in any manner been concealed, and no attempt to deceive the said company, as to
                 the extent of said loss, has</strong>
         </div>
     </div>
-    <div class="formRow">
+    <div class="formRow finePrint">
         <div style="order: 1;">
             <strong>in any manner been made. Any other information that may be required will be furnished and considered
                 a part of this proof.</strong>
         </div>
     </div>
-    <div class="formRow" style="padding-bottom: 10px"></div>
+    <div class="formRow finePrint" style="padding-bottom: 10px"></div>
     <div class="formRow">
         <div style="order: 1; margin-left: 1em">
             <strong>The furnishing of this blank or the preparation of proofs by a representative of the above insurance
                 company is not a waiver </strong>
         </div>
     </div>
-    <div class="formRow">
+    <div class="formRow finePrint">
         <div style="order: 1;">
             <strong>of any of its rights.</strong>
         </div>
@@ -377,7 +384,7 @@
     </div>
 
     <!-- **** Subscribed and sworn **** -->
-    <div class="formRow">
+    <div class="formRow topMargin15">
         <div style="order: 1">Subscribed and sworn to before me this</div>
         <div style="order: 2; flex-grow: 0; flex-basis: 5em">
             <input data-bind="value: ao"/>
@@ -395,7 +402,9 @@
         </div>
         <div style="order: 7; flex-grow: 1;"></div>
     </div>
-    <div class="formRow">
+
+    <!-- **** Notary public **** -->
+    <div class="formRow topMargin15">
         <div style="order: 1; flex-grow: 0; flex-basis: 20em">
             <input data-bind="value: ar"/>
             <span data-bind="text: ar"></span>
@@ -404,7 +413,9 @@
         <div style="order: 3; flex-grow: 1;"></div>
     </div>
 
+    <!-- ************************************************** -->
     <!-- **** Schedule A - Policy form **** -->
+    <!-- ************************************************** -->
     <div class="formRow topMargin5pc bottomMargin10">
         <div style="order: 1; text-align: center; flex-grow: 1"><strong>SCHEDULE "A" - POLICY FORM</strong></div>
     </div>
@@ -494,7 +505,7 @@
             <span data-bind="text: bd"></span>
         </div>
     </div>
-
+    <div class="clear"></div>
     <!-- **** SCHEDULE "B" **** -->
     <div class="formRow topMargin5pc bottomMargin10">
         <div style="order: 1; text-align: center; flex-grow: 1"><strong>SCHEDULE "B"</strong></div>
@@ -505,56 +516,138 @@
     </div>
     <div class="formRow">
         <table style="border: 1px solid black; width: 100%">
-            <thead>
             <tr style="border-top-style: double; height: 2.5em">
                 <th class="formTableHeaderCell"></th>
                 <th class="formTableHeaderCell"></th>
                 <th class="formTableHeaderCell text-center">ACTUAL CASH VALUE</th>
                 <th class="formTableHeaderCell text-center">LOSS AND DAMAGE</th>
             </tr>
-            </thead>
             <tbody>
             <tr>
-                <td class="formTableCell width10pc"><input class="width100pc" data-bind="value: be"><span data-bind="text: be"></span></td>
-                <td class="formTableCell width60pc"><input class="width100pc" data-bind="value: bf"><span data-bind="text: bf"></span></td>
-                <td class="formTableCell width15pc"><input class="width100pc" data-bind="value: bg"><span data-bind="text: bg"></span></td>
-                <td class="formTableCell width15pc"><input class="width100pc" data-bind="value: bh"><span data-bind="text: bh"></span></td>
+                <td class="formTableCell width10pc">
+                    <input class="width100pc" data-bind="value: be">
+                    <span data-bind="text: be"></span>
+                </td>
+                <td class="formTableCell width60pc">
+                    <input class="width100pc" data-bind="value: bf">
+                    <span data-bind="text: bf"></span>
+                </td>
+                <td class="formTableCell width15pc">
+                    <input class="width100pc numeric" data-bind="value: bg">
+                    <div class="numeric printNumeric" data-bind="text: bg"></div>
+                </td>
+                <td class="formTableCell width15pc">
+                    <input class="width100pc numeric" data-bind="value: bh">
+                    <div class="numeric printNumeric" data-bind="text: bh"></div>
+                </td>
             </tr>
             <tr>
-                <td class="formTableCell width10pc"><input class="width100pc" data-bind="value: bi"><span data-bind="text: bi"></span></td>
-                <td class="formTableCell width60pc"><input class="width100pc" data-bind="value: bj"><span data-bind="text: bj"></span></td>
-                <td class="formTableCell width15pc"><input class="width100pc" data-bind="value: bk"><span data-bind="text: bk"></span></td>
-                <td class="formTableCell width15pc"><input class="width100pc" data-bind="value: bl"><span data-bind="text: bl"></span></td>
+                <td class="formTableCell width10pc">
+                    <input class="width100pc" data-bind="value: bi">
+                    <span data-bind="text: bi"></span>
+                </td>
+                <td class="formTableCell width60pc">
+                    <input class="width100pc" data-bind="value: bj">
+                    <span data-bind="text: bj"></span>
+                </td>
+                <td class="formTableCell width15pc">
+                    <input class="width100pc numeric" data-bind="value: bk">
+                    <div class="numeric printNumeric" data-bind="text: bk"></div>
+                </td>
+                <td class="formTableCell width15pc">
+                    <input class="width100pc numeric" data-bind="value: bl">
+                    <div class="numeric printNumeric" data-bind="text: bl"></div>
+                </td>
             </tr>
             <tr>
-                <td class="formTableCell width10pc"><input class="width100pc" data-bind="value: bm"><span data-bind="text: bm"></span></td>
-                <td class="formTableCell width60pc"><input class="width100pc" data-bind="value: bn"><span data-bind="text: bn"></span></td>
-                <td class="formTableCell width15pc"><input class="width100pc" data-bind="value: bo"><span data-bind="text: bo"></span></td>
-                <td class="formTableCell width15pc"><input class="width100pc" data-bind="value: bp"><span data-bind="text: bp"></span></td>
+                <td class="formTableCell width10pc">
+                    <input class="width100pc" data-bind="value: bm">
+                    <span data-bind="text: bm"></span>
+                </td>
+                <td class="formTableCell width60pc">
+                    <input class="width100pc" data-bind="value: bn">
+                    <span data-bind="text: bn"></span>
+                </td>
+                <td class="formTableCell width15pc">
+                    <input class="width100pc numeric" data-bind="value: bo">
+                    <div class="numeric printNumeric" data-bind="text: bo"></div>
+                </td>
+                <td class="formTableCell width15pc">
+                    <input class="width100pc numeric" data-bind="value: bp">
+                    <div class="numeric printNumeric" data-bind="text: bp"></div>
+                </td>
             </tr>
             <tr>
-                <td class="formTableCell width10pc"><input class="width100pc" data-bind="value: bq"><span data-bind="text: bq"></span></td>
-                <td class="formTableCell width60pc"><input class="width100pc" data-bind="value: br"><span data-bind="text: br"></span></td>
-                <td class="formTableCell width15pc"><input class="width100pc" data-bind="value: bs"><span data-bind="text: bs"></span></td>
-                <td class="formTableCell width15pc"><input class="width100pc" data-bind="value: bt"><span data-bind="text: bt"></span></td>
+                <td class="formTableCell width10pc">
+                    <input class="width100pc" data-bind="value: bq">
+                    <span data-bind="text: bq"></span>
+                </td>
+                <td class="formTableCell width60pc">
+                    <input class="width100pc" data-bind="value: br">
+                    <span data-bind="text: br"></span>
+                </td>
+                <td class="formTableCell width15pc">
+                    <input class="width100pc numeric" data-bind="value: bs">
+                    <div class="numeric printNumeric" data-bind="text: bs"></div>
+                </td>
+                <td class="formTableCell width15pc">
+                    <input class="width100pc numeric" data-bind="value: bt">
+                    <div class="numeric printNumeric" data-bind="text: bt"></div>
+                </td>
             </tr>
             <tr>
-                <td class="formTableCell width10pc"><input class="width100pc" data-bind="value: bu"><span data-bind="text: bu"></span></td>
-                <td class="formTableCell width60pc"><input class="width100pc" data-bind="value: bv"><span data-bind="text: bv"></span></td>
-                <td class="formTableCell width15pc"><input class="width100pc" data-bind="value: bw"><span data-bind="text: bw"></span></td>
-                <td class="formTableCell width15pc"><input class="width100pc" data-bind="value: bx"><span data-bind="text: bx"></span></td>
+                <td class="formTableCell width10pc">
+                    <input class="width100pc" data-bind="value: bu">
+                    <span data-bind="text: bu"></span>
+                </td>
+                <td class="formTableCell width60pc">
+                    <input class="width100pc" data-bind="value: bv">
+                    <span data-bind="text: bv"></span>
+                </td>
+                <td class="formTableCell width15pc">
+                    <input class="width100pc numeric" data-bind="value: bw">
+                    <div class="numeric printNumeric" data-bind="text: bw"></div>
+                </td>
+                <td class="formTableCell width15pc">
+                    <input class="width100pc numeric" data-bind="value: bx">
+                    <div class="numeric printNumeric" data-bind="text: bx"></div>
+                </td>
             </tr>
             <tr>
-                <td class="formTableCell width10pc"><input class="width100pc" data-bind="value: by"><span data-bind="text: by"></span></td>
-                <td class="formTableCell width60pc"><input class="width100pc" data-bind="value: bx"><span data-bind="text: bz"></span></td>
-                <td class="formTableCell width15pc"><input class="width100pc" data-bind="value: ca"><span data-bind="text: ca"></span></td>
-                <td class="formTableCell width15pc"><input class="width100pc" data-bind="value: cb"><span data-bind="text: cb"></span></td>
+                <td class="formTableCell width10pc">
+                    <input class="width100pc" data-bind="value: by">
+                    <span data-bind="text: by"></span>
+                </td>
+                <td class="formTableCell width60pc">
+                    <input class="width100pc" data-bind="value: bx">
+                    <span data-bind="text: bz"></span>
+                </td>
+                <td class="formTableCell width15pc">
+                    <input class="width100pc numeric" data-bind="value: ca">
+                    <div class="numeric printNumeric" data-bind="text: ca"></div>
+                </td>
+                <td class="formTableCell width15pc">
+                    <input class="width100pc numeric" data-bind="value: cb">
+                    <div class="numeric printNumeric" data-bind="text: cb"></div>
+                </td>
             </tr>
             <tr>
-                <td class="formTableCell width10pc"><input class="width100pc" data-bind="value: cc"><span data-bind="text: cc"></span></td>
-                <td class="formTableCell width60pc"><input class="width100pc" data-bind="value: cd"><span data-bind="text: cd"></span></td>
-                <td class="formTableCell width15pc"><input class="width100pc" data-bind="value: ce"><span data-bind="text: ce"></span></td>
-                <td class="formTableCell width15pc"><input class="width100pc" data-bind="value: cf"><span data-bind="text: cf"></span></td>
+                <td class="formTableCell width10pc">
+                    <input class="width100pc" data-bind="value: cc">
+                    <span data-bind="text: cc"></span>
+                </td>
+                <td class="formTableCell width60pc">
+                    <input class="width100pc" data-bind="value: cd">
+                    <span data-bind="text: cd"></span>
+                </td>
+                <td class="formTableCell width15pc">
+                    <input class="width100pc numeric" data-bind="value: ce">
+                    <div class="numeric printNumeric" data-bind="text: ce"></div>
+                </td>
+                <td class="formTableCell width15pc">
+                    <input class="width100pc numeric" data-bind="value: cf">
+                    <div class="numeric printNumeric" data-bind="text: cf"></div>
+                </td>
             </tr>
             </tbody>
             <tfoot style="border-bottom-style: double; height: 2em">
@@ -565,12 +658,12 @@
                     <span data-bind="text: cg"></span>
                 </td>
                 <td class="formTableFooterCell width15pc">
-                    <input class="width100pc" data-bind="value: $parent.sum(['bg','bk','bo','bs','bw','ca','ce'])">
-                    <span data-bind="text: $parent.sum(['bg','bk','bo','bs','bw','ca','ce'])"></span>
+                    <input class="width100pc numeric" data-bind="value: dx">
+                    <div class="numeric printNumeric" data-bind="text: dx"></div>
                 </td>
                 <td class="formTableFooterCell width15pc">
-                    <input class="width100pc" data-bind="value: $parent.sum(['bh','bl','bp','bt','bx','cb','cf'])">
-                    <span data-bind="text: $parent.sum(['bh','bl','bp','bt','bx','cb','cf'])"></span>
+                    <input class="width100pc numeric" data-bind="value: dy">
+                    <div class="numeric printNumeric" data-bind="text: dy"></div>
                 </td>
             </tr>
             </tfoot>
@@ -583,7 +676,6 @@
     </div>
     <div class="formRow">
         <table style="border: 1px solid black; width: 100%">
-            <thead>
             <tr style="border-top-style: double; height: 2.5em">
                 <th class="formTableHeaderCell text-center">POLICY NO.</th>
                 <th class="formTableHeaderCell text-center">EXPIRES</th>
@@ -600,65 +692,155 @@
                 <th class="formTableHeaderCell text-center">INSURES</th>
                 <th class="formTableHeaderCell text-center">PAYS</th>
             </tr>
-            </thead>
             <tbody>
             <tr>
-                <td class="formTableCell width10pc"><input class="width100pc" data-bind="value: cg"><span data-bind="text: cg"></span></td>
-                <td class="formTableCell width10pc"><input class="width100pc" data-bind="value: ch"><span data-bind="text: ch"></span></td>
-                <td class="formTableCell width40pc"><input class="width100pc" data-bind="value: ci"><span data-bind="text: ci"></span></td>
-                <td class="formTableCell width10pc"><input class="width100pc" data-bind="value: cj"><span data-bind="text: cj"></span></td>
-                <td class="formTableCell width10pc"><input class="width100pc" data-bind="value: ck"><span data-bind="text: ck"></span></td>
-                <td class="formTableCell width10pc"><input class="width100pc" data-bind="value: cl"><span data-bind="text: cl"></span></td>
-                <td class="formTableCell width10pc"><input class="width100pc" data-bind="value: cm"><span data-bind="text: cm"></span></td>
+                <td class="formTableCell width10pc">
+                    <input class="width100pc" data-bind="value: cg">
+                    <span data-bind="text: cg"></span>
+                </td>
+                <td class="formTableCell width10pc">
+                    <input class="width100pc" data-bind="value: ch">
+                    <span data-bind="text: ch"></span>
+                </td>
+                <td class="formTableCell width40pc">
+                    <input class="width100pc" data-bind="value: ci">
+                    <span data-bind="text: ci"></span>
+                </td>
+                <td class="formTableCell width10pc">
+                    <input class="width100pc numeric" data-bind="value: cj">
+                    <div class="numeric printNumeric" data-bind="text: cj"></div>
+                </td>
+                <td class="formTableCell width10pc">
+                    <input class="width100pc numeric" data-bind="value: ck">
+                    <div class="numeric printNumeric" data-bind="text: ck"></div>
+                </td>
+                <td class="formTableCell width10pc">
+                    <input class="width100pc numeric" data-bind="value: cl">
+                    <div class="numeric printNumeric" data-bind="text: cl"></div>
+                </td>
+                <td class="formTableCell width10pc">
+                    <input class="width100pc numeric" data-bind="value: cm">
+                    <div class="numeric printNumeric" data-bind="text: cm"></div>
+                </td>
             </tr>
             <tr>
-                <td class="formTableCell width10pc"><input class="width100pc" data-bind="value: cn"><span data-bind="text: cn"></span></td>
-                <td class="formTableCell width10pc"><input class="width100pc" data-bind="value: co"><span data-bind="text: co"></span></td>
-                <td class="formTableCell width40pc"><input class="width100pc" data-bind="value: cp"><span data-bind="text: cp"></span></td>
-                <td class="formTableCell width10pc"><input class="width100pc" data-bind="value: cq"><span data-bind="text: cq"></span></td>
-                <td class="formTableCell width10pc"><input class="width100pc" data-bind="value: cr"><span data-bind="text: cr"></span></td>
-                <td class="formTableCell width10pc"><input class="width100pc" data-bind="value: cs"><span data-bind="text: cs"></span></td>
-                <td class="formTableCell width10pc"><input class="width100pc" data-bind="value: ct"><span data-bind="text: ct"></span></td>
+                <td class="formTableCell width10pc">
+                    <input class="width100pc" data-bind="value: cn">
+                    <span data-bind="text: cn"></span>
+                </td>
+                <td class="formTableCell width10pc">
+                    <input class="width100pc" data-bind="value: co">
+                    <span data-bind="text: co"></span>
+                </td>
+                <td class="formTableCell width40pc">
+                    <input class="width100pc" data-bind="value: cp">
+                    <span data-bind="text: cp">
+                </span>
+                </td>
+                <td class="formTableCell width10pc">
+                    <input class="width100pc numeric" data-bind="value: cq">
+                    <div class="numeric printNumeric" data-bind="text: cq"></div>
+                </td>
+                <td class="formTableCell width10pc">
+                    <input class="width100pc numeric" data-bind="value: cr">
+                    <div class="numeric printNumeric" data-bind="text: cr"></div>
+                </td>
+                <td class="formTableCell width10pc">
+                    <input class="width100pc numeric" data-bind="value: cs">
+                    <div class="numeric printNumeric" data-bind="text: cs"></div>
+                </td>
+                <td class="formTableCell width10pc">
+                    <input class="width100pc numeric" data-bind="value: ct">
+                    <div class="numeric printNumeric" data-bind="text: ct"></div>
+                </td>
             </tr>
             <tr>
-                <td class="formTableCell width10pc"><input class="width100pc" data-bind="value: cu"><span data-bind="text: cu"></span></td>
-                <td class="formTableCell width10pc"><input class="width100pc" data-bind="value: cv"><span data-bind="text: cv"></span></td>
-                <td class="formTableCell width40pc"><input class="width100pc" data-bind="value: cw"><span data-bind="text: cw"></span></td>
-                <td class="formTableCell width10pc"><input class="width100pc" data-bind="value: cx"><span data-bind="text: cx"></span></td>
-                <td class="formTableCell width10pc"><input class="width100pc" data-bind="value: cy"><span data-bind="text: cy"></span></td>
-                <td class="formTableCell width10pc"><input class="width100pc" data-bind="value: cz"><span data-bind="text: cz"></span></td>
-                <td class="formTableCell width10pc"><input class="width100pc" data-bind="value: da"><span data-bind="text: da"></span></td>
+                <td class="formTableCell width10pc">
+                    <input class="width100pc" data-bind="value: cu">
+                    <span data-bind="text: cu"></span>
+                </td>
+                <td class="formTableCell width10pc">
+                    <input class="width100pc" data-bind="value: cv">
+                    <span data-bind="text: cv"></span>
+                </td>
+                <td class="formTableCell width40pc">
+                    <input class="width100pc" data-bind="value: cw">
+                    <span data-bind="text: cw"></span>
+                </td>
+                <td class="formTableCell width10pc">
+                    <input class="width100pc numeric" data-bind="value: cx">
+                    <div class="numeric printNumeric" data-bind="text: cx"></div>
+                </td>
+                <td class="formTableCell width10pc">
+                    <input class="width100pc numeric" data-bind="value: cy">
+                    <div class="numeric printNumeric" data-bind="text: cy"></div>
+                </td>
+                <td class="formTableCell width10pc">
+                    <input class="width100pc numeric" data-bind="value: cz">
+                    <div class="numeric printNumeric" data-bind="text: cz"></div>
+                </td>
+                <td class="formTableCell width10pc">
+                    <input class="width100pc numeric" data-bind="value: da">
+                    <div class="numeric printNumeric" data-bind="text: da"></div>
+                </td>
             </tr>
             <tr>
-                <td class="formTableCell width10pc"><input class="width100pc" data-bind="value: db"><span data-bind="text: db"></span></td>
-                <td class="formTableCell width10pc"><input class="width100pc" data-bind="value: dc"><span data-bind="text: dc"></span></td>
-                <td class="formTableCell width40pc"><input class="width100pc" data-bind="value: dd"><span data-bind="text: dd"></span></td>
-                <td class="formTableCell width10pc"><input class="width100pc" data-bind="value: de"><span data-bind="text: de"></span></td>
-                <td class="formTableCell width10pc"><input class="width100pc" data-bind="value: df"><span data-bind="text: df"></span></td>
-                <td class="formTableCell width10pc"><input class="width100pc" data-bind="value: dg"><span data-bind="text: dg"></span></td>
-                <td class="formTableCell width10pc"><input class="width100pc" data-bind="value: dh"><span data-bind="text: dh"></span></td>
+                <td class="formTableCell width10pc">
+                    <input class="width100pc" data-bind="value: db">
+                    <span data-bind="text: db"></span>
+                </td>
+                <td class="formTableCell width10pc">
+                    <input class="width100pc" data-bind="value: dc">
+                    <span data-bind="text: dc"></span>
+                </td>
+                <td class="formTableCell width40pc">
+                    <input class="width100pc" data-bind="value: dd">
+                    <span data-bind="text: dd"></span>
+                </td>
+                <td class="formTableCell width10pc">
+                    <input class="width100pc numeric" data-bind="value: de">
+                    <div class="numeric printNumeric" data-bind="text: de"></div>
+                </td>
+                <td class="formTableCell width10pc">
+                    <input class="width100pc numeric" data-bind="value: df">
+                    <div class="numeric printNumeric" data-bind="text: df"></div>
+                </td>
+                <td class="formTableCell width10pc">
+                    <input class="width100pc numeric" data-bind="value: dg">
+                    <div class="numeric printNumeric" data-bind="text: dg"></div>
+                </td>
+                <td class="formTableCell width10pc">
+                    <input class="width100pc numeric" data-bind="value: dh">
+                    <div class="numeric printNumeric" data-bind="text: dh"></div>
+                </td>
             </tr>
             </tbody>
             <tfoot style="border-bottom-style: double; height: 2em">
             <tr>
                 <td class="formTableFooterCell width10pc"><strong>Totals</strong></td>
-                <td class="formTableFooterCell width10pc"><input class="width100pc" data-bind="value: di"><span data-bind="text: di"></span></td>
-                <td class="formTableFooterCell width40pc"><input class="width100pc" data-bind="value: dj"><span data-bind="text: dj"></span></td>
                 <td class="formTableFooterCell width10pc">
-                    <input class="width100pc" data-bind="value: $parent.sum(['cj','cq','cx','de'])">
-                    <span data-bind="text: $parent.sum(['cj','cq','cx','de'])"></span>
+                    <input class="width100pc" data-bind="value: di">
+                    <span data-bind="text: di"></span>
+                </td>
+                <td class="formTableFooterCell width40pc">
+                    <input class="width100pc" data-bind="value: dj">
+                    <span data-bind="text: dj"></span>
                 </td>
                 <td class="formTableFooterCell width10pc">
-                    <input class="width100pc" data-bind="value: $parent.sum(['ck','cr','cy','df'])">
-                    <span data-bind="text: $parent.sum(['ck','cr','cy','df'])"></span>
+                    <input class="width100pc numeric" data-bind="value: dz">
+                    <div class="numeric printNumeric" data-bind="text: dz"></div>
                 </td>
                 <td class="formTableFooterCell width10pc">
-                    <input class="width100pc" data-bind="value: $parent.sum(['cl','cs','cz','dg'])">
-                    <span data-bind="text: $parent.sum(['cl','cs','cz','dg'])"></span>
+                    <input class="width100pc numeric" data-bind="value: ea">
+                    <div class="numeric printNumeric" data-bind="text: ea"></div>
                 </td>
                 <td class="formTableFooterCell width10pc">
-                    <input class="width100pc" data-bind="value: $parent.sum(['cm','ct','da','dh'])">
-                    <span data-bind="text: $parent.sum(['cm','ct','da','dh'])"></span>
+                    <input class="width100pc numeric" data-bind="value: eb">
+                    <div class="numeric printNumeric" data-bind="text: eb"></div>
+                </td>
+                <td class="formTableFooterCell width10pc">
+                    <input class="width100pc numeric" data-bind="value: ec">
+                    <div class="numeric printNumeric" data-bind="text: ec"></div>
                 </td>
             </tr>
             </tfoot>
@@ -666,20 +848,21 @@
     </div>
 
     <!-- **** Adjuster **** -->
-    <div class="formRow topMargin1pc" style="width: 50%; float: right">
+    <div class="formRow topMargin15" style="width: 50%; float: right">
         <div style="order: 1; flex-grow: 1">
             <input data-bind="value: dk"/>
             <span data-bind="text: dk"></span>
         </div>
         <div style="order: 2">Adjuster</div>
     </div>
+    <div class="clear"></div>
 
     <!-- **** RECEIPT FOR PAYMENT **** -->
-    <div class="formRow topMargin5pc bottomMargin10">
+    <div class="formRow topMargin15 bottomMargin10">
         <div style="order: 1; text-align: center; flex-grow: 1"><strong>RECEIPT FOR PAYMENT</strong></div>
     </div>
     <div class="formRow">
-        <div style="order: 1">Received of </div>
+        <div style="order: 1">Received of</div>
         <div style="order: 2; flex-grow: 1; flex-basis: 10em">
             <input data-bind="value: dl"/>
             <span data-bind="text: dl"></span>
@@ -695,7 +878,7 @@
             <input data-bind="value: dn"/>
             <span data-bind="text: dn"></span>
         </div>
-        <div style="order: 2">Dollars ($ </div>
+        <div style="order: 2">Dollars ($</div>
         <div style="order: 3; flex-grow: 0; flex-basis: 10em">
             <input data-bind="value: dp"/>
             <span data-bind="text: dp"></span>
@@ -703,7 +886,9 @@
         <div style="order: 4">)</div>
     </div>
     <div class="formRow">
-        <div style="order: 1; flex-grow: 1">in full satisfaction and indemnity for all claims and demands upon said company on account of said loss and damage and the </div>
+        <div style="order: 1; flex-grow: 1">in full satisfaction and indemnity for all claims and demands upon said
+            company on account of said loss and damage and the
+        </div>
     </div>
     <div class="formRow">
         <div style="order: 1">said policy is hereby</div>
@@ -711,11 +896,13 @@
             <input data-bind="value: dq"/>
             <span data-bind="text: dq"></span>
         </div>
-        <div style="order: 3">(State whether <strong>Reduced, Reduced and Reinstated</strong> or <strong>Canceled</strong> by payment.)</div>
+        <div style="order: 3">(State whether <strong>Reduced, Reduced and Reinstated</strong> or
+            <strong>Canceled</strong> by payment.)
+        </div>
     </div>
     <div class="formRow topMargin"></div>
 
-   <!-- The insured -->
+    <!-- The insured -->
     <div class="formRow">
         <div style="order: 1">Dated</div>
         <div style="order: 2; flex-grow: 1; flex-basis: 15em">
@@ -737,7 +924,7 @@
         The Insured
     </div>
 
-   <!-- The Mortgagee -->
+    <!-- The Mortgagee -->
     <div class="formRow">
         <div style="order: 1">Dated</div>
         <div style="order: 2; flex-grow: 1; flex-basis: 15em">

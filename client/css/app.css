@@ -123,6 +123,14 @@ div {
     margin-top: 5px;
 }
 
+.topMargin10 {
+    margin-top: 10px;
+}
+
+.topMargin15 {
+    margin-top: 15px;
+}
+
 .topMargin1pc {
     margin-top: 1%;
 }
@@ -199,6 +207,10 @@ div {
     border-bottom: 1px dotted #2d6ca2;
 }
 
+.bottomBorderForm {
+    border-bottom: 1px solid black;
+}
+
 .bottomBorder.darkGray {
     border-bottom-color: #ccc;
 }
@@ -209,6 +221,10 @@ div {
 
 .noBorder {
     border: 0;
+}
+
+.noBorderBottom {
+    border-bottom: 0;
 }
 
 .squareCorners {
@@ -1289,7 +1305,25 @@ div.hopscotch-bubble .hopscotch-bubble-arrow-container.right .hopscotch-bubble-a
 /**** Form styling ****/
 /**********************************************************/
 
+.formContainer {
+    font-family: sans-serif;
+    font-size: 14px;
+}
+
+.formContainer .finePrint {
+    font-size: 12px;
+}
+
+.formContainer .header {
+    display: none;
+}
+
 .formContainer span {
+    display: none;
+    font-size: 14px;
+}
+
+.formContainer .printNumeric {
     display: none;
 }
 
@@ -1304,10 +1338,33 @@ div.hopscotch-bubble .hopscotch-bubble-arrow-container.right .hopscotch-bubble-a
     font-weight: normal;
     line-height: 20px;
     min-height: 20px;
-    margin-right: 3px;
+    padding-left: 5px;
 }
 
 @media print {
+    @page {
+        size: letter;
+        margin-left: .25in;
+        margin-right: .25in;
+        margin-bottom: .25in;
+        margin-top: .25in;
+    }
+
+    .formContainer {
+        font-family: sans-serif;
+        font-size: 12px;
+    }
+
+    .formContainer .finePrint {
+        font-size: 11.5px;
+    }
+
+    .formContainer .header {
+        display: inherit;
+        font-weight: bold;
+        font-size: 18px;
+    }
+
     .formContainer input {
         display: none;
     }
@@ -1318,12 +1375,22 @@ div.hopscotch-bubble .hopscotch-bubble-arrow-container.right .hopscotch-bubble-a
         border: none;
         box-shadow: none;
         border-bottom: 1px solid darkgrey;
-        font-family: Lato, sans-serif;
-        font-size: 14px;
+        font-size: 12px;
         font-weight: normal;
-        line-height: 20px;
-        min-height: 20px;
-        margin-right: 3px;
+        line-height: 17px;
+        min-height: 17px;
+        padding-left: 5px;
+    }
+
+    .formContainer .printNumeric {
+        display: inline-flex;
+        border: none;
+        box-shadow: none;
+        font-size: 12px;
+        font-weight: normal;
+        line-height: 17px;
+        min-height: 17px;
+        padding-left: 5px;
     }
 }
 
@@ -1331,12 +1398,6 @@ div.hopscotch-bubble .hopscotch-bubble-arrow-container.right .hopscotch-bubble-a
     display: flex;
     flex-direction: row;
     min-height: 1em;
-}
-
-.formRowCentered {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
 }
 
 .formColumn {
@@ -1354,10 +1415,57 @@ div.hopscotch-bubble .hopscotch-bubble-arrow-container.right .hopscotch-bubble-a
     font-weight: 800;
 }
 
+/************ Form table *************/
+
 .formTableCell {
     padding: 0;
     border: none;
+    /* Apply bottom border on the cell */
     border-right: 1px solid black;
+    border-bottom: 1px solid black;
+    line-height: 30px;
+}
+
+.formTableCell input {
+    border-bottom: none;
+}
+
+.formTableCell span {
+    border-bottom: none;
+}
+
+.formTableCell div {
+    border-bottom: none;
+}
+
+.formTableFooterCell input {
+    border-bottom: none;
+}
+
+.formTableFooterCell span {
+    border-bottom: none;
+}
+
+.formTableFooterCell div {
+    border-bottom: none;
+}
+
+.formTableCell .numeric {
+    text-align: right;
+    padding-right: 5px;
+    float: right;
+}
+
+.formTableFooterCell .numeric {
+    text-align: right;
+    padding-right: 5px;
+    float: right;
+}
+
+.formRowCentered {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
 }
 
 .formTableHeaderCell {
@@ -1372,6 +1480,8 @@ div.hopscotch-bubble .hopscotch-bubble-arrow-container.right .hopscotch-bubble-a
     border: none;
     border-right: 1px solid black;
 }
+
+/********************************/
 
 .width3pc {
     width: 3%;

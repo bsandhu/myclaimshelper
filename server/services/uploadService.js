@@ -4,6 +4,8 @@ let ObjectUtils = require('./../shared/objectUtils.js');
 let FileMetadata = require('./../model/fileMetadata.js');
 let GridStore = require('mongodb').GridStore;
 let jQuery = require('jquery-deferred');
+let _ = require('underscore');
+
 
 /**
  *  The uploaded file is in the form of multi part form data
@@ -47,27 +49,27 @@ function downloadFile(req, res) {
 
     jQuery
         .when(getFileMetadata(id), readFromDB(id))
-        .done(streamFileToClient)
+        .done(_.partial(streamFileToClient, res))
         .fail(function (err) {
             res.writeHead(500, {'content-type': 'text/plain'});
             res.write('Error');
             res.end();
         });
+}
 
-    function streamFileToClient(fileMeta, stream) {
-        res.writeHead(200, {
-            'Content-type': fileMeta.contentType,
-            'Content-Disposition': 'attachment; filename="' + fileMeta.filename + '"'
-        });
-        stream.on('data',
-            function sendToClient(chunk) {
-                res.write(chunk);
-            }
-        );
-        stream.on('end', function () {
-            res.end();
-        });
-    }
+function streamFileToClient(res, fileMeta, stream) {
+    res.writeHead(200, {
+        'Content-type': fileMeta.contentType,
+        'Content-Disposition': 'attachment; filename="' + fileMeta.filename + '"'
+    });
+    stream.on('data',
+        function sendToClient(chunk) {
+            res.write(chunk);
+        }
+    );
+    stream.on('end', function () {
+        res.end();
+    });
 }
 
 /******************************************************/
@@ -172,3 +174,4 @@ exports.uploadFile = uploadFile;
 exports.downloadFile = downloadFile;
 exports.saveToDB = saveToDB;
 exports.readFromDB = readFromDB;
+exports.streamFileToClient = streamFileToClient;

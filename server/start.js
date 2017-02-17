@@ -18,6 +18,7 @@ let entityExtractionService = require('./services/entityExtractionService.js');
 let notificationService = require('./services/notificationService.js');
 let statsService = require('./services/statsService');
 let configservice = require('./services/configService');
+let pdfService = require('./services/pdfService.js');
 
 let processMail = require('./services/mail/mailHandler.js').process;
 let mongoUtils = require('./mongoUtils.js');
@@ -146,6 +147,9 @@ function setupClaimsServiceRoutes() {
 
     server.post('/upload', uploadService.uploadFile);
     server.get('/download', uploadService.downloadFile);
+
+    server.post('/convertToPdf', pdfService.convertToPdf);
+    server.post('/emailPdf', pdfService.emailPdf);
 
     server.post('/extract/entity', authenticate, entityExtractionService.extract);
     server.get('/refData/:type', authenticate, refDataService.getRefData);

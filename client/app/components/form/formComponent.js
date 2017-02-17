@@ -149,27 +149,65 @@ define(['knockout', 'KOMap', 'jquery', 'underscore', 'bootbox',
             return defer;
         }
 
+        FormsComponentVM.prototype.onEmail = function (claimId) {
+            let htmlContent = $('#claimFormPrintContainer')[0].innerHTML;
+
+            let url = '/emailForm';
+            let params = {htmlContent: $('<div>').text(htmlContent).html()};
+
+            $.when($.get("/css/app.css"))
+                .then(css => {
+                        ajaxUtils.post(
+                            '/emailPdf',
+                            JSON.stringify({htmlContent: '<style>' + css + '</style>' + htmlContent}),
+                            () => {
+                                alert('Done')
+                            }
+                        )
+                    }
+                );
+        }
+
+        FormsComponentVM.prototype.onConvertToPdf = function (claimId) {
+            let htmlContent = $('#claimFormPrintContainer')[0].innerHTML;
+
+            let url = '/emailPdf';
+            let params = {htmlContent: $('<div>').text(htmlContent).html()};
+
+            $.when($.get("/css/app.css"))
+                .then(css => {
+                    let form = $('<form method="POST" action="' + url + '">');
+                    $('<input>')
+                        .attr('type', 'hidden')
+                        .attr('name', 'htmlContent')
+                        .val('<style>' + css + '</style>' + htmlContent)
+                        .appendTo(form);
+                    $('body').append(form);
+                    form.submit();
+                })
+        }
+
         FormsComponentVM.prototype.printForm = function (claimId) {
             $('#print-template').html(proofOfLossTmpl);
             let container = document.createElement("div");
             let _this = this;
 
-                        // Add frame
-                        let frame = document.createElement('iframe');
-                        document.body.appendChild(frame);
+            // Add frame
+            let frame = document.createElement('iframe');
+            document.body.appendChild(frame);
 
-                        // Print
-                        let frameContent = frame.contentWindow;
-                        frameContent.document.open();
-                        frameContent.document.write('<head><link rel=stylesheet href=../../css/app.css type=text/css ></head>');
-                        frameContent.document.write('<head><link rel=stylesheet href=../../css/formPrint.css type=text/css ></head>');
-                        frameContent.document.write($('#claimFormPrintContainer')[0].innerHTML);
-                        frameContent.document.close();
-                        setTimeout(function afterFrameRender() {
-                            frameContent.focus();
-                            frameContent.print();
-                            document.body.removeChild(frame);
-                        }, 500);
+            // Print
+            let frameContent = frame.contentWindow;
+            frameContent.document.open();
+            frameContent.document.write('<head><link rel=stylesheet href=../../css/app.css type=text/css ></head>');
+            frameContent.document.write('<head><link rel=stylesheet href=../../css/formPrint.css type=text/css ></head>');
+            frameContent.document.write($('#claimFormPrintContainer')[0].innerHTML);
+            frameContent.document.close();
+            setTimeout(function afterFrameRender() {
+                frameContent.focus();
+                frameContent.print();
+                document.body.removeChild(frame);
+            }, 500);
             Audit.info('Print' + this.activeFormTmplNames, {});
         }
 
