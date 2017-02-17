@@ -171,7 +171,7 @@ define(['knockout', 'KOMap', 'jquery', 'underscore', 'bootbox',
         FormsComponentVM.prototype.onConvertToPdf = function (claimId) {
             let htmlContent = $('#claimFormPrintContainer')[0].innerHTML;
 
-            let url = '/emailPdf';
+            let url = '/convertToPdf';
             let params = {htmlContent: $('<div>').text(htmlContent).html()};
 
             $.when($.get("/css/app.css"))
