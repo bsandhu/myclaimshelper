@@ -36,8 +36,7 @@ function convertToPdf(req, res) {
     let fileName = req.params.formName;
 
     conversion = convertFactory({
-        converterPath: convertFactory.converters.PDF,
-        strategy: 'electron-server'
+        converterPath: convertFactory.converters.PDF
     });
     conversion(
         PDF_PARAMS(html),
@@ -56,8 +55,11 @@ function convertToPdf(req, res) {
 
 function emailPdf(req, res) {
     assert.ok(req.params.htmlContent, 'Expecting htmlContent as a parameter');
-    console.log('Converting to pdf..');
+    assert.ok(req.params.email, 'Expecting email as a parameter');
+
     let html = req.params.htmlContent;
+    let email = req.params.email;
+    console.log('Email with pdf.. ' + JSON.stringify(email));
 
     conversion = convertFactory({
         converterPath: convertFactory.converters.PDF
@@ -70,21 +72,17 @@ function emailPdf(req, res) {
             }
             console.log("Converted to Pdf. Pages: " + result.numberOfPages);
             let inStream = result.stream;
-            let writer = fs.createWriteStream('/tmp/foo.pdf');
-            inStream.pipe(writer);
+            let outStream = fs.createWriteStream('/tmp/' + email.attachments[0].name);
+            inStream.pipe(outStream);
             inStream.on('end', () => {
-                writer.end();
-                sendEmailViaMailgun().then(res.end());
+                //outStream.end();
+                sendEmailViaMailgun(email).then(res.end());
             })
         });
 }
 
-function sendEmailViaMailgun(recipient, subject, header, body) {
-    // let compiled = _.template(emailTemplate);
-    // header = lodash.trim(header, '"');
-    // body = lodash.trim(body, '"');
-    // let htmlBody = compiled({header: header, body: body});
-
+function sendEmailViaMailgun(email) {
+    console.log('Emailing pdf');
     let defer = jQuery.Deferred();
 
     let mailgun = new Mailgun({
@@ -92,13 +90,13 @@ function sendEmailViaMailgun(recipient, subject, header, body) {
         domain: config.mailgun.domain
     });
     let data = {
-        from: 'baljeet.mail@gmail.com',
-        to: 'baljeet.mail@gmail.com',
-        subject: 'Emailing pdf',
-        text: 'Testing some Mailgun awesomness!',
-        attachment: path.join('/tmp', 'foo.pdf')
+        from: email.from,
+        to: email.to,
+        bcc: email.cc,
+        subject: email.subject,
+        text: email.body || 'Document attached',
+        attachment: path.join('/tmp', email.attachments[0].name)
     };
-    console.log('Emailing pdf');
     mailgun.messages().send(data, function (error, body) {
         console.log(data);
         if (error) {

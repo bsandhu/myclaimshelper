@@ -24,8 +24,8 @@
             <div class="pull-right">
                 <a href="javascript:void(0);"
                    class="btn btn-default ghost-button pull-right hidden-xs"
-                   style="top: -5px; position: relative;"
-                   data-bind="click: onEmail">
+                   data-toggle="modal" data-target="#emailFormModal"
+                   style="top: -5px; position: relative;">
                     <span class="btn-label"><i class="fa fa-envelope"></i></span> E-mail
                 </a>
             </div>
@@ -42,7 +42,8 @@
             <button id="claim-form-close"
                     type="button"
                     class="btn btn-default pull-right"
-                    data-bind="click: onClose">Close</button>
+                    data-bind="click: onClose">Close
+            </button>
 
             <button type="button" class="btn btn-info pull-right leftMargin2pc rightMargin5"
                     data-bind="click: onSave">Save
@@ -50,3 +51,58 @@
         </div>
     </div>
 </div>
+
+<!-- ************************************************************ -->
+<!--Email Modal-->
+<!-- ************************************************************ -->
+<div class="modal modal-lg fade centered" role="dialog" tabindex="-1" id="emailFormModal"
+     data-bind="if: readyToRender">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <!-- Header -->
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">Compose Email</h4>
+            </div>
+
+            <!-- Body -->
+            <div class="modal-body">
+
+                <div>
+                    <div class="row bottomMargin5">
+                        <div class="col-md-10">
+                            <input class="form-control wider input-sm" placeholder="From" data-bind="value: email().from">
+                        </div>
+                    </div>
+                    <div class="row bottomMargin5">
+                        <div class="col-md-10">
+                            <input class="form-control wider input-sm" placeholder="To" data-bind="value: email().to">
+                        </div>
+                    </div>
+                    <div class="row bottomMargin5">
+                        <div class="col-md-10">
+                            <input class="form-control wider input-sm" placeholder="Subject" data-bind="value: email().subject">
+                        </div>
+                    </div>
+                    <div class="row topMargin5">
+                        <div class="col-md-10">
+                            <textarea class="form-control widest" placeholder="Message"
+                                      data-bind="value: email().body"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Footer -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"
+                            data-bind="click: onEmail">Send</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!--End modal-->

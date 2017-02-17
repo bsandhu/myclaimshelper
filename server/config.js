@@ -18,7 +18,7 @@ config.send_success_email_reply = process.env.SEND_SUCCESS_EMAIL_REPLY || false;
 config.send_failure_email_reply = (process.env.SEND_FAILURE_EMAIL_REPLY || true) && true;
 
 config.LOCAL.use_ssl = false;
-config.TEST.use_ssl = true;
+config.TEST.use_ssl = false;
 config.PROD.use_ssl = true;
 config.use_ssl = config[config.env]['use_ssl'];
 

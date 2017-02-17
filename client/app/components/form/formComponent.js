@@ -1,12 +1,12 @@
 define(['knockout', 'KOMap', 'jquery', 'underscore', 'bootbox',
         'amplify', 'app/utils/events', 'app/utils/ajaxUtils', 'app/utils/router',
         'shared/objectUtils', 'app/utils/audit', 'app/utils/session',
-        'model/form',
+        'model/form', 'model/email',
         'text!app/components/form/proofOfLoss.tmpl.html',
         'text!app/components/form/anotherForm.tmpl.html',
         'text!app/components/form/formComponent.tmpl.html'],
     function (ko, KOMap, $, _, bootbox, amplify, Events, ajaxUtils, Router, ObjectUtils, Audit, Session,
-              Form, proofOfLossTmpl, anotherForm, viewHtml) {
+              Form, Email, proofOfLossTmpl, anotherForm, viewHtml) {
         'use strict';
 
         function FormsComponentVM(params) {
@@ -17,7 +17,7 @@ define(['knockout', 'KOMap', 'jquery', 'underscore', 'bootbox',
             this.readyToRender = ko.observable(false);
             this.activeFormTmpl = ko.observable('');
             this.form = ko.observable(KOMap.fromJS(new Form()));
-
+            this.email = ko.observable(KOMap.fromJS(new Email()));
             this.setupEvListeners();
         }
 
@@ -54,15 +54,23 @@ define(['knockout', 'KOMap', 'jquery', 'underscore', 'bootbox',
         FormsComponentVM.prototype.initFormTmpl = function () {
             if (this.form().type() == 'proofOfLoss') {
                 this.activeFormTmpl(proofOfLossTmpl);
+                this.email().attachments([{name: 'ProofOfLoss.pdf'}]);
+                this.email().subject('Sending ProofOfLoss');
             }
             if (this.form().type() == 'anotherForm') {
                 this.activeFormTmpl(anotherForm);
+                this.email().attachments([{name: 'ProofOfLoss.pdf'}]);
+                this.email().subject('Sending ProofOfLoss');
             }
         }
 
         FormsComponentVM.prototype.setupEvListeners = function () {
             amplify.subscribe(Events.SHOW_CLAIM_FORM, this, this.onShowClaimForm);
             amplify.subscribe(Events.CREATE_NEW_FORM, this, this.onNewClaimForm);
+            amplify.subscribe(Events.LOADED_USER_PROFILE, this, function () {
+                this.email().from(Session.getCurrentUserProfile().contactInfo.email);
+                this.email().cc(Session.getCurrentUserProfile().contactInfo.email);
+            });
         }
 
         FormsComponentVM.prototype.onShowClaimForm = function (evData) {
@@ -151,15 +159,16 @@ define(['knockout', 'KOMap', 'jquery', 'underscore', 'bootbox',
 
         FormsComponentVM.prototype.onEmail = function (claimId) {
             let htmlContent = $('#claimFormPrintContainer')[0].innerHTML;
-
             let url = '/emailForm';
-            let params = {htmlContent: $('<div>').text(htmlContent).html()};
+            let _this = this;
 
             $.when($.get("/css/app.css"))
                 .then(css => {
                         ajaxUtils.post(
                             '/emailPdf',
-                            JSON.stringify({htmlContent: '<style>' + css + '</style>' + htmlContent}),
+                            JSON.stringify({
+                                htmlContent: '<style>' + css + '</style>' + htmlContent,
+                                email: KOMap.toJS(_this.email())}),
                             () => {
                                 alert('Done')
                             }
