@@ -8,11 +8,16 @@ rsync -rvzhe ssh --exclude '*node_modules' --exclude '.git*' --delete .  root@45
 ssh root@45.55.192.142 chmod 777 /root/myclaimshelper/*.sh
 
 echo""
-echo "*** Done ***"
+echo "*** Finished rsync ***"
 echo""
+echo "*** Killing any rouge Electron ***"
+ssh root@45.55.192.142 'pkill -ef --signal 9 "electron"'
+echo""
+
 echo "*** Killing Node ***"
-ssh root@45.55.192.142 kill $(ps -ef | grep '[s]erver/start.js' | awk '{print $2}')
+ssh root@45.55.192.142 'pkill -ef --signal 9 "node ./server/start.js"'
 echo""
+
 echo "*** Starting Node ***"
 ssh root@45.55.192.142 'cd ~/myclaimshelper;sudo npm update;./startTest.sh'
 

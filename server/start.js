@@ -272,13 +272,10 @@ function setupBroadcastListener() {
 /*********************************************************/
 /* End of Push notifications */
 /*********************************************************/
-let ElectronPDF = require('electron-pdf')
-let exporter = new ElectronPDF()
 
 function startServer() {
     server.listen(config.port, function () {
         console.log('%s listening at %s', server.name, server.url);
-        exporter.start()
     });
 }
 

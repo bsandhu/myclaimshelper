@@ -16,7 +16,8 @@ let addOwnerInfo = mongoUtils.addOwnerInfo;
 let sendResponse = serviceUtils.sendResponse;
 let jQuery = require('jquery-deferred');
 
-function PDF_PARAMS(html) {
+
+function PDF_DOC_PARAMS(html) {
     return {
         html: html,
         pdf: {
@@ -28,6 +29,13 @@ function PDF_PARAMS(html) {
     }
 };
 
+function CONVERTER_PARAMS() {
+    return {
+        converterPath: convertFactory.converters.PDF,
+        strategy: 'dedicated-process'
+    };
+}
+
 function convertToPdf(req, res) {
     assert.ok(req.params.htmlContent, 'Expecting htmlContent as a parameter');
     assert.ok(req.params.formName, 'Expecting formName as a parameter');
@@ -35,11 +43,9 @@ function convertToPdf(req, res) {
     let html = req.params.htmlContent;
     let fileName = req.params.formName;
 
-    conversion = convertFactory({
-        converterPath: convertFactory.converters.PDF
-    });
+    conversion = convertFactory(CONVERTER_PARAMS());
     conversion(
-        PDF_PARAMS(html),
+        PDF_DOC_PARAMS(html),
         function (err, result) {
             if (err) {
                 return console.error(err);
@@ -61,11 +67,9 @@ function emailPdf(req, res) {
     let email = req.params.email;
     console.log('Email with pdf.. ' + JSON.stringify(email));
 
-    conversion = convertFactory({
-        converterPath: convertFactory.converters.PDF
-    });
+    conversion = convertFactory(CONVERTER_PARAMS());
     conversion(
-        PDF_PARAMS(html),
+        PDF_DOC_PARAMS(html),
         function (err, result) {
             if (err) {
                 return console.error(err);
@@ -75,7 +79,6 @@ function emailPdf(req, res) {
             let outStream = fs.createWriteStream('/tmp/' + email.attachments[0].name);
             inStream.pipe(outStream);
             inStream.on('end', () => {
-                //outStream.end();
                 sendEmailViaMailgun(email).then(res.end());
             })
         });

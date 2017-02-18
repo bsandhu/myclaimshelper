@@ -14,4 +14,4 @@ export PORT=80
 export ENV=TEST
 echo 'Starting TEST ENV on Port 80'
 
-node ./server/start.js &1>server.out &
+node ./server/start.js 1>>server.out 2>>server.err &
