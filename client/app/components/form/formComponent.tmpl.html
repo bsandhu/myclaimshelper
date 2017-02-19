@@ -53,10 +53,13 @@
 </div>
 
 <!-- ************************************************************ -->
-<!--Email Modal-->
+<!-- Email Modal -->
 <!-- ************************************************************ -->
-<div class="modal modal-lg fade centered" role="dialog" tabindex="-1" id="emailFormModal"
-     data-bind="if: readyToRender">
+<div class="modal modal-lg fade"
+     role="dialog"
+     tabindex="-1" id="emailFormModal"
+     data-bind="if: readyToRender"
+     style="margin: auto; top:20%">
     <div class="modal-dialog">
         <div class="modal-content">
 
@@ -65,40 +68,82 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
-                <h4 class="modal-title">Compose Email</h4>
+                <h4 class="modal-title"
+                    data-bind="text: 'Emailing ' + ObjectUtils.camelcaseToSpaces(form().type())"></h4>
             </div>
 
             <!-- Body -->
             <div class="modal-body">
 
-                <div>
+                <div class="bottomMargin10">
                     <div class="row bottomMargin5">
                         <div class="col-md-10">
-                            <input class="form-control wider input-sm" placeholder="From" data-bind="value: email().from">
+                            <div style="display: flex;flex-direction: row;">
+                                <div style="flex-basis: 5em;text-align: end;" class="rightMargin2pc control-label">
+                                    <i class="fa fa-user rightMargin" style="opacity: .85;"></i>
+                                    From
+                                </div>
+                                <div style="flex-grow: 1">
+                                    <span data-bind="text: email().from"></span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="row bottomMargin5">
                         <div class="col-md-10">
-                            <input class="form-control wider input-sm" placeholder="To" data-bind="value: email().to">
+                            <div style="display: flex;flex-direction: row;">
+                                <div style="flex-basis: 5em;text-align: end;" class="rightMargin2pc control-label">
+                                    <i class="fa fa-user rightMargin" style="opacity: .85;"></i>
+                                    To
+                                </div>
+                                <div style="flex-grow: 1">
+                                    <input class="form-control input-sm"
+                                           data-bind="value: email().to">
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="row bottomMargin5">
                         <div class="col-md-10">
-                            <input class="form-control wider input-sm" placeholder="Subject" data-bind="value: email().subject">
+                            <div style="display: flex;flex-direction: row;">
+                                <div style="flex-basis: 5em;text-align: end;" class="rightMargin2pc control-label">
+                                    Subject
+                                </div>
+                                <div style="flex-grow: 1">
+                                    <input class="form-control input-sm"
+                                           data-bind="value: email().subject">
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="row topMargin5">
-                        <div class="col-md-10">
-                            <textarea class="form-control widest" placeholder="Message"
-                                      data-bind="value: email().body"></textarea>
+                        <div class="col-md-12">
+                            <div style="display: flex;flex-direction: row;">
+                                <div style="flex-basis: 5em;text-align: end;" class="rightMargin2pc control-label">
+                                    Message
+                                </div>
+                                <div style="flex-grow: 1">
+                                    <textarea class="form-control"
+                                              rows="10"
+                                              data-bind="value: email().body"></textarea>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Footer -->
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal"
-                            data-bind="click: onEmail">Send</button>
+                    <div class="pull-left">
+                        <span class="control-label">Attachment:</span>
+                        <span data-bind="text: ObjectUtils.camelcaseToSpaces(form().type()) + '.pdf'"></span>
+                    </div>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                        Cancel
+                    </button>
+                    <button type="button" class="btn btn-info" data-dismiss="modal"
+                            data-bind="click: onEmail">Send Email
+                    </button>
                 </div>
             </div>
 

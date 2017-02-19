@@ -85,6 +85,8 @@ function changeToUserProfileSchema() {
                         profile.isClaimNoteEnabled = true;
                         profile.isClaimClaimantEnabled = true;
                         profile.isClaimDtEnabled = true;
+                        profile.isClaimCoverageEnabled = true;
+                        profile.isClaimCloseEnabled = true;
                         delete profile.isClaimDatesEnabled;
 
                         return mongoUtils.saveOrUpdateEntity(profile, mongoUtils.USERPROFILE_COL_NAME, false);

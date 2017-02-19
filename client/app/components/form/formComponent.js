@@ -168,9 +168,15 @@ define(['knockout', 'KOMap', 'jquery', 'underscore', 'bootbox',
                             '/emailPdf',
                             JSON.stringify({
                                 htmlContent: '<style>' + css + '</style>' + htmlContent,
-                                email: KOMap.toJS(_this.email())}),
-                            () => {
-                                alert('Done')
+                                email: KOMap.toJS(_this.email())
+                            }),
+                            function onSuccess(resp) {
+                                alert('ok')
+                            },
+                            function onFailure(resp) {
+                                amplify.publish(
+                                    Events.FAILURE_NOTIFICATION,
+                                    {msg: "<strong> Failed to email form - " + resp.responseJSON.Details + "</strong><br/>"});
                             }
                         )
                     }

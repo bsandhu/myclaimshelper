@@ -69,7 +69,7 @@ define(['jquery', 'underscore', 'amplify', 'knockout', 'KOMap',
 
                     let comboArrow = document.createElement('div');
                     $(comboArrow).addClass('inline');
-                    $(comboArrow).html('<a href="#"><i class="fa fa-sort-desc" style="top: -5px; position: relative"></i></a>');
+                    $(comboArrow).html('<a href="#" tabindex="-1"><i class="fa fa-sort-desc" style="top: -5px; position: relative"></i></a>');
                     $(comboArrow).click(function () {
                         if (autoCompleteOpen) {
                             $(element).autocomplete("close");

@@ -199,31 +199,49 @@
                                             <div data-bind="text: userProfile.contactInfo.streetAddress"></div>
                                             <div data-bind="text: userProfile.contactInfo.city() + ' ' + userProfile.contactInfo.zip()"></div>
                                             <div data-bind="text: userProfile.contactInfo.phone"></div>
+                                            <div data-bind="text: userProfile.contactInfo.email"></div>
 
                                             <!-- Feature flags -->
                                             <div class="topMargin5 sub-heading bottomBorderDashed">Features</div>
                                             <div class="row topMargin">
                                                 <div class="col-sm-12">
-                                                    <span class="col-sm-5">Enable billing</span>
+                                                    <span class="col-sm-5 text-right">Enable billing</span>
                                                     <span data-bind="text: userProfile.isBillingEnabled() ? 'Yes' : 'No'"></span>
                                                 </div>
                                             </div>
                                             <div class="row">
                                                 <div class="col-sm-12">
-                                                    <span class="col-sm-5">Show Note on claim</span>
+                                                    <div class="col-sm-5 sub-heading">Claim</div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-sm-12">
+                                                    <span class="col-sm-5 text-right">Show Note</span>
                                                     <span data-bind="text: userProfile.isClaimNoteEnabled() ? 'Yes' : 'No'"></span>
                                                 </div>
                                             </div>
                                             <div class="row">
                                                 <div class="col-sm-12">
-                                                    <span class="col-sm-5">Show Claimant on Claim</span>
+                                                    <span class="col-sm-5 text-right">Show Claimant</span>
                                                     <span data-bind="text: userProfile.isClaimClaimantEnabled() ? 'Yes' : 'No'"></span>
                                                 </div>
                                             </div>
                                             <div class="row">
                                                 <div class="col-sm-12">
-                                                    <span class="col-sm-5">Show Dates on Claim</span>
+                                                    <span class="col-sm-5 text-right">Show Dates</span>
                                                     <span data-bind="text: userProfile.isClaimDtEnabled() ? 'Yes' : 'No'"></span>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-sm-12">
+                                                    <span class="col-sm-5 text-right">Show policy cov.</span>
+                                                    <span data-bind="text: userProfile.isClaimCoverageEnabled() ? 'Yes' : 'No'"></span>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-sm-12">
+                                                    <span class="col-sm-5 text-right">Allow closing Claim</span>
+                                                    <span data-bind="text: userProfile.isClaimCloseEnabled() ? 'Yes' : 'No'"></span>
                                                 </div>
                                             </div>
                                         </div>
@@ -248,7 +266,7 @@
                                                        placeholder="City"
                                                        data-bind="value: userProfile.contactInfo.city"/>
                                             </div>
-                                            <div class="col-md-5 col-sm-5 col-xs-5 bottomMargin noPadding">
+                                            <div class="col-md-3 col-sm-4 col-xs-4 bottomMargin noPadding leftMargin">
                                                 <input class="form-control"
                                                        placeholder="Zip"
                                                        data-bind="value: userProfile.contactInfo.zip"/>
@@ -258,34 +276,53 @@
                                                        placeholder="Phone"
                                                        data-bind="value: userProfile.contactInfo.phone"/>
                                             </div>
+                                            <div class="col-md-8 col-sm-8 col-xs-10 bottomMargin noPadding">
+                                                <input class="form-control"
+                                                       placeholder="Email"
+                                                       data-bind="value: userProfile.contactInfo.email"/>
+                                            </div>
 
                                             <!-- Features -->
                                             <div class="col-md-10 col-sm-10 col-xs-10 noPadding bottomMargin flexRowCenter">
-                                                <div style="flex-basis: 13em">Enable billing</div>
+                                                <div style="flex-basis: 13em; text-align: end" class="rightMargin2pc">Enable billing</div>
                                                 <div>
                                                     <input type="checkbox"
                                                            data-bind="checked: userProfile.isBillingEnabled"/>
                                                 </div>
                                             </div>
                                             <div class="col-md-10 col-sm-10 col-xs-10 noPadding bottomMargin flexRowCenter">
-                                                <div style="flex-basis: 13em">Show Note on claim</div>
+                                                <div style="flex-basis: 13em; text-align: end" class="rightMargin2pc">Show Note on claim</div>
                                                 <div>
                                                     <input type="checkbox"
                                                            data-bind="checked: userProfile.isClaimNoteEnabled"/>
                                                 </div>
                                             </div>
                                             <div class="col-md-10 col-sm-10 col-xs-10 noPadding bottomMargin flexRowCenter">
-                                                <div style="flex-basis: 13em">Show Claimant on claim</div>
+                                                <div style="flex-basis: 13em; text-align: end" class="rightMargin2pc">Show Claimant on claim</div>
                                                 <div>
                                                     <input type="checkbox"
                                                            data-bind="checked: userProfile.isClaimClaimantEnabled"/>
                                                 </div>
                                             </div>
                                             <div class="col-md-10 col-sm-10 col-xs-10 noPadding bottomMargin flexRowCenter">
-                                                <div style="flex-basis: 13em">Show Dates on Claim</div>
+                                                <div style="flex-basis: 13em; text-align: end" class="rightMargin2pc">Show Dates on Claim</div>
                                                 <div>
                                                     <input type="checkbox"
                                                            data-bind="checked: userProfile.isClaimDtEnabled"/>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-10 col-sm-10 col-xs-10 noPadding bottomMargin flexRowCenter">
+                                                <div style="flex-basis: 13em; text-align: end" class="rightMargin2pc">Show policy cov. on Claim</div>
+                                                <div>
+                                                    <input type="checkbox"
+                                                           data-bind="checked: userProfile.isClaimCoverageEnabled"/>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-10 col-sm-10 col-xs-10 noPadding bottomMargin flexRowCenter">
+                                                <div style="flex-basis: 13em; text-align: end" class="rightMargin2pc">Allow closing</div>
+                                                <div>
+                                                    <input type="checkbox"
+                                                           data-bind="checked: userProfile.isClaimCloseEnabled"/>
                                                 </div>
                                             </div>
                                         </div>

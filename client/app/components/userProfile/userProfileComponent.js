@@ -197,10 +197,13 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox',
                 'contactInfo.city': this.userProfile.contactInfo.city(),
                 'contactInfo.zip': this.userProfile.contactInfo.zip(),
                 'contactInfo.phone': this.userProfile.contactInfo.phone(),
+                'contactInfo.email': this.userProfile.contactInfo.email(),
                 'isBillingEnabled': this.userProfile.isBillingEnabled(),
                 'isClaimNoteEnabled': this.userProfile.isClaimNoteEnabled(),
                 'isClaimClaimantEnabled': this.userProfile.isClaimClaimantEnabled(),
-                'isClaimDtEnabled': this.userProfile.isClaimDtEnabled()
+                'isClaimDtEnabled': this.userProfile.isClaimDtEnabled(),
+                'isClaimCoverageEnabled': this.userProfile.isClaimCoverageEnabled(),
+                'isClaimCloseEnabled': this.userProfile.isClaimCloseEnabled()
             };
 
             AjaxUtils.post(

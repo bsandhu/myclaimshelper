@@ -22,6 +22,36 @@
         <div data-bind="ifnot: inEditMode">
             <div data-bind="ifnot: isPartiallyCollapsed">
 
+                <!-- Insured -->
+                <div class="row bottomMargin5">
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                        <strong>Insured</strong>
+                    </div>
+                </div>
+                <div class="row">
+                    <div data-bind="foreach: {data: claim().contacts(), as: 'contactInfo'}">
+                        <div data-bind="if: contactInfo.category() == 'Insured'">
+                            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+                                <div class="row bottomMargin5">
+                                    <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
+                                        <span data-bind="text: contactInfo.subCategory"></span>
+                                    </div>
+                                    <div class="col-lg-4 col-md-5 col-sm-4 col-xs-4">
+                                        <a href=""
+                                           data-bind="click: function(){$parent.onShowContact(contactInfo.contact)}">
+                                            <span data-bind="text: $parent.niceName(contactInfo.contact)"></span>
+                                        </a>
+                                    </div>
+                                    <div class="col-lg-4 col-md-5 col-sm-4 col-xs-4">
+                                        <span data-bind="text: contactInfo.contact.phone"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="bottomMargin5 topMargin5 bottomBorderDashed"></div>
+
                 <!-- Loss location/type/dateOfLoss -->
                 <div class="row">
                     <div class="col-lg-10 col-md-10 col-sm-12 col-xs-12">
@@ -42,9 +72,10 @@
                               data-bind="text: DateUtils.niceDate(claim().dateOfLoss ? claim().dateOfLoss() : '')"></span>
                     </div>
                 </div>
-                <div class="bottomMargin5 bottomBorderDashed"></div>
+                <div class="bottomMargin5 topMargin5 bottomBorderDashed"></div>
 
-                <!-- Description -->
+                <!-- Notes -->
+                <!-- ko if: Session.getCurrentUserProfile().isClaimNoteEnabled -->
                 <div class="row">
                     <div class="col-lg-10 col-md-10 col-sm-12 col-xs-12">
                         <div class="col-lg-1 col-md-1 col-sm-1 col-xs-2 noPadding">
@@ -55,9 +86,11 @@
                         </div>
                     </div>
                 </div>
-                <div class="bottomMargin5 bottomBorderDashed"></div>
+                <div class="bottomMargin5 topMargin5 bottomBorderDashed"></div>
+                <!-- /ko -->
 
                 <!-- Dates -->
+                <!-- ko if: Session.getCurrentUserProfile().isClaimDtEnabled -->
                 <div class="row">
                     <div class="col-lg-3 col-md-4 col-sm-6 col-xs-6">
                         <strong>Received</strong>
@@ -69,7 +102,8 @@
                         <span class="leftMargin5"
                               data-bind="text: DateUtils.niceDate(claim().dateReceived ? claim().dateDue() : '')"></span>
                 </div>
-                <div class="bottomMargin5 bottomBorderDashed"></div>
+                <div class="bottomMargin5 topMargin5 bottomBorderDashed"></div>
+                <!-- /ko -->
 
                 <!-- Insurance co -->
                 <div class="row">
@@ -103,39 +137,34 @@
                               data-bind="text: DateUtils.niceDate(claim().validToDate ? claim().validToDate() : '')"></span>
                     </div>
                 </div>
-                <div class="bottomMargin5 bottomBorderDashed"></div>
+                <div class="bottomMargin5 topMargin5 bottomBorderDashed"></div>
 
-                <!-- Insured -->
-                <div class="row bottomMargin5">
-                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                        <strong>Insured</strong>
+                <!-- Policy coverages -->
+                <!-- ko if: Session.getCurrentUserProfile().isClaimCoverageEnabled -->
+                <div class="row">
+                    <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
+                        <strong>Policy coverages</strong>
                     </div>
                 </div>
                 <div class="row">
-                    <div data-bind="foreach: {data: claim().contacts(), as: 'contactInfo'}">
-                        <div data-bind="if: contactInfo.category() == 'Insured'">
-                            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
-                                <div class="row bottomMargin5">
-                                    <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                                        <span data-bind="text: contactInfo.subCategory"></span>
-                                    </div>
-                                    <div class="col-lg-4 col-md-5 col-sm-4 col-xs-4">
-                                        <a href=""
-                                           data-bind="click: function(){$parent.onShowContact(contactInfo.contact)}">
-                                            <span data-bind="text: $parent.niceName(contactInfo.contact)"></span>
-                                        </a>
-                                    </div>
-                                    <div class="col-lg-4 col-md-5 col-sm-4 col-xs-4">
-                                        <span data-bind="text: contactInfo.contact.phone"></span>
-                                    </div>
+                    <div data-bind="foreach: {data: claim().expenses(), as: 'expense'}">
+                        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+                            <div class="row bottomMargin5">
+                                <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6">
+                                    <span data-bind="text: expense.subCategory"></span>
+                                </div>
+                                <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6">
+                                    <span data-bind="text: '$'+ $parent.NumberUtils.nice(expense.amount())"></span>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="bottomMargin5 bottomBorderDashed"></div>
+                <div class="bottomMargin5 topMargin5 bottomBorderDashed"></div>
+                <!-- /ko -->
 
                 <!-- Claimant -->
+                <!-- ko if: Session.getCurrentUserProfile().isClaimDtEnabled -->
                 <div class="row bottomMargin5">
                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                         <strong>Claimant</strong>
@@ -163,7 +192,8 @@
                         </div>
                     </div>
                 </div>
-                <div class="bottomMargin5 bottomBorderDashed"></div>
+                <div class="bottomMargin5 topMargin5 bottomBorderDashed"></div>
+                <!-- /ko -->
 
                 <!-- Other contacts -->
                 <div class="row">
@@ -195,29 +225,8 @@
                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                     </div>
                 </div>
-                <div class="bottomMargin5 bottomBorderDashed"></div>
+                <div class="bottomMargin5 topMargin5 bottomBorderDashed"></div>
 
-                <!-- Expenses -->
-                <div class="row">
-                    <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                        <strong>Expenses</strong>
-                    </div>
-                </div>
-                <div class="row">
-                    <div data-bind="foreach: {data: claim().expenses(), as: 'expense'}">
-                        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
-                            <div class="row bottomMargin5">
-                                <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6">
-                                    <span data-bind="text: expense.subCategory"></span>
-                                </div>
-                                <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6">
-                                    <span data-bind="text: '$'+ $parent.NumberUtils.nice(expense.amount())"></span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="bottomMargin5 bottomBorderDashed"></div>
             </div>
         </div>
     </div>
@@ -317,11 +326,13 @@
                          mytitle="File may be closed once all work on this Claim is finished"
                          myTitleWidth="180px">
                         <!-- ko ifnot: isClaimClosed -->
+                        <!-- ko if: Session.getCurrentUserProfile().isClaimCloseEnabled -->
                         <div class="btn btn-default inline btn-info"
                              data-bind="click: onCloseClaimClick.bind($data)">
                             <i class="fa fa-check-square-o"></i>
                             Close file
                         </div>
+                        <!-- /ko -->
                         <!-- /ko -->
                         <!-- ko if: isClaimClosed -->
                         <div class="btn btn-default inline btn-info"
@@ -335,7 +346,7 @@
 
                 <div class="clear"></div>
 
-                <!-- **** Docs/Tasks/Froms **** -->
+                <!-- **** Docs/Tasks/Forms **** -->
                 <div data-bind="ifnot: inEditMode" class="row">
                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="top: -20px;">
                         <div class="tab-content">

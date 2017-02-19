@@ -11,7 +11,7 @@
                                   attr: {'placeholder': placeholder}"/>
     </div>
     <div class="inline">
-        <strong><a href="#" data-bind="click: onDetailsClick" style="font-size: 1.25em">...</a></strong>
+        <strong><a href="#" data-bind="click: onDetailsClick" style="font-size: 1.25em" tabindex="-1">...</a></strong>
     </div>
 </div>
 
@@ -84,7 +84,8 @@
         </div>
         <div class="inline bottomMargin">
             <input type="tel" class="form-control normal input-sm" placeholder="Phone"
-                   data-bind="value: contact.phone"/>
+                   data-bind="phoneMask: contact.phone,
+                              value: contact.phone"/>
         </div>
         <div class="inline narrow bottomMargin">
             <input class="form-control narrower input-sm" placeholder="Ext"
@@ -99,7 +100,7 @@
         </div>
         <div class="inline bottomMargin">
             <input type="tel" class="form-control normal input-sm" placeholder="Cell"
-                   data-bind="value: contact.cell"/>
+                   data-bind="phoneMask: contact.cell, value: contact.cell"/>
         </div>
     </div>
 

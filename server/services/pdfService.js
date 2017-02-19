@@ -48,7 +48,9 @@ function convertToPdf(req, res) {
         PDF_DOC_PARAMS(html),
         function (err, result) {
             if (err) {
-                return console.error(err);
+                console.error(err);
+                sendResponse(res, err, null);
+                return;
             }
             console.log(result.numberOfPages);
             uploadService.streamFileToClient(
@@ -72,15 +74,23 @@ function emailPdf(req, res) {
         PDF_DOC_PARAMS(html),
         function (err, result) {
             if (err) {
-                return console.error(err);
+                sendResponse(res, err, null);
+                return;
             }
             console.log("Converted to Pdf. Pages: " + result.numberOfPages);
             let inStream = result.stream;
             let outStream = fs.createWriteStream('/tmp/' + email.attachments[0].name);
             inStream.pipe(outStream);
             inStream.on('end', () => {
-                sendEmailViaMailgun(email).then(res.end());
-            })
+                sendEmailViaMailgun(email)
+                    .always(err => {
+                        if (err) {
+                            sendResponse(res, err);
+                        } else {
+                            sendResponse(res, null, {msg: 'Mail sent successfully'});
+                        }
+                    });
+            });
         });
 }
 
@@ -100,17 +110,19 @@ function sendEmailViaMailgun(email) {
         text: email.body || 'Document attached',
         attachment: path.join('/tmp', email.attachments[0].name)
     };
-    mailgun.messages().send(data, function (error, body) {
-        console.log(data);
-        if (error) {
-            console.log('Failure sending Mail');
-            console.log(error);
-            defer.reject(error);
-        } else {
-            console.log('Mail sent successfully: ' + JSON.stringify(body));
-            defer.resolve();
-        }
-    });
+    mailgun
+        .messages()
+        .send(data, function (error, body) {
+            console.log(data);
+            if (error) {
+                console.log('Failure sending Mail');
+                console.log(error);
+                defer.reject(error.message);
+            } else {
+                console.log('Mail sent successfully: ' + JSON.stringify(body));
+                defer.resolve();
+            }
+        });
     return defer;
 }
 

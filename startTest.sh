@@ -8,7 +8,7 @@ sudo apt-get install build-essential clang libdbus-1-dev libgtk2.0-dev \
 
 echo 'Starting Xfvb for Electron'
 export DISPLAY=':99.0'
-Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
+Xvfb :99 -screen 0 1366x768x24 > /dev/null 2>&1 &
 
 export PORT=80
 export ENV=TEST
