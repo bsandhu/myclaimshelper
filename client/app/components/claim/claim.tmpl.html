@@ -273,6 +273,15 @@
                 <!-- **** Right side buttons ***** -->
                 <div class="pull-right" style="position: relative; top: -44px;">
 
+                    <!-- Print claim button -->
+                    <div data-bind="ifnot: inEditMode && isPartiallyCollapsed" class="inline">
+                        <div class="btn btn-default inline btn-info"
+                             data-bind="click: onPrintClaim.bind($data)">
+                            <i class="fa fa-print"></i>
+                            Print
+                        </div>
+                    </div>
+
                     <!-- Edit claim button -->
                     <div data-bind="ifnot: inEditMode && isPartiallyCollapsed" class="inline">
                         <!-- ko ifnot: isClaimClosed -->
@@ -442,3 +451,7 @@
         </div>
     </div><!-- /.modal -->
 
+</div>
+
+<!-- Print tmpl is dynamically populated by the VM -->
+<script type="text/html" id="claim-print-template"></script>

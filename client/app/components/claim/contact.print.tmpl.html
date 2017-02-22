@@ -1,0 +1,29 @@
+<div class="bottomMargin10"
+     style="vertical-align: top;">
+    <strong data-bind="text: contactInfo.contact.name"></strong>
+    <span data-bind="if: contactInfo.subCategory() == 'Insured attorney'">
+        <strong data-bind="text: '(Attorney)'"></strong>
+    </span>
+    <br>
+    <span data-bind="if: contactInfo.contact.streetAddress() != null">
+        <span data-bind="text: contactInfo.contact.streetAddress"></span><br>
+    </span>
+    <span data-bind="if: contactInfo.contact.city() != null">
+        <span data-bind="text: contactInfo.contact.city"></span><br>
+    </span>
+    <span data-bind="if: contactInfo.contact.state() != null">
+        <span data-bind="text: contactInfo.contact.state"></span><br>
+    </span>
+    <span data-bind="if: contactInfo.contact.zip() != null">
+        <span data-bind="text: contactInfo.contact.zip"></span><br>
+    </span>
+    <span data-bind="if: contactInfo.contact.phone() != null">
+        <abbr>Phone: </abbr><span data-bind="text: contactInfo.contact.phone"></span><br>
+    </span>
+    <span data-bind="if: contactInfo.contact.cell() != null">
+        <abbr>Cell: </abbr><span data-bind="text: contactInfo.contact.cell"></span><br>
+    </span>
+    <span data-bind="if: contactInfo.contact.email() != null">
+        <a href="mailto:#"><span data-bind="text: contactInfo.contact.email"></span></a>
+</span>
+</div>

@@ -1,0 +1,146 @@
+<h2 class="bottomBorderForm" data-bind="text: 'Claim ' + claim().fileNum()">Claim</h2>
+
+<!-- Insured -->
+<h3 class="bottomBorderDashed">Insured</h3>
+<div data-bind="foreach: {data: insuredContacts(), as: 'contactInfo'}"
+     class="formRow"
+     style="justify-content: space-between; align-items: flex-start; flex-grow: 1;">
+
+    <div class="formRow" style="flex-grow: 1">
+        <div data-bind="template: {name: $parent.contactPrintTmpl}"></div>
+    </div>
+</div>
+<div class="bottomMargin5 topMargin5"></div>
+
+<!-- Loss location/type/dateOfLoss -->
+<div class="formRow">
+    <div>
+        <span class="control-label sub-heading">Location</span>
+    </div>
+    <div class="leftMargin5">
+        <span data-bind="text: claim().location() ? claim().location().formatted_address : 'None'"></span>
+    </div>
+</div>
+<div class="formRow">
+    <div>
+        <span class="control-label sub-heading">Loss type</span>
+    </div>
+    <div class="leftMargin5">
+        <span data-bind="text: claim().lossType()"></span>
+    </div>
+</div>
+<div class="formRow">
+    <div>
+        <span class="control-label sub-heading">Date of loss</span>
+    </div>
+    <div class="leftMargin5">
+        <span data-bind="text: DateUtils.niceDate(claim().dateOfLoss ? claim().dateOfLoss() : '')"></span>
+    </div>
+</div>
+<div class="bottomMargin5 topMargin5"></div>
+
+<!-- Notes -->
+<!-- ko if: Session.getCurrentUserProfile().isClaimNoteEnabled -->
+<div class="formRow">
+    <h3 class="fromRow bottomBorderDashed" style="flex-grow: 1">Notes</h3>
+</div>
+<div class="formRow">
+    <span data-bind="text: claim().description"></span>
+</div>
+<div class="bottomMargin5 topMargin5"></div>
+<!-- /ko -->
+
+<!-- Dates -->
+<!-- ko if: Session.getCurrentUserProfile().isClaimDtEnabled -->
+<div class="formRow">
+    <h3 class="fromRow bottomBorderDashed" style="flex-grow: 1">Dates</h3>
+</div>
+<div class="formRow">
+    <div class="control-label sub-heading">Claim received</div>
+    <div class="leftMargin5"
+         style="flex-basis: 10em"
+         data-bind="text: DateUtils.niceDate(claim().dateReceived ? claim().dateReceived() : '')"></div>
+    <div class="control-label sub-heading">Due</div>
+    <div class="leftMargin5"
+         data-bind="text: DateUtils.niceDate(claim().dateReceived ? claim().dateDue() : '')"></div>
+</div>
+<div class="bottomMargin5 topMargin5"></div>
+<!-- /ko -->
+
+<!-- Insurance co -->
+<div class="formRow">
+    <h3 class="fromRow bottomBorderDashed" style="flex-grow: 1">Insurance</h3>
+</div>
+<div class="formRow">
+    <div class="control-label sub-heading">Company</div>
+    <div class="inline leftMargin5"
+         data-bind="text: claim().insuranceCompanyName ? claim().insuranceCompanyName() : ''"></div>
+</div>
+<div class="formRow">
+    <div class="control-label sub-heading"
+         style="flex-basis: 5em">File num.
+    </div>
+    <div class="leftMargin5"
+         style="flex-basis: 10em; flex-grow: 0"
+         data-bind="text: claim().insuranceCompanyFileNum ? claim().insuranceCompanyFileNum() : ''"></div>
+    <div class="control-label sub-heading">Policy num.</div>
+    <div class="inline leftMargin5"
+         data-bind="text: claim().insuranceCompanyFileNum ? claim().insuranceCompanyPolicyNum() : ''"></div>
+</div>
+
+<!-- Issued/Expires -->
+<div class="formRow">
+    <div class="control-label sub-heading"
+         style="flex-basis: 5em">Issued
+    </div>
+    <div class="inline leftMargin5"
+         style="flex-basis: 10em; flex-grow: 0"
+         data-bind="text: DateUtils.niceDate(claim().validFromDate ? claim().validFromDate() : '')"></div>
+    <div class="control-label sub-heading">Expires</div>
+    <div class="inline leftMargin5"
+         data-bind="text: DateUtils.niceDate(claim().validToDate ? claim().validToDate() : '')"></div>
+</div>
+<div class="bottomMargin5 topMargin5"></div>
+
+<!-- Policy coverages -->
+<!-- ko if: Session.getCurrentUserProfile().isClaimCoverageEnabled -->
+<h3 class="bottomBorderDashed">Policy coverages</h3>
+<div class="formRow"
+     style="flex-wrap: wrap; justify-content: space-between;"
+     data-bind="foreach: {data: claim().expenses(), as: 'expense'}">
+    <div class="formRow" style="flex-wrap: nowrap; flex-grow: 1">
+        <div class="control-label sub-heading"
+             data-bind="text: expense.subCategory"></div>
+        <div class="control-label leftMargin5"
+             style="flex-basis: 15em; flex-grow: 1"
+             data-bind="text: '$'+ $parent.NumberUtils.nice(expense.amount())"></div>
+    </div>
+</div>
+<div class="bottomMargin5 topMargin5"></div>
+<!-- /ko -->
+
+<!-- Claimant -->
+<!-- ko if: Session.getCurrentUserProfile().isClaimClaimantEnabled -->
+<h3 class="bottomBorderDashed">Claimant</h3>
+<div data-bind="foreach: {data: claimantContacts(), as: 'contactInfo'}"
+     class="formRow"
+     style="justify-content: space-between; align-items: flex-start; flex-grow: 1;">
+
+    <div class="formRow" style="flex-grow: 1">
+        <div data-bind="template: {name: $parent.contactPrintTmpl}"></div>
+    </div>
+</div>
+<div class="bottomMargin5 topMargin5"></div>
+<!-- /ko -->
+
+<!-- Other contacts -->
+<h3 class="bottomBorderDashed">Contacts</h3>
+<div data-bind="foreach: {data: otherContacts(), as: 'contactInfo'}"
+     class="formRow"
+     style="justify-content: space-between; align-items: flex-start; flex-grow: 1;">
+
+    <div class="formRow" style="flex-grow: 1">
+        <div data-bind="template: {name: $parent.contactPrintTmpl}"></div>
+    </div>
+</div>
+<div class="bottomMargin5 topMargin5"></div>

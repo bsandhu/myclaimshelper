@@ -8,10 +8,12 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore', 'bootbox',
         'text!app/components/claim/claim.docs.tmpl.html',
         'text!app/components/claim/claim.entries.tmpl.html',
         'text!app/components/claim/claim.forms.tmpl.html',
+        'text!app/components/claim/claim.print.tmpl.html',
+        'text!app/components/claim/contact.print.tmpl.html',
         'app/utils/audit'],
     function ($, ko, KOMap, amplify, _, bootbox, Claim, ClaimEntry, Contact, States, ajaxUtils,
               Events, Consts, Router, SessionKeys, Session, ContactClient, DateUtils, SharedConsts, ObjectUtils, NumberUtils,
-              viewHtml, editorViewHtml, docsViewHtml, entriesViewHtml, formsViewHtml, Audit) {
+              viewHtml, editorViewHtml, docsViewHtml, entriesViewHtml, formsViewHtml, printHtml, contactPrintTmpl, Audit) {
 
         function ClaimVM() {
             console.log('Init ClaimVM');
@@ -38,6 +40,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore', 'bootbox',
             this.editorViewHtml = editorViewHtml;
             this.docsViewHtml = docsViewHtml;
             this.formsViewHtml = formsViewHtml;
+            this.contactPrintTmpl = contactPrintTmpl;
             this.vm = this;
 
             // View state
@@ -235,6 +238,18 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore', 'bootbox',
         ClaimVM.prototype.onDeleteContact = function (index, contact) {
             let arr = this.claim().contacts();
             this.claim().contacts(arr.filter((elem, idx) => idx != index));
+        }
+
+        ClaimVM.prototype.otherContacts = function () {
+            return _.filter(this.claim().contacts(), contact => contact.category() == 'Other');
+        }
+
+        ClaimVM.prototype.insuredContacts = function () {
+            return _.filter(this.claim().contacts(), contact => contact.category() == 'Insured');
+        }
+
+        ClaimVM.prototype.claimantContacts = function () {
+            return _.filter(this.claim().contacts(), contact => contact.category() == 'Claimant');
         }
 
         ClaimVM.prototype.onAddNewExpense = function () {
@@ -469,6 +484,42 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore', 'bootbox',
         ClaimVM.prototype.getActiveClaimEntryId = function () {
             return amplify.store.sessionStorage(SessionKeys.ACTIVE_CLAIM_ENTRY_ID);
         };
+
+        ClaimVM.prototype.onPrintClaim = function () {
+            // Populate the print template with AMD content
+            $('#claim-print-template').html(printHtml);
+            let container = document.createElement("div");
+            let _this = this;
+
+            // Render the print
+            ko.renderTemplate(
+                "claim-print-template",
+                _this,
+                {
+                    afterRender: function print() {
+                        console.log(container.innerHTML);
+
+                        // Add frame
+                        let frame = document.createElement('iframe');
+                        document.body.appendChild(frame);
+
+                        // Print
+                        let frameContent = frame.contentWindow;
+                        frameContent.document.open();
+                        frameContent.document.write('<head><link rel=stylesheet href=../../css/app.css type=text/css ></head>');
+                        frameContent.document.write(container.innerHTML);
+                        frameContent.document.close();
+                        setTimeout(function afterFrameRender() {
+                            frameContent.focus();
+                            frameContent.print();
+                            document.body.removeChild(frame);
+                        }, 500);
+                    }
+                },
+                container
+            );
+            Audit.info('PrintClaim', {_id: _this.claim()._id()});
+        }
 
         return {viewModel: ClaimVM, template: viewHtml};
     });
