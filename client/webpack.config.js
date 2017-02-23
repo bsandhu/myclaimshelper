@@ -1,5 +1,6 @@
-var webpack = require('webpack');
+let webpack = require('webpack');
 var path = require('path');
+let HtmlWebpackPlugin = require('html-webpack-plugin')
 
 
 module.exports = {
@@ -7,7 +8,7 @@ module.exports = {
     entry: path.join(__dirname, 'app', 'components', 'start.js'),
     output: {
         path: path.join(path.resolve('.'), 'app', 'components'),
-        filename: "client.js"
+        filename: "client.[chunkhash].js"
     },
     plugins: [
         new webpack.ProvidePlugin({
@@ -16,6 +17,10 @@ module.exports = {
             "window.jQuery": "jquery",
             "window.amplify": "amplify"
         }),
+        new HtmlWebpackPlugin({
+            template: path.join('app', 'components', 'index.ejs'),
+            inject: 'body'
+        })
     ],
     resolve: {
         root: [
