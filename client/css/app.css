@@ -420,6 +420,10 @@ input.no-border {
 
 .clearSearchIcon:hover {
     color: lightcoral;
+    font-size: 1.4em;
+    transition-property: font-size;
+    transition-duration: 300ms;
+    transition-timing-function: linear;
 }
 
 .text-fine-print {

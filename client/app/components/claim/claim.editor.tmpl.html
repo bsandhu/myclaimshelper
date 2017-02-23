@@ -36,8 +36,9 @@
                                     idSuffix: 'claimContact-' + $index"></contact-component>
                 </div>
                 <div class="col-sm-1 hidden-xs"
+                     style="cursor: pointer"
                      data-bind="click: $parent.onDeleteContact.bind($parent, $index())">
-                    <i class="fa fa-times-circle clearSearchIcon"></i>
+                    <i class="fa fa-trash-o clearSearchIcon"></i>
                 </div>
             </div>
         </form>
@@ -187,13 +188,14 @@
                     <div class="col-sm-3" style="display: table-cell">
                         <div class="input-group">
                             <span class="input-group-addon">$</span>
-                            <input class="form-control input-sm" id="appendprepend" type="number"
-                                   data-bind="value: expense.amount">
+                            <input class="form-control input-sm" id="appendprepend"
+                                   data-bind="ccyMask: expense.amount, value: expense.amount">
                         </div>
                     </div>
                     <div class="col-sm-1 hidden-xs topMargin5"
+                         style="cursor: pointer"
                          data-bind="click: $parent.onDeleteExpense.bind($parent, $index())">
-                        <i class="fa fa-times-circle clearSearchIcon"></i>
+                        <i class="fa fa-trash-o clearSearchIcon"></i>
                     </div>
                 </div>
             </form>
@@ -267,8 +269,9 @@
                                             idSuffix: 'claimContact-' + $index"></contact-component>
                         </div>
                         <div class="col-sm-1 hidden-xs"
+                             style="cursor: pointer"
                              data-bind="click: $parent.onDeleteContact.bind($parent, $index())">
-                            <i class="fa fa-times-circle clearSearchIcon"></i>
+                            <i class="fa fa-trash-o clearSearchIcon"></i>
                         </div>
                     </div>
                 </form>
@@ -314,8 +317,9 @@
                                             idSuffix: 'claimContact-' + $index"></contact-component>
                         </div>
                         <div class="col-sm-1 hidden-xs"
+                             style="cursor: pointer"
                              data-bind="click: $parent.onDeleteContact.bind($parent, $index())">
-                            <i class="fa fa-times-circle clearSearchIcon"></i>
+                            <i class="fa fa-trash-o clearSearchIcon"></i>
                         </div>
                     </div>
                 </form>

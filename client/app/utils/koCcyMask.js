@@ -3,12 +3,12 @@ define(['jquery', 'knockout', 'KOMap'],
     function ($, ko, KOMap) {
         'use strict';
 
-        ko.bindingHandlers.phoneMask = {
+        ko.bindingHandlers.ccyMask = {
 
             init: function (element, valueAccessor, allBindings, viewModel, bindingContext) {
                 console.log(valueAccessor());
                 let value = valueAccessor();
-                $(element).mask('000-000-0000');
+                $(element).mask("#,##0.00", {reverse: true});
 
                 $(element).focusout(()=>{
                     value($(element).val());

@@ -10,8 +10,18 @@
                                   value: contact.name,
                                   attr: {'placeholder': placeholder}"/>
     </div>
-    <div class="inline">
-        <strong><a href="#" data-bind="click: onDetailsClick" style="font-size: 1.25em" tabindex="-1">...</a></strong>
+    <div class="inline" data-bind="if: showDetails">
+        <a href="#"
+           data-bind="click: onDetailsClick"
+           style="font-size: .85em" tabindex="-1">Collapse</a>
+    </div>
+    <div class="inline" data-bind="ifnot: showDetails">
+        <a href="#"
+           data-bind="click: onDetailsClick"
+           style="font-size: .85em"
+           class="myTooltip"
+           myTitle="Show contact details"
+           tabindex="-1">Expand</a>
     </div>
 </div>
 

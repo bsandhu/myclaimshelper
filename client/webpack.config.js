@@ -50,7 +50,7 @@ module.exports = {
             'select2': 'lib\\select2.min.js',
             'circliful': 'lib\\jquery.circliful.min.js',
             'underscore': 'lib\\underscore.min.js',
-            'maskedInput': 'lib\\jquery.maskedinput.min.js',
+            'maskedInput': 'lib\\jquery.mask.js',
             'loggly': 'lib\\loggly.tracker-2.1.min.js',
             'hopscotch': 'lib\\hopscotch.js'
         }

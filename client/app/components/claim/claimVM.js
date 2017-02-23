@@ -235,9 +235,33 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore', 'bootbox',
                 }));
         }
 
-        ClaimVM.prototype.onDeleteContact = function (index, contact) {
-            let arr = this.claim().contacts();
-            this.claim().contacts(arr.filter((elem, idx) => idx != index));
+        ClaimVM.prototype.onDeleteContact = function (index, contact, mouseEvent) {
+            let dialog = bootbox.dialog({
+                title: "",
+                message: "Remove contact from Claim?",
+                size: "small",
+                buttons: {
+                    no: {label: "No", className: "btn-danger", callback: $.noop},
+                    yes: {label: "Yes", className: "btn-info", callback: onConfirm.bind(this)}
+                }
+            });
+            dialog.find('.modal-dialog')
+                .css({
+                    'margin-left':  mouseEvent.x + 'px'
+                });
+            dialog.find('.modal-content')
+                .css({
+                    'margin-top': () => mouseEvent.y + 'px',
+                });
+            dialog.find('.modal-footer')
+                .css({
+                    'border-top': () => 'none',
+                });
+
+            function onConfirm() {
+                let arr = this.claim().contacts();
+                this.claim().contacts(arr.filter((elem, idx) => idx != index));
+            }
         }
 
         ClaimVM.prototype.otherContacts = function () {
@@ -261,9 +285,32 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore', 'bootbox',
                 }));
         }
 
-        ClaimVM.prototype.onDeleteExpense = function (index, expense) {
-            let arr = this.claim().expenses();
-            this.claim().expenses(arr.filter((elem, idx) => idx != index));
+        ClaimVM.prototype.onDeleteExpense = function (index, expense, mouseEvent) {
+            let dialog = bootbox.dialog({
+                title: "",
+                message: "Remove expense from Claim?",
+                size: "small",
+                buttons: {
+                    no: {label: "No", className: "btn-danger", callback: $.noop},
+                    yes: {label: "Yes", className: "btn-info", callback: onConfirm.bind(this)}
+                }
+            });
+            dialog.find('.modal-dialog')
+                .css({
+                    'margin-left':  mouseEvent.x + 'px'
+                });
+            dialog.find('.modal-content')
+                .css({
+                    'margin-top': () => mouseEvent.y + 'px',
+                });
+            dialog.find('.modal-footer')
+                .css({
+                    'border-top': () => 'none',
+                });
+            function onConfirm() {
+                let arr = this.claim().expenses();
+                this.claim().expenses(arr.filter((elem, idx) => idx != index));
+            }
         }
 
         ClaimVM.prototype.onCloseClaim = function () {
