@@ -1,45 +1,47 @@
-<div class="formContainer">
+<div class="formContainer" style="padding: .8in">
     <!-- ************************************************************************************************* -->
     <!-- NOTE: Input fields do not render in the print layout since the content is not in the DOM -->
     <!-- Hence there is a span for every input. In the @media print css inputs are hidden and spans shown -->
     <!-- ************************************************************************************************* -->
 
     <!-- **** Company header **** -->
-    <div class="formRow" style="justify-content: center">
+    <div class="formRow" style="justify-content: center; font-size: 1.1em">
         <div style="order: 1; align-content: center">PAUL GUTTMAN & CO., INC</div>
     </div>
-    <div class="formRow" style="justify-content: center">
+    <div class="formRow" style="justify-content: center; font-size: 1.1em">
         <div style="order: 1; align-content: center">203 RACKAWAY AVE.</div>
     </div>
-    <div class="formRow" style="justify-content: center">
+    <div class="formRow" style="justify-content: center; font-size: 1.1em">
         <div style="order: 1; align-content: center">VALLEY STREAM, NY 11580</div>
     </div>
-    <div class="formRow" style="justify-content: center">
+    <div class="formRow" style="justify-content: center; font-size: 1.1em">
         <div style="order: 1; align-content: center">516-825-4800 FAX 516-825-4037</div>
     </div>
+    <div class="formRow" class="topMargin10"></div>
 
-    <div class="formRow">
+    <!-- **** Text block **** -->
+    <div class="formRow topMargin15">
         <div style="order: 1; flex-basis: 5em">INSURED:</div>
         <div style="flex-grow: 1; order: 2">
             <input data-bind="value: a">
             <span data-bind="text: a"></span>
         </div>
     </div>
-    <div class="formRow">
+    <div class="formRow topMargin15">
         <div style="order: 1; flex-basis: 5em">FILE #</div>
         <div style="flex-grow: 1; order: 2">
             <input data-bind="value: b">
             <span data-bind="text: b"></span>
         </div>
     </div>
-    <div class="formRow">
+    <div class="formRow topMargin15">
         <div style="order: 1; flex-basis: 5em">POLICY #</div>
         <div style="flex-grow: 1; order: 2">
             <input data-bind="value: c">
             <span data-bind="text: c"></span>
         </div>
     </div>
-    <div class="formRow">
+    <div class="formRow topMargin15 bottomMargin15">
         <div style="order: 1">DATE OF LOSS:</div>
         <div style="flex-grow: 1; order: 2">
             <input data-bind="value: d">
@@ -53,33 +55,12 @@
     <div class="topMargin5pc"></div>
     <div class="formRow">
         <div style="order: 1">"25.12 PAYMENT OF LOSSES. WHEN A CLAIM IS SETTLED WHERE THE INSURED IS REPRESENTED BY A
-            PUBLIC
-        </div>
+            PUBLIC ADJUSTER, UPON THE REQUEST OF THE INSURED, THE INSURER'S CHECK MAY BE MADE PAYABLE TO BOTH
+            THE PUBLIC ADJUSTER NAMED AS PAYEE, BUT NOT IN EXCESS OF THE AMOUNT OF THE PUBLIC ADJUSTER'S
+            FEE, AS INDICATED IN THE WRITTEN COMPENSATION AGREEMENT SIGNED BY THE INSURED AND FILED WITH THE INSURER.
+            THE BALANCE OF THE PROCEEDS SHALL BE MADE PAYABLE TO THE INSURED OR THE LOSS PAYEE, OR BOTH WHICHEVER IS APPROPRIATE."</div>
     </div>
-    <div class="formRow">
-        <div style="order: 1">ADJUSTER, UPON THE REQUEST OF THE INSURED, THE INSURER'S CHECK MAY BE MADE PAYABLE TO BOTH
-            THE
-        </div>
-    </div>
-    <div class="formRow">
-        <div style="order: 1">PUBLIC ADJUSTER NAMED AS PAYEE, BUT NOT IN EXCESS OF THE AMOUNT OF THE PUBLIC ADJUSTER'S
-            FEE, AS
-        </div>
-    </div>
-    <div class="formRow">
-        <div style="order: 1">INDICATED IN THE WRITTEN COMPENSATION AGREEMENT SIGNED BY THE INSURED AND FILED WITH THE
-        </div>
-    </div>
-    <div class="formRow">
-        <div style="order: 1">INSURER. THE BALANCE OF THE PROCEEDS SHALL BE MADE PAYABLE TO THE INSURED OR THE LOSS
-            PAYEE,
-        </div>
-    </div>
-    <div class="formRow">
-        <div style="order: 1">OR BOTH WHICHEVER IS APPROPRIATE."</div>
-    </div>
-    <div class="topMargin1pc"></div>
-    <div class="formRow">
+    <div class="formRow topMargin1pc">
         <div style="order: 1">IN ACCORDANCE WITH THE LAW, PLEASE CHECK THE LINE OF YOUR CHOICE AND SIGN THIS LETTER
             WHERE
         </div>
@@ -213,7 +194,7 @@
         <div style="order: 3; flex-basis: 20em; flex-grow:0;">INSUREDS SIGNATURE</div>
     </div>
 
-    <div class="topMargin1pc"></div>
+    <div class="topMargin5pc"></div>
     <div class="formRow">
         <div style="order: 1">AN UNALTERED COPY OF THE COMPENSATION AGREEMENT MUST BE ATTACHED TO THIS COMPLETED FORM
         </div>
