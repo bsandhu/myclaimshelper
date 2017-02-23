@@ -188,7 +188,7 @@ define(['knockout', 'KOMap', 'jquery', 'underscore', 'bootbox',
             let url = '/convertToPdf';
             let _this = this;
 
-            $.when($.get("/css/app.css"))
+            $.when($.get("/css/app.css?hash=" + new Date().getTime()))
                 .then(css => {
                     let form = $('<form method="POST" action="' + url + '">');
                     $('<input>')
