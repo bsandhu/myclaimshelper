@@ -4,9 +4,10 @@ define(['knockout', 'KOMap', 'jquery', 'underscore', 'bootbox',
         'model/form', 'model/email',
         'text!app/components/form/proofOfLoss.tmpl.html',
         'text!app/components/form/anotherForm.tmpl.html',
+        'text!app/components/form/subrogationReceipt.tmpl.html',
         'text!app/components/form/formComponent.tmpl.html'],
     function (ko, KOMap, $, _, bootbox, amplify, Events, ajaxUtils, Router, ObjectUtils, Audit, Session,
-              Form, Email, proofOfLossTmpl, anotherForm, viewHtml) {
+              Form, Email, proofOfLossTmpl, anotherForm, subrogationReceipt, viewHtml) {
         'use strict';
 
         function FormsComponentVM(params) {
@@ -61,6 +62,11 @@ define(['knockout', 'KOMap', 'jquery', 'underscore', 'bootbox',
                 this.activeFormTmpl(anotherForm);
                 this.email().attachments([{name: 'ProofOfLoss.pdf'}]);
                 this.email().subject('Sending ProofOfLoss');
+            }
+            if (this.form().type() == 'subrogationReceipt') {
+                this.activeFormTmpl(subrogationReceipt);
+                this.email().attachments([{name: 'SubrogationReceipt.pdf'}]);
+                this.email().subject('Sending Subrogation Receipt');
             }
         }
 
