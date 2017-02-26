@@ -43,14 +43,30 @@
         </div>
     </div>
 
-    <!--Address-->
+    <!-- **** Addresses **** -->
+    <div style="width: 100%;" class="topMargin10"></div>
+    <!-- ko foreach: contact.addresses -->
     <div style="width: 100%;">
         <div class="inline narrowest contactFormIcon">
             <i class="fa fa-map-marker"></i>
         </div>
+        <div class="inline bottomMargin sub-heading" style="width: 20%">
+            <input type="text" class="form-control input-sm"
+                   data-bind="refDataAutoComplete: type,
+                              type: 'ContactAddressType',
+                              appendTo: '#contactAddressType' + $index()"
+                   placeholder="Type"
+                   autocomplete="on">
+        </div>
+        <div data-bind="attr: {id: 'contactAddressType' + $index()}" class="inline"></div>
+    </div>
+    <div style="width: 100%;">
+        <div class="inline narrowest contactFormIcon">
+            <i class="fa fa-power-off" style="visibility: hidden"></i>
+        </div>
         <div class="inline bottomMargin">
-            <input class="form-control wider input-sm" placeholder="Address"
-                   data-bind="value: contact.streetAddress"/>
+            <input class="form-control wider input-sm" placeholder="Street"
+                   data-bind="value: street"/>
         </div>
     </div>
 
@@ -61,58 +77,95 @@
         </div>
         <div class="inline bottomMargin">
             <input class="form-control normal input-sm" placeholder="City"
-                   data-bind="value: contact.city"/>
+                   data-bind="value: city"/>
         </div>
         <div class="inline bottomMargin">
             <select class="form-control narrow input-sm"
-                    data-bind="value: contact.state,
-                                   options: states,
-                                   optionsCaption: 'State'">
+                    data-bind="value: state,
+                               options: $parent.states,
+                               optionsCaption: 'State'">
             </select>
         </div>
         <div class="inline bottomMargin">
             <input class="form-control narrow input-sm" placeholder="Zip"
-                   data-bind="value: contact.zip"/>
+                   data-bind="value: zip"/>
+        </div>
+        <div class="inline bottomMargin">
+            <a href="" data-bind="click: $parent.onAddAddress.bind($parent)"><i class="fa fa-plus-circle"></i></a>
+        </div>
+        <div class="inline bottomMargin leftMargin2pc">
+            <a href="" data-bind="click: $parent.onDeleteAddress.bind($parent, $index())"><i
+                    class="fa fa-trash-o clearSearchIcon"></i></a>
         </div>
     </div>
+    <!-- /ko -->
 
-    <!--Email-->
+    <!-- **** Emails **** -->
+    <div style="width: 100%;" class="topMargin10"></div>
+    <!-- ko foreach: contact.emails -->
     <div style="width: 100%;">
         <div class="inline narrowest contactFormIcon">
             <i class="fa fa-envelope"></i>
         </div>
+        <div class="inline bottomMargin sub-heading" style="width: 20%">
+            <input type="text" class="form-control input-sm"
+                   data-bind="refDataAutoComplete: type,
+                                  type: 'ContactEmailType',
+                                  appendTo: '#contactEmailType' + $index()"
+                   placeholder="Type"
+                   autocomplete="on">
+        </div>
+        <div data-bind="attr: {id: 'contactEmailType' + $index()}" class="inline"></div>
         <div class="inline bottomMargin">
             <input type="email" class="form-control wider input-sm" placeholder="Email"
-                   data-bind="value: contact.email"/>
+                   data-bind="value: email"/>
+        </div>
+        <div class="inline bottomMargin">
+            <a href="" data-bind="click: $parent.onAddEmail.bind($parent)"><i class="fa fa-plus-circle"></i></a>
+        </div>
+        <div class="inline bottomMargin leftMargin2pc">
+            <a href="" data-bind="click: $parent.onDeleteEmail.bind($parent, $index())"><i
+                    class="fa fa-trash-o clearSearchIcon"></i></a>
         </div>
     </div>
+    <!-- /ko -->
 
-    <!--Phone-->
+    <!-- Phones -->
+    <div style="width: 100%;" class="topMargin10"></div>
+    <!-- ko foreach: contact.phones -->
     <div style="width: 100%;">
         <div class="inline narrowest contactFormIcon">
             <i class="fa fa-phone"></i>
         </div>
+        <div class="inline bottomMargin sub-heading" style="width: 20%">
+            <input type="text" class="form-control input-sm"
+                   data-bind="refDataAutoComplete: type,
+                                  type: 'ContactPhoneType',
+                                  appendTo: '#contactPhoneType' + $index()"
+                   placeholder="Type"
+                   autocomplete="on">
+        </div>
+        <div data-bind="attr: {id: 'contactPhoneType' + $index()}" class="inline"></div>
         <div class="inline bottomMargin">
             <input type="tel" class="form-control normal input-sm" placeholder="Phone"
-                   data-bind="phoneMask: contact.phone,
-                              value: contact.phone"/>
+                   data-bind="phoneMask: phone,
+                              value: phone"/>
         </div>
         <div class="inline narrow bottomMargin">
             <input class="form-control narrower input-sm" placeholder="Ext"
-                   data-bind="value: contact.ext"/>
+                   data-bind="value: ext"/>
+        </div>
+        <div class="inline bottomMargin" style="margin-left: 14px">
+            <a href="" data-bind="click: $parent.onAddPhone.bind($parent)">
+                <i class="fa fa-plus-circle"></i>
+            </a>
+        </div>
+        <div class="inline bottomMargin leftMargin2pc">
+            <a href="" data-bind="click: $parent.onDeletePhone.bind($parent, $index())"><i
+                    class="fa fa-trash-o clearSearchIcon"></i></a>
         </div>
     </div>
-
-    <!--Cell-->
-    <div style="width: 100%;">
-        <div class="inline narrowest contactFormIcon">
-            <i class="fa fa-power-off" style="visibility: hidden"></i>
-        </div>
-        <div class="inline bottomMargin">
-            <input type="tel" class="form-control normal input-sm" placeholder="Cell"
-                   data-bind="phoneMask: contact.cell, value: contact.cell"/>
-        </div>
-    </div>
+    <!-- /ko -->
 
     <!--Notes-->
     <div style="width: 100%;">
@@ -133,7 +186,7 @@
         <span data-bind="text: contact.city"></span>
         <span data-bind="text: contact.zip"></span><br>
         <a>
-            <span data-bind="text: contact.phone"></span>
+            <span data-bind="text: ContactUtils.parsePhone(contact)"></span>
         </a>
     </div>
 </div>

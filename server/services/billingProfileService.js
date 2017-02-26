@@ -63,7 +63,7 @@ function codesInUse(req, res) {
                     {fields: {'_id': 0, 'mileageCode': 1, 'timeCode': 1, 'expenseCode': 1}})
                 .toArray(function (err, resp) {
                     if (err) {
-                        sendResponse(res, 'Failed to find usages of BillingCode ' + code, {});
+                        sendResponse(res, 'Failed to find usages of BillingCodes', {});
                     } else {
                         let result = new Set([]);
                         _.each(resp, function (val) {

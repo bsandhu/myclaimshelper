@@ -56,8 +56,8 @@
                         <tbody data-bind="foreach: { data: filteredContacts , as: 'contact' }">
                         <tr data-bind="click: $parent.onShowContact">
                             <td><a data-bind="text: contact.name, click: $parent.onShowContact"></a></td>
-                            <td class="hidden-xs" nowrap><span data-bind="text: contact.phone"></span></td>
-                            <td class="hidden-xs" nowrap><span data-bind="text: contact.cell"></span></td>
+                            <td class="hidden-xs" nowrap><span data-bind="text: $parent.ContactUtils.parsePhone(contact)"></span></td>
+                            <td class="hidden-xs" nowrap><span data-bind="text: $parent.ContactUtils.parsePhone2(contact)"></span></td>
                             <td class="hidden-xs"><span data-bind="text: contact.email"></span></td>
                         </tr>
                         </tbody>

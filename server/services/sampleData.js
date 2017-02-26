@@ -65,27 +65,65 @@ let data = {
     contacts: [
         {
             "_id": sampleClaimantId,
-            "role": null,
             "name": "Sample Claimant",
             "businessName": null,
-            "streetAddress": null,
-            "city": "East Meadow",
-            "zip": 11554,
-            "email": null,
-            "phone": "908-243-4800",
-            "cell": null
+            "jobTitle" : null,
+            "notes" : null,
+            "isBusiness" : null,
+            "role" : null,
+            "addresses" : [
+                {
+                    "type" : "Work",
+                    "street" : "",
+                    "city" : "East Meadow",
+                    "state" : "---",
+                    "zip" : "11554"
+                }
+            ],
+            "emails" : [
+                {
+                    "type" : "Work",
+                    "email" : ""
+                }
+            ],
+            "phones" : [
+                {
+                    "type" : "Work",
+                    "phone" : "908-243-4800",
+                    "ext" : ""
+                }
+            ]
         },
         {
             "_id": sampleInsuredId,
-            "role": null,
             "name": "Sample Insured",
             "businessName": "ABC corp",
-            "streetAddress": null,
-            "city": "East Meadow",
-            "zip": 11554,
-            "email": null,
-            "phone": "516-213-0000",
-            "cell": null
+            "jobTitle" : null,
+            "notes" : null,
+            "isBusiness" : null,
+            "role" : null,
+            "addresses" : [
+                {
+                    "type" : "Work",
+                    "street" : "",
+                    "city" : "East Meadow",
+                    "state" : "---",
+                    "zip" : "11554"
+                }
+            ],
+            "emails" : [
+                {
+                    "type" : "Work",
+                    "email" : ""
+                }
+            ],
+            "phones" : [
+                {
+                    "type" : "Work",
+                    "phone" : "516-213-0000",
+                    "ext" : ""
+                }
+            ]
         }],
     tasks: [
         {

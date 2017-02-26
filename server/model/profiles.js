@@ -9,7 +9,14 @@ define(['./contact', './billingProfile'], function (Contact, BillingProfile) {
 
     function UserProfile() {
         this._id = undefined;
-        this.contactInfo = new Contact();
+        this.contactInfo = {
+            'businessName': '',
+            'streetAddress': '',
+            'city': '',
+            'zip': '',
+            'phone': '',
+            'email': ''
+        }
 
         this.owner = undefined;
         // Primary group the user belongs to

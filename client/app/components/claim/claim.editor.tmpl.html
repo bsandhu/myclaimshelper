@@ -56,9 +56,9 @@
     <div class="clear bottomMargin15"></div>
 
     <form class="form-horizontal">
-        <!-- Loss location -->
+        <!-- Loss Location -->
         <div class="form-group">
-            <label class="col-sm-2 control-label">Loss location</label>
+            <label class="col-sm-2 control-label">Loss Location</label>
             <div class="col-sm-6">
                 <!-- Maps component -->
                 <maps-component params="'claimEntry': claim"></maps-component>
@@ -66,9 +66,9 @@
         </div>
     </form>
     <form class="form-horizontal">
-        <!-- Loss type -->
+        <!-- Loss Type -->
         <div class="form-group">
-            <label class="col-sm-2 col-xs-2 control-label">Loss type</label>
+            <label class="col-sm-2 col-xs-2 control-label">Loss Type</label>
             <div class="col-sm-3">
                 <input type="text"
                        class="form-control input-sm sub-heading"
@@ -77,7 +77,7 @@
                        placeholder="Loss Type"
                        autocomplete="on">
             </div>
-            <label class="col-sm-2 control-label">Date of loss</label>
+            <label class="col-sm-2 control-label">Date Of Loss</label>
             <div class="col-sm-3">
                 <input type="text" class="form-control input-sm" id="dateOfLossInput"
                        style="width: 75%;"
@@ -141,7 +141,7 @@
                            autocomplete="on">
                 </div>
                 <div class="col-sm-7">
-                    <label class="col-sm-3 control-label">Date issued</label>
+                    <label class="col-sm-3 control-label">Date Issued</label>
                     <div class="col-sm-7">
                         <input type="text" class="form-control input-sm"
                                style="width: 40%;"
@@ -164,10 +164,10 @@
         </form>
     </fieldset>
 
-    <!-- **** Policy coverages **** -->
+    <!-- **** Policy Coverages **** -->
     <!-- ko if: Session.getCurrentUserProfile().isClaimCoverageEnabled -->
     <fieldset>
-        <legend>Policy coverages</legend>
+        <legend>Policy Coverages</legend>
         <!-- ko foreach: {data: claim().expenses, as: 'expense'} -->
         <form class="form-horizontal">
             <form class="form-inline">

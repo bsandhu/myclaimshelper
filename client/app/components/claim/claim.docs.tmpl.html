@@ -29,12 +29,14 @@
         <thead>
         <tr>
             <th data-field="name" data-sortable="true" data-sortable-type="alpha">File name</th>
+            <!-- ko ifnot: isPartiallyCollapsed -->
             <th></th>
             <th data-sortable-type="numeric">Size</th>
             <th data-sortable-type="alpha" class="hidden-xs">Type</th>
             <th data-field="lastModifiedDate" data-sortable="true" data-sortable-type="numeric" class="hidden-xs">Last modified</th>
             <th data-field="owner" data-sortable="true" data-sortable-type="alpha" class="hidden-xs hidden-sm">Created by</th>
             <th data-field="id" data-sortable="true" class="hidden-sm hidden-xs hidden-md hidden-lg">Id</th>
+            <!-- /ko -->
         </tr>
         </thead>
 
@@ -43,6 +45,7 @@
         <tbody data-bind='foreach: { data: docsToList() }'>
         <tr style="cursor: default">
             <td data-bind="text: attachment.name"></td>
+            <!-- ko ifnot: $parent.isPartiallyCollapsed -->
             <td>
                 <a data-bind="attr: {href: '/download?id=' + attachment.id()}"
                    class="color-light-blue myTooltip" myTitle="Click to Download file">
@@ -66,6 +69,7 @@
             <td class="hidden-sm hidden-xs hidden-md hidden-lg tableCell"
                 data-bind="text: attachment.id">
             </td>
+            <!-- /ko -->
         </tr>
         </tbody>
     </table>

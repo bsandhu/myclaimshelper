@@ -43,7 +43,7 @@
                                         </a>
                                     </div>
                                     <div class="col-lg-4 col-md-5 col-sm-4 col-xs-4">
-                                        <span data-bind="text: contactInfo.contact.phone"></span>
+                                        <span data-bind="text: $parent.ContactUtils.parsePhone(contactInfo.contact)"></span>
                                     </div>
                                 </div>
                             </div>
@@ -52,7 +52,7 @@
                 </div>
                 <div class="bottomMargin5 topMargin5 bottomBorderDashed"></div>
 
-                <!-- Loss location/type/dateOfLoss -->
+                <!-- Loss Location/type/dateOfLoss -->
                 <div class="row">
                     <div class="col-lg-10 col-md-10 col-sm-12 col-xs-12">
                         <strong>Location</strong>
@@ -62,12 +62,12 @@
                 </div>
                 <div class="row">
                     <div class="col-lg-3 col-md-4 col-sm-6 col-xs-6">
-                        <strong>Loss type</strong>
+                        <strong>Loss Type</strong>
                         <span class="leftMargin5"
                               data-bind="text: claim().lossType()"></span>
                     </div>
                     <div class="col-lg-3 col-md-4 col-sm-6 col-xs-6">
-                        <strong>Date of loss</strong>
+                        <strong>Date Of Loss</strong>
                         <span class="leftMargin5"
                               data-bind="text: DateUtils.niceDate(claim().dateOfLoss ? claim().dateOfLoss() : '')"></span>
                     </div>
@@ -108,7 +108,7 @@
                 <!-- Insurance co -->
                 <div class="row">
                     <div class="col-lg-3 col-md-4 col-sm-12 col-xs-12">
-                        <strong>Insurance co.</strong>
+                        <strong>Insurance Co.</strong>
                         <span class="inline leftMargin5"
                               data-bind="text: claim().insuranceCompanyName ? claim().insuranceCompanyName() : ''"></span>
                     </div>
@@ -139,11 +139,11 @@
                 </div>
                 <div class="bottomMargin5 topMargin5 bottomBorderDashed"></div>
 
-                <!-- Policy coverages -->
+                <!-- Policy Coverages -->
                 <!-- ko if: Session.getCurrentUserProfile().isClaimCoverageEnabled -->
                 <div class="row">
                     <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                        <strong>Policy coverages</strong>
+                        <strong>Policy Coverages</strong>
                     </div>
                 </div>
                 <div class="row">
@@ -185,7 +185,7 @@
                                         </a>
                                     </div>
                                     <div class="col-lg-4 col-md-5 col-sm-4 col-xs-4">
-                                        <span data-bind="text: contactInfo.contact.phone"></span>
+                                        <span data-bind="text: $parent.ContactUtils.parsePhone(contactInfo.contact)"></span>
                                     </div>
                                 </div>
                             </div>
@@ -216,7 +216,7 @@
                                         </a>
                                     </div>
                                     <div class="col-lg-4 col-md-5 col-sm-4 col-xs-4">
-                                        <span data-bind="text: contactInfo.contact.phone"></span>
+                                        <span data-bind="text: $parent.ContactUtils.parsePhone(contactInfo.contact)"></span>
                                     </div>
                                 </div>
                             </div>

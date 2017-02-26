@@ -17,15 +17,14 @@ define([], function () {
         this.businessName = undefined;
         this.jobTitle = undefined;
 
-        this.streetAddress = undefined;
-        this.city = undefined;
-        this.state = undefined;
-        this.zip = undefined;
+        // [{type, street, city, state, zip}]
+        this.addresses = []
 
-        this.email = undefined;
-        this.phone = undefined;
-        this.ext = undefined;
-        this.cell = undefined;
+        // [{type, email}]
+        this.emails = []
+
+        // [{type, phone, ext}]
+        this.phones = [];
 
         this.notes = undefined;
     }

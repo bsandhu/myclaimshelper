@@ -8,6 +8,7 @@ define(['jquery', 'underscore', 'amplify', 'knockout', 'KOMap',
 
             init: function (element, valueAccessor, allBindings, viewModel, bindingContext) {
                 let refDataType = allBindings.get('type');
+                let appendTo = allBindings.get('appendTo');
 
                 $.getJSON('/refData/' + refDataType)
                     .then(function (data) {
@@ -23,7 +24,7 @@ define(['jquery', 'underscore', 'amplify', 'knockout', 'KOMap',
 
                     addComboBox();
 
-                    $(element).autocomplete({
+                    let props = {
                         minLength: 0,
                         source: dataSrc,
                         open: function () {
@@ -58,7 +59,11 @@ define(['jquery', 'underscore', 'amplify', 'knockout', 'KOMap',
                             let value = valueAccessor();
                             value(ui.item.value);
                         }
-                    });
+                    };
+                    if (appendTo) {
+                        props.appendTo = appendTo;
+                    }
+                    $(element).autocomplete(props);
                     $(element).val(ko.unwrap(valueAccessor()));
                 }
 

@@ -344,10 +344,6 @@ input[type="file"] {
     font-weight: 600;
 }
 
-.control-label.sub-heading {
-    font-weight: 600;
-}
-
 .sub-heading {
     font-weight: 600;
 }
@@ -1001,6 +997,18 @@ h3.panel-title {
     font-weight: 700;
 }
 
+/**********************************************************/
+/**** jQuery UI autocomplete ****/
+/**********************************************************/
+.ui-autocomplete {
+    border-radius: 0px;
+    background-color: lightyellow;
+}
+
+.ui-corner-all {
+    border-radius: 0px;
+    background-color: lightyellow;
+}
 /**********************************************************/
 /**** Bootstrap table overrides ****/
 /**********************************************************/

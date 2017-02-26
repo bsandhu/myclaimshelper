@@ -1,10 +1,14 @@
-define(['knockout', 'underscore',
+define(['knockout', 'underscore', 'KOMap',
         'text!app/components/contact/contactWidget.tmpl.html',
-        'app/utils/session', 'app/components/contact/contactClient', 'amplify', 'app/utils/events'],
-    function (ko, _, view, Session, ContactClient, amplify, Events) {
+        'app/utils/session',
+        'app/components/contact/contactClient',
+        'app/components/contact/contactUtils',
+        'amplify', 'app/utils/events'],
+    function (ko, _, KOMap, view, Session, ContactClient, ContactUtils, amplify, Events) {
 
         function ContactWidgetVM() {
-            console.log('Init Contacts Widget');
+            console.log('Init Contacts Widget')
+            this.ContactUtils = ContactUtils;
             this.contacts = ko.observableArray([]);
             this.filteredContacts = ko.observableArray([]);
             this.filterText = ko.observable();

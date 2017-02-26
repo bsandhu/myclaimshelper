@@ -1,7 +1,8 @@
 define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore', 'bootbox',
         'model/claim', 'model/claimEntry', 'model/contact', 'model/states',
         'app/utils/ajaxUtils', 'app/utils/events', 'app/utils/consts', 'app/utils/router',
-        'app/utils/sessionKeys', 'app/utils/session', 'app/components/contact/contactClient',
+        'app/utils/sessionKeys', 'app/utils/session',
+        'app/components/contact/contactClient', 'app/components/contact/contactUtils',
         'shared/dateUtils', 'shared/consts', 'shared/objectUtils', 'shared/NumberUtils',
         'text!app/components/claim/claim.tmpl.html',
         'text!app/components/claim/claim.editor.tmpl.html',
@@ -12,7 +13,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore', 'bootbox',
         'text!app/components/claim/contact.print.tmpl.html',
         'app/utils/audit'],
     function ($, ko, KOMap, amplify, _, bootbox, Claim, ClaimEntry, Contact, States, ajaxUtils,
-              Events, Consts, Router, SessionKeys, Session, ContactClient, DateUtils, SharedConsts, ObjectUtils, NumberUtils,
+              Events, Consts, Router, SessionKeys, Session, ContactClient, ContactUtils, DateUtils, SharedConsts, ObjectUtils, NumberUtils,
               viewHtml, editorViewHtml, docsViewHtml, entriesViewHtml, formsViewHtml, printHtml, contactPrintTmpl, Audit) {
 
         function ClaimVM() {
@@ -26,6 +27,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore', 'bootbox',
             this.DateUtils = DateUtils;
             this.ObjectUtils = ObjectUtils;
             this.NumberUtils = NumberUtils;
+            this.ContactUtils = ContactUtils;
             this.Router = Router;
             this.Session = Session;
             this.claim = ko.observable(this.newEmptyClaim());
