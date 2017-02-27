@@ -5,7 +5,8 @@ if (typeof define !== 'function') {
     var define = require('amdefine')(module)
 }
 
-define([], function () {
+define(['./contactAddress', './contactEmail', './contactPhone'],
+    function (ContactAddress, ContactEmail, ContactPhone) {
 
     function Contact() {
         this._id = undefined;
@@ -18,13 +19,13 @@ define([], function () {
         this.jobTitle = undefined;
 
         // [{type, street, city, state, zip}]
-        this.addresses = []
+        this.addresses = [new ContactAddress()]
 
         // [{type, email}]
-        this.emails = []
+        this.emails = [new ContactEmail()]
 
         // [{type, phone, ext}]
-        this.phones = [];
+        this.phones = [new ContactPhone()];
 
         this.notes = undefined;
     }
