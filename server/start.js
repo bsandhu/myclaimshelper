@@ -1,3 +1,5 @@
+let fs = require('fs');
+let path = require('path');
 let restify = require('restify');
 let serveStaticWith304 = require('./static');
 
@@ -38,27 +40,41 @@ let DISABLE_AUTH = config.disable_auth;
 let USE_SSL = config.use_ssl;
 let TEST_USER = config.test_user;
 
-// Restify server
-let server = restify.createServer();
+let server, http_server;
+if (USE_SSL) {
+    // Restify server - pass in certs for https
+    let https_options = {
+        key: fs.readFileSync(path.join(__dirname, 'cert', 'www_myclaimshelper_com.key')),
+        certificate: fs.readFileSync(path.join(__dirname, 'cert', 'www_myclaimshelper_com.pem'))
+    };
+    server = restify.createServer(https_options);
+    http_server = restify.createServer();
+} else {
+    server = restify.createServer();
+    http_server = null;
+}
+
+// Socket IO
 let io = socketio.listen(server.server);
 
 
 function init() {
-    // server = restify.createServer();
-
-    // Wrap with socket io instance
-    // io = socketio.listen(server);
-
-    server.use(function httpsRedirect(req, res, next) {
+    function httpsRedirect(req, res, next) {
         let securityNotNeeded = USE_SSL === false;
         let isSecure = req.isSecure() === true || req.headers['x-forwarded-proto'] == 'https';
         if (securityNotNeeded || isSecure) {
             next();
         } else {
-            res.writeHead(302, {'Location': 'https://' + req.headers.host + req.url});
+            let secureUrl = 'https://' + req.headers.host.split(':')[0] + ':' + config.https_port + req.url;
+            console.log("Redirecting to https: " + secureUrl);
+            res.writeHead(302, {'Location': secureUrl});
             res.end();
         }
-    });
+    }
+
+    if (http_server) {
+        http_server.use(httpsRedirect);
+    }
 
     // Attach handlers to Server
     server.use(restify.acceptParser(server.acceptable));
@@ -238,6 +254,13 @@ function setupStaticRoutes() {
         'default': 'myclaimshelper/redirect.html',
         maxAge: 60 * 60 * 24
     }));
+    if (http_server) {
+        http_server.get('/.*/ ', serveStaticWith304({
+            'directory': 'site',
+            'default': 'myclaimshelper/redirect.html',
+            maxAge: 60 * 60 * 24
+        }));
+    }
 }
 
 /*********************************************************/
@@ -274,9 +297,21 @@ function setupBroadcastListener() {
 /*********************************************************/
 
 function startServer() {
-    server.listen(config.port, function () {
-        console.log('%s listening at %s', server.name, server.url);
-    });
+    // If https is enabled, start two servers and re-direct to https
+    // See: http://stackoverflow.com/questions/33666226/get-restify-rest-api-server-to-support-both-https-and-http
+
+    if (http_server) {
+        server.listen(config.https_port, function () {
+            console.log('%s listening at %s', server.name, server.url);
+        });
+        http_server.listen(config.port, function () {
+            console.log('%s listening at %s', server.name, server.url);
+        });
+    } else {
+        server.listen(config.port, function () {
+            console.log('%s listening at %s', server.name, server.url);
+        });
+    }
 }
 
 init();

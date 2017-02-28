@@ -11,6 +11,7 @@ config.ENV_PROD = 'PROD';
 
 // **** Heroku Config vars ****
 config.port = process.env.PORT || 8080;
+config.https_port = process.env.HTTPS_PORT || 8443;
 config.env = process.env.ENV || 'LOCAL';
 config.disable_auth = process.env.DISABLE_AUTH || false;
 config.test_user = process.env.TEST_USER || 'testuser1';
