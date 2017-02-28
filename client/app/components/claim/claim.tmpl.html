@@ -25,24 +25,24 @@
                 <!-- Insured -->
                 <div class="row bottomMargin5">
                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                        <strong>Insured</strong>
+                        <span class="sub-heading">Insured</span>
                     </div>
                 </div>
                 <div class="row">
                     <div data-bind="foreach: {data: claim().contacts(), as: 'contactInfo'}">
                         <div data-bind="if: contactInfo.category() == 'Insured'">
-                            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <div class="row bottomMargin5">
-                                    <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
+                                    <div class="col-lg-1 col-md-1 col-sm-2 col-xs-2">
                                         <span data-bind="text: contactInfo.subCategory"></span>
                                     </div>
-                                    <div class="col-lg-4 col-md-5 col-sm-4 col-xs-4">
+                                    <div class="col-lg-3 col-md-3 col-sm-5 col-xs-5">
                                         <a href=""
                                            data-bind="click: function(){$parent.onShowContact(contactInfo.contact)}">
                                             <span data-bind="text: $parent.niceName(contactInfo.contact)"></span>
                                         </a>
                                     </div>
-                                    <div class="col-lg-4 col-md-5 col-sm-4 col-xs-4">
+                                    <div class="col-lg-3 col-md-3 col-sm-4 col-xs-4">
                                         <span data-bind="text: $parent.ContactUtils.parsePhone(contactInfo.contact)"></span>
                                     </div>
                                 </div>
@@ -107,18 +107,18 @@
 
                 <!-- Insurance co -->
                 <div class="row">
-                    <div class="col-lg-3 col-md-4 col-sm-12 col-xs-12">
-                        <strong>Insurance Co.</strong>
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <span class="sub-heading">Insurance Co.</span>
                         <span class="inline leftMargin5"
                               data-bind="text: claim().insuranceCompanyName ? claim().insuranceCompanyName() : ''"></span>
                     </div>
                     <div class="col-lg-3 col-md-4 col-sm-6 col-xs-6">
-                        <strong>File #</strong>
+                        <span class="sub-heading" style="padding-right: 50px">File #</span>
                         <span class="inline leftMargin5"
                               data-bind="text: claim().insuranceCompanyFileNum ? claim().insuranceCompanyFileNum() : ''"></span>
                     </div>
                     <div class="col-lg-3 col-md-4 col-sm-6 col-xs-6">
-                        <strong>Policy #</strong>
+                        <span class="sub-heading">Policy #</span>
                         <span class="inline leftMargin5"
                               data-bind="text: claim().insuranceCompanyFileNum ? claim().insuranceCompanyPolicyNum() : ''"></span>
                     </div>
@@ -127,12 +127,12 @@
                 <!-- Issued/Expires -->
                 <div class="row">
                     <div class="col-lg-3 col-md-4 col-sm-6 col-xs-6">
-                        <strong>Issued</strong>
+                        <span class="sub-heading" style="padding-right: 45px">Issued</span>
                         <span class="inline leftMargin5"
                               data-bind="text: DateUtils.niceDate(claim().validFromDate ? claim().validFromDate() : '')"></span>
                     </div>
                     <div class="col-lg-3 col-md-4 col-sm-6 col-xs-6">
-                        <strong>Expires</strong>
+                        <span class="sub-heading">Expires</span>
                         <span class="inline leftMargin5"
                               data-bind="text: DateUtils.niceDate(claim().validToDate ? claim().validToDate() : '')"></span>
                     </div>
@@ -149,14 +149,7 @@
                 <div class="row">
                     <div data-bind="foreach: {data: claim().expenses(), as: 'expense'}">
                         <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
-                            <div class="row bottomMargin5">
-                                <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6">
-                                    <span data-bind="text: expense.subCategory"></span>
-                                </div>
-                                <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6">
-                                    <span data-bind="text: '$'+ $parent.NumberUtils.nice(expense.amount())"></span>
-                                </div>
-                            </div>
+                            <span data-bind="text: expense.subCategory() + ':  $' + $parent.NumberUtils.nice(expense.amount())"></span>
                         </div>
                     </div>
                 </div>
@@ -173,12 +166,12 @@
                 <div class="row">
                     <div data-bind="foreach: {data: claim().contacts(), as: 'contactInfo'}">
                         <div data-bind="if: contactInfo.category() == 'Claimant'">
-                            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <div class="row bottomMargin5">
-                                    <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
+                                    <div class="col-lg-1 col-md-1 col-sm-2 col-xs-2">
                                         <span data-bind="text: contactInfo.subCategory"></span>
                                     </div>
-                                    <div class="col-lg-4 col-md-5 col-sm-4 col-xs-4">
+                                    <div class="col-lg-3 col-md-3 col-sm-5 col-xs-5">
                                         <a href=""
                                            data-bind="click: function(){$parent.onShowContact(contactInfo.contact)}">
                                             <span data-bind="text: $parent.niceName(contactInfo.contact)"></span>
@@ -203,13 +196,13 @@
                 </div>
                 <div class="row">
                     <div data-bind="foreach: {data: claim().contacts(), as: 'contactInfo'}">
-                        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             <div data-bind="if: contactInfo.category() == 'Other'">
                                 <div class="row bottomMargin5">
-                                    <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
+                                    <div class="col-lg-1 col-md-1 col-sm-2 col-xs-2">
                                         <span data-bind="text: contactInfo.subCategory"></span>
                                     </div>
-                                    <div class="col-lg-4 col-md-5 col-sm-4 col-xs-4">
+                                    <div class="col-lg-3 col-md-3 col-sm-5 col-xs-5">
                                         <a href=""
                                            data-bind="click: function(){$parent.onShowContact(contactInfo.contact)}">
                                             <span data-bind="text: $parent.niceName(contactInfo.contact)"></span>
