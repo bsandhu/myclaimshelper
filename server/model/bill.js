@@ -5,7 +5,7 @@ if (typeof define !== 'function') {
     var define = require('amdefine')(module)
 }
 
-define(['./billingStatus'], function (BillingStatus) {
+define(['./billingStatus', './contact'], function (BillingStatus, Contact) {
 
     function Bill() {
         this._id = undefined;
@@ -16,9 +16,9 @@ define(['./billingStatus'], function (BillingStatus) {
         this.description = undefined;
 
         // Instance of Contact.
-        // Contact details can change over time. Hence this is stored inlibe with the bill so that we can reproduce contact info exactly
+        // Contact details can change over time. Hence this is stored inline with the bill so that we can reproduce contact info exactly
         // as it appreaded at the time of bill submission.
-        this.billRecipient = undefined;
+        this.billRecipient = new Contact();
 
         // Amounts
         this.preTaxTotal = undefined;

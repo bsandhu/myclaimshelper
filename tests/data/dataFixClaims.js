@@ -56,6 +56,7 @@ function changeToClaimsSchema() {
                             });
                         }
 
+                        claim.isDeleted = false;
                         delete claim.insuredContactId;
                         delete claim.insuredAttorneyContactId;
                         delete claim.claimantContactId;

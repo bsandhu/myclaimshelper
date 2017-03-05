@@ -154,6 +154,7 @@ function setupClaimsServiceRoutes() {
     server.post('/claim', authenticate, claimsService.saveOrUpdateClaim);
     server.post('/claim/search', authenticate, claimsService.searchClaims);
     server.post('/claim/close', authenticate, claimsService.closeClaim);
+    server.post('/claim/modify', authenticate, claimsService.modifyClaim);
 
     server.get('/claimEntry/:id', authenticate, claimsService.getClaimEntry);
     server.post('/claimEntry', authenticate, claimsService.saveOrUpdateClaimEntry);

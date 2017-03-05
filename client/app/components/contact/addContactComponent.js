@@ -1,17 +1,17 @@
 define(['knockout', 'KOMap', 'underscore',
         'text!app/components/contact/addContactComponent.tmpl.html', 'model/contact',
+        'app/components/contact/contactUtils',
         'app/utils/ajaxUtils', 'amplify', 'app/utils/events', 'app/components/contact/contactClient',
         'app/utils/audit'],
 
-    function (ko, KOMap, _, viewHtml, Contact, AjaxUtils, amplify, Events, ContactClient, Audit) {
+    function (ko, KOMap, _, viewHtml, Contact, ContactUtils, AjaxUtils, amplify, Events, ContactClient, Audit) {
         'use strict';
 
         function AddContactComponentVM(params) {
             console.log('Init Add Contact Widget');
 
             this.readyToRender = ko.observable(false);
-            let contact = new Contact();
-            this.contact = KOMap.fromJS(contact);
+            this.contact = ContactUtils.initContact();
             this.contacts = ko.observableArray([this.contact]);
             this.popupTitle = ko.observable('');
             this.setupEvListeners();
@@ -40,26 +40,7 @@ define(['knockout', 'KOMap', 'underscore',
 
         AddContactComponentVM.prototype.addContact = function () {
             console.log("Adding contact");
-            for (let attr in this.contact) {
-                let isObservable = ko.isObservable(this.contact[attr]);
-
-                //Clean out
-                if (isObservable) {
-                    console.log('Clearing contact attr: ' + attr);
-                    let attrVal = this.contact[attr]();
-                    let isArray = _.isArray(attrVal);
-                    if (isArray) {
-                        this.contact[attr]([]);
-                    } else {
-                        this.contact[attr](null);
-                    }
-                }
-            }
-            // Add defaults
-            this.contact.phones.push(KOMap.fromJS({type: 'Work', phone: '', ext: ''}));
-            this.contact.emails.push(KOMap.fromJS({type: 'Work', email: ''}));
-            this.contact.addresses.push(KOMap.fromJS({type: 'Work', street: '', city: '', state: '---', zip: ''}));
-
+            ContactUtils.reinitContact(this.contact);
             $('#addContactModal').modal('show');
         };
 
@@ -88,15 +69,7 @@ define(['knockout', 'KOMap', 'underscore',
             AjaxUtils.getJSON('/contact/' + contactId)
                 .done(function (resp) {
                     console.log('Loaded contact ' + JSON.stringify(resp.data));
-
-                    // Populate with JSON data
-                    this.contact = KOMap.fromJS(resp.data, {}, new Contact());
-                    // Array needs to be observable for dynamic add/remove.
-                    // KOMap doesn't create an observable array
-                    this.contact.phones = ko.observableArray(this.contact.phones);
-                    this.contact.emails = ko.observableArray(this.contact.emails);
-                    this.contact.addresses = ko.observableArray(this.contact.addresses);
-
+                    this.contact = ContactUtils.populateFromJSON(resp.data);
                     this.contacts([this.contact]);
 
                     $('#addContactModal').modal('show');

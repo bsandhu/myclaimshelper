@@ -50,6 +50,9 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore', 'bootbox',
             this.isClaimClosed = ko.computed(function () {
                 return this.claim().isClosed();
             }, this);
+            this.isClaimSaved = ko.computed(function () {
+                return Number(this.claim()._id()) > 0;
+            }, this);
             this.screenHeight = ko.observable($(window).height() - 215);
             this.inEditMode = ko.observable(false);
             this.showStatusForEntryId = ko.observable();
@@ -111,10 +114,28 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore', 'bootbox',
             this.onClose(false);
         };
 
+        ClaimVM.prototype.onDeleteClaim = function (vm, mouseEvent) {
+            let dialog = bootbox.dialog({
+                title: "",
+                message: "Delete this Claim permanently ?",
+                buttons: {
+                    no: {label: "No", className: "btn-danger", callback: $.noop},
+                    yes: {label: "Yes", className: "btn-info", callback: onConfirm.bind(this)}
+                }
+            });
+
+            function onConfirm() {
+                console.log('ClaimVM - Deleting claim');
+                this.claim().isDeleted(true);
+                this.onSave('Deleted Claim');
+                Router.routeToClaimsList();
+            }
+        };
+
         ClaimVM.prototype.onReOpenClaimClick = function () {
             console.log('ClaimVM - ReOpen claim');
             this.claim().isClosed(false);
-            this.onSave();
+            this.onSave('ReOpened Claim');
         };
 
         ClaimVM.prototype.onBillingProfileClick = function () {
@@ -229,11 +250,14 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore', 'bootbox',
         };
 
         ClaimVM.prototype._onAddNewContact = function (category, subCategory) {
+            let newContact = new Contact();
+            newContact._id = -1 * (this.claim().contacts().length + 1);
+
             this.claim().contacts.push(
                 KOMap.fromJS({
                     category: category,
                     subCategory: subCategory,
-                    contact: new Contact()
+                    contact: newContact
                 }));
         }
 
@@ -247,19 +271,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore', 'bootbox',
                     yes: {label: "Yes", className: "btn-info", callback: onConfirm.bind(this)}
                 }
             });
-            dialog.find('.modal-dialog')
-                .css({
-                    'margin-left':  mouseEvent.x + 'px'
-                });
-            dialog.find('.modal-content')
-                .css({
-                    'margin-top': () => mouseEvent.y + 'px',
-                });
-            dialog.find('.modal-footer')
-                .css({
-                    'border-top': () => 'none',
-                });
-
+            positionDialog(dialog, mouseEvent);
             function onConfirm() {
                 let arr = this.claim().contacts();
                 this.claim().contacts(arr.filter((elem, idx) => idx != index));
@@ -268,6 +280,13 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore', 'bootbox',
 
         ClaimVM.prototype.otherContacts = function () {
             return _.filter(this.claim().contacts(), contact => contact.category() == 'Other');
+        }
+
+        ClaimVM.prototype.contactIndex = function (contactInfo) {
+            let allContacts = this.claim().contacts();
+            return allContacts.findIndex(c => {
+                return contactInfo.contact._id() == c.contact._id();
+            })
         }
 
         ClaimVM.prototype.insuredContacts = function () {
@@ -283,7 +302,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore', 'bootbox',
                 KOMap.fromJS({
                     category: SharedConsts.EXPENSE_CATEGORY,
                     subCategory: null,
-                    amount: 0
+                    amount: ''
                 }));
         }
 
@@ -297,18 +316,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore', 'bootbox',
                     yes: {label: "Yes", className: "btn-info", callback: onConfirm.bind(this)}
                 }
             });
-            dialog.find('.modal-dialog')
-                .css({
-                    'margin-left':  mouseEvent.x + 'px'
-                });
-            dialog.find('.modal-content')
-                .css({
-                    'margin-top': () => mouseEvent.y + 'px',
-                });
-            dialog.find('.modal-footer')
-                .css({
-                    'border-top': () => 'none',
-                });
+            positionDialog(dialog, mouseEvent);
             function onConfirm() {
                 let arr = this.claim().expenses();
                 this.claim().expenses(arr.filter((elem, idx) => idx != index));
@@ -325,6 +333,21 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore', 'bootbox',
 
         ClaimVM.prototype.onDocsViewClick = function () {
             this.bottomPanel(Consts.CLAIMS_TAB_DOCS);
+        }
+
+        function positionDialog(dialog, mouseEvent) {
+            dialog.find('.modal-dialog')
+                .css({
+                    'margin-left': mouseEvent.x + 'px'
+                });
+            dialog.find('.modal-content')
+                .css({
+                    'margin-top': () => mouseEvent.y + 'px',
+                });
+            dialog.find('.modal-footer')
+                .css({
+                    'border-top': () => 'none',
+                });
         }
 
         /***********************************************************/
@@ -455,8 +478,11 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore', 'bootbox',
                 }.bind(this));
         };
 
-        ClaimVM.prototype.onSave = function () {
+        ClaimVM.prototype.onSave = function (msg) {
             console.log(`Saving Claim: ${KOMap.toJSON(this.claim)}`);
+
+            // Params are different from the KO binding call
+            let nofityMsg = _.isString(msg) ? msg : 'Updated claim';
 
             ajaxUtils.post(
                 '/claim',
@@ -472,7 +498,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore', 'bootbox',
                         || this.claim().fileNum()
                         || this.claim()._id();
 
-                    amplify.publish(Events.SUCCESS_NOTIFICATION, {msg: `Updated Claim ${fileNum}`});
+                    amplify.publish(Events.SUCCESS_NOTIFICATION, {msg: `${nofityMsg} ${fileNum}`});
                     amplify.publish(Events.SAVED_CLAIM, {'claim': KOMap.toJS(this.claim())});
 
                     this.storeInSession(this.claim()._id(), KOMap.toJS(this.claim()));

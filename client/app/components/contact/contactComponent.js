@@ -14,9 +14,11 @@ define(['knockout', 'KOMap', 'maskedInput', 'bootbox',
             }
 
             this.placeholder = ko.observable(params.hasOwnProperty('placeholder') ? params.placeholder : 'Name');
-            this.showDetails = ko.observable(params.hasOwnProperty('showDetails') ? params.showDetails : false);
-            this.allowEdits = ko.observable(params.hasOwnProperty('allowEdits') ? params.allowEdits : true);
-            this.contact = params.contact;
+            this.showDetails = ko.observable(params.hasOwnProperty('showDetails') ? ko.utils.unwrapObservable(params.showDetails) : false);
+            this.expandCollapseLabel = ko.computed(() => {return this.showDetails() ? 'Collapse' : 'Expand';
+            }, this);
+            this.allowEdits = ko.observable(params.hasOwnProperty('allowEdits') ? ko.utils.unwrapObservable(params.allowEdits) : true);
+            this.contact = ko.utils.unwrapObservable(params.contact);
             this.idSuffix = ko.observable(params.idSuffix);
             this.states = ko.observable([
                 'NY',

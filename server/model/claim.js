@@ -16,6 +16,7 @@ define([], function () {
         this.location = undefined;
         this.lossType = undefined;
         this.isClosed = false;
+        this.isDeleted = false;
 
         // Dates
         this.dateReceived = undefined;

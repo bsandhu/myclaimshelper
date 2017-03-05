@@ -41,4 +41,16 @@ describe('MongoUtils', function () {
         assert.equal(dest.group, 'TestGroup');
         assert.equal(dest.ingroups.length, 2);
     });
+
+    it('Must check id validity', () => {
+        assert.equal(mongoUtils.isEntityIdValid({}), false);
+        assert.equal(mongoUtils.isEntityIdValid({_id: null}), false);
+        assert.equal(mongoUtils.isEntityIdValid({_id: undefined}), false);
+        assert.equal(mongoUtils.isEntityIdValid({_id: ''}), false);
+        assert.equal(mongoUtils.isEntityIdValid({_id: ' '}), false);
+        assert.equal(mongoUtils.isEntityIdValid({_id: '-1'}), false);
+
+        assert.equal(mongoUtils.isEntityIdValid({_id: '1'}), true);
+        assert.equal(mongoUtils.isEntityIdValid({_id: 1}), true);
+    });
 });

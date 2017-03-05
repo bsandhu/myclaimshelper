@@ -39,6 +39,9 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore', 'model/claim', '
                 ? {query: {isClosed: false}}
                 : {query: {isClosed: true}};
 
+            // Exclude deleted claims
+            postReq.query['$or'] = [{isDeleted: {'$exists': false}}, {isDeleted: false}];
+
             AjaxUtils.post(
                 '/claim/search',
                 JSON.stringify(postReq),

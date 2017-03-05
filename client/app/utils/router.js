@@ -123,6 +123,11 @@ define(['Path', 'amplify', 'app/utils/events'],
             window.location.hash = '#/bill/' + this.claimId + '/' + this._id;
         };
 
+        Router.prototype.routeToClaimsList = function () {
+            console.log('Navigating to claims list');
+            window.location.hash = "#/claim/list";
+        }
+
         Router.prototype.routeToClaim = function (claimId) {
             console.log('Navigating to claim ' + claimId);
             if (claimId) {

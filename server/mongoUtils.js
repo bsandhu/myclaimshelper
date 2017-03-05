@@ -91,6 +91,11 @@ function incrementAndGet(sequenceName) {
     return deferred.promise();
 }
 
+function isEntityIdValid(entity) {
+    let id = String(entity._id).trim();
+    return !_.isEmpty(id) && Number(id) > 0;
+}
+
 function saveOrUpdateEntity(entity, colName, deleteIngroupsAttr = true) {
     console.log('saveOrUpdateEntity. ' + JSON.stringify(entity) + '. Collection name: ' + colName);
     checkOwnerPresent(entity.owner);
@@ -109,7 +114,7 @@ function saveOrUpdateEntity(entity, colName, deleteIngroupsAttr = true) {
     function dbCall(seqNum) {
         run(function update(db) {
             let entityCol = db.collection(colName);
-            if (!entity._id) {
+            if (!isEntityIdValid(entity)) {
                 // Note: Ids are always Strings .. not numbers
                 entity._id = String(seqNum);
                 entityCol.insert(entity,
@@ -343,6 +348,7 @@ exports.findEntities = findEntities;
 exports.connect = connect;
 exports.addOwnerInfo = addOwnerInfo;
 exports.toArray = toArray;
+exports.isEntityIdValid = isEntityIdValid;
 
 exports.CLAIMS_COL_NAME = 'Claims';
 exports.CLAIM_ENTRIES_COL_NAME = 'ClaimEntries';

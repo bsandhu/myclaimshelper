@@ -11,6 +11,15 @@
                 <span class="color-grey" style="font-size: .8em"
                       data-bind="text: (claim().insuranceCompanyName() || '')"></span>
             </span>
+            <div data-bind="ifnot: isPartiallyCollapsed"
+                 class="pull-right">
+                <a href="javascript:void(0);"
+                   class="btn btn-default ghost-button pull-right hidden-xs"
+                   style="top: -5px; position: relative;"
+                   data-bind="click: onPrintClaim.bind($data)">
+                    <span class="btn-label"><i class="fa fa-print"></i></span> Print
+                </a>
+            </div>
         </h3>
     </div>
 
@@ -69,7 +78,7 @@
                     <div class="col-lg-3 col-md-4 col-sm-6 col-xs-6">
                         <strong>Date Of Loss</strong>
                         <span class="leftMargin5"
-                              data-bind="text: DateUtils.niceDate(claim().dateOfLoss ? claim().dateOfLoss() : '')"></span>
+                              data-bind="text: DateUtils.niceLocaleDate(claim().dateOfLoss ? claim().dateOfLoss() : '')"></span>
                     </div>
                 </div>
                 <div class="bottomMargin5 topMargin5 bottomBorderDashed"></div>
@@ -95,12 +104,12 @@
                     <div class="col-lg-3 col-md-4 col-sm-6 col-xs-6">
                         <strong>Received</strong>
                         <span class="leftMargin5"
-                              data-bind="text: DateUtils.niceDate(claim().dateReceived ? claim().dateReceived() : '')"></span>
+                              data-bind="text: DateUtils.niceLocaleDate(claim().dateReceived ? claim().dateReceived() : '')"></span>
                     </div>
                     <span class="col-lg-3 col-md-4 col-sm-6 col-xs-6">
                         <strong>Due</strong>
                         <span class="leftMargin5"
-                              data-bind="text: DateUtils.niceDate(claim().dateReceived ? claim().dateDue() : '')"></span>
+                              data-bind="text: DateUtils.niceLocaleDate(claim().dateReceived ? claim().dateDue() : '')"></span>
                 </div>
                 <div class="bottomMargin5 topMargin5 bottomBorderDashed"></div>
                 <!-- /ko -->
@@ -129,12 +138,12 @@
                     <div class="col-lg-3 col-md-4 col-sm-6 col-xs-6">
                         <span class="sub-heading" style="padding-right: 45px">Issued</span>
                         <span class="inline leftMargin5"
-                              data-bind="text: DateUtils.niceDate(claim().validFromDate ? claim().validFromDate() : '')"></span>
+                              data-bind="text: DateUtils.niceLocaleDate(claim().validFromDate ? claim().validFromDate() : '')"></span>
                     </div>
                     <div class="col-lg-3 col-md-4 col-sm-6 col-xs-6">
                         <span class="sub-heading">Expires</span>
                         <span class="inline leftMargin5"
-                              data-bind="text: DateUtils.niceDate(claim().validToDate ? claim().validToDate() : '')"></span>
+                              data-bind="text: DateUtils.niceLocaleDate(claim().validToDate ? claim().validToDate() : '')"></span>
                     </div>
                 </div>
                 <div class="bottomMargin5 topMargin5 bottomBorderDashed"></div>
@@ -239,7 +248,7 @@
                 <div class="row">
                     <div class="col-lg-offset-2 col-md-offset-2 col-sm-offset-1 col-lg-8 col-md-8 col-sm-10 col-xs-12">
                         <div class="alert alert-info" role="alert"
-                             data-bind="html: '<i class=\'fa fa-lock fa-2x\'></i><b>  Claim closed on ' + DateUtils.niceDate(claim().dateClosed()) + '</b>. Please re-open the Claim if you wish to make further changes.'">
+                             data-bind="html: '<i class=\'fa fa-lock fa-2x\'></i><b>  Claim closed on ' + DateUtils.niceLocaleDate(claim().dateClosed()) + '</b>. Please re-open the Claim if you wish to make further changes.'">
                         </div>
                     </div>
                 </div>
@@ -265,15 +274,6 @@
 
                 <!-- **** Right side buttons ***** -->
                 <div class="pull-right" style="position: relative; top: -44px;">
-
-                    <!-- Print claim button -->
-                    <div data-bind="ifnot: inEditMode && isPartiallyCollapsed" class="inline">
-                        <div class="btn btn-default inline btn-info"
-                             data-bind="click: onPrintClaim.bind($data)">
-                            <i class="fa fa-print"></i>
-                            Print
-                        </div>
-                    </div>
 
                     <!-- Edit claim button -->
                     <div data-bind="ifnot: inEditMode && isPartiallyCollapsed" class="inline">

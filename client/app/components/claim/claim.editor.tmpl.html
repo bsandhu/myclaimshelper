@@ -30,15 +30,15 @@
                        data-bind="text: subCategory"></label>
 
                 <!-- Contact -->
-                <div class="col-sm-7 col-xs-12" style="display: table-cell">
+                <div class="col-sm-6 col-xs-12">
                     <contact-component
                             params="contact : contact,
                                     idSuffix: 'claimContact-' + $index"></contact-component>
                 </div>
-                <div class="col-sm-1 hidden-xs"
-                     style="cursor: pointer"
-                     data-bind="click: $parent.onDeleteContact.bind($parent, $index())">
-                    <i class="fa fa-trash-o clearSearchIcon"></i>
+                <div class="col-sm-1 col-xs-1">
+                    <i class="fa fa-trash-o hidden-xs clearSearchIcon leftMargin2pc"
+                       style="cursor: pointer"
+                       data-bind="click: $parent.onDeleteContact.bind($parent, $index())"></i>
                 </div>
             </div>
         </form>
@@ -172,10 +172,10 @@
         <form class="form-horizontal">
             <form class="form-inline">
                 <div class="form-group">
-                    <div class="col-sm-2" style="display: table-cell"></div>
+                    <div class="col-sm-2 hidden-xs" style="display: table-cell"></div>
 
                     <!-- Sub category -->
-                    <div class="col-sm-2" style="display: table-cell">
+                    <div class="col-sm-2 col-xs-5" style="display: table-cell">
                         <input type="text"
                                class="form-control input-sm sub-heading"
                                data-bind="refDataAutoComplete: expense.subCategory,
@@ -185,7 +185,7 @@
                     </div>
 
                     <!-- Expense amount -->
-                    <div class="col-sm-3" style="display: table-cell">
+                    <div class="col-sm-3 col-xs-8" style="display: table-cell">
                         <div class="input-group">
                             <span class="input-group-addon">$</span>
                             <input class="form-control input-sm" id="appendprepend"
@@ -256,19 +256,19 @@
                     <div class="form-group">
 
                         <!-- SubCategory -->
-                        <div class="col-sm-2 fieldLabel" style="display: table-cell">
-                                <span data-bind="if: subCategory() != 'Claimant'">
-                                    <span data-bind="text: subCategory"></span>
-                                </span>
+                        <div class="col-sm-2 fieldLabel">
+                            <span data-bind="if: subCategory() != 'Claimant'">
+                                <span data-bind="text: subCategory"></span>
+                            </span>
                         </div>
 
                         <!-- Contact -->
-                        <div class="col-sm-7 col-xs-12" style="display: table-cell">
+                        <div class="col-sm-6 col-xs-12">
                             <contact-component
                                     params="contact : contact,
                                             idSuffix: 'claimContact-' + $index"></contact-component>
                         </div>
-                        <div class="col-sm-1 hidden-xs"
+                        <div class="col-sm-1 col-xs-1"
                              style="cursor: pointer"
                              data-bind="click: $parent.onDeleteContact.bind($parent, $index())">
                             <i class="fa fa-trash-o clearSearchIcon"></i>
@@ -298,10 +298,10 @@
             <form class="form-horizontal">
                 <form class="form-inline">
                     <div class="form-group">
-                        <div class="col-sm-2" style="display: table-cell"></div>
+                        <div class="col-sm-2 hidden-xs"></div>
 
                         <!-- Sub category -->
-                        <div class="col-sm-2" style="display: table-cell">
+                        <div class="col-sm-2 col-xs-5">
                             <input type="text"
                                    class="form-control input-sm sub-heading"
                                    data-bind="refDataAutoComplete: otherContact.subCategory,
@@ -311,15 +311,17 @@
                         </div>
 
                         <!-- Contact -->
-                        <div class="col-sm-6" style="display: table-cell">
+                        <div class="col-sm-6 col-xs-12">
                             <contact-component
                                     params="contact : contact,
                                             idSuffix: 'claimContact-' + $index"></contact-component>
                         </div>
-                        <div class="col-sm-1 hidden-xs"
-                             style="cursor: pointer"
-                             data-bind="click: $parent.onDeleteContact.bind($parent, $index())">
-                            <i class="fa fa-trash-o clearSearchIcon"></i>
+                        <div class="col-sm-1 col-xs-1">
+                            <div class="hidden-xs"
+                                 style="cursor: pointer"
+                                 data-bind="click: $parent.onDeleteContact.bind($parent, $index())">
+                                <i class="fa fa-trash-o clearSearchIcon"></i>
+                            </div>
                         </div>
                     </div>
                 </form>
@@ -338,10 +340,23 @@
 
     <!-- **** Save/cancel buttons **** -->
     <div class="topMargin5 clear">
+        <div class="col-md-1 col-sm-1 col-xs-1">
+            <!-- ko if: isClaimSaved -->
+            <button type="button"
+                    data-toggle="tooltip" data-placement="top"
+                    data-bind="click: onDeleteClaim,
+                       css: 'btn btn-link color-red'">
+                <i class="fa fa-trash-o"></i>
+                Delete
+            </button>
+            <!-- /ko -->
+        </div>
+
         <div class="col-md-offset-9 col-sm-offset-9 col-xs-offset-6">
             <button type="button" class="btn btn-info" data-bind="click: onSave">Save</button>
             <button type="button" class="btn btn-default" data-bind="click: onCancel">Cancel</button>
         </div>
     </div>
+
 </div>
 

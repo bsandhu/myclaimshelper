@@ -1,194 +1,201 @@
-<!-- **** Name **** -->
-<div style="width: 100%;">
-    <div class="inline narrowest contactFormIcon" data-bind="visible: showDetails() && allowEdits()">
-        <i class="fa fa-user"></i>
-    </div>
-    <div class="inline bottomMargin">
-        <!-- Auto complete -->
-        <input class="form-control wider input-sm"
-               data-bind="autoComplete: contact,
-                                  value: contact.name,
-                                  attr: {'placeholder': placeholder}"/>
-    </div>
-    <div class="inline" data-bind="if: showDetails">
-        <a href="#"
-           data-bind="click: onDetailsClick"
-           style="font-size: .85em" tabindex="-1">Collapse</a>
-    </div>
-    <div class="inline" data-bind="ifnot: showDetails">
-        <a href="#"
-           data-bind="click: onDetailsClick"
-           style="font-size: .85em"
-           class="myTooltip"
-           myTitle="Show contact details"
-           tabindex="-1">Expand</a>
-    </div>
-</div>
-
-<!-- **** Details form - allow editing **** -->
-<div data-bind="visible: showDetails() && allowEdits()">
-
-    <!--Business-->
-    <div style="width: 100%;">
-        <div class="inline narrowest contactFormIcon">
-            <i class="fa fa-power-off" style="visibility: hidden"></i>
+<div data-bind="css: {contactFormBG: showDetails}, visible: allowEdits()">
+    <!-- **** Name **** -->
+    <div class="row bottomMargin">
+        <div class="col-sm-1 col-xs-12 contactFormIcon"
+             data-bind="visible: showDetails() && allowEdits()">
+            <i class="fa fa-user pull-left"></i>
         </div>
-        <div class="inline bottomMargin">
-            <input class="form-control wide input-sm" placeholder="Business name"
-                   data-bind="value: contact.businessName"/>
+        <div class="col-sm-8">
+            <!-- Auto complete -->
+            <input class="form-control input-sm"
+                   data-bind="autoComplete: contact,
+                          value: contact.name,
+                          attr: {'placeholder': placeholder}"/>
         </div>
-        <div class="inline bottomMargin">
-            <input class="form-control normal input-sm" placeholder="Job title"
-                   data-bind="value: contact.jobTitle"/>
+        <!-- Expand/Collapse -->
+        <div class="col-sm-2">
+            <a href="#"
+               data-bind="click: onDetailsClick,
+                      text: expandCollapseLabel"
+               style="font-size: .9em"
+               tabindex="-1"></a>
         </div>
     </div>
 
-    <!-- **** Addresses **** -->
-    <div style="width: 100%;" class="topMargin10"></div>
-    <!-- ko foreach: contact.addresses -->
-    <div style="width: 100%;">
-        <div class="inline narrowest contactFormIcon">
-            <i class="fa fa-map-marker"></i>
+    <!-- **** Details form - allow editing **** -->
+    <div data-bind="visible: showDetails() && allowEdits()">
+
+        <!--Business-->
+        <div class="row bottomMargin">
+            <div class="col-sm-1 hidden-xs contactFormIcon">
+                <i class="fa fa-power-off" style="visibility: hidden"></i>
+            </div>
+            <div class="col-sm-5 col-xs-6 noRightPadding" style="padding-right: 2px">
+                <input class="form-control input-sm" placeholder="Business name"
+                       data-bind="value: contact.businessName"/>
+            </div>
+            <div class="col-sm-3 col-xs-5 noLeftPadding">
+                <input class="form-control input-sm" placeholder="Job title"
+                       data-bind="value: contact.jobTitle"/>
+            </div>
         </div>
-        <div class="inline bottomMargin sub-heading" style="width: 23%">
-            <input type="text" class="form-control input-sm"
-                   data-bind="refDataAutoComplete: type,
+
+        <!-- **** Addresses **** -->
+        <div style="width: 100%;" class="topMargin10"></div>
+
+        <!-- ko foreach: contact.addresses -->
+        <div class="row bottomMargin">
+            <div class="col-sm-1 col-xs-12 contactFormIcon">
+                <i class="fa fa-map-marker pull-left"></i>
+            </div>
+            <!-- Category -->
+            <div class="col-sm-3 col-xs-5 sub-heading">
+                <input type="text" class="form-control input-sm"
+                       data-bind="refDataAutoComplete: type,
                               type: 'ContactAddressType',
                               appendTo: '#contactAddressType' + $index()"
-                   placeholder="Type"
-                   autocomplete="on">
+                       placeholder="Type"
+                       autocomplete="on">
+            </div>
+            <div data-bind="attr: {id: 'contactAddressType' + $index()}" class="inline"></div>
         </div>
-        <div data-bind="attr: {id: 'contactAddressType' + $index()}" class="inline"></div>
-    </div>
-    <div style="width: 100%;">
-        <div class="inline narrowest contactFormIcon">
-            <i class="fa fa-power-off" style="visibility: hidden"></i>
+        <div class="row bottomMargin">
+            <div class="col-sm-offset-1 col-sm-8">
+                <input class="form-control input-sm" placeholder="Street"
+                       data-bind="value: street"/>
+            </div>
         </div>
-        <div class="inline bottomMargin">
-            <input class="form-control wider input-sm" placeholder="Street"
-                   data-bind="value: street"/>
-        </div>
-    </div>
 
-    <!--City/State/Zip-->
-    <div style="width: 100%;">
-        <div class="inline narrowest contactFormIcon">
-            <i class="fa fa-power-off" style="visibility: hidden"></i>
-        </div>
-        <div class="inline bottomMargin">
-            <input class="form-control normal input-sm" placeholder="City"
-                   data-bind="value: city"/>
-        </div>
-        <div class="inline bottomMargin">
-            <select class="form-control narrow input-sm"
-                    data-bind="value: state,
+        <!--City/State/Zip-->
+        <div class="row bottomMargin">
+            <div class="col-sm-offset-1 col-sm-4 col-xs-5 noRightPadding rightMargin">
+                <input class="form-control input-sm" placeholder="City"
+                       data-bind="value: city"/>
+            </div>
+            <div class="col-sm-2 col-xs-2 noPadding rightMargin">
+                <select class="form-control input-sm"
+                        data-bind="value: state,
                                options: $parent.states,
                                optionsCaption: 'State'">
-            </select>
+                </select>
+            </div>
+            <div class="col-sm-2 col-xs-3 noLeftPadding">
+                <input class="form-control input-sm" placeholder="Zip"
+                       data-bind="value: zip"/>
+            </div>
+            <!-- Add -->
+            <div class="col-sm-1 noLeftPadding">
+                <a href="" data-bind="click: $parent.onAddAddress.bind($parent)"><i class="fa fa-plus-circle"></i></a>
+            </div>
+            <!-- Delete -->
+            <div class="col-sm-1 hidden-xs noLeftPadding"
+                 data-bind="if: $index() > 0">
+                <a href=""
+                   data-bind="click: $parent.onDeleteAddress.bind($parent, $index())"><i
+                        class="fa fa-trash-o clearSearchIcon"></i></a>
+            </div>
         </div>
-        <div class="inline bottomMargin">
-            <input class="form-control narrow input-sm" placeholder="Zip"
-                   data-bind="value: zip"/>
-        </div>
-        <div class="inline bottomMargin">
-            <a href="" data-bind="click: $parent.onAddAddress.bind($parent)"><i class="fa fa-plus-circle"></i></a>
-        </div>
-        <div class="inline bottomMargin leftMargin2pc">
-            <a href="" data-bind="click: $parent.onDeleteAddress.bind($parent, $index())"><i
-                    class="fa fa-trash-o clearSearchIcon"></i></a>
-        </div>
-    </div>
-    <!-- /ko -->
+        <!-- /ko -->
 
-    <!-- **** Emails **** -->
-    <div style="width: 100%;" class="topMargin10"></div>
-    <!-- ko foreach: contact.emails -->
-    <div style="width: 100%;">
-        <div class="inline narrowest contactFormIcon">
-            <i class="fa fa-envelope"></i>
-        </div>
-        <div class="inline bottomMargin sub-heading" style="width: 23%">
-            <input type="text" class="form-control input-sm"
-                   data-bind="refDataAutoComplete: type,
+        <!-- **** Emails **** -->
+        <div style="width: 100%;" class="topMargin10"></div>
+
+        <!-- ko foreach: contact.emails -->
+        <div class="row bottomMargin">
+            <div class="col-sm-1 col-xs-12 contactFormIcon">
+                <i class="fa fa-envelope pull-left"></i>
+            </div>
+            <div class="col-sm-3 col-xs-4 noRightPadding rightMargin sub-heading">
+                <input type="text" class="form-control input-sm"
+                       data-bind="refDataAutoComplete: type,
                                   type: 'ContactEmailType',
                                   appendTo: '#contactEmailType' + $index()"
-                   placeholder="Type"
-                   autocomplete="on">
+                       placeholder="Type"
+                       autocomplete="on">
+            </div>
+            <div data-bind="attr: {id: 'contactEmailType' + $index()}" class="inline"></div>
+            <div class="col-sm-5 col-xs-6 noLeftPadding">
+                <input type="email" class="form-control" placeholder=" Email"
+                       data-bind="value: email"/>
+            </div>
+            <div class="col-sm-1 col-xs-1 noLeftPadding">
+                <a href="" data-bind="click: $parent.onAddEmail.bind($parent)"><i class="fa fa-plus-circle"></i></a>
+            </div>
+            <div class="col-sm-1 hidden-xs noLeftPadding"
+                 data-bind="if: $index() > 0">
+                <a href="" data-bind="click: $parent.onDeleteEmail.bind($parent, $index())"><i
+                        class="fa fa-trash-o clearSearchIcon"></i></a>
+            </div>
         </div>
-        <div data-bind="attr: {id: 'contactEmailType' + $index()}" class="inline"></div>
-        <div class="inline bottomMargin">
-            <input type="email" class="form-control wider input-sm" placeholder="Email"
-                   data-bind="value: email"/>
-        </div>
-        <div class="inline bottomMargin">
-            <a href="" data-bind="click: $parent.onAddEmail.bind($parent)"><i class="fa fa-plus-circle"></i></a>
-        </div>
-        <div class="inline bottomMargin leftMargin2pc">
-            <a href="" data-bind="click: $parent.onDeleteEmail.bind($parent, $index())"><i
-                    class="fa fa-trash-o clearSearchIcon"></i></a>
-        </div>
-    </div>
-    <!-- /ko -->
+        <!-- /ko -->
 
-    <!-- Phones -->
-    <div style="width: 100%;" class="topMargin10"></div>
-    <!-- ko foreach: contact.phones -->
-    <div style="width: 100%;">
-        <div class="inline narrowest contactFormIcon">
-            <i class="fa fa-phone"></i>
-        </div>
-        <div class="inline bottomMargin sub-heading" style="width: 23%">
-            <input type="text" class="form-control input-sm"
-                   data-bind="refDataAutoComplete: type,
+        <!-- Phones -->
+        <div style="width: 100%;" class="topMargin10"></div>
+
+        <!-- ko foreach: contact.phones -->
+        <div class="row bottomMargin">
+            <div class="col-sm-1 col-xs-12 contactFormIcon">
+                <i class="fa fa-phone pull-left"></i>
+            </div>
+            <div class="col-sm-3 col-xs-4 noRightPadding rightMargin sub-heading">
+                <input type="text" class="form-control input-sm"
+                       data-bind="refDataAutoComplete: type,
                                   type: 'ContactPhoneType',
                                   appendTo: '#contactPhoneType' + $index()"
-                   placeholder="Type"
-                   autocomplete="on">
+                       placeholder="Type"
+                       autocomplete="on">
+            </div>
+            <div data-bind="attr: {id: 'contactPhoneType' + $index()}" class="inline"></div>
+            <div class="col-sm-4 col-xs-4 noPadding rightMargin">
+                <input type="tel" class="form-control" placeholder="Phone"
+                       data-bind="phoneMask: phone, value: phone"/>
+            </div>
+            <div class="col-sm-1 col-xs-2 noPadding">
+                <input class="form-control" placeholder="Ext" data-bind="value: ext"/>
+            </div>
+            <div class="col-sm-1 col-xs-1">
+                <a href="" data-bind="click: $parent.onAddPhone.bind($parent)">
+                    <i class="fa fa-plus-circle"></i>
+                </a>
+            </div>
+            <div class="col-sm-1 hidden-xs"
+                 data-bind="if: $index() > 0">
+                <a href="" data-bind="click: $parent.onDeletePhone.bind($parent, $index())"><i
+                        class="fa fa-trash-o clearSearchIcon"></i></a>
+            </div>
         </div>
-        <div data-bind="attr: {id: 'contactPhoneType' + $index()}" class="inline"></div>
-        <div class="inline bottomMargin">
-            <input type="tel" class="form-control normal input-sm" placeholder="Phone"
-                   data-bind="phoneMask: phone,
-                              value: phone"/>
-        </div>
-        <div class="inline narrow bottomMargin">
-            <input class="form-control narrower input-sm" placeholder="Ext"
-                   data-bind="value: ext"/>
-        </div>
-        <div class="inline bottomMargin" style="margin-left: 14px">
-            <a href="" data-bind="click: $parent.onAddPhone.bind($parent)">
-                <i class="fa fa-plus-circle"></i>
-            </a>
-        </div>
-        <div class="inline bottomMargin leftMargin2pc">
-            <a href="" data-bind="click: $parent.onDeletePhone.bind($parent, $index())"><i
-                    class="fa fa-trash-o clearSearchIcon"></i></a>
-        </div>
-    </div>
-    <!-- /ko -->
+        <!-- /ko -->
 
-    <!--Notes-->
-    <div style="width: 100%;">
-        <div class="inline narrowest contactFormIcon">
-            <i class="fa fa-power-off" style="visibility: hidden"></i>
-        </div>
-        <div class="inline bottomMargin">
+        <!--Notes-->
+        <div class="row bottomMargin topMargin10">
+            <div class="col-sm-1 col-xs-12 contactFormIcon">
+                <i class="fa fa-file-text pull-left"></i>
+            </div>
+            <div class="col-sm-11 col-xs-10 ">
             <textarea class="form-control widest" placeholder="Notes"
                       data-bind="value: contact.notes"></textarea>
+            </div>
         </div>
     </div>
 </div>
 
 <!-- **** Details view only **** -->
 <div data-bind="visible: showDetails() && !allowEdits()">
-    <div data-bind="if: contact">
-        <span data-bind="text: contact.streetAddress"></span><br>
-        <span data-bind="text: contact.city"></span>
-        <span data-bind="text: contact.zip"></span><br>
-        <a>
-            <span data-bind="text: ContactUtils.parsePhone(contact)"></span>
-        </a>
-    </div>
+    <strong><span data-bind="text: contact.name"></span></strong><br>
+    <!-- ko if: contact.businessName -->
+    <span data-bind="text: contact.businessName"></span><br>
+    <!-- /ko -->
+    <!-- ko if: contact.addresses()[0].street -->
+    <span data-bind="text: contact.addresses()[0].street"></span><br>
+    <!-- /ko -->
+    <!-- ko if: contact.addresses()[0].city -->
+    <span data-bind="text: contact.addresses()[0].city"></span>
+    <!-- /ko -->
+    <!-- ko if: contact.addresses()[0].zip -->
+    <span data-bind="text: contact.addresses()[0].zip"></span><br>
+    <!-- /ko -->
+    <!-- ko if: contact.addresses()[0].street -->
+    <span data-bind="text: ContactUtils.parsePhone(contact)"></span>
+    <!-- /ko -->
 </div>
 
-</div>
