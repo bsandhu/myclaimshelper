@@ -92,8 +92,19 @@ function incrementAndGet(sequenceName) {
 }
 
 function isEntityIdValid(entity) {
+    if (!entity.hasOwnProperty('_id')
+        || entity._id == null
+        || entity._id == undefined
+    ) {
+        return false;
+    }
+
     let id = String(entity._id).trim();
-    return !_.isEmpty(id) && Number(id) > 0;
+    if (isNaN(Number(id))) {
+        return !_.isEmpty(id);
+    } else {
+        return Number(id) > 0;
+    }
 }
 
 function saveOrUpdateEntity(entity, colName, deleteIngroupsAttr = true) {

@@ -52,5 +52,6 @@ describe('MongoUtils', function () {
 
         assert.equal(mongoUtils.isEntityIdValid({_id: '1'}), true);
         assert.equal(mongoUtils.isEntityIdValid({_id: 1}), true);
+        assert.equal(mongoUtils.isEntityIdValid({_id: 'TestUser1488733445693'}), true);
     });
 });
