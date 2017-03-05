@@ -1,10 +1,10 @@
 <div data-bind="if: readyToRender">
     <!-- **** Billing overview **** -->
-    <div data-bind="template: {name: 'app/components/billing/billing.list',
+    <div data-bind="template: {name: listHtml,
                                if: mode() === Consts.BILLING_TAB_HISTORY_MODE}"></div>
 
     <!-- **** Create/View Bill **** -->
-    <div data-bind="template: {name: 'app/components/billing/billing.create',
+    <div data-bind="template: {name: createHtml,
                                ifnot: mode() === Consts.BILLING_TAB_HISTORY_MODE,
                                afterRender: afterBillingCreateRender}"></div>
 </div>

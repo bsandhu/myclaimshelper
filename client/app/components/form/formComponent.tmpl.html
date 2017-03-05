@@ -1,0 +1,153 @@
+<div class="panel panel-default" data-bind="if: readyToRender">
+    <div class="panel-heading">
+        <h3>
+            <i class="fa fa-file-text-o"></i>
+            <div class="inline"
+                 id="claimFormHeading"
+                 data-bind="text: ObjectUtils.camelcaseToSpaces(form().type())"></div>
+            <div class="pull-right">
+                <a href="javascript:void(0);"
+                   class="btn btn-default ghost-button pull-right hidden-xs"
+                   style="top: -5px; position: relative;"
+                   data-bind="click: printForm">
+                    <span class="btn-label"><i class="fa fa-print"></i></span> Print
+                </a>
+            </div>
+            <div class="pull-right">
+                <a href="javascript:void(0);"
+                   class="btn btn-default ghost-button pull-right hidden-xs"
+                   style="top: -5px; position: relative;"
+                   data-bind="click: onConvertToPdf">
+                    <span class="btn-label"><i class="fa fa-file-pdf-o"></i></span> Pdf
+                </a>
+            </div>
+            <div class="pull-right">
+                <a href="javascript:void(0);"
+                   class="btn btn-default ghost-button pull-right hidden-xs"
+                   data-toggle="modal" data-target="#emailFormModal"
+                   style="top: -5px; position: relative;">
+                    <span class="btn-label"><i class="fa fa-envelope"></i></span> E-mail
+                </a>
+            </div>
+        </h3>
+    </div>
+
+    <div class="panel-body">
+        <!-- Form template -->
+        <div id="claimFormPrintContainer"
+             data-bind="template: { name: activeFormTmpl, data: form().data()}"></div>
+
+        <!-- Footer buttons -->
+        <div class="col-md-12 col-lg-12 topBorderSolid topMargin5pc">
+            <button id="claim-form-close"
+                    type="button"
+                    class="btn btn-default pull-right topMargin10"
+                    data-bind="click: onClose">Close
+            </button>
+
+            <button type="button" class="btn btn-info pull-right leftMargin2pc rightMargin5 topMargin10"
+                    data-bind="click: onSave">Save
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- ************************************************************ -->
+<!-- Email Modal -->
+<!-- ************************************************************ -->
+<div class="modal modal-lg fade"
+     role="dialog"
+     tabindex="-1" id="emailFormModal"
+     data-bind="if: readyToRender"
+     style="margin: auto; top:20%">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <!-- Header -->
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title"
+                    data-bind="text: 'Emailing ' + ObjectUtils.camelcaseToSpaces(form().type())"></h4>
+            </div>
+
+            <!-- Body -->
+            <div class="modal-body">
+
+                <div class="bottomMargin10">
+                    <div class="row bottomMargin5">
+                        <div class="col-md-10">
+                            <div style="display: flex;flex-direction: row;">
+                                <div style="flex-basis: 5em;text-align: end;" class="rightMargin2pc control-label">
+                                    <i class="fa fa-user rightMargin" style="opacity: .85;"></i>
+                                    From
+                                </div>
+                                <div style="flex-grow: 1">
+                                    <span data-bind="text: email().from"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row bottomMargin5">
+                        <div class="col-md-10">
+                            <div style="display: flex;flex-direction: row;">
+                                <div style="flex-basis: 5em;text-align: end;" class="rightMargin2pc control-label">
+                                    <i class="fa fa-user rightMargin" style="opacity: .85;"></i>
+                                    To
+                                </div>
+                                <div style="flex-grow: 1">
+                                    <input class="form-control input-sm"
+                                           data-bind="value: email().to">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row bottomMargin5">
+                        <div class="col-md-10">
+                            <div style="display: flex;flex-direction: row;">
+                                <div style="flex-basis: 5em;text-align: end;" class="rightMargin2pc control-label">
+                                    Subject
+                                </div>
+                                <div style="flex-grow: 1">
+                                    <input class="form-control input-sm"
+                                           data-bind="value: email().subject">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row topMargin5">
+                        <div class="col-md-12">
+                            <div style="display: flex;flex-direction: row;">
+                                <div style="flex-basis: 5em;text-align: end;" class="rightMargin2pc control-label">
+                                    Message
+                                </div>
+                                <div style="flex-grow: 1">
+                                    <textarea class="form-control"
+                                              rows="10"
+                                              data-bind="value: email().body"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Footer -->
+                <div class="modal-footer">
+                    <div class="pull-left">
+                        <span class="control-label">Attachment:</span>
+                        <span data-bind="text: ObjectUtils.camelcaseToSpaces(form().type()) + '.pdf'"></span>
+                    </div>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                        Cancel
+                    </button>
+                    <button type="button" class="btn btn-info" data-dismiss="modal"
+                            data-bind="click: onEmail">Send Email
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!--End modal-->

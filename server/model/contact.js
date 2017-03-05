@@ -5,26 +5,27 @@ if (typeof define !== 'function') {
     var define = require('amdefine')(module)
 }
 
-define([], function () {
+define(['./contactAddress', './contactEmail', './contactPhone'],
+    function (ContactAddress, ContactEmail, ContactPhone) {
 
     function Contact() {
         this._id = undefined;
 
-        this.isBusiness = undefined;
-        this.role = undefined;
+        this.category = undefined;
+        this.subCategory = undefined;
 
         this.name = undefined;
         this.businessName = undefined;
+        this.jobTitle = undefined;
 
-        this.streetAddress = undefined;
-        this.city = undefined;
-        this.state = undefined;
-        this.zip = undefined;
+        // [{type, street, city, state, zip}]
+        this.addresses = [new ContactAddress()]
 
-        this.email = undefined;
-        this.phone = undefined;
-        this.ext = undefined;
-        this.cell = undefined;
+        // [{type, email}]
+        this.emails = [new ContactEmail()]
+
+        // [{type, phone, ext}]
+        this.phones = [new ContactPhone()];
 
         this.notes = undefined;
     }

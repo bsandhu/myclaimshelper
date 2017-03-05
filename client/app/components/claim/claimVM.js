@@ -1,52 +1,82 @@
 define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore', 'bootbox',
         'model/claim', 'model/claimEntry', 'model/contact', 'model/states',
         'app/utils/ajaxUtils', 'app/utils/events', 'app/utils/consts', 'app/utils/router',
-        'app/utils/sessionKeys', 'app/utils/session', 'app/components/contact/contactClient',
-        'shared/dateUtils', 'text!app/components/claim/claim.tmpl.html', 'app/utils/audit'],
+        'app/utils/sessionKeys', 'app/utils/session',
+        'app/components/contact/contactClient', 'app/components/contact/contactUtils',
+        'shared/dateUtils', 'shared/consts', 'shared/objectUtils', 'shared/NumberUtils',
+        'text!app/components/claim/claim.tmpl.html',
+        'text!app/components/claim/claim.editor.tmpl.html',
+        'text!app/components/claim/claim.docs.tmpl.html',
+        'text!app/components/claim/claim.entries.tmpl.html',
+        'text!app/components/claim/claim.forms.tmpl.html',
+        'text!app/components/claim/claim.print.tmpl.html',
+        'text!app/components/claim/contact.print.tmpl.html',
+        'app/utils/audit'],
     function ($, ko, KOMap, amplify, _, bootbox, Claim, ClaimEntry, Contact, States, ajaxUtils,
-              Events, Consts, Router, SessionKeys, Session, ContactClient, DateUtils, viewHtml,
-              Audit) {
+              Events, Consts, Router, SessionKeys, Session, ContactClient, ContactUtils, DateUtils, SharedConsts, ObjectUtils, NumberUtils,
+              viewHtml, editorViewHtml, docsViewHtml, entriesViewHtml, formsViewHtml, printHtml, contactPrintTmpl, Audit) {
 
         function ClaimVM() {
             console.log('Init ClaimVM');
 
             // Model
             this._ = _;
+            this.$ = $;
             this.States = States;
             this.Consts = Consts;
             this.DateUtils = DateUtils;
+            this.ObjectUtils = ObjectUtils;
+            this.NumberUtils = NumberUtils;
+            this.ContactUtils = ContactUtils;
             this.Router = Router;
             this.Session = Session;
             this.claim = ko.observable(this.newEmptyClaim());
             this.claimEntries = ko.observableArray();
+
+            this.claimForms = ko.observableArray();
             this.sortDir = ko.observable('desc');
             this.activeTab = ko.observable(Consts.CLAIMS_TAB);
             this.activeClaimEntryId = ko.observable();
             this.isPartiallyCollapsed = ko.observable(false);
+            this.entriesViewHtml = entriesViewHtml;
+            this.editorViewHtml = editorViewHtml;
+            this.docsViewHtml = docsViewHtml;
+            this.formsViewHtml = formsViewHtml;
+            this.contactPrintTmpl = contactPrintTmpl;
+            this.vm = this;
 
             // View state
             this.readyToRender = ko.observable(false);
             this.isClaimClosed = ko.computed(function () {
                 return this.claim().isClosed();
             }, this);
+            this.isClaimSaved = ko.computed(function () {
+                return Number(this.claim()._id()) > 0;
+            }, this);
             this.screenHeight = ko.observable($(window).height() - 215);
             this.inEditMode = ko.observable(false);
             this.showStatusForEntryId = ko.observable();
+            this.bottomPanel = ko.observable(Consts.CLAIMS_TAB_TASKS);
+
+            // Profile based access
+            this.isBillingEnabled = ko.observable(false);
+
             this.setupEvListeners();
+            this.setupDocsToList();
         }
 
         ClaimVM.prototype.newEmptyClaim = function () {
-            var jsClaimObject = new Claim();
-            jsClaimObject.claimantsAttorneyContact = new Contact();
-            jsClaimObject.claimantContact = new Contact();
-            jsClaimObject.insuredAttorneyContact = new Contact();
-            jsClaimObject.insuredContact = new Contact();
-            jsClaimObject.insuranceCoContact = new Contact();
+            let jsClaimObject = new Claim();
             jsClaimObject.dateOfLoss = DateUtils.startOfToday();
             jsClaimObject.dateDue = DateUtils.startOfToday();
             jsClaimObject.dateReceived = DateUtils.startOfToday();
+            jsClaimObject.validFromDate = DateUtils.startOfToday();
+            jsClaimObject.validToDate = DateUtils.startOfToday();
+            jsClaimObject.attachments = [];
+            jsClaimObject.location = undefined;
+            jsClaimObject.lossType = undefined;
 
-            var claimObjWithObservableAttributes = KOMap.fromJS(jsClaimObject);
+            let claimObjWithObservableAttributes = KOMap.fromJS(jsClaimObject);
             return claimObjWithObservableAttributes;
         };
 
@@ -59,6 +89,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore', 'bootbox',
             amplify.subscribe(Events.NEW_CLAIM, this, this.onNewClaim);
             amplify.subscribe(Events.SHOW_CLAIM_ENTRY, this, this.onShowClaimEntry);
             amplify.subscribe(Events.SAVED_CLAIM_ENTRY, this, this.refreshClaimEntriesListing);
+            amplify.subscribe(Events.SAVED_CLAIM_FORM, this, this.refreshFormsListing);
             amplify.subscribe(Events.EXPAND_CLAIM_PANEL, this, function () {
                 this.isPartiallyCollapsed(false)
             });
@@ -68,7 +99,9 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore', 'bootbox',
             amplify.subscribe(Events.PARTIALLY_COLlAPSE_CLAIM_PANEL, this, function () {
                 this.isPartiallyCollapsed(true)
             });
-
+            amplify.subscribe(Events.LOADED_USER_PROFILE, this, function () {
+                this.isBillingEnabled(Session.getCurrentUserProfile().isBillingEnabled);
+            });
             window.onclick = this.onDismissStatus.bind(this);
         };
 
@@ -81,10 +114,28 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore', 'bootbox',
             this.onClose(false);
         };
 
+        ClaimVM.prototype.onDeleteClaim = function (vm, mouseEvent) {
+            let dialog = bootbox.dialog({
+                title: "",
+                message: "Delete this Claim permanently ?",
+                buttons: {
+                    no: {label: "No", className: "btn-danger", callback: $.noop},
+                    yes: {label: "Yes", className: "btn-info", callback: onConfirm.bind(this)}
+                }
+            });
+
+            function onConfirm() {
+                console.log('ClaimVM - Deleting claim');
+                this.claim().isDeleted(true);
+                this.onSave('Deleted Claim');
+                Router.routeToClaimsList();
+            }
+        };
+
         ClaimVM.prototype.onReOpenClaimClick = function () {
             console.log('ClaimVM - ReOpen claim');
             this.claim().isClosed(false);
-            this.onSave();
+            this.onSave('ReOpened Claim');
         };
 
         ClaimVM.prototype.onBillingProfileClick = function () {
@@ -106,6 +157,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore', 'bootbox',
             // Re-load
             this.loadClaim(evData.claimId);
             this.loadEntriesForClaim(evData.claimId);
+            this.loadFormsForClaim(evData.claimId);
             this.inEditMode(false);
             this.readyToRender(true);
         };
@@ -172,22 +224,130 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore', 'bootbox',
             Router.routeToClaimEntry(this.claim()._id(), entry._id);
         };
 
-        ClaimVM.prototype.onAddContact = function (contact) {
-            amplify.publish(Events.ADD_CONTACT);
+        ClaimVM.prototype.onClaimFormClick = function (form, ev) {
+            Router.routeToClaimForm(form._id);
+        };
+
+        ClaimVM.prototype.onAddNewOtherContact = function () {
+            // Sub-category is added by the selection ui
+            this._onAddNewContact(SharedConsts.CONTACT_CATEGORY_OTHER);
+        };
+
+        ClaimVM.prototype.onAddNewInsuredContact = function () {
+            this._onAddNewContact(SharedConsts.CONTACT_CATEGORY_INSURED, SharedConsts.CONTACT_SUBCATEGORY_INSURED);
+        };
+
+        ClaimVM.prototype.onAddNewInsuredAttyContact = function () {
+            this._onAddNewContact(SharedConsts.CONTACT_CATEGORY_INSURED, SharedConsts.CONTACT_CATEGORY_INSURED_ATTY);
+        };
+
+        ClaimVM.prototype.onAddNewClaimantContact = function () {
+            this._onAddNewContact(SharedConsts.CONTACT_CATEGORY_CLAIMANT, SharedConsts.CONTACT_SUBCATEGORY_CLAIMANT);
+        };
+
+        ClaimVM.prototype.onAddNewClaimantAttyContact = function () {
+            this._onAddNewContact(SharedConsts.CONTACT_CATEGORY_CLAIMANT, SharedConsts.CONTACT_CATEGORY_CLAIMANT_ATTY);
+        };
+
+        ClaimVM.prototype._onAddNewContact = function (category, subCategory) {
+            let newContact = new Contact();
+            newContact._id = -1 * (this.claim().contacts().length + 1);
+
+            this.claim().contacts.push(
+                KOMap.fromJS({
+                    category: category,
+                    subCategory: subCategory,
+                    contact: newContact
+                }));
         }
 
-        ClaimVM.prototype.onCloseClaim = function (contact) {
+        ClaimVM.prototype.onDeleteContact = function (index, contact, mouseEvent) {
+            let dialog = bootbox.dialog({
+                title: "",
+                message: "Remove contact from Claim?",
+                size: "small",
+                buttons: {
+                    no: {label: "No", className: "btn-danger", callback: $.noop},
+                    yes: {label: "Yes", className: "btn-info", callback: onConfirm.bind(this)}
+                }
+            });
+            positionDialog(dialog, mouseEvent);
+            function onConfirm() {
+                let arr = this.claim().contacts();
+                this.claim().contacts(arr.filter((elem, idx) => idx != index));
+            }
+        }
+
+        ClaimVM.prototype.otherContacts = function () {
+            return _.filter(this.claim().contacts(), contact => contact.category() == 'Other');
+        }
+
+        ClaimVM.prototype.contactIndex = function (contactInfo) {
+            let allContacts = this.claim().contacts();
+            return allContacts.findIndex(c => {
+                return contactInfo.contact._id() == c.contact._id();
+            })
+        }
+
+        ClaimVM.prototype.insuredContacts = function () {
+            return _.filter(this.claim().contacts(), contact => contact.category() == 'Insured');
+        }
+
+        ClaimVM.prototype.claimantContacts = function () {
+            return _.filter(this.claim().contacts(), contact => contact.category() == 'Claimant');
+        }
+
+        ClaimVM.prototype.onAddNewExpense = function () {
+            this.claim().expenses.push(
+                KOMap.fromJS({
+                    category: SharedConsts.EXPENSE_CATEGORY,
+                    subCategory: null,
+                    amount: ''
+                }));
+        }
+
+        ClaimVM.prototype.onDeleteExpense = function (index, expense, mouseEvent) {
+            let dialog = bootbox.dialog({
+                title: "",
+                message: "Remove expense from Claim?",
+                size: "small",
+                buttons: {
+                    no: {label: "No", className: "btn-danger", callback: $.noop},
+                    yes: {label: "Yes", className: "btn-info", callback: onConfirm.bind(this)}
+                }
+            });
+            positionDialog(dialog, mouseEvent);
+            function onConfirm() {
+                let arr = this.claim().expenses();
+                this.claim().expenses(arr.filter((elem, idx) => idx != index));
+            }
+        }
+
+        ClaimVM.prototype.onCloseClaim = function () {
             Router.routeToHome();
         }
 
-        ClaimVM.prototype.onToggleAtty = function (elemId) {
-            var elem = $(elemId);
+        ClaimVM.prototype.onTasksViewClick = function () {
+            this.bottomPanel(Consts.CLAIMS_TAB_TASKS);
+        }
 
-            if (elem.is(':visible')) {
-                elem.velocity("slideUp", { duration: 300 });
-            } else {
-                elem.velocity("slideDown", { duration: 300 });
-            }
+        ClaimVM.prototype.onDocsViewClick = function () {
+            this.bottomPanel(Consts.CLAIMS_TAB_DOCS);
+        }
+
+        function positionDialog(dialog, mouseEvent) {
+            dialog.find('.modal-dialog')
+                .css({
+                    'margin-left': mouseEvent.x + 'px'
+                });
+            dialog.find('.modal-content')
+                .css({
+                    'margin-top': () => mouseEvent.y + 'px',
+                });
+            dialog.find('.modal-footer')
+                .css({
+                    'border-top': () => 'none',
+                });
         }
 
         /***********************************************************/
@@ -195,8 +355,9 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore', 'bootbox',
         /***********************************************************/
 
 
-        ClaimVM.prototype.initTooltipComponent = function () {
+        ClaimVM.prototype.afterTabRender = function () {
             $('[data-toggle="tooltip"]').tooltip();
+            $('#claimDocsTabLink').click();
         };
 
         ClaimVM.prototype.showTasksCollapsed = function () {
@@ -214,33 +375,72 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore', 'bootbox',
 
         ClaimVM.prototype.sortEntries = function () {
             function sortAsc(a, b) {
-                var dateA = new Date(Date.parse(a.dueDate));
-                var dateB = new Date(Date.parse(b.dueDate));
+                let dateA = new Date(Date.parse(a.dueDate));
+                let dateB = new Date(Date.parse(b.dueDate));
                 return dateA.getTime() - dateB.getTime();
             }
 
             function sortDesc(a, b) {
-                var dateA = new Date(Date.parse(a.dueDate));
-                var dateB = new Date(Date.parse(b.dueDate));
+                let dateA = new Date(Date.parse(a.dueDate));
+                let dateB = new Date(Date.parse(b.dueDate));
                 return dateB.getTime() - dateA.getTime();
             }
 
-            var tmpArray = this.claimEntries.removeAll();
+            let tmpArray = this.claimEntries.removeAll();
             tmpArray.sort(this.sortDir() === 'desc' ? sortDesc : sortAsc);
             this.claimEntries(tmpArray);
         };
 
         ClaimVM.prototype.refreshClaimEntriesListing = function () {
-            var claimId = this.claim()._id();
+            let claimId = this.claim()._id();
             console.log('Refresh entries list. ClaimId ' + claimId);
             this.loadEntriesForClaim(claimId);
         };
 
-        ClaimVM.prototype.niceName = function (contact) {
-            var nice = contact.name() || '';
-            return nice.length > 0 ? nice : 'None';
-
+        ClaimVM.prototype.refreshFormsListing = function () {
+            let claimId = this.claim()._id();
+            console.log('Refresh forms list. ClaimId ' + claimId);
+            this.loadFormsForClaim(claimId);
         };
+
+        ClaimVM.prototype.niceName = function (contact) {
+            let nice = contact.name() || '';
+            return nice.length > 0 ? nice : 'None';
+        };
+
+        ClaimVM.prototype.setupDocsToList = function () {
+            this.docsToList = ko.computed(function () {
+                let allDocs = [];
+                this.claim().attachments().forEach(attach => {
+                    allDocs.push({origin: 'Claim', originId: this.claim()._id(), attachment: attach});
+                });
+                this.claimEntries().forEach(claimEntry => {
+                    claimEntry.attachments.forEach(attach => {
+                        if (!attach.hasOwnProperty('type')) {
+                            attach.type = 'Unknown';
+                        }
+                        if (!attach.hasOwnProperty('lastModifiedDate')) {
+                            attach.lastModifiedDate = new Date();
+                        }
+                        if (!attach.hasOwnProperty('owner')) {
+                            attach.owner = claimEntry.owner;
+                        }
+                        allDocs.push({
+                            origin: 'ClaimEntry',
+                            originId: claimEntry._id,
+                            attachment: KOMap.fromJS(attach)
+                        });
+                    });
+                });
+                return allDocs.sort((doc1, doc2) => {
+                    function _getTime(doc) {
+                        return doc.attachment.lastModifiedDate().getTime();
+                    }
+
+                    return (_getTime(doc2) - _getTime(doc1));
+                });
+            }, this);
+        }
 
         /***********************************************************/
         /* Server calls                                            */
@@ -269,14 +469,20 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore', 'bootbox',
                             message: "Close anyway?",
                             size: "small",
                             buttons: {
-                                no: { label: "No", className: "btn-danger", callback: $.noop },
-                                yes: { label: "Yes", className: "btn-info", callback: this.onClose.bind(this, true)}}});
-                        };
-                    }.bind(this));
+                                no: {label: "No", className: "btn-danger", callback: $.noop},
+                                yes: {label: "Yes", className: "btn-info", callback: this.onClose.bind(this, true)}
+                            }
+                        });
+                    }
+                    ;
+                }.bind(this));
         };
 
-        ClaimVM.prototype.onSave = function () {
-            console.log('Saving Claim: ' + KOMap.toJSON(this.claim));
+        ClaimVM.prototype.onSave = function (msg) {
+            console.log(`Saving Claim: ${KOMap.toJSON(this.claim)}`);
+
+            // Params are different from the KO binding call
+            let nofityMsg = _.isString(msg) ? msg : 'Updated claim';
 
             ajaxUtils.post(
                 '/claim',
@@ -286,25 +492,21 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore', 'bootbox',
 
                     // Update Ids gen. by the server
                     this.claim()._id(response.data._id);
-                    this.claim().insuredContact._id(response.data.insuredContactId);
-                    this.claim().insuredAttorneyContact._id(response.data.insuredAttorneyContactId);
-                    this.claim().claimantContact._id(response.data.claimantContactId);
-                    this.claim().claimantsAttorneyContact._id(response.data.claimantsAttorneyContactId);
-                    this.claim().insuranceCoContact._id(response.data.insuranceCoContactId);
 
-                    ContactClient.updateInSession(KOMap.toJS(this.claim().insuredContact));
-                    ContactClient.updateInSession(KOMap.toJS(this.claim().insuredAttorneyContact));
-                    ContactClient.updateInSession(KOMap.toJS(this.claim().claimantContact));
-                    ContactClient.updateInSession(KOMap.toJS(this.claim().claimantsAttorneyContact));
-                    ContactClient.updateInSession(KOMap.toJS(this.claim().insuranceCoContact));
+                    let fileNum = this.claim().insuranceCompanyFileNum()
+                        || this.claim().insuranceCompanyPolicyNum()
+                        || this.claim().fileNum()
+                        || this.claim()._id();
 
-                    amplify.publish(Events.SUCCESS_NOTIFICATION, {msg: 'Updated Claim ' + this.claim().insuranceCompanyFileNum()});
-                    amplify.publish(Events.ADDED_CONTACT, KOMap.toJS(this.claim().insuredContact));
+                    amplify.publish(Events.SUCCESS_NOTIFICATION, {msg: `${nofityMsg} ${fileNum}`});
                     amplify.publish(Events.SAVED_CLAIM, {'claim': KOMap.toJS(this.claim())});
 
                     this.storeInSession(this.claim()._id(), KOMap.toJS(this.claim()));
                     this.inEditMode(false);
                     Audit.info('SavedClaim', {_id: this.claim()._id(), fileNum: this.claim().fileNum()});
+
+                    // Reload
+                    this.loadClaim(this.claim()._id());
                 }.bind(this));
         };
 
@@ -314,8 +516,20 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore', 'bootbox',
                     console.log('Loaded claim ' + JSON.stringify(resp.data).substr(0, 100));
                     KOMap.fromJS(resp.data, {}, this.claim);
                     this.storeInSession(claimId, resp.data);
+
+                    // Update contacts
+                    console.log('Updating contacts in session');
+                    this.claim().contacts().forEach(contactInfo => {
+                        ContactClient.updateInSession(KOMap.toJS(contactInfo.contact));
+                    });
+                    amplify.publish(Events.ADDED_CONTACT);
+
                     Audit.info('ViewClaim', {_id: this.claim()._id(), fileNum: this.claim().fileNum()});
-                }.bind(this));
+                }.bind(this))
+                .fail(err => {
+                    Audit.error('ViewClaim', {_id: claimId, Details: err.responseText});
+                    amplify.publish(Events.FAILURE_NOTIFICATION, {msg: 'Error while displaying claim'});
+                });
         };
 
         ClaimVM.prototype.loadEntriesForClaim = function (claimId) {
@@ -325,6 +539,14 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore', 'bootbox',
                     this.claimEntries(resp.data);
                     this.activeClaimEntryId(null);
                     this.sortEntries();
+                }.bind(this));
+        };
+
+        ClaimVM.prototype.loadFormsForClaim = function (claimId) {
+            ajaxUtils.getJSON('/claim/' + claimId + '/forms')
+                .done(function (resp) {
+                    console.log('Loaded claim forms. ClaimId: ' + JSON.stringify(resp.data.length));
+                    this.claimForms(resp.data);
                 }.bind(this));
         };
 
@@ -338,5 +560,41 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore', 'bootbox',
             return amplify.store.sessionStorage(SessionKeys.ACTIVE_CLAIM_ENTRY_ID);
         };
 
-        return ClaimVM;
+        ClaimVM.prototype.onPrintClaim = function () {
+            // Populate the print template with AMD content
+            $('#claim-print-template').html(printHtml);
+            let container = document.createElement("div");
+            let _this = this;
+
+            // Render the print
+            ko.renderTemplate(
+                "claim-print-template",
+                _this,
+                {
+                    afterRender: function print() {
+                        console.log(container.innerHTML);
+
+                        // Add frame
+                        let frame = document.createElement('iframe');
+                        document.body.appendChild(frame);
+
+                        // Print
+                        let frameContent = frame.contentWindow;
+                        frameContent.document.open();
+                        frameContent.document.write('<head><link rel=stylesheet href=../../css/app.css type=text/css ></head>');
+                        frameContent.document.write(container.innerHTML);
+                        frameContent.document.close();
+                        setTimeout(function afterFrameRender() {
+                            frameContent.focus();
+                            frameContent.print();
+                            document.body.removeChild(frame);
+                        }, 500);
+                    }
+                },
+                container
+            );
+            Audit.info('PrintClaim', {_id: _this.claim()._id()});
+        }
+
+        return {viewModel: ClaimVM, template: viewHtml};
     });

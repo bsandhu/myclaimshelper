@@ -5,6 +5,12 @@
     <meta charset="utf-8">
     <meta name="description" content="Productivity tool for Insurance Adjusters">
     <meta name="author" content="Epitomic.Systems">
+
+    <!-- Turn off caching for this pg -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+
     <!-- Setting the right viewport -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
 
@@ -15,13 +21,12 @@
 
     <!-- CSS -->
     <link rel="stylesheet" type="text/css" href='https://fonts.googleapis.com/css?family=Lato'>
-    <link rel="stylesheet" type="text/css" href="/css/index-lib-built.css">
-    <link rel="stylesheet" type="text/css" href="/css/app.css">
+    <link rel="stylesheet" type="text/css" href="/css/index-lib-built.css?hash=<%= new Date().getTime() %>">
+    <link rel="stylesheet" type="text/css" href="/css/app.css?hash=<%= new Date().getTime() %>">
 
     <script src="../../../lib/lock-9.1.min.js"></script>
-    <script src="../../../lib/require.js"></script>
-    <script src="../../../lib/requireConfig.js"></script>
-    <script src="/dist/app/components/start.js"></script>
+    <script async defer
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBB-Qincf0sNQcsu5PzZh7znG3GiB98GRU&libraries=places&signed_in=true&v=3.exp"></script>
 </head>
 <body>
 
@@ -33,7 +38,9 @@
                 <span class="sr-only">Toggle navigation</span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
+                <!-- ko if:isBillingEnabled -->
                 <span class="icon-bar"></span>
+                <!-- /ko -->
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
@@ -51,8 +58,10 @@
                                              data-target=".navbar-collapse">Tasks</a></li>
                 <li id="index-claims-list"><a href="#/claim/list" data-toggle="collapse" data-target=".navbar-collapse">Claims</a>
                 </li>
+                <!-- ko if:isBillingEnabled -->
                 <li id="index-billing"><a href="#/billing" data-toggle="collapse"
                                           data-target=".navbar-collapse">Billing</a></li>
+                <!-- /ko -->
                 <li><a href="#/travel" data-toggle="collapse" data-target=".navbar-collapse">Travel</a></li>
                 <li><a href="#/contacts" data-toggle="collapse" data-target=".navbar-collapse">Contacts</a></li>
                 <li><a href=""
@@ -97,28 +106,26 @@
 <div data-bind="component: 'user-profile-component'"></div>
 
 <!-- #MAIN PANEL -->
-<div style="position: relative; top: 85px;">
+<div style="position: relative; top: 85px;" class="container">
 
     <!-- **** Dashboard **** -->
-    <div class="container">
-        <div id="dashboardPanel" class="row dashboardPanel">
-            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                <div class="row hidden-xs">
-                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                        <div data-bind="component: 'stats-component'"></div>
-                    </div>
+    <div id="dashboardPanel" class="row dashboardPanel">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <div class="row hidden-xs">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <div data-bind="component: 'stats-component'"></div>
                 </div>
-                <div class="row">
-                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                        <div data-bind="component: 'summary-component'"></div>
-                    </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <div data-bind="component: 'summary-component'"></div>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- **** Billing **** -->
-    <div id="billingPanel" class="billingPanel container">
+    <div id="billingPanel" class="billingPanel">
         <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                 <div data-bind="component: {name: 'billing-component'}"></div>
@@ -136,7 +143,7 @@
     </div>
 
     <!-- **** Contacts **** -->
-    <div id="contactsPanel" class="contactsPanel container" data-bind="if: loadContacts">
+    <div id="contactsPanel" class="contactsPanel" data-bind="if: loadContacts">
         <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 ">
                 <div data-bind="component: 'contact-widget-component'"></div>
@@ -145,7 +152,7 @@
     </div>
 
     <!-- **** Claims list **** -->
-    <div id="claimsListPanel" class="claimsListPanel container" data-bind="if: loadClaimsList">
+    <div id="claimsListPanel" class="claimsListPanel" data-bind="if: loadClaimsList">
         <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                 <div data-bind="component: 'claims-list-component'"></div>
@@ -154,20 +161,24 @@
     </div>
 
     <!-- **** Claim edit/entry module **** -->
-    <div class="container">
-        <div class="row">
-            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                <div id="claimPanel" class="claimPanel inline pull-top">
-                    <!-- Note: Still using module for the afterRender fn -->
-                    <div data-bind="module: {name: 'app/components/claim/claimVM',
-                                             template: 'app/components/claim/claim'}"></div>
-                </div>
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <div id="claimPanel" class="claimPanel inline pull-top">
+                <!-- Note: Still using module for the afterRender fn -->
+                <div data-bind="component: 'claims-component'"></div>
+            </div>
 
-                <!-- **** Task edit/entry module **** -->
-                <div id="claimEntryPanel" class="claimEntryPanel inline">
-                    <div id="claimEntryPanelContent" class="claimEntryPanelContent">
-                        <div data-bind="component: 'task-entry-component'"></div>
-                    </div>
+            <!-- **** Task edit/entry module **** -->
+            <div id="claimEntryPanel" class="claimEntryPanel inline">
+                <div id="claimEntryPanelContent" class="claimEntryPanelContent">
+                    <div data-bind="component: 'task-entry-component'"></div>
+                </div>
+            </div>
+
+            <!-- **** From edit/entry module **** -->
+            <div id="claimFormPanel" class="claimFormPanel inline">
+                <div id="claimFormPanelContent" class="claimFormPanelContent">
+                    <div data-bind="component: 'claim-form-component'"></div>
                 </div>
             </div>
         </div>
@@ -189,7 +200,6 @@
     <add-contact-component></add-contact-component>
 </div>
 <!-- END #MAIN CONTENT -->
-</body>
 
 <!-- Welcome splash -->
 <div id="welcomeModal"
@@ -200,7 +210,7 @@
     <div class="welcome modal-dialog">
         <div class="welcome modal-content">
             <div class="welcome modal-body">
-                <div class="container-fluid">
+                <div>
                     <div class="text-center">
                         <div class="welcome banner">Welcome to MyClaimsHelper</div>
                         <div>Would you like a quick tour of the basics?</div>
@@ -217,18 +227,5 @@
         </div>
     </div>
 </div>
-
-<script type="application/javascript">
-    require.config({
-        paths: {
-            // Load optimized file
-            "app/components/start": "dist/app/components/start"
-        }
-    });
-
-    require(['app/components/start'], function () {
-    });
-</script>
-
-
+</body>
 </html>

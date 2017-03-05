@@ -1,61 +1,80 @@
-var restify = require('restify');
-var serveStaticWith304 = require('./static');
+let fs = require('fs');
+let path = require('path');
+let restify = require('restify');
+let serveStaticWith304 = require('./static');
 
-var socketio = require('socket.io');
-var config = require('./config.js');
-var EventEmitter = require('events').EventEmitter;
+let socketio = require('socket.io');
+let config = require('./config.js');
+let EventEmitter = require('events').EventEmitter;
 
-var claimsService = require('./services/claimsService.js');
-var billingServices = require('./services/billingServices.js');
-var billingProfileService = require('./services/billingProfileService.js');
-var contactService = require('./services/contactService.js');
-var contactSyncService = require('./services/contactSyncService.js');
-var profileService = require('./services/profileService.js');
-var uploadService = require('./services/uploadService.js');
-var entityExtractionService = require('./services/entityExtractionService.js');
-var notificationService = require('./services/notificationService.js');
-var statsService = require('./services/statsService');
-var configservice = require('./services/configService');
+let claimsService = require('./services/claimsService.js');
+let refDataService = require('./services/refDataService.js');
+let formService = require('./services/formService.js');
+let billingServices = require('./services/billingServices.js');
+let billingProfileService = require('./services/billingProfileService.js');
+let contactService = require('./services/contactService.js');
+let contactSyncService = require('./services/contactSyncService.js');
+let profileService = require('./services/profileService.js');
+let uploadService = require('./services/uploadService.js');
+let entityExtractionService = require('./services/entityExtractionService.js');
+let notificationService = require('./services/notificationService.js');
+let statsService = require('./services/statsService');
+let configservice = require('./services/configService');
+let pdfService = require('./services/pdfService.js');
 
-var processMail = require('./services/mail/mailHandler.js').process;
-var mongoUtils = require('./mongoUtils.js');
-var Consts = require('./shared/consts.js');
-var serviceUtils = require('./serviceUtils.js');
-var os = require('os');
-var jwt = require('jsonwebtoken');
-var assert = require('assert');
+let processMail = require('./services/mail/mailHandler.js').process;
+let mongoUtils = require('./mongoUtils.js');
+let Consts = require('./shared/consts.js');
+let serviceUtils = require('./serviceUtils.js');
+let os = require('os');
+let jwt = require('jsonwebtoken');
+let assert = require('assert');
 
 
 // Auto0 keys
-var JWT_SECRET = config.auth0_client_secret;
-var DECODED_JWT_SECRET = new Buffer(JWT_SECRET, 'base64');
+let JWT_SECRET = config.auth0_client_secret;
+let DECODED_JWT_SECRET = new Buffer(JWT_SECRET, 'base64');
 
 // Testing hooks
-var DISABLE_AUTH = config.disable_auth;
-var USE_SSL = config.use_ssl;
-var TEST_USER = config.test_user;
+let DISABLE_AUTH = config.disable_auth;
+let USE_SSL = config.use_ssl;
+let TEST_USER = config.test_user;
 
-// Restify server
-var server = restify.createServer();
-var io = socketio.listen(server);
+let server, http_server;
+if (USE_SSL) {
+    // Restify server - pass in certs for https
+    let https_options = {
+        key: fs.readFileSync(path.join(__dirname, 'cert', 'www_myclaimshelper_com.key')),
+        certificate: fs.readFileSync(path.join(__dirname, 'cert', 'www_myclaimshelper_com.pem'))
+    };
+    server = restify.createServer(https_options);
+    http_server = restify.createServer();
+} else {
+    server = restify.createServer();
+    http_server = null;
+}
+
+// Socket IO
+let io = socketio.listen(server.server);
 
 
 function init() {
-    server = restify.createServer();
-
-    // Wrap with socket io instance
-    io = socketio.listen(server);
-
-    server.use(function httpsRedirect(req, res, next) {
-        var securityNotNeeded = USE_SSL === false;
-        var isSecure = req.isSecure() === true || req.headers['x-forwarded-proto'] == 'https';
+    function httpsRedirect(req, res, next) {
+        let securityNotNeeded = USE_SSL === false;
+        let isSecure = req.isSecure() === true || req.headers['x-forwarded-proto'] == 'https';
         if (securityNotNeeded || isSecure) {
             next();
         } else {
-            res.writeHead(302, {'Location': 'https://' + req.headers.host + req.url});
+            let secureUrl = 'https://' + req.headers.host.split(':')[0] + ':' + config.https_port + req.url;
+            console.log("Redirecting to https: " + secureUrl);
+            res.writeHead(302, {'Location': secureUrl});
             res.end();
         }
-    });
+    }
+
+    if (http_server) {
+        http_server.use(httpsRedirect);
+    }
 
     // Attach handlers to Server
     server.use(restify.acceptParser(server.acceptable));
@@ -129,12 +148,13 @@ function authenticate(req, res, next) {
 }
 
 function setupClaimsServiceRoutes() {
-    server.get('/claim', authenticate, claimsService.getAllClaims);
     server.get('/claim/:id', authenticate, claimsService.getClaim);
     server.get('/claim/:id/entries', authenticate, claimsService.getAllEntriesForClaim);
+    server.get('/claim/:id/forms', authenticate, formService.getAllFormsForClaim);
     server.post('/claim', authenticate, claimsService.saveOrUpdateClaim);
     server.post('/claim/search', authenticate, claimsService.searchClaims);
     server.post('/claim/close', authenticate, claimsService.closeClaim);
+    server.post('/claim/modify', authenticate, claimsService.modifyClaim);
 
     server.get('/claimEntry/:id', authenticate, claimsService.getClaimEntry);
     server.post('/claimEntry', authenticate, claimsService.saveOrUpdateClaimEntry);
@@ -145,7 +165,15 @@ function setupClaimsServiceRoutes() {
     server.post('/upload', uploadService.uploadFile);
     server.get('/download', uploadService.downloadFile);
 
+    server.post('/convertToPdf', pdfService.convertToPdf);
+    server.post('/emailPdf', pdfService.emailPdf);
+
     server.post('/extract/entity', authenticate, entityExtractionService.extract);
+    server.get('/refData/:type', authenticate, refDataService.getRefData);
+    server.post('/refData', authenticate, refDataService.addRefData);
+
+    server.get('/form/:id', authenticate, formService.getFormData);
+    server.post('/form', authenticate, formService.addFormData);
 }
 
 function setupContactServiceRoutes() {
@@ -194,6 +222,10 @@ function setupStaticRoutes() {
         directory: 'client',
         maxAge: 60 * 60 * 24
     }));
+    server.get(/\/built\/.*/, serveStaticWith304({
+        directory: 'client',
+        maxAge: 60 * 60 * 24
+    }));
     server.get(/\/lib\/.*/, serveStaticWith304({
         directory: 'client',
         maxAge: 60 * 60 * 24
@@ -223,6 +255,13 @@ function setupStaticRoutes() {
         'default': 'myclaimshelper/redirect.html',
         maxAge: 60 * 60 * 24
     }));
+    if (http_server) {
+        http_server.get('/.*/ ', serveStaticWith304({
+            'directory': 'site',
+            'default': 'myclaimshelper/redirect.html',
+            maxAge: 60 * 60 * 24
+        }));
+    }
 }
 
 /*********************************************************/
@@ -259,9 +298,21 @@ function setupBroadcastListener() {
 /*********************************************************/
 
 function startServer() {
-    server.listen(config.port, function () {
-        console.log('%s listening at %s', server.name, server.url);
-    });
+    // If https is enabled, start two servers and re-direct to https
+    // See: http://stackoverflow.com/questions/33666226/get-restify-rest-api-server-to-support-both-https-and-http
+
+    if (http_server) {
+        server.listen(config.https_port, function () {
+            console.log('%s listening at %s', server.name, server.url);
+        });
+        http_server.listen(config.port, function () {
+            console.log('%s listening at %s', server.name, server.url);
+        });
+    } else {
+        server.listen(config.port, function () {
+            console.log('%s listening at %s', server.name, server.url);
+        });
+    }
 }
 
 init();

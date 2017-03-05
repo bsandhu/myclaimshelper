@@ -1,0 +1,81 @@
+<!-- ko ifnot: isClaimClosed -->
+<div class="col-lg-12 col-md-12 col-sm-12" style="margin-bottom: 20px">
+    <!-- File upload component -->
+    <file-upload-component params="'claimEntry': claim,
+                                    domElemId: 'file-input-1',
+                                    onUpload: onSave.bind(vm),
+                                    listFiles: false"></file-upload-component>
+</div>
+<!-- /ko -->
+
+<!-- No docs msg -->
+<!-- ko ifnot: isClaimClosed -->
+<div data-bind="if: docsToList().length == 0"
+     class="col-lg-offset-2 col-md-offset-2 col-sm-offset-1 col-lg-8 col-md-8 col-sm-10 col-xs-12">
+    <div class="text-info topMargin5pc text-center">
+        You may attach documents to a Claim for safekeeping<br/>No documents for this Claim yet
+    </div>
+</div>
+<!-- /ko -->
+
+<!-- **** List files **** -->
+<div class="col-lg-12 col-md-12 col-sm-12" data-bind="if: docsToList().length > 0">
+    <table id="claimDocsTable"
+           data-sortable
+           data-bind="sortable"
+           class="table table-hover">
+
+        <!-- Header -->
+        <thead>
+        <tr>
+            <th data-field="name" data-sortable="true" data-sortable-type="alpha">File name</th>
+            <!-- ko ifnot: isPartiallyCollapsed -->
+            <th></th>
+            <th data-sortable-type="numeric">Size</th>
+            <th data-sortable-type="alpha" class="hidden-xs">Type</th>
+            <th data-field="lastModifiedDate" data-sortable="true" data-sortable-type="numeric" class="hidden-xs">Last modified</th>
+            <th data-field="owner" data-sortable="true" data-sortable-type="alpha" class="hidden-xs hidden-sm">Created by</th>
+            <th data-field="id" data-sortable="true" class="hidden-sm hidden-xs hidden-md hidden-lg">Id</th>
+            <!-- /ko -->
+        </tr>
+        </thead>
+
+        <!-- Body -->
+        <!-- **** List out docs attached to claim directly **** -->
+        <tbody data-bind='foreach: { data: docsToList() }'>
+        <tr style="cursor: default">
+            <td data-bind="text: attachment.name"></td>
+            <!-- ko ifnot: $parent.isPartiallyCollapsed -->
+            <td>
+                <a data-bind="attr: {href: '/download?id=' + attachment.id()}"
+                   class="color-light-blue myTooltip" myTitle="Click to Download file">
+                    <span class="fa-stack fa-lg">
+                      <i class="fa fa-circle fa-stack-2x"></i>
+                      <i class="fa fa-download fa-stack-1x fa-inverse"></i>
+                    </span>
+                </a>
+            </td>
+            <td data-bind="attr: {'data-value': attachment.size()},
+                           text: Math.round(attachment.size()/1024, 2) + ' K'"></td>
+            <td class="hidden-xs"
+                data-bind="text: attachment.type,
+                            attr: {'data-value': attachment.type()}"></td>
+            <td class="hidden-xs"
+                data-bind="text: $parent.DateUtils.niceDate(attachment.lastModifiedDate ? attachment.lastModifiedDate() : '-'),
+                           attr: {'data-value': attachment.lastModifiedDate().getTime()}">
+            </td>
+            <td class="hidden-xs hidden-sm tableCell"
+                data-bind="text: attachment.owner"></td>
+            <td class="hidden-sm hidden-xs hidden-md hidden-lg tableCell"
+                data-bind="text: attachment.id">
+            </td>
+            <!-- /ko -->
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<!--- **** Tmpl for docs table row **** -->
+<script type="text/html" id="claimDocsRowTmpl">
+
+</script>

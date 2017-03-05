@@ -1,10 +1,10 @@
-var assert = require('assert');
-var billingProfileService = require('./../../server/services/billingProfileService.js');
-var BillingProfile = require('./../../server/model/billingProfile.js');
-var mongoUtils = require("./../../server/mongoUtils.js");
-var _ = require('underscore');
-var jQuery = require('jquery-deferred');
-var BILLING_PROFILE_COL_NAME = mongoUtils.BILLING_PROFILE_COL_NAME;
+let assert = require('assert');
+let billingProfileService = require('./../../server/services/billingProfileService.js');
+let BillingProfile = require('./../../server/model/billingProfile.js');
+let mongoUtils = require("./../../server/mongoUtils.js");
+let _ = require('underscore');
+let jQuery = require('jquery-deferred');
+let BILLING_PROFILE_COL_NAME = mongoUtils.BILLING_PROFILE_COL_NAME;
 
 
 describe('BillingProfile Service', function () {
@@ -15,11 +15,11 @@ describe('BillingProfile Service', function () {
             .fail('Failed to cleanup test data');
     });
 
-    var testBillingProfile = undefined;
+    let testBillingProfile = undefined;
 
     it('checkAndGetBillingProfileForClaimREST', function (done) {
-        var req = {params: {claimId: 'TestClaim'}, headers: {userid: 'TestUser'}};
-        var res = {};
+        let req = {params: {claimId: 'TestClaim'}, headers: {userid: 'TestUser', group: 'TestGroup', ingroups: ['TestGroup']}};
+        let res = {};
 
         res.json = function (data) {
             assert(data);
@@ -36,8 +36,8 @@ describe('BillingProfile Service', function () {
     });
 
     it('saveOrUpdateREST', function (done) {
-        var req = {body: testBillingProfile, headers: {userid: 'TestUser'}};
-        var res = {};
+        let req = {body: testBillingProfile, headers: {userid: 'TestUser', group: 'TestGroup', ingroups: ['TestGroup']}};
+        let res = {};
 
         res.json = function (data) {
             assert(data);
@@ -57,8 +57,8 @@ describe('BillingProfile Service', function () {
     });
 
     it('checkAndGetBillingProfileForClaimREST already exists', function (done) {
-        var req = {params: {claimId: 'TestClaim'}, headers: {userid: 'TestUser'}};
-        var res = {};
+        let req = {params: {claimId: 'TestClaim'}, headers: {userid: 'TestUser', group: 'TestGroup', ingroups: ['TestGroup']}};
+        let res = {};
 
         res.json = function (data) {
             assert(data);
@@ -70,8 +70,8 @@ describe('BillingProfile Service', function () {
     });
 
     it('isCodeInUse', function (done) {
-        var req = {params: {billingCode: '100'}, headers: {userid: 'TestUser'}};
-        var res = {};
+        let req = {params: {billingCode: '100'}, headers: {userid: 'TestUser', group: 'TestGroup', ingroups: ['TestGroup']}};
+        let res = {};
 
         res.json = function (data) {
             assert(data);

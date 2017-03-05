@@ -17,6 +17,9 @@ define(['underscore', 'jquery', 'knockout', 'KOMap', 'amplify',
             this.myDueDate = ko.observable();
             this.myDescription = ko.observable();
 
+            // Profile based access
+            this.isBillingEnabled = ko.observable(false);
+
             // Model
             this.claimEntry = ko.observable(this.newEmptyClaimEntry());
 
@@ -89,6 +92,9 @@ define(['underscore', 'jquery', 'knockout', 'KOMap', 'amplify',
             amplify.subscribe(Events.SHOW_CLAIM_ENTRY, this, this.onShowClaimEntry);
             amplify.subscribe(Events.NEW_CLAIM_ENTRY, this, this.onNewClaimEntry);
             amplify.subscribe(Events.UPDATE_CLAIM_ENTRY_STATUS, this, this.onStatusUpdate);
+            amplify.subscribe(Events.LOADED_USER_PROFILE, this, function () {
+                this.isBillingEnabled(Session.getCurrentUserProfile().isBillingEnabled);
+            });
         };
 
         TaskEntryVM.prototype.onShowClaimEntry = function (evData) {

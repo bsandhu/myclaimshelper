@@ -8,9 +8,12 @@
     "amdefine": "0.1.0",
     "assert-plus": "^1.0.0",
     "debug": "^2.2.0",
+    "electron": "1.4.15",
+    "electron-html-to": "2.3.3",
     "entities": "^1.1.1",
     "escape-regexp-component": "^1.0.2",
     "googleapis": "^5.2.1",
+    "html-pdf": "2.1.0",
     "jquery-deferred": "0.3.0",
     "jsonwebtoken": "^5.7.0",
     "lodash": "^4.5.1",
@@ -19,16 +22,18 @@
     "mime": "^1.3.4",
     "moment": "^2.12.0",
     "moment-timezone": "^0.5.5",
-    "mongodb": "1.4.*",
+    "mongodb": "^2.2.21",
     "requirejs": "^2.2.0",
-    "restify": "2.8.1",
-    "socket.io": "^1.3.7",
+    "restify": "4.3.0",
+    "socket.io": "^1.7.2",
     "underscore": "1.8.*",
     "utf8": "^2.1.1",
     "verror": "^1.6.1"
   },
   "devDependencies": {
-    "mocha": "1.21.4"
+    "mocha": "1.21.4",
+    "supervisor": "^0.12.0",
+    "webpack": "^1.14.0"
   },
-  "engine": "node 4.3.2"
+  "engine": "node 7.4.0"
 }

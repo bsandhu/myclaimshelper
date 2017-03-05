@@ -105,6 +105,12 @@ div {
     min-width: 350px;
 }
 
+.flexRowCenter {
+    display: flex;
+    flex-direction: row;
+    align-items: center
+}
+
 /**********************************************************/
 /**** Margins and borders ****/
 /**********************************************************/
@@ -115,6 +121,14 @@ div {
 
 .topMargin5 {
     margin-top: 5px;
+}
+
+.topMargin10 {
+    margin-top: 10px;
+}
+
+.topMargin15 {
+    margin-top: 15px;
 }
 
 .topMargin1pc {
@@ -135,6 +149,14 @@ div {
 
 .bottomMargin5 {
     margin-bottom: 5px;
+}
+
+.bottomMargin10 {
+    margin-bottom: 10px;
+}
+
+.bottomMargin15 {
+    margin-bottom: 15px;
 }
 
 .leftMargin {
@@ -165,6 +187,10 @@ div {
     margin-right: 2%;
 }
 
+.rightMargin5pc {
+    margin-right: 5%;
+}
+
 .paddingRight5 {
     padding-right: 5px;
 }
@@ -189,12 +215,28 @@ div {
     border-bottom: 1px dotted #2d6ca2;
 }
 
+.bottomBorderForm {
+    border-bottom: 1px solid black;
+}
+
 .bottomBorder.darkGray {
     border-bottom-color: #ccc;
 }
 
+.border {
+    border: 1px solid black;
+}
+
 .noBorder {
     border: 0;
+}
+
+.noBorderBottom {
+    border-bottom: 0;
+}
+
+.squareCorners {
+    border-radius: 0px;
 }
 
 .noRightBorder {
@@ -211,6 +253,14 @@ div {
 
 .noPadding {
     padding: 0;
+}
+
+.noRightPadding {
+    padding-right: 0;
+}
+
+.noLeftPadding {
+    padding-left: 0;
 }
 
 .noOverflow {
@@ -245,6 +295,10 @@ div {
 /**********************************************************/
 /**** Form elements ****/
 /**********************************************************/
+
+input[type="text"] {
+    border-radius: 0;
+}
 
 input[type="file"] {
     display: none;
@@ -291,7 +345,15 @@ input[type="file"] {
 
 .control-label {
     font-weight: 300;
-    font-size: 18px;
+    font-size: 16px;
+}
+
+.control-label .sub-heading {
+    font-weight: 600;
+}
+
+.sub-heading {
+    font-weight: 600;
 }
 
 /****  Borders on input elements ****/
@@ -335,6 +397,10 @@ input.no-border {
 !important;
 }
 
+.color-light-blue {
+    color: #039cdb;
+}
+
 .color-dark-green {
     color: darkgreen;
 }
@@ -358,6 +424,10 @@ input.no-border {
 
 .clearSearchIcon:hover {
     color: lightcoral;
+    font-size: 1.4em;
+    transition-property: font-size;
+    transition-duration: 300ms;
+    transition-timing-function: linear;
 }
 
 .text-fine-print {
@@ -590,6 +660,11 @@ input.no-border {
 /**** Bootstrap overrides ****/
 /**********************************************************/
 
+/* Square tabs */
+.nav-tabs > li.active > a {
+    border-radius: 0px;
+}
+
 /* Narrow to avoid excessive whitespace on XS devices */
 .container {
     padding-right: 3px;
@@ -669,7 +744,7 @@ h3.panel-title {
 }
 
 .panel-default .panel-heading {
-    background-color: white;
+    background-color: rgba(173, 216, 230, 0.22);
     border-bottom: 0px;
 }
 
@@ -855,10 +930,6 @@ h3.panel-title {
     }
 }
 
-.nav > li {
-    background-color: #34495e;
-}
-
 .navbar-default {
     background-color: #34495e;
     height: 74px;
@@ -935,6 +1006,18 @@ h3.panel-title {
 }
 
 /**********************************************************/
+/**** jQuery UI autocomplete ****/
+/**********************************************************/
+.ui-autocomplete {
+    border-radius: 0px;
+    background-color: lightyellow;
+}
+
+.ui-corner-all {
+    border-radius: 0px;
+    background-color: lightyellow;
+}
+/**********************************************************/
 /**** Bootstrap table overrides ****/
 /**********************************************************/
 
@@ -954,6 +1037,10 @@ h3.panel-title {
 /**** Contacts ****/
 /**********************************************************/
 
+.stepBulletPoint.color-teal {
+    background: #00bebe;
+}
+
 .stepBulletPoint {
     background: #0091d9;
     color: #fff;
@@ -961,6 +1048,25 @@ h3.panel-title {
     padding: 7px 13px;
     font-size: 12px;
     border-radius: 50%;
+    line-height: 275%;
+}
+
+.contactFormIcon {
+    font-size: 1.25em;
+    opacity: .80;
+    left: 10px;
+    position: relative;
+}
+
+.contactFormRow {
+    display: flex;
+    flex-direction: row;
+    min-height: 1em;
+    flex-wrap: wrap;
+}
+
+.contactFormBG {
+    background-color: #E0F2F1;
 }
 
 /**********************************************************/
@@ -1054,7 +1160,6 @@ h3.panel-title {
 .myTooltip {
     display: inline;
     position: relative;
-    text-transform: capitalize;
 }
 
 .myTooltip:hover:before {
@@ -1079,7 +1184,6 @@ h3.panel-title {
     padding: 5px 15px;
     position: absolute;
     z-index: 98;
-    width: 200px;
 }
 
 /**********************************************************/
@@ -1235,3 +1339,232 @@ div.hopscotch-bubble .hopscotch-bubble-arrow-container.right .hopscotch-bubble-a
 div.hopscotch-bubble .hopscotch-bubble-arrow-container.right .hopscotch-bubble-arrow-border {
     border-left: 17px solid rgb(171, 175, 176);
 }
+
+/**********************************************************/
+/**** Form styling ****/
+/**********************************************************/
+
+.formContainer {
+    font-family: sans-serif;
+    font-size: 14px;
+}
+
+.formContainer .finePrint {
+    font-size: 11px;
+}
+
+.formContainer .header {
+    display: none;
+}
+
+.formContainer span {
+    display: none;
+    font-size: 14px;
+}
+
+.formContainer .printNumeric {
+    display: none;
+}
+
+.formContainer input {
+    width: 100%;
+    border: none;
+    box-shadow: none;
+    border-bottom: 1px solid darkgrey;
+    color: #2b669a;
+    font-family: Lato, sans-serif;
+    font-size: 14px;
+    font-weight: normal;
+    line-height: 20px;
+    min-height: 20px;
+    padding-left: 5px;
+}
+
+@media print {
+    @page {
+        size: letter;
+        margin-left: .25in;
+        margin-right: .25in;
+        margin-bottom: .25in;
+        margin-top: .25in;
+    }
+
+    .formContainer {
+        font-family: sans-serif;
+        font-size: 12px;
+    }
+
+    .formContainer .finePrint {
+        font-size: 11px;
+    }
+
+    .formContainer .header {
+        display: inherit;
+        font-weight: bold;
+        font-size: 18px;
+    }
+
+    .formContainer input {
+        display: none;
+    }
+
+    .formContainer span {
+        display: inline-flex;
+        width: 100%;
+        border: none;
+        box-shadow: none;
+        border-bottom: 1px solid darkgrey;
+        font-size: 12px;
+        font-weight: normal;
+        line-height: 17px;
+        min-height: 17px;
+        padding-left: 5px;
+    }
+
+    .formContainer .printNumeric {
+        display: inline-flex;
+        border: none;
+        box-shadow: none;
+        font-size: 12px;
+        font-weight: normal;
+        line-height: 17px;
+        min-height: 17px;
+        padding-left: 5px;
+    }
+}
+
+.formRow {
+    display: flex;
+    flex-direction: row;
+    min-height: 1em;
+}
+
+.formColumn {
+    display: flex;
+    flex-flow: column;
+}
+
+.formTextBox {
+    flex-basis: 50%;
+    flex-grow: 0;
+    align-content: flex-start;
+    border: 1px solid darkgray;
+    padding: 5px;
+    margin: 5px;
+    font-weight: 800;
+}
+
+/************ Form table *************/
+
+.formTableCell {
+    padding: 0;
+    border: none;
+    /* Apply bottom border on the cell */
+    border-right: 1px solid black;
+    border-bottom: 1px solid black;
+    line-height: 30px;
+}
+
+.formTableCell:last-child {
+    border-right: none;
+}
+
+.formTableCell input {
+    border-bottom: none;
+}
+
+.formTableCell span {
+    border-bottom: none;
+}
+
+.formTableCell div {
+    border-bottom: none;
+}
+
+.formTableFooterCell:last-child {
+    border-right: none;
+}
+
+.formTableFooterCell input {
+    border-bottom: none;
+}
+
+.formTableFooterCell span {
+    border-bottom: none;
+}
+
+.formTableFooterCell div {
+    border-bottom: none;
+}
+
+.formTableCell .numeric {
+    text-align: right;
+    padding-right: 5px;
+    float: right;
+}
+
+.formTableFooterCell .numeric {
+    text-align: right;
+    padding-right: 5px;
+    float: right;
+}
+
+.formRowCentered {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.formTableHeaderCell {
+    padding: 0;
+    border: none;
+    border-bottom: 1px solid black;
+    border-right: 1px solid black;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.formTableHeaderCell:last-child {
+    border-right: none;
+}
+
+.formTableFooterCell {
+    padding: 0;
+    border: none;
+    border-right: 1px solid black;
+}
+
+/********************************/
+
+.width3pc {
+    width: 3%;
+}
+
+.width7pc {
+    width: 7%;
+}
+
+.width10pc {
+    width: 10%;
+}
+
+.width15pc {
+    width: 15%;
+}
+
+.width40pc {
+    width: 40%;
+}
+
+.width50pc {
+    width: 50%;
+}
+
+.width60pc {
+    width: 60%;
+}
+
+.width100pc {
+    width: 100%;
+}
+

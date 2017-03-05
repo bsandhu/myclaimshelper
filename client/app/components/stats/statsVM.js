@@ -1,6 +1,6 @@
 define(['jquery', 'underscore', 'knockout', 'KOMap', 'amplify',
         'app/utils/events', 'shared/NumberUtils', 'app/utils/ajaxUtils',
-        'text!app/components/stats/stats.tmpl.html', 'chartjs'],
+        'text!app/components/stats/stats.tmpl.html', 'chart.js'],
     function ($, _, ko, KOMap, amplify, Events, NumberUtils, AjaxUtils, statsView, Chart) {
 
         var N = Number;
@@ -110,13 +110,13 @@ define(['jquery', 'underscore', 'knockout', 'KOMap', 'amplify',
         StatsVM.prototype.onclosedClaimsStatsTemplRender = function () {
             console.log('Rendering closed claims Stats');
             // Destroy on re-render
-            $('#closedClaimsChart').remove(); // this is my <canvas> element
-            $('#closedClaimsChartDiv').append('<canvas id="closedClaimsChart"></canvas>');
+            // $('#closedClaimsChart').remove(); // this is my <canvas> element
+            // $('#closedClaimsChartDiv').append('<canvas id="closedClaimsChart"></canvas>');
 
-            var ctx = $("#closedClaimsChart");
-            var labels = _.keys(this.closedClaimsData());
-            var dataPoints = _.values(this.closedClaimsData());
-            var myChart = new Chart(ctx, {
+            let ctx = $("#closedClaimsChart");
+            let labels = _.keys(this.closedClaimsData());
+            let dataPoints = _.values(this.closedClaimsData());
+            let myChart = new Chart(ctx, {
                 type: 'bar',
                 data: {
                     labels: labels,
@@ -128,6 +128,8 @@ define(['jquery', 'underscore', 'knockout', 'KOMap', 'amplify',
                     ]
                 },
                 options: {
+                    legend: {display: false},
+                    responsive: true,
                     scales: {
                         xAxes: [
                             {display: false, gridLines: {drawOnChartArea: false}}

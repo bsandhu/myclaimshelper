@@ -892,7 +892,9 @@
             });
         }
 
+        // ************************************************
         // **** NOTE custom mods on original lib ****
+        // ************************************************
         if (this.options.search) {
             html = [];
             html.push(
@@ -925,10 +927,6 @@
                 }, that.options.searchTimeOut);
             }
         }
-
-        // **********************************************************
-        // **** NOTE Status filter - custom mods on original lib ****
-        // **********************************************************
 
         html = [];
         this.$toolbar.append(html.join(''));

@@ -1,13 +1,12 @@
-var assert = require('assert');
-var notificationService = require('./../../server/services/notificationService.js');
-var Notification = require('./../../server/model/notification.js');
-var mongoUtils = require('./../../server/mongoUtils.js');
-var _ = require('underscore');
-var assert = require('assert');
+let assert = require('assert');
+let notificationService = require('./../../server/services/notificationService.js');
+let Notification = require('./../../server/model/notification.js');
+let mongoUtils = require('./../../server/mongoUtils.js');
+let _ = require('underscore');
 
 
 describe('NotificationService', function () {
-    var testNotification = new Notification();
+    let testNotification = new Notification();
     testNotification.name = undefined;
     testNotification.type = 'info';
     testNotification.read = false;
@@ -24,13 +23,13 @@ describe('NotificationService', function () {
     });
 
     it('Add Notification', function (done) {
-        var req = {body: {msg: 'Hello'}, headers: {userid: 'TestUser'}};
-        var res = {};
+        let req = {body: {msg: 'Hello'}, headers: {userid: 'TestUser', group: 'TestGroup', ingroups: ['TestGroup']}};
+        let res = {};
         res.json = function (data) {
             assert(data);
             assert.equal(data.status, 'Success');
 
-            var notification = data.data;
+            let notification = data.data;
             assert.ok(notification._id);
             assert.ok(notification.owner);
             testNotification._id = notification._id;
@@ -53,7 +52,7 @@ describe('NotificationService', function () {
     it('Mark all as read', function (done) {
         notificationService.markAllAsReadInDB('TestUser')
             .then(function () {
-                mongoUtils.getEntityById(testNotification._id, mongoUtils.NOTIFICATIONS_COL_NAME, 'TestUser')
+                mongoUtils.getEntityById(testNotification._id, mongoUtils.NOTIFICATIONS_COL_NAME, 'TestUser', ['TestUser'])
                     .then(function (err, item) {
                         assert.equal(err, null);
                     })

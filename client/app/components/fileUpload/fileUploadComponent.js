@@ -1,15 +1,23 @@
 define(['knockout', 'KOMap', 'jquery', 'underscore', 'bootbox',
         'amplify', 'app/utils/events',
-        'shared/objectUtils',
+        'shared/objectUtils', 'app/utils/ajaxUtils',
         'text!app/components/fileUpload/fileUploadComponent.tmpl.html'],
-    function (ko, KOMap, $, _, bootbox, amplify, Events, ObjectUtils, viewHtml) {
+    function (ko, KOMap, $, _, bootbox, amplify, Events, ObjectUtils, AjaxUtils, viewHtml) {
         'use strict';
 
         function FileUploadComponentVM(params) {
             console.log('Init File upload Widget');
 
+            // Customization params
             console.assert(params.claimEntry, 'Expecting claimEntry param');
+            console.assert(params.domElemId, 'Expecting domElemId param');
+
+            this.domElemId = params.domElemId;
             this.claimEntry = params.claimEntry;
+            this.onUpload = params.onUpload || $.noop;
+            this.listFiles = _.isBoolean(params.listFiles) ? params.listFiles : true;
+            this.enrichFileName = _.isBoolean(params.listFiles) ? params.listFiles : true;
+
             this.showUploadingSpinner = ko.observable(false);
         }
 
@@ -31,43 +39,44 @@ define(['knockout', 'KOMap', 'jquery', 'underscore', 'bootbox',
 
         FileUploadComponentVM.prototype.handleFilesSelection = function (ev) {
             console.log("Handle files selection");
-            var files = document.getElementById('fileUpload-input').files;
+            let files = document.getElementById(this.domElemId).files;
             this._upload(files);
         }
 
         FileUploadComponentVM.prototype.handleFilesDrop = function (ev) {
-            var filesSrc = ev.originalEvent.dataTransfer || ev.currentTarget;
-            var files = filesSrc.files;
+            let filesSrc = ev.dataTransfer || ev.currentTarget;
+            let files = filesSrc.files;
             this._upload(files);
         }
 
         FileUploadComponentVM.prototype._upload = function (files) {
             try {
                 console.log("Uploading " + files);
-                var _this = this;
+                let _this = this;
 
                 if (!files.length) {
                     console.log('No files selected');
                     return;
                 }
 
-                for (var i = 0; i < files.length; i++) {
+                for (let i = 0; i < files.length; i++) {
                     this.showUploadingSpinner(true);
                     this.uploadFile(files[i])
                         .done(function (fileMetadata) {
-                            var metaObj = JSON.parse(fileMetadata);
+                            let metaObj = JSON.parse(fileMetadata);
                             console.log(metaObj);
                             _this.claimEntry().attachments.push(KOMap.fromJS(metaObj));
                             _this.showUploadingSpinner(false);
                             setTimeout(function clearFileName() {
-                                $('#fileUpload-input').val('')
+                                $('#' + _this.domElemId).val('')
                             }, 500);
+                            _this.onUpload();
                         })
                         .fail(function (msg) {
                             amplify.publish(Events.FAILURE_NOTIFICATION,
                                 {
                                     msg: "<strong>Error </strong> while uploading files. Please retry." +
-                                    "<br>Techinal details: " + msg
+                                    "<br>Technical details: " + msg
                                 })
                         });
                 }
@@ -75,14 +84,14 @@ define(['knockout', 'KOMap', 'jquery', 'underscore', 'bootbox',
                 amplify.publish(Events.FAILURE_NOTIFICATION,
                     {
                         msg: "<strong>Error</strong> while processing your request. Please retry." +
-                        "<br>Techinal details: " + e
+                        "<br>Technical details: " + e
                     })
             }
         };
 
         FileUploadComponentVM.prototype.createThumbnail = function (file) {
-            var imgDiv = $('<div class="inline"></div>');
-            var img = $('<img>');
+            let imgDiv = $('<div class="inline"></div>');
+            let img = $('<img>');
             img.attr('src', window.URL.createObjectURL(file));
             img.attr('height', 30);
             img.bind('onload', function (e) {
@@ -93,12 +102,14 @@ define(['knockout', 'KOMap', 'jquery', 'underscore', 'bootbox',
         };
 
         FileUploadComponentVM.prototype.uploadFile = function (file) {
-            var uri = '/upload';
-            var xhr = new XMLHttpRequest();
-            var fd = new FormData();
+            let uri = '/upload';
+            let xhr = new XMLHttpRequest();
 
+            let fd = new FormData();
             xhr.open('POST', uri, true);
-            var defer = $.Deferred();
+            // Set auth headers - after req open but before send
+            AjaxUtils.setReqHeaders(xhr);
+            let defer = $.Deferred();
 
             // Handle response.
             xhr.onreadystatechange = function () {
@@ -112,7 +123,8 @@ define(['knockout', 'KOMap', 'jquery', 'underscore', 'bootbox',
             };
             fd.append('uploadedFile', file);
             // The JS file object is immutable, hence we need to send this through separately
-            fd.append('fileName', this.enrichedFileName(file));
+            fd.append('fileName', this.enrichFileName ? this.enrichedFileName(file) : file.name);
+            fd.append('lastModifiedDate', file.lastModified);
 
             // Initiate a multipart/form-data upload
             xhr.send(fd);
@@ -120,7 +132,7 @@ define(['knockout', 'KOMap', 'jquery', 'underscore', 'bootbox',
         };
 
         FileUploadComponentVM.prototype.enrichedFileName = function (file) {
-            var fileNum = ObjectUtils.nullSafe.bind(this, 'this.claimEntry().fileNum()', '')();
+            let fileNum = ObjectUtils.nullSafe.bind(this, 'this.claimEntry().fileNum()', '')();
             return (!ObjectUtils.isBlank(fileNum)
             && fileNum != '-'
             && file.name.indexOf(fileNum) == -1)
@@ -138,11 +150,11 @@ define(['knockout', 'KOMap', 'jquery', 'underscore', 'bootbox',
                 }
             });
 
-            var _this = this;
+            let _this = this;
 
             function removeAttachment() {
-                var allAttachments = _this.claimEntry().attachments();
-                var sansRemovedAttachment =
+                let allAttachments = _this.claimEntry().attachments();
+                let sansRemovedAttachment =
                     _.filter(allAttachments, function (attach) {
                         return attach.id() != attachment.id();
                     });

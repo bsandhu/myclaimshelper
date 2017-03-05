@@ -34,15 +34,31 @@ define([],
             }
         }
 
+        function camelcaseToSpaces(str) {
+            if (str == null || str == undefined) {
+                return "";
+            } else {
+                return str
+                // insert a space before all caps
+                    .replace(/([A-Z])/g, ' $1')
+                    // uppercase the first character
+                    .replace(/^./, function (str) {
+                        return str.toUpperCase();
+                    })
+
+            }
+        }
+
         function isBlank(obj) {
             return (!obj || String(obj).trim() === "");
-        };
+        }
 
         return {
             'nullSafe': nullsafe,
             'capitalize': capitalize,
             'defaultValue': defaultValue,
-            'isBlank': isBlank
+            'isBlank': isBlank,
+            'camelcaseToSpaces': camelcaseToSpaces
         }
     }
 )

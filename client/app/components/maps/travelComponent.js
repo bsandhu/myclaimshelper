@@ -3,8 +3,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore',
         'text!app/components/maps/travelComponent.tmpl.html',
         'model/tags', 'model/claimEntry',
         'shared/dateUtils', 'app/utils/ajaxUtils', 'app/utils/events', 'app/utils/audit',
-        'app/utils/responsive',
-        'async!https://maps.googleapis.com/maps/api/js?key=AIzaSyBB-Qincf0sNQcsu5PzZh7znG3GiB98GRU&libraries=places&signed_in=true&v=3.exp'],
+        'app/utils/responsive'],
 
     function ($, ko, KOMap, amplify, _, SummaryVM, viewHtml, Tags, ClaimEntry, DateUtils, AjaxUtils, Events, Audit, Responsive) {
         'use strict';

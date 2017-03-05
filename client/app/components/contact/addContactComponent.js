@@ -1,17 +1,18 @@
-define(['knockout', 'KOMap', 'text!app/components/contact/addContactComponent.tmpl.html', 'model/contact',
+define(['knockout', 'KOMap', 'underscore',
+        'text!app/components/contact/addContactComponent.tmpl.html', 'model/contact',
+        'app/components/contact/contactUtils',
         'app/utils/ajaxUtils', 'amplify', 'app/utils/events', 'app/components/contact/contactClient',
         'app/utils/audit'],
 
-    function (ko, KOMap, viewHtml, Contact, AjaxUtils, amplify, Events, ContactClient, Audit) {
+    function (ko, KOMap, _, viewHtml, Contact, ContactUtils, AjaxUtils, amplify, Events, ContactClient, Audit) {
         'use strict';
 
         function AddContactComponentVM(params) {
             console.log('Init Add Contact Widget');
 
             this.readyToRender = ko.observable(false);
-            var contact = new Contact();
-            contact.isBusiness = false;
-            this.contact = ko.observable(KOMap.fromJS(contact));
+            this.contact = ContactUtils.initContact();
+            this.contacts = ko.observableArray([this.contact]);
             this.popupTitle = ko.observable('');
             this.setupEvListeners();
         }
@@ -39,25 +40,20 @@ define(['knockout', 'KOMap', 'text!app/components/contact/addContactComponent.tm
 
         AddContactComponentVM.prototype.addContact = function () {
             console.log("Adding contact");
-            for (var attr in this.contact()) {
-                if (ko.isObservable(this.contact()[attr])) {
-                    console.log('Clearing contact attr: ' + attr);
-                    this.contact()[attr](null);
-                }
-            }
+            ContactUtils.reinitContact(this.contact);
             $('#addContactModal').modal('show');
         };
 
         AddContactComponentVM.prototype.onSave = function () {
             AjaxUtils.post(
                 '/contact',
-                KOMap.toJSON(this.contact()),
+                KOMap.toJSON(this.contact),
                 function onSuccess(response) {
                     console.log('Saved Contact: ' + JSON.stringify(response));
-                    this.contact()._id(response.data._id);
-                    amplify.publish(Events.SUCCESS_NOTIFICATION, {msg: 'Contact <b>' +  response.data.name +'</b> saved'});
+                    this.contact._id(response.data._id);
+                    amplify.publish(Events.SUCCESS_NOTIFICATION, {msg: 'Contact <b>' + response.data.name + '</b> saved'});
 
-                    var contactJS = KOMap.toJS(this.contact());
+                    let contactJS = KOMap.toJS(this.contact);
                     ContactClient.updateInSession(contactJS);
                     amplify.publish(Events.ADDED_CONTACT, contactJS);
                     $('#addContactModal').modal('hide');
@@ -73,9 +69,9 @@ define(['knockout', 'KOMap', 'text!app/components/contact/addContactComponent.tm
             AjaxUtils.getJSON('/contact/' + contactId)
                 .done(function (resp) {
                     console.log('Loaded contact ' + JSON.stringify(resp.data));
+                    this.contact = ContactUtils.populateFromJSON(resp.data);
+                    this.contacts([this.contact]);
 
-                    // Populate with JSON data
-                    this.contact(KOMap.fromJS(resp.data, {}, new Contact()));
                     $('#addContactModal').modal('show');
                 }.bind(this))
                 .fail(function (resp) {

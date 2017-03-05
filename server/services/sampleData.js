@@ -1,27 +1,28 @@
-var tags = require('./../model/tags.js');
-var DateUtils = require('./../shared/dateUtils.js');
-var mongoUtils = require('./../../server/mongoUtils.js');
-var _ = require('underscore');
-var jQuery = require('jquery-deferred');
+let tags = require('./../model/tags.js');
+let DateUtils = require('./../shared/dateUtils.js');
+let mongoUtils = require('./../../server/mongoUtils.js');
+let SharedConsts = require('./../shared/consts.js');
+let _ = require('underscore');
+let jQuery = require('jquery-deferred');
 
 
-var now = new Date().getTime();
+let now = new Date().getTime();
 
-var sampleClaimId = String(now);
-var sampleClaimantId = sampleClaimId + '0';
-var sampleInsuredId = sampleClaimId + '1';
-var sampleTask1Id = sampleClaimId + '5';
-var sampleTask2Id = sampleClaimId + '6';
-var sampleTask3Id = sampleClaimId + '7';
-var sampleBillId = sampleClaimId + '111';
+let sampleClaimId = String(now);
+let sampleClaimantId = sampleClaimId + '0';
+let sampleInsuredId = sampleClaimId + '1';
+let sampleTask1Id = sampleClaimId + '5';
+let sampleTask2Id = sampleClaimId + '6';
+let sampleTask3Id = sampleClaimId + '7';
+let sampleBillId = sampleClaimId + '111';
 
-var tenDaysFromNow = DateUtils.daysFromNowInMillis(10);
-var tomorrow = DateUtils.daysFromNowInMillis(1);
-var anHourFromNow = now + (86400000/24);
-var tenDaysEarlier = now - (DateUtils.MILLIS_IN_A_DAY * 10);
-var twentyDaysEarlier = now - (DateUtils.MILLIS_IN_A_DAY * 20);
+let tenDaysFromNow = DateUtils.daysFromNowInMillis(10);
+let tomorrow = DateUtils.daysFromNowInMillis(1);
+let anHourFromNow = now + (86400000 / 24);
+let tenDaysEarlier = now - (DateUtils.MILLIS_IN_A_DAY * 10);
+let twentyDaysEarlier = now - (DateUtils.MILLIS_IN_A_DAY * 20);
 
-var data = {
+let data = {
     claim: {
         "_id": sampleClaimId,
         "fileNum": "02-88767AC",
@@ -36,11 +37,27 @@ var data = {
         "locationStreetAddress": "100 Rodeo Drive",
         "locationCity": "East Meadow",
         "locationZip": 11554,
-        "insuredContactId": sampleInsuredId,
-        "insuredAttorneyContactId": sampleClaimantId,
-        "claimantContactId": sampleClaimantId,
-        "claimantsAttorneyContactId": sampleClaimantId,
-        "insuranceCoContactId": sampleClaimantId,
+        "contacts": [
+            {
+                category: SharedConsts.CONTACT_CATEGORY_INSURED,
+                subCategory: SharedConsts.CONTACT_SUBCATEGORY_INSURED,
+                contactId: sampleInsuredId
+            },
+            {
+                category: SharedConsts.CONTACT_CATEGORY_INSURED_ATTY,
+                subCategory: SharedConsts.CONTACT_CATEGORY_INSURED_ATTY,
+                contactId: sampleInsuredId
+            },
+            {
+                category: SharedConsts.CONTACT_CATEGORY_CLAIMANT,
+                subCategory: SharedConsts.CONTACT_SUBCATEGORY_CLAIMANT,
+                contactId: sampleClaimantId
+            },
+            {
+                category: SharedConsts.CONTACT_CATEGORY_CLAIMANT_ATTY,
+                subCategory: SharedConsts.CONTACT_CATEGORY_CLAIMANT_ATTY,
+                contactId: sampleClaimantId
+            }],
         "insuranceCompanyFileNum": "60001870845",
         "insuranceCompanyName": "Gieco",
         "state": "NY"
@@ -48,29 +65,65 @@ var data = {
     contacts: [
         {
             "_id": sampleClaimantId,
-            "isBusiness": false,
-            "role": null,
             "name": "Sample Claimant",
             "businessName": null,
-            "streetAddress": null,
-            "city": "East Meadow",
-            "zip": 11554,
-            "email": null,
-            "phone": "908-243-4800",
-            "cell": null
+            "jobTitle" : null,
+            "notes" : null,
+            "isBusiness" : null,
+            "role" : null,
+            "addresses" : [
+                {
+                    "type" : "Work",
+                    "street" : "",
+                    "city" : "East Meadow",
+                    "state" : "---",
+                    "zip" : "11554"
+                }
+            ],
+            "emails" : [
+                {
+                    "type" : "Work",
+                    "email" : ""
+                }
+            ],
+            "phones" : [
+                {
+                    "type" : "Work",
+                    "phone" : "908-243-4800",
+                    "ext" : ""
+                }
+            ]
         },
         {
             "_id": sampleInsuredId,
-            "isBusiness": true,
-            "role": null,
             "name": "Sample Insured",
             "businessName": "ABC corp",
-            "streetAddress": null,
-            "city": "East Meadow",
-            "zip": 11554,
-            "email": null,
-            "phone": "516-213-0000",
-            "cell": null
+            "jobTitle" : null,
+            "notes" : null,
+            "isBusiness" : null,
+            "role" : null,
+            "addresses" : [
+                {
+                    "type" : "Work",
+                    "street" : "",
+                    "city" : "East Meadow",
+                    "state" : "---",
+                    "zip" : "11554"
+                }
+            ],
+            "emails" : [
+                {
+                    "type" : "Work",
+                    "email" : ""
+                }
+            ],
+            "phones" : [
+                {
+                    "type" : "Work",
+                    "phone" : "516-213-0000",
+                    "ext" : ""
+                }
+            ]
         }],
     tasks: [
         {
@@ -98,16 +151,16 @@ var data = {
             "dueDate": anHourFromNow,
             "summary": "Sample visit task",
             "description": "This is a sample travel task. Typically you would use this when you travel for business purposes. <br><br>" +
-                           "Travel taska are automatically shown on a map in the 'Travel' section.",
+            "Travel taska are automatically shown on a map in the 'Travel' section.",
             "attachments": [],
             "state": "ToDo",
-            "location" : {
-                "formatted_address" : "2550 Hempstead Turnpike, East Meadow, NY 11554, USA",
-                "name" : "2550 Hempstead Turnpike",
-                "geometry" : {
-                    "location" : {
-                        "lat" : 40.723888,
-                        "lng" : -73.541483
+            "location": {
+                "formatted_address": "2550 Hempstead Turnpike, East Meadow, NY 11554, USA",
+                "name": "2550 Hempstead Turnpike",
+                "geometry": {
+                    "location": {
+                        "lat": 40.723888,
+                        "lng": -73.541483
                     }
                 }
             }
@@ -199,36 +252,41 @@ var data = {
 }
 
 function setupSampleDataFor(userId) {
-    var defer = jQuery.Deferred();
-    var defereds = [];
+    let defer = jQuery.Deferred();
+    let defereds = [];
 
     // Contacts
     _.each(data.contacts, function (contact) {
         contact.owner = userId;
-        defereds.push(mongoUtils.saveOrUpdateEntity(contact, mongoUtils.CONTACTS_COL_NAME, userId));
+        contact.group = userId;
+        defereds.push(mongoUtils.saveOrUpdateEntity(contact, mongoUtils.CONTACTS_COL_NAME));
     });
 
     // Tasks
     _.each(data.tasks, function (entry) {
         entry.owner = userId;
-        defereds.push(mongoUtils.saveOrUpdateEntity(entry, mongoUtils.CLAIM_ENTRIES_COL_NAME, userId));
+        entry.group = userId;
+        defereds.push(mongoUtils.saveOrUpdateEntity(entry, mongoUtils.CLAIM_ENTRIES_COL_NAME));
     });
 
     // Billing item
     _.each(data.billingItems, function (billItem) {
         billItem.owner = userId;
-        defereds.push(mongoUtils.saveOrUpdateEntity(billItem, mongoUtils.BILLING_ITEMS_COL_NAME, userId));
+        billItem.group = userId;
+        defereds.push(mongoUtils.saveOrUpdateEntity(billItem, mongoUtils.BILLING_ITEMS_COL_NAME));
     });
 
     // Claim
-    var claim = data.claim;
+    let claim = data.claim;
     claim.owner = userId;
-    defereds.push(mongoUtils.saveOrUpdateEntity(claim, mongoUtils.CLAIMS_COL_NAME, userId));
+    claim.group = userId;
+    defereds.push(mongoUtils.saveOrUpdateEntity(claim, mongoUtils.CLAIMS_COL_NAME));
 
     // Bill
-    var bill = data.bill;
+    let bill = data.bill;
     bill.owner = userId;
-    defereds.push(mongoUtils.saveOrUpdateEntity(bill, mongoUtils.BILL_COL_NAME, userId));
+    bill.group = userId;
+    defereds.push(mongoUtils.saveOrUpdateEntity(bill, mongoUtils.BILL_COL_NAME));
 
     jQuery.when(defereds)
         .then(function () {

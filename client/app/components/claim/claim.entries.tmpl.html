@@ -1,13 +1,80 @@
 <!-- ************************************************ -->
-<!--List Claim Entries -->
+<!--List Tasks -->
 <!-- ************************************************ -->
 
 <!-- Hide completely on xs devices -->
 <div data-bind="ifnot: inEditMode,
                 style: {'max-height': screenHeight()+ 'px'}"
-     class="rightMargin topMargin5 overflowY">
+     class="rightMargin">
 
-    <table class="table table-hover" id="claimEntriesList">
+    <!-- New task btn -->
+    <div class="btn-group inline leftMargin5"
+         data-bind="ifnot: isClaimClosed">
+        <button type="button"
+                id="claim-newtask-btn"
+                class="btn btn-default dropdown-toggle btn-info"
+                data-toggle="dropdown">
+            <span class="fa fa-plus"></span>
+            New Task <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu" role="menu">
+            <li>
+                <a href="#/claimEntry/new/phone">
+                    <span class="glyphicon glyphicon-earphone"></span>
+                    <span class="leftMargin5">Phone</span>
+                </a>
+            </li>
+            <li>
+                <a href="#/claimEntry/new/visit">
+                    <span class="glyphicon glyphicon-map-marker"></span>
+                    <span class="leftMargin5">Site visit</span>
+                </a>
+            </li>
+            <li>
+                <a href="#/claimEntry/new/photos">
+                    <span class="glyphicon glyphicon-camera"></span>
+                    <span class="leftMargin5">Photos</span>
+                </a>
+            </li>
+            <li>
+                <a href="#/claimEntry/new/other">
+                    <span class="fa fa-tag"></span>
+                    <span class="leftMargin5">Other</span>
+                </a>
+            </li>
+            <li class="divider"></li>
+            <li>
+                <a href="#/claimEntry/new/other" data-toggle="modal" data-target="#emailTaskTypeModal">
+                    <span class="fa fa-mail-forward"></span>
+                    <span class="leftMargin5">From Email</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Email task btn -->
+    <!-- ko ifnot: inEditMode && isPartiallyCollapsed -->
+    <!-- ko ifnot: isClaimClosed -->
+    <div class="btn btn-default inline btn-info hidden-xs"
+         data-toggle="modal" data-target="#emailTaskTypeModal">
+        <span class="fa fa-mail-forward"></span>
+        <span class="leftMargin5">From Email</span>
+    </div>
+    <!-- /ko -->
+    <!-- /ko -->
+
+    <!-- No tasks msg -->
+    <!-- ko ifnot: isClaimClosed -->
+    <div data-bind="if: claimEntries().length == 0"
+         class="col-lg-offset-2 col-md-offset-2 col-sm-offset-1 col-lg-8 col-md-8 col-sm-10 col-xs-12">
+        <div class="text-info topMargin5pc text-center">
+            You may add things to be done for this Claim as <i>Tasks</i><br/>No Tasks for this Claim yet
+        </div>
+    </div>
+    <!-- /ko -->
+
+    <!-- **** Tasks list table **** -->
+    <table class="table table-hover" id="claimEntriesList" data-bind="if: claimEntries().length > 0">
         <thead>
         <tr>
             <th>&nbsp;</th>
@@ -37,54 +104,54 @@
         <!-- Claim entry row -->
         <tbody data-bind="foreach: {data: claimEntries, as: 'entry' }"
                id="claimEntriesListBody">
-            <tr
+        <tr
                 data-bind="css: {info: $parent.activeClaimEntryId() === entry._id},
                            click: $parent.onClaimEntryClick.bind($parent),
-                           event: {mouseover: function(){$('#claimEntryArrowCell' + $index()).css('font-size', '1.2em');},
-                                   mouseout : function(){$('#claimEntryArrowCell' + $index()).css('font-size', '1em');}}">
-                <td style="min-width: 15px">
-                    <!-- Tag -->
-                    <i class="leftMargin"
-                          data-bind="taskEntryTag: entry.tag.toString()"></i>
-                </td>
+                           event: {mouseover: function(){$parent.$('#claimEntryArrowCell' + $index()).css('font-size', '1.2em');},
+                                   mouseout : function(){$parent.$('#claimEntryArrowCell' + $index()).css('font-size', '1em');}}">
+            <td style="min-width: 15px">
+                <!-- Tag -->
+                <i class="leftMargin"
+                   data-bind="taskEntryTag: entry.tag.toString()"></i>
+            </td>
 
-                <!-- ko ifnot: $parent.isPartiallyCollapsed -->
-                <td>
+            <!-- ko ifnot: $parent.isPartiallyCollapsed -->
+            <td>
                     <span data-bind="if: Number(entry.attachments.length) > 0">
                         <i class="fa fa-paperclip" style="font-size: 1.4em"></i>
                     </span>
-                </td>
-                <!-- /ko -->
+            </td>
+            <!-- /ko -->
 
-                <!-- ko if: $parent.isPartiallyCollapsed -->
-                <td>
-                    <span data-bind="text: $parent.DateUtils.niceDate(entry.dueDate)"></span>
-                </td>
-                <!-- /ko -->
+            <!-- ko if: $parent.isPartiallyCollapsed -->
+            <td>
+                <span data-bind="text: $parent.DateUtils.niceDate(entry.dueDate)"></span>
+            </td>
+            <!-- /ko -->
 
-                <td style="min-width: 20%;">
+            <td style="min-width: 20%;">
                     <span data-bind="text: entry.summary,
                                      attr: {id: 'taskEntrySummary' + $index()}"></span>
-                </td>
+            </td>
 
-                <!-- ko ifnot: $parent.isPartiallyCollapsed -->
-                <td class="rightMargin">
-                    <span data-bind="text: $parent.DateUtils.niceDate(entry.dueDate)"></span>
-                </td>
-                <td>
-                    <!-- Current state -->
-                    <a href="#" data-bind="event: { mouseover: $parent.onStatusFocus.bind($parent)}">
+            <!-- ko ifnot: $parent.isPartiallyCollapsed -->
+            <td class="rightMargin">
+                <span data-bind="text: $parent.DateUtils.niceDate(entry.dueDate)"></span>
+            </td>
+            <td>
+                <!-- Current state -->
+                <a href="#" data-bind="event: { mouseover: $parent.onStatusFocus.bind($parent)}">
                         <span class="glyphicon"
                               data-bind="css: {'glyphicon-unchecked': entry.state == undefined || entry.state == $parent.States.None,
                                                'glyphicon-inbox'    : entry.state == $parent.States.TODO,
                                                'glyphicon-time'     : entry.state == $parent.States.Pending,
                                                'glyphicon-ok'       : entry.state == $parent.States.Complete}"></span>
-                    </a>
+                </a>
 
-                    <!-- Pick new State -->
-                    <div style="z-index: 9999; width: 160px; position: absolute " class="list-group"
-                         data-bind="visible: $parent.showStatusForEntryId() == entry._id">
-                        <li class="list-group-item bg-color-blueLight" style="cursor: default">
+                <!-- Pick new State -->
+                <div style="z-index: 9999; width: 160px; position: absolute " class="list-group"
+                     data-bind="visible: $parent.showStatusForEntryId() == entry._id">
+                    <li class="list-group-item bg-color-blueLight" style="cursor: default">
                             <span>
                                 Update status to
                                 <span class="pull-right">
@@ -93,38 +160,38 @@
                                           data-bind="click: $parent.onDismissStatus.bind($parent)"></span>
                                 </span>
                             </span>
-                        </li>
-                        <a data-bind="click: $parent.onEntryStatusUpdate.bind($parent, $parent.States.Complete)"
-                           href="#" class="list-group-item">
-                            <span class="glyphicon glyphicon-ok"></span>
-                            <span class="leftMargin">Complete</span>
-                        </a>
-                        <a data-bind="click: $parent.onEntryStatusUpdate.bind($parent, $parent.States.Pending)"
-                           href="#" class="list-group-item">
-                            <span class="glyphicon glyphicon-time"></span>
-                            <span class="leftMargin">Pending</span>
-                        </a>
-                        <a data-bind="click: $parent.onEntryStatusUpdate.bind($parent, $parent.States.TODO)"
-                           class="list-group-item" href="#">
-                            <span class="glyphicon glyphicon-inbox"></span>
-                            <span class="leftMargin">To Do</span>
-                        </a>
-                        <a data-bind="click: $parent.onEntryStatusUpdate.bind($parent, $parent.States.None)"
-                           href="#" class="list-group-item">
-                            <span class="glyphicon glyphicon-unchecked"></span>
-                            <span class="leftMargin">Clear</span>
-                        </a>
-                    </div>
-                </td>
-                <td class="hidden-xs">
-                    <span data-bind="text: entry.billingItem.status"></span>
-                </td>
-                <!-- /ko -->
-                <td class="rightMargin hidden-xs">
-                    <i class="fa fa-angle-right"
-                       data-bind="attr: {id: 'claimEntryArrowCell' + $index()}"></i>
-                </td>
-            </tr>
+                    </li>
+                    <a data-bind="click: $parent.onEntryStatusUpdate.bind($parent, $parent.States.Complete)"
+                       href="#" class="list-group-item">
+                        <span class="glyphicon glyphicon-ok"></span>
+                        <span class="leftMargin">Complete</span>
+                    </a>
+                    <a data-bind="click: $parent.onEntryStatusUpdate.bind($parent, $parent.States.Pending)"
+                       href="#" class="list-group-item">
+                        <span class="glyphicon glyphicon-time"></span>
+                        <span class="leftMargin">Pending</span>
+                    </a>
+                    <a data-bind="click: $parent.onEntryStatusUpdate.bind($parent, $parent.States.TODO)"
+                       class="list-group-item" href="#">
+                        <span class="glyphicon glyphicon-inbox"></span>
+                        <span class="leftMargin">To Do</span>
+                    </a>
+                    <a data-bind="click: $parent.onEntryStatusUpdate.bind($parent, $parent.States.None)"
+                       href="#" class="list-group-item">
+                        <span class="glyphicon glyphicon-unchecked"></span>
+                        <span class="leftMargin">Clear</span>
+                    </a>
+                </div>
+            </td>
+            <td class="hidden-xs">
+                <span data-bind="text: entry.billingItem.status"></span>
+            </td>
+            <!-- /ko -->
+            <td class="rightMargin hidden-xs">
+                <i class="fa fa-angle-right"
+                   data-bind="attr: {id: 'claimEntryArrowCell' + $index()}"></i>
+            </td>
+        </tr>
         </tbody>
 
     </table>

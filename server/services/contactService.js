@@ -1,9 +1,9 @@
-var assert = require('assert');
-var Contact = require('./../model/contact.js');
-var mongoUtils = require('./../mongoUtils.js');
-var serviceUtils = require('./../serviceUtils.js');
-var jQuery = require('jquery-deferred');
-var _ = require('underscore');
+let assert = require('assert');
+let Contact = require('./../model/contact.js');
+let mongoUtils = require('./../mongoUtils.js');
+let serviceUtils = require('./../serviceUtils.js');
+let jQuery = require('jquery-deferred');
+let _ = require('underscore');
 
 
 /********************************************************/
@@ -13,10 +13,11 @@ var _ = require('underscore');
 function saveOrUpdateContact(req, res) {
     assert.ok(req.hasOwnProperty('body'), 'Expecting instance of Request');
 
-    var contactJSON = req.body;
+    let contactJSON = req.body;
     console.log('Save/update contact: ' + JSON.stringify(contactJSON));
-    var contactObj = _.extend(new Contact(), contactJSON);
+    let contactObj = _.extend(new Contact(), contactJSON);
     contactObj.owner = req.headers.userid;
+    contactObj.group = req.headers.group;
 
     // Validate
     if (!_.isString(contactObj.name)) {
@@ -31,7 +32,7 @@ function saveOrUpdateContact(req, res) {
 
 function saveOrUpdateContactObject(contactObj) {
     assert.ok(contactObj instanceof Contact, 'Expecting instance of Contact object');
-    var defer = jQuery.Deferred();
+    let defer = jQuery.Deferred();
 
     mongoUtils.saveOrUpdateEntity(contactObj, mongoUtils.CONTACTS_COL_NAME)
         .always(function (err, results) {
@@ -46,18 +47,18 @@ function saveOrUpdateContactObject(contactObj) {
 
 function getContact(req, res) {
     assert.ok(req.params.id, 'Expecting ContactId as a parameter');
-    var contactId = req.params.id;
+    let contactId = req.params.id;
 
-    getContactObject(contactId, req.headers.userid)
+    getContactObject(contactId, req.headers.userid, req.headers.ingroups)
         .always(function (result) {
             result.status === 'Success' ? sendResponse(res, null, result.data) : sendResponse(res, result.details);
         });
 }
 
-function getContactObject(contactId, owner) {
-    var defer = jQuery.Deferred();
+function getContactObject(contactId, owner, ingroups) {
+    let defer = jQuery.Deferred();
 
-    mongoUtils.getEntityById(contactId, mongoUtils.CONTACTS_COL_NAME, owner)
+    mongoUtils.getEntityById(contactId, mongoUtils.CONTACTS_COL_NAME, owner, ingroups)
         .always(function (err, results) {
             defer.resolve(serviceUtils.createResponse(err, results));
         });
@@ -67,12 +68,16 @@ function getContactObject(contactId, owner) {
 function listAllContacts(req, res) {
     console.log('getting all contacts');
     mongoUtils.run(function (db) {
-        var contactsCol = db.collection(mongoUtils.CONTACTS_COL_NAME);
-
-        var userId = req.headers.userid;
-        contactsCol.find({owner: userId}).toArray(function (err, items) {
-            sendResponse(res, err, items);
-        });
+        mongoUtils.findEntities(
+            mongoUtils.CONTACTS_COL_NAME,
+            {'owner': req.headers.userid, 'ingroups': req.headers.ingroups},
+            db)
+            .then(function(contacts){
+                sendResponse(res, null, contacts);
+            })
+            .fail(function(err){
+                sendResponse(res, err, null);
+            })
     });
 }
 
@@ -81,7 +86,7 @@ function listAllContacts(req, res) {
 /********************************************************/
 
 function deleteContact(contactId) {
-    var defer = jQuery.Deferred();
+    let defer = jQuery.Deferred();
 
     jQuery.when(mongoUtils.deleteEntity({_id: contactId}, mongoUtils.CONTACTS_COL_NAME))
         .then(defer.resolve())

@@ -58,6 +58,10 @@ define(['Path', 'amplify', 'app/utils/events'],
                 amplify.publish(Events.CREATE_NEW_BILL, {claimId: this.params.claimId});
             });
 
+            Path.map("#/claim/form/new/:claimId/:formType").to(function () {
+                amplify.publish(Events.CREATE_NEW_FORM, {claimId: this.params.claimId, formType: this.params.formType});
+            });
+
             Path.map("#/bill/:claimId/:billId").to(function () {
                 amplify.publish(Events.SHOW_BILL, {claimId: this.params.claimId, billId: this.params.billId});
             });
@@ -75,9 +79,20 @@ define(['Path', 'amplify', 'app/utils/events'],
             });
 
             Path.map("#/claimEntry/:claimId/:claimEntryId").to(function () {
-                amplify.publish(Events.SHOW_CLAIM_ENTRY, {claimId: this.params.claimId, claimEntryId: this.params.claimEntryId});
+                amplify.publish(Events.SHOW_CLAIM_ENTRY, {
+                    claimId: this.params.claimId,
+                    claimEntryId: this.params.claimEntryId
+                });
             });
-        };
+
+            Path.map("#/form/new/:formType").to(function () {
+                amplify.publish(Events.NEW_CLAIM_FORM, {formType: this.params.formType});
+            });
+
+            Path.map("#/form/:formId").to(function () {
+                amplify.publish(Events.SHOW_CLAIM_FORM, {formId: this.params.formId});
+            });
+        }
 
         Router.prototype.routeToHome = function () {
             window.location.hash = '#/home';
@@ -108,6 +123,11 @@ define(['Path', 'amplify', 'app/utils/events'],
             window.location.hash = '#/bill/' + this.claimId + '/' + this._id;
         };
 
+        Router.prototype.routeToClaimsList = function () {
+            console.log('Navigating to claims list');
+            window.location.hash = "#/claim/list";
+        }
+
         Router.prototype.routeToClaim = function (claimId) {
             console.log('Navigating to claim ' + claimId);
             if (claimId) {
@@ -132,6 +152,11 @@ define(['Path', 'amplify', 'app/utils/events'],
             } else {
                 this.routeToNewClaimEntry();
             }
+        };
+
+        Router.prototype.routeToClaimForm = function (formId) {
+            console.log('Navigating to claim form ' + formId);
+            window.location.hash = '#/form/' + formId;
         };
 
         Router.prototype.showMsgsPopup = function () {

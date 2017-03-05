@@ -108,20 +108,12 @@
             <br>
 
             <div class="row">
-                <div class="col-sm-8" data-bind="if: isBillEditable">
-                    <contact-component params="contact : billRecipient,
+                <div class="col-sm-6 col-xs-6">
+                    <contact-component params="contact : bill().billRecipient,
                                        idSuffix: 'billing-recipient',
-                                       allowEdits: false,
-                                       showDetails: true,
-                                       placeholder: 'Start typing recipient',
-                                       isBusinessOptionApplicable: false"></contact-component>
-                </div>
-                <div class="col-sm-8" data-bind="ifnot: isBillEditable">
-                    <span data-bind="text: billRecipient().name"></span><br>
-                    <span data-bind="text: billRecipient().streetAddress"></span><br>
-                    <span data-bind="text: billRecipient().city"></span>
-                    <span data-bind="text: billRecipient().zip"></span><br>
-                    <span data-bind="text: billRecipient().phone"></span>
+                                       allowEdits: isBillEditable(),
+                                       showDetails: !isBillEditable(),
+                                       placeholder: 'Start typing recipient'"></contact-component>
                 </div>
                 <div class="col-sm-4 pull-right">
                     <div>

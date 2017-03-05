@@ -11,6 +11,7 @@ config.ENV_PROD = 'PROD';
 
 // **** Heroku Config vars ****
 config.port = process.env.PORT || 8080;
+config.https_port = process.env.HTTPS_PORT || 8443;
 config.env = process.env.ENV || 'LOCAL';
 config.disable_auth = process.env.DISABLE_AUTH || false;
 config.test_user = process.env.TEST_USER || 'testuser1';
@@ -18,7 +19,7 @@ config.send_success_email_reply = process.env.SEND_SUCCESS_EMAIL_REPLY || false;
 config.send_failure_email_reply = (process.env.SEND_FAILURE_EMAIL_REPLY || true) && true;
 
 config.LOCAL.use_ssl = false;
-config.TEST.use_ssl = true;
+config.TEST.use_ssl = false;
 config.PROD.use_ssl = true;
 config.use_ssl = config[config.env]['use_ssl'];
 

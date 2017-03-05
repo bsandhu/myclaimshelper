@@ -1,43 +1,45 @@
-var jQuery = require('jquery-deferred');
-var Mailgun = require('mailgun-js');
-var _ = require('underscore');
-var lodash = require('lodash');
-var moment = require('moment-timezone');
+let jQuery = require('jquery-deferred');
+let Mailgun = require('mailgun-js');
+let _ = require('underscore');
+let lodash = require('lodash');
+let moment = require('moment-timezone');
 
-var config = require('../../config.js');
-var claimsService = require("../../services/claimsService.js");
-var ClaimEntry = require("../../model/claimEntry.js");
-var BillingItem = require('../../model/billingItem.js');
-var States = require('../../model/states.js');
-var MailParser = require('./mailParser.js').MailParser;
-var saveToDB = require('../uploadService.js').saveToDB;
-var mongoUtils = require('../../mongoUtils.js');
-var DateUtils = require('../../shared/dateUtils.js');
-var Consts = require('./../../shared/consts.js');
-var broadcastNoHTTP = require('../../services/notificationService.js').broadcastNoHTTP;
+let config = require('../../config.js');
+let claimsService = require("../../services/claimsService.js");
+let ClaimEntry = require("../../model/claimEntry.js");
+let BillingItem = require('../../model/billingItem.js');
+let States = require('../../model/states.js');
+let MailParser = require('./mailParser.js').MailParser;
+let saveToDB = require('../uploadService.js').saveToDB;
+let mongoUtils = require('../../mongoUtils.js');
+let DateUtils = require('../../shared/dateUtils.js');
+let Consts = require('./../../shared/consts.js');
+let broadcastNoHTTP = require('../../services/notificationService.js').broadcastNoHTTP;
 
 /**
  * Invoked by the Mailgun service
  */
-var process = function (req, res, testMode) {
+let process = function (req, res, testMode) {
     res.send(200, 'Request received successfully.');
+    console.log('*** Starting email processing ***')
+    let sendSuccessEmail, sendErrorEmail;
 
     if (_.isBoolean(testMode) && testMode == true) {
-        var sendSuccessEmail = false
-        var sendErrorEmail = false;
+        sendSuccessEmail = false
+        sendErrorEmail = false;
     } else {
-        var sendSuccessEmail = config.send_success_email_reply;
-        var sendErrorEmail = config.send_failure_email_reply;
+        sendSuccessEmail = config.send_success_email_reply;
+        sendErrorEmail = config.send_failure_email_reply;
     }
 
     // Remove any spurious quotes around email addr
-    var from = req.params.To.toUpperCase().split('@')[0];
+    let from = req.params.To.toUpperCase().split('@')[0];
     from = from.replace('"', '');
     from = from.replace("'", '');
     console.log('Email from: ' + from);
-    var defer = jQuery.Deferred();
+    let defer = jQuery.Deferred();
 
-    var isTestUser = ['TESTUSER1', 'TESTUSER2'].indexOf(from) >= 0;
+    let isTestUser = ['TESTUSER1', 'TESTUSER2'].indexOf(from) >= 0;
     console.log('Incoming req to MailHandler: ' + JSON.stringify(req.params));
 
     // Filter msgs accrding to ENV
@@ -52,11 +54,11 @@ var process = function (req, res, testMode) {
         return defer;
     }
 
-    var parser = new MailParser();
+    let parser = new MailParser();
     jQuery.when(parser._getAllKnownClaims(from), parser._getAllKnownUserIds())
         .then(function (allKnownClaims, allKnownUserIds) {
 
-            var mailEntry = parser.parseRequest(req, allKnownClaims, allKnownUserIds);
+            let mailEntry = parser.parseRequest(req, allKnownClaims, allKnownUserIds);
 
             if (mailEntry.errors.length > 0) {
                 notifyFailure(sendErrorEmail, mailEntry);
@@ -73,9 +75,9 @@ var process = function (req, res, testMode) {
     return defer;
 };
 
-var saveEntry = function (mailEntry) {
+let saveEntry = function (mailEntry) {
     console.log('Saving claim entry');
-    var d = jQuery.Deferred();
+    let d = jQuery.Deferred();
 
     constructClaimEntry(mailEntry, mailEntry.attachments)
         .then(function (entry) {
@@ -97,53 +99,55 @@ var saveEntry = function (mailEntry) {
 };
 
 // @returns ids of files saved to db.
-var saveAttachment = function (attachment) {
+let saveAttachment = function (attachment) {
     return saveToDB(attachment.name, attachment.path);
 };
 
-var saveAttachments = function (mailEntry) {
+let saveAttachments = function (mailEntry) {
     console.log('Saving attachments');
-    var _success = function () {
-        for (var i = 0; i < mailEntry.attachments.length; i++) {
+    let _success = function () {
+        for (let i = 0; i < mailEntry.attachments.length; i++) {
             mailEntry.attachments[i].id = arguments[i];
         }
         return mailEntry;
     }
 
-    var _failure = function (error) {
+    let _failure = function (error) {
         mailEntry.error = error;
         return mailEntry;
     }
 
-    var x = jQuery.when.apply(null, mailEntry.attachments.map(saveAttachment));
+    let x = jQuery.when.apply(null, mailEntry.attachments.map(saveAttachment));
     return x.then(_success, _failure);
 };
 
-var notifySuccess = function (sendEmail, mailEntry) {
+let notifySuccess = function (sendEmail, mailEntry) {
     broadcastNoHTTP(
         Consts.NotificationName.NEW_MSG,
         Consts.NotificationType.INFO,
         '<b>Email processed</b> ' + mailEntry.mail.subject + '<a href="#/claimEntry/' + mailEntry.claimId + '/' + mailEntry._id + '">Goto task</a>',
-        mailEntry.owner)
+        mailEntry.owner,
+        mailEntry.group)
         .always(function email() {
             if (sendEmail) {
-                var header = 'Email <i>' + mailEntry.mail.subject + '</i> processed';
-                var body = JSON.stringify(mailEntry);
+                let header = 'Email <i>' + mailEntry.mail.subject + '</i> processed';
+                let body = JSON.stringify(mailEntry);
                 sendEmailViaMailgun(mailEntry.mail.from, mailEntry.mail.subject, header, body);
             }
         });
     return mailEntry;
 };
 
-var notifyFailure = function (sendEmail, mailEntry) {
-    var header = '<b>Failed to process email</b> ' + mailEntry.mail.subject;
-    var body = JSON.stringify(mailEntry.errors[0]) || 'There was a problem on our server. Apologies.';
+let notifyFailure = function (sendEmail, mailEntry) {
+    let header = '<b>Failed to process email</b> ' + mailEntry.mail.subject;
+    let body = JSON.stringify(mailEntry.errors[0]) || 'There was a problem on our server. Apologies.';
 
-    var notifyFn = _.partial(broadcastNoHTTP,
+    let notifyFn = _.partial(broadcastNoHTTP,
         Consts.NotificationName.NEW_MSG,
         Consts.NotificationType.ERROR,
         header,
-        mailEntry.owner);
+        mailEntry.owner,
+        mailEntry.group);
 
     if (mailEntry.owner) {
         notifyFn();
@@ -157,12 +161,12 @@ var notifyFailure = function (sendEmail, mailEntry) {
 // **** Helpers ****
 
 function constructClaimEntry(data, attachments) {
-    var d = jQuery.Deferred();
+    let d = jQuery.Deferred();
 
     // Get user profile
-    mongoUtils.getEntityById(data.owner, mongoUtils.USERPROFILE_COL_NAME, data.owner)
+    mongoUtils.getEntityById(data.owner, mongoUtils.USERPROFILE_COL_NAME, data.owner, [data.owner])
         .then(function (err, profile) {
-            var defer = jQuery.Deferred();
+            let defer = jQuery.Deferred();
             if (!err) {
                 defer.resolve(profile);
             } else {
@@ -178,15 +182,15 @@ function constructClaimEntry(data, attachments) {
                 .then(function (db) {
                     mongoUtils.findEntities(mongoUtils.ZIPCODES_COL_NAME, {'zip': profile.contactInfo.zip}, db, false)
                         .then(function (zipCodesInfo) {
-                            var zipInfo = zipCodesInfo[0];
+                            let zipInfo = zipCodesInfo[0];
                             console.log('User in TZ: ' + zipInfo.timezone);
 
                             // UI stores dates in local TZ
                             // Use Moment TZ to resolve offset
-                            var zone = moment.tz.zone(zipInfo.timezone);
-                            var zoneOffsetInMinutes = zone.offset((DateUtils.startOfToday()).getTime());
+                            let zone = moment.tz.zone(zipInfo.timezone);
+                            let zoneOffsetInMinutes = zone.offset((DateUtils.startOfToday()).getTime());
 
-                            var entry = new ClaimEntry();
+                            let entry = new ClaimEntry();
                             entry.entryDate = (new Date()).getTime();
                             entry.dueDate = (DateUtils.startOfTodayUTC()).getTime() + (zoneOffsetInMinutes * 60 * 1000);
                             entry.updateDate = (new Date()).getTime();
@@ -198,16 +202,22 @@ function constructClaimEntry(data, attachments) {
                             entry.tag.push('email');
                             entry.state = States.TODO;
                             entry.owner = data.owner;
+                            // Do not show notification to group
+                            entry.group = data.owner;
 
                             // Service does the linking to the ClaimEntry
                             entry.billingItem = new BillingItem();
 
                             // Associate attachment metadata
-                            for (var i = 0; i < attachments.length; i++) {
-                                var metadata = {
+                            for (let i = 0; i < attachments.length; i++) {
+                                let metadata = {
                                     id: attachments[i].id,
                                     name: data.fileNum + '-' + attachments[i].name,
-                                    size: attachments[i].size
+                                    size: attachments[i].size,
+                                    type: attachments[i].type,
+                                    owner: data.owner,
+                                    group: data.owner,
+                                    lastModifiedDate: attachments[i].mtime ? new Date(attachments[i].mtime).getTime() : new Date().getTime()
                                 };
                                 entry.attachments.push(metadata);
                             }
@@ -225,16 +235,16 @@ function sendEmailViaMailgun(recipient, subject, header, body) {
         return;
     }
 
-    var compiled = _.template(emailTemplate);
+    let compiled = _.template(emailTemplate);
     header = lodash.trim(header, '"');
     body = lodash.trim(body, '"');
-    var htmlBody = compiled({header: header, body: body});
+    let htmlBody = compiled({header: header, body: body});
 
-    var mailgun = new Mailgun({
+    let mailgun = new Mailgun({
         apiKey: config.mailgun.api_key,
         domain: config.mailgun.domain
     });
-    var data = {
+    let data = {
         from: 'MyClaimsHelper <no-reply@myclaimshelper.com>',
         to: recipient,
         subject: subject,
@@ -251,7 +261,7 @@ function sendEmailViaMailgun(recipient, subject, header, body) {
     });
 }
 
-var emailTemplate = '<body style="font-family: ""Arial", sans-serif">' +
+let emailTemplate = '<body style="font-family: ""Arial", sans-serif">' +
     '<h3 style="color: #045FB4">MyClaimsHelper</h3>' +
     '<strong><%= header %></strong>' +
     '<br/>' +

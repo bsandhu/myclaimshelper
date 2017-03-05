@@ -1,13 +1,18 @@
 define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox', 'underscore',
-        'shared/dateUtils', 'shared/NumberUtils', 'shared/objectUtils', 'app/utils/ajaxUtils', 'app/utils/events', 'app/utils/consts', 'app/utils/router',
+        'shared/dateUtils', 'shared/NumberUtils', 'shared/objectUtils', 'app/utils/ajaxUtils', 'app/utils/events',
+        'app/utils/consts', 'app/utils/router',
         'app/utils/session', 'app/utils/sessionKeys',
         'model/bill', 'model/billingItem', 'model/billingStatus', 'model/contact',
         'text!app/components/billing/billing.tmpl.html',
         'text!app/components/billing/billing.print.tmpl.html',
-        'app/utils/audit'
+        'text!app/components/billing/billing.create.tmpl.html',
+        'text!app/components/billing/billing.list.tmpl.html',
+        'app/utils/audit', 'app/components/contact/contactUtils'
     ],
     function ($, ko, KOMap, amplify, bootbox, _, DateUtils, NumberUtils, ObjectUtils, ajaxUtils, Events,
-              Consts, router, Session, SessionKeys, Bill, BillingItem, BillingStatus, Contact, viewHtml, printHtml, Audit) {
+              Consts, router, Session, SessionKeys, Bill, BillingItem, BillingStatus, Contact,
+              viewHtml, printHtml, createHtml, listHtml,
+              Audit, ContactUtils) {
 
         function BillingVM() {
             console.log('Init BillingVM.');
@@ -25,8 +30,9 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox', 'underscore',
             this.billingProfile = undefined;
             this.mode = ko.observable();
             this.showClosedClaims = ko.observable(false);
-            this.billRecipient = ko.observable(KOMap.fromJS(new Contact()));
             this.groupedByCode = ko.observableArray([]);
+            this.createHtml = createHtml;
+            this.listHtml = listHtml;
 
             // Grouping
             this.groupBy = ko.observable('Not Submitted');
@@ -130,16 +136,16 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox', 'underscore',
         }
 
         BillingVM.prototype.newEmptyBill = function () {
-            var jsObject = new Bill();
+            let jsObject = new Bill();
             jsObject.billingItems = [];
             jsObject.status = this.billingStatus.NOT_SUBMITTED();
             jsObject.creationDate = new Date();
             jsObject.submissionDate = null;
             jsObject.paidDate = null;
             jsObject.isClaimClosed = false;
-            this.billRecipient(KOMap.fromJS(new Contact()));
-            var objWithObservableAttributes = KOMap.fromJS(jsObject);
-            return objWithObservableAttributes;
+
+            let objWithObservAttrs = KOMap.fromJS(jsObject);
+            return objWithObservAttrs;
         };
 
         /***********************************************************/
@@ -232,7 +238,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox', 'underscore',
             this.claimId(evData.claimId);
             this.readyToRender(true);
 
-            // Check if an unsubmitted bill exists for claim
+            // Check if an un-submitted bill exists for claim
             var _this = this;
             _this.loadBillingProfile(evData.claimId)
                 .then(function () {
@@ -529,7 +535,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox', 'underscore',
                 billingItem.totalAmount(0);
                 return;
             }
-            var N = Number;
+            let N = Number;
             billingItem.totalAmount(Number(
                 N(billingItem.time() * billingItem.timeRate()) +
                 N(billingItem.mileage() * billingItem.distanceRate()) +
@@ -542,18 +548,17 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox', 'underscore',
 
         BillingVM.prototype.loadBill = function (billId) {
             console.log('Load bill' + billId);
-            var defer = $.Deferred();
-            var _this = this;
+            let defer = $.Deferred();
+            let _this = this;
 
             ajaxUtils.post(
                 '/bill/search',
                 JSON.stringify({search: {_id: billId}, includeClosedClaims: true}),
 
                 function onSuccess(response) {
-                    console.debug('Loaded blll for claim: ' + JSON.stringify(response));
+                    console.debug('Loaded bill for claim: ' + JSON.stringify(response));
                     if (response.data[0]) {
-                        var billJS = response.data[0];
-                        billJS.billRecipient = billJS.billRecipient || new Contact();
+                        let billJS = response.data[0];
 
                         // Sort
                         billJS.billingItems = _.sortBy(billJS.billingItems, 'entryDate');
@@ -567,7 +572,6 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox', 'underscore',
                             }
                         });
                         _this.bill(KOMap.fromJS(billJS))
-                        _this.billRecipient(_this.bill().billRecipient);
                         defer.resolve();
                     } else {
                         console.warn('No bill found for Id: ' + billId);
@@ -620,7 +624,6 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox', 'underscore',
             console.log('Saving Bill');
             var defer = $.Deferred();
             this.bill().claimId(this.claimId());
-            this.bill().billRecipient = this.billRecipient();
 
             // Timestamp status update
             this.bill().status(billingStatus);

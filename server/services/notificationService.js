@@ -1,13 +1,13 @@
-var sendResponse = require('./claimsService.js').sendResponse;
-var EventEmitter = require('events').EventEmitter;
-var Notification = require('../model/notification.js');
-var mongoUtils = require('./../mongoUtils.js');
-var serviceUtils = require('./../serviceUtils.js');
-var dateUtils = require('./../shared/dateUtils.js');
-var Consts = require('./../shared/consts.js');
-var jQuery = require('jquery-deferred');
-var _ = require('underscore');
-var assert = require('assert');
+let sendResponse = require('./claimsService.js').sendResponse;
+let EventEmitter = require('events').EventEmitter;
+let Notification = require('../model/notification.js');
+let mongoUtils = require('./../mongoUtils.js');
+let serviceUtils = require('./../serviceUtils.js');
+let dateUtils = require('./../shared/dateUtils.js');
+let Consts = require('./../shared/consts.js');
+let jQuery = require('jquery-deferred');
+let _ = require('underscore');
+let assert = require('assert');
 
 
 function markAllAsRead(req, res) {
@@ -35,17 +35,18 @@ function getUnreadMsgCount(req, res) {
 /* No Http Ops */
 /****************************************************/
 
-function broadcastNoHTTP(name, type, body, owner) {
+function broadcastNoHTTP(name, type, body, owner, group) {
     assert(name,  'name must be specified');
     assert(type,  'type must be specified');
     assert(body,  'body must be specified');
     assert(owner, 'owner must be specified');
-    var defer = jQuery.Deferred();
+    let defer = jQuery.Deferred();
 
-    var notification = new Notification();
+    let notification = new Notification();
     notification.name = name;
     notification.type = type;
     notification.owner = owner;
+    notification.group = group;
     notification.body = body;
 
     // Persist and broadcast
@@ -56,7 +57,7 @@ function broadcastNoHTTP(name, type, body, owner) {
         })
         .then(_.partial(getUnreadMsgCountInDB, owner))
         .then(function (count) {
-            var msgCountNotification = new Notification();
+            let msgCountNotification = new Notification();
             msgCountNotification.name = Consts.NotificationName.UNREAD_COUNT;
             msgCountNotification.body = count;
 
@@ -77,7 +78,8 @@ function broadcast(req, res) {
                 Consts.NotificationName.NEW_MSG,
                 Consts.NotificationType.INFO,
                 req.body.msg,
-                req.headers.userid)
+                req.headers.userid,
+                req.headers.group)
         .then(_.partial(sendResponse, res, null))
         .fail(_.partial(sendResponse, res, 'Failed to update'));
 }
@@ -87,7 +89,7 @@ function broadcast(req, res) {
 /****************************************************/
 
 function saveNotificationInDB(notification) {
-    var defer = jQuery.Deferred();
+    let defer = jQuery.Deferred();
     mongoUtils.saveOrUpdateEntity(notification, mongoUtils.NOTIFICATIONS_COL_NAME)
         .then(function (err, entity) {
             err ? defer.reject(err)
@@ -100,7 +102,7 @@ function getUnreadinDB(daysAgo, owner) {
     assert(daysAgo, 'daysAgo must be specified');
     assert(owner, 'Owner must be specified');
 
-    var defer = jQuery.Deferred();
+    let defer = jQuery.Deferred();
     mongoUtils.run(function find(db) {
         db.collection(mongoUtils.NOTIFICATIONS_COL_NAME)
             .find({
@@ -120,7 +122,7 @@ function getUnreadinDB(daysAgo, owner) {
 }
 
 function deleteNotificationInDB(notificationId) {
-    var defer = jQuery.Deferred();
+    let defer = jQuery.Deferred();
     jQuery
         .when(mongoUtils.deleteEntity({_id: notificationId}, mongoUtils.NOTIFICATIONS_COL_NAME))
         .then(defer.resolve())
@@ -130,7 +132,7 @@ function deleteNotificationInDB(notificationId) {
 
 function markAllAsReadInDB(owner) {
     assert(owner, 'Owner must be specified');
-    var defer = jQuery.Deferred();
+    let defer = jQuery.Deferred();
     jQuery
         .when(mongoUtils.modifyAttr(
                     mongoUtils.NOTIFICATIONS_COL_NAME,
@@ -143,7 +145,7 @@ function markAllAsReadInDB(owner) {
 
 function getUnreadMsgCountInDB(owner) {
     assert(owner, 'Owner must be specified');
-    var defer = jQuery.Deferred();
+    let defer = jQuery.Deferred();
 
     mongoUtils.run(function count(db) {
         db.collection(mongoUtils.NOTIFICATIONS_COL_NAME)

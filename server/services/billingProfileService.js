@@ -1,17 +1,17 @@
-var Set = require('Set');
-var assert = require('assert');
-var BillingProfile = require('./../model/billingProfile.js');
-var mongoUtils = require('./../mongoUtils.js');
-var serviceUtils = require('./../serviceUtils.js');
-var jQuery = require('jquery-deferred');
-var _ = require('underscore');
-var sendResponse = require('./claimsService.js').sendResponse;
-var DEFAULT_USER = require('./profileService.js').DEFAULT_USER;
+let Set = require('Set');
+let assert = require('assert');
+let BillingProfile = require('./../model/billingProfile.js');
+let mongoUtils = require('./../mongoUtils.js');
+let serviceUtils = require('./../serviceUtils.js');
+let jQuery = require('jquery-deferred');
+let _ = require('underscore');
+let sendResponse = require('./claimsService.js').sendResponse;
+let DEFAULT_USER = require('./profileService.js').DEFAULT_USER;
+let addOwnerInfo = mongoUtils.addOwnerInfo;
 
-
-var entityCollectionName = mongoUtils.BILLING_PROFILE_COL_NAME;
-var BILLING_PROFILE_COL_NAME = mongoUtils.BILLING_PROFILE_COL_NAME;
-var USERPROFILE_COL_NAME = mongoUtils.USERPROFILE_COL_NAME;
+let entityCollectionName = mongoUtils.BILLING_PROFILE_COL_NAME;
+let BILLING_PROFILE_COL_NAME = mongoUtils.BILLING_PROFILE_COL_NAME;
+let USERPROFILE_COL_NAME = mongoUtils.USERPROFILE_COL_NAME;
 
 
 /********************************************************/
@@ -21,10 +21,10 @@ var USERPROFILE_COL_NAME = mongoUtils.USERPROFILE_COL_NAME;
 function saveOrUpdateREST(req, res) {
     assert.ok(req.hasOwnProperty('body'), 'Expecting instance of Request');
 
-    var entityJSON = req.body;
+    let entityJSON = req.body;
     console.log('Save/update BillingProfile: ' + JSON.stringify(entityJSON));
-    var entityObj = _.extend(new BillingProfile(), entityJSON);
-    entityObj.owner = req.headers.userid;
+    let entityObj = _.extend(new BillingProfile(), entityJSON);
+    entityObj = addOwnerInfo(req, entityObj);
 
     // Validate
     saveOrUpdateEntityObject(entityObj)
@@ -37,7 +37,7 @@ function saveOrUpdateREST(req, res) {
 
 function saveOrUpdateEntityObject(entityObj) {
     assert.ok(entityObj instanceof BillingProfile, 'Expecting instance of BillingProfile object');
-    var defer = jQuery.Deferred();
+    let defer = jQuery.Deferred();
 
     mongoUtils.saveOrUpdateEntity(entityObj, entityCollectionName)
         .always(function (err, results) {
@@ -53,17 +53,19 @@ function saveOrUpdateEntityObject(entityObj) {
 
 function codesInUse(req, res) {
     assert.ok(req.headers.userid, 'Expecting userId in headers');
-    var owner = req.headers.userid;
+    let owner = req.headers.userid;
+    let ingroups = req.headers.ingroups;
 
     mongoUtils.connect()
         .then(function (db) {
             db.collection(mongoUtils.BILLING_ITEMS_COL_NAME)
-                .find({'owner': owner}, {fields: {'_id': 0, 'mileageCode': 1, 'timeCode': 1, 'expenseCode': 1}})
+                .find({$or: [{'owner': owner}, {'group': {$in: ingroups}}]},
+                    {fields: {'_id': 0, 'mileageCode': 1, 'timeCode': 1, 'expenseCode': 1}})
                 .toArray(function (err, resp) {
                     if (err) {
-                        sendResponse(res, 'Failed to find usages of BillingCode ' + code, {});
+                        sendResponse(res, 'Failed to find usages of BillingCodes', {});
                     } else {
-                        var result = new Set([]);
+                        let result = new Set([]);
                         _.each(resp, function (val) {
                             result.add(val.mileageCode);
                             result.add(val.timeCode);
@@ -80,15 +82,16 @@ function codesInUse(req, res) {
  * Create one by copying user profile default if one is not present
  */
 function checkAndGetBillingProfileForClaimREST(req, res) {
-
     assert.ok(req.params.claimId, 'Expecting claimId as a parameter');
     assert.ok(req.headers.userid, 'Expecting userid in header');
 
-    var claimId = req.params.claimId;
-    var userId = req.headers.userid;
+    let claimId = req.params.claimId;
+    let userId = req.headers.userid;
+    let group = req.headers.group;
+    let ingroups = req.headers.ingroups;
 
     // Check if profile exists
-    mongoUtils.getEntityById(claimId, BILLING_PROFILE_COL_NAME, userId)
+    mongoUtils.getEntityById(claimId, BILLING_PROFILE_COL_NAME, userId, ingroups)
         .then(function (err, profile) {
             _.isObject(profile)
                 ? sendResponse(res, null, profile)
@@ -97,7 +100,7 @@ function checkAndGetBillingProfileForClaimREST(req, res) {
 
     // If not make a copy of the default profile
     function copyDefaultProfile() {
-        mongoUtils.getEntityById(DEFAULT_USER, USERPROFILE_COL_NAME, DEFAULT_USER)
+        mongoUtils.getEntityById(DEFAULT_USER, USERPROFILE_COL_NAME, DEFAULT_USER, [DEFAULT_USER])
 
             .then(function copyDefaultProfile(err, defaultProfile) {
                 console.log('Creating new billing profile for claim: ' + userId);
@@ -105,9 +108,10 @@ function checkAndGetBillingProfileForClaimREST(req, res) {
                     sendResponse(res, 'Error while setting up billing profile: ' + err.message, null);
                     return;
                 }
-                var newProfile = new BillingProfile();
+                let newProfile = new BillingProfile();
                 newProfile._id = claimId;
                 newProfile.owner = userId;
+                newProfile.group = group;
                 newProfile.timeUnit = defaultProfile.billingProfile.timeUnit; // e.g., .1 hour.
                 newProfile.distanceUnit = defaultProfile.billingProfile.distanceUnit;
                 newProfile.timeRate = Number(defaultProfile.billingProfile.timeRate); // $ per unit.

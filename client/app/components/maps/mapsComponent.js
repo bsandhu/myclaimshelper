@@ -1,7 +1,6 @@
 define(['knockout', 'KOMap',
         'app/utils/audit',
-        'text!app/components/maps/mapsComponent.tmpl.html',
-        'async!https://maps.googleapis.com/maps/api/js?key=AIzaSyBB-Qincf0sNQcsu5PzZh7znG3GiB98GRU&libraries=places&signed_in=true&v=3.exp'],
+        'text!app/components/maps/mapsComponent.tmpl.html'],
 
     function (ko, KOMap, Audit, viewHtml) {
         'use strict';
@@ -26,12 +25,12 @@ define(['knockout', 'KOMap',
             this.markers = [];
 
             // Autocomplete
-            var input = document.getElementById('pac-input');
-            var options = {componentRestrictions: {country: 'us'}};
+            let input = document.getElementById('pac-input');
+            let options = {componentRestrictions: {country: 'us'}};
             this.autocomplete = new google.maps.places.Autocomplete(input, options);
             this.setupAutocompleteChangeListener();
             this.geolocate();
-            var self = this;
+            let self = this;
 
             $("#dialog-message").dialog({
                 autoOpen: false,
@@ -58,7 +57,7 @@ define(['knockout', 'KOMap',
         };
 
         MapsComponentVM.prototype.setupAutocompleteChangeListener = function () {
-            var self = this;
+            let self = this;
             /**
              * This is called when the Google widget gets location data.
              * Save the data in the same schema as Google. This allows for easy recreation later.
@@ -84,7 +83,7 @@ define(['knockout', 'KOMap',
 
         MapsComponentVM.prototype.dropMarkeAndRepositionMap = function () {
             console.log('Mas autocomplete > Place changed ev');
-            var self = this;
+            let self = this;
             self.mapDiv = document.getElementById('map-canvas');
             self.map = new google.maps.Map(self.mapDiv, self.mapOptions);
 
@@ -110,13 +109,13 @@ define(['knockout', 'KOMap',
         MapsComponentVM.prototype.createMarker = function (place) {
             console.log('Mas autocomplete > Creating markers');
 
-            var marker = new google.maps.Marker({
+            let marker = new google.maps.Marker({
                 map: this.map,
                 title: place.name || place.address_components[0].long_name,
                 place: {'location': place.geometry.location, query: place.name || place.address_components[0].long_name},
                 attribution: {'source': 'Agent 007'}
             });
-            var infowindow = new google.maps.InfoWindow({
+            let infowindow = new google.maps.InfoWindow({
                 content: place.name
             });
             marker.addListener('click', function () {
@@ -125,22 +124,22 @@ define(['knockout', 'KOMap',
             return marker;
         };
 
-        MapsComponentVM.prototype.setAllMarkersOnMap = function () {
+        /*MapsComponentVM.prototype.setAllMarkersOnMap = function () {
             console.log('Mas autocomplete > Seting all markers');
             var self = this;
             $.each(this.markers, function (index, marker) {
                 marker.setMap(self.map);
             })
-        };
+        };*/
 
         MapsComponentVM.prototype.geolocate = function () {
-            var self = this;
+            let self = this;
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(function (position) {
-                    var geolocation = new google.maps.LatLng(
+                    let geolocation = new google.maps.LatLng(
                         position.coords.latitude,
                         position.coords.longitude);
-                    var circle = new google.maps.Circle({
+                    let circle = new google.maps.Circle({
                         center: geolocation,
                         radius: position.coords.accuracy
                     });
@@ -149,7 +148,7 @@ define(['knockout', 'KOMap',
             }
         };
 
-        MapsComponentVM.prototype.showMultiLocations = function (locations, geocoder, map, markers) {
+        /*MapsComponentVM.prototype.showMultiLocations = function (locations, geocoder, map, markers) {
             for (var i = 0; i < locations.length; i++) {
                 geocoder.geocode({'address': locations[i]}, function (res, status) {
                     if (status == google.maps.GeocoderStatus.OK) {
@@ -161,9 +160,9 @@ define(['knockout', 'KOMap',
                     }
                 });
             }
-        };
+        };*/
 
-        MapsComponentVM.prototype.routePlanner = function (start, end, middle, dirService, dirDisplay) {
+        /*MapsComponentVM.prototype.routePlanner = function (start, end, middle, dirService, dirDisplay) {
             if (middle == undefined) {
                 middle = [];
             }
@@ -177,7 +176,7 @@ define(['knockout', 'KOMap',
                 console.log(status);
                 dirDisplay.setDirections(res);
             })
-        };
+        };*/
 
         return {viewModel: MapsComponentVM, template: viewHtml};
     });

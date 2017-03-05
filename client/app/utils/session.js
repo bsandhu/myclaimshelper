@@ -29,7 +29,9 @@ define(['amplify', 'app/utils/sessionKeys'], function (amplify, SessionKeys) {
             amplify.store.sessionStorage(SessionKeys.USER_PROFILE, profile);
         },
         getCurrentUserProfile: function () {
-            return amplify.store.sessionStorage(SessionKeys.USER_PROFILE);
+            var profile = amplify.store.sessionStorage(SessionKeys.USER_PROFILE);
+            if (profile)
+            return profile;
         },
 
         // Auth profile

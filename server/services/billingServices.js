@@ -1,16 +1,17 @@
-var assert = require('assert')
-var Bill = require('../model/bill.js');
-var Claim = require("../model/claim.js");
-var BillingItem = require('../model/billingItem.js');
-var config = require('./../config.js');
-var sendResponse = require('./claimsService.js').sendResponse;
-var mongoUtils = require('./../mongoUtils.js');
-var jQuery = require("jquery-deferred");
-var _ = require('underscore');
+let assert = require('assert')
+let Bill = require('../model/bill.js');
+let Claim = require("../model/claim.js");
+let BillingItem = require('../model/billingItem.js');
+let config = require('./../config.js');
+let sendResponse = require('./claimsService.js').sendResponse;
+let mongoUtils = require('./../mongoUtils.js');
+let jQuery = require("jquery-deferred");
+let _ = require('underscore');
+let addOwnerInfo = mongoUtils.addOwnerInfo;
 
-var BILL_COL_NAME = mongoUtils.BILL_COL_NAME;
-var BILLING_ITEMS_COL_NAME = mongoUtils.BILLING_ITEMS_COL_NAME;
-var CLAIMS_COL_NAME = mongoUtils.CLAIMS_COL_NAME;
+let BILL_COL_NAME = mongoUtils.BILL_COL_NAME;
+let BILLING_ITEMS_COL_NAME = mongoUtils.BILLING_ITEMS_COL_NAME;
+let CLAIMS_COL_NAME = mongoUtils.CLAIMS_COL_NAME;
 
 
 // :: DB -> Obj
@@ -21,27 +22,27 @@ function _billsCollection(db) {
 // :: f -> Dict -> [Obj]
 // convert a dict into an Object with dot-accessible attributes
 function _hydrate(type, objects) {
-    var objs = _.isArray(objects) ? objects : [objects];
-    var fn = function (obj) {
+    let objs = _.isArray(objects) ? objects : [objects];
+    let fn = function (obj) {
         return _.extend(new type(), obj)
     };
-    var hydrated = _.map(objs, fn);
+    let hydrated = _.map(objs, fn);
     return hydrated;
 }
 
 // :: Obj -> (obj, [Obj])
-var _decomposeBill = function (obj) {
-    var billingItems = obj.billingItems;
+let _decomposeBill = function (obj) {
+    let billingItems = obj.billingItems;
     delete obj.billingItems;
     return [obj, billingItems]
 }
 
 // :: [Obj] -> Promise
-var _saveOrUpdateBillingItems = _.partial(mongoUtils.saveOrUpdateEntity, _, BILLING_ITEMS_COL_NAME);
+let _saveOrUpdateBillingItems = _.partial(mongoUtils.saveOrUpdateEntity, _, BILLING_ITEMS_COL_NAME);
 
 // :: Dict -> DB -> Promise
-var _getBills = function (search, db) {
-    var result = jQuery.Deferred();
+let _getBills = function (search, db) {
+    let result = jQuery.Deferred();
     jQuery
         .when(mongoUtils.findEntities(BILL_COL_NAME, search, db))
         .then(function (bills) {
@@ -52,8 +53,8 @@ var _getBills = function (search, db) {
 }
 
 // :: Dict -> DB -> Promise
-var _getBillingItems = function (search, db) {
-    var result = jQuery.Deferred();
+let _getBillingItems = function (search, db) {
+    let result = jQuery.Deferred();
     jQuery.when(mongoUtils.findEntities(BILLING_ITEMS_COL_NAME, search, db))
         .then(function (billingItems) {
             //console.log('_getBillingItems: ' + JSON.stringify(billingItems).substr(0, 100));
@@ -62,8 +63,8 @@ var _getBillingItems = function (search, db) {
     return result;
 }
 
-var _getClaimsIgnoringOwnership = function (search, db) {
-    var result = jQuery.Deferred();
+let _getClaimsIgnoringOwnership = function (search, db) {
+    let result = jQuery.Deferred();
     jQuery.when(mongoUtils.findEntities(CLAIMS_COL_NAME, search, db, false))
         .then(function (claims) {
             console.log('_getClaimsIgnoringOwnership: ' + JSON.stringify(claims).substr(0, 100));
@@ -73,14 +74,14 @@ var _getClaimsIgnoringOwnership = function (search, db) {
 }
 
 // :: Dict -> DB -> Promise
-var getBillObjects = function (search, includeClosedClaims, db) {
-    var result = jQuery.Deferred();
+let getBillObjects = function (search, includeClosedClaims, db) {
+    let result = jQuery.Deferred();
 
     jQuery
         .when(_getBills(search, db))
         .then(function (bills) {
-            var promises = _.map(bills, _.partial(_populateBillingItems));
-            var itemsDefer = jQuery.Deferred();
+            let promises = _.map(bills, _.partial(_populateBillingItems));
+            let itemsDefer = jQuery.Deferred();
             jQuery
                 .when.apply(jQuery, promises)
                 .then(function () {
@@ -89,13 +90,18 @@ var getBillObjects = function (search, includeClosedClaims, db) {
             return itemsDefer;
         })
         .then(function populateClaimAttrs(bills) {
-            var correspondingClaimIds = _.uniq(_.map(bills, function (bill) {
+            let correspondingClaimIds = _.uniq(_.map(bills, function (bill) {
                 return bill.claimId
             }));
-            _getClaimsIgnoringOwnership({_id: {$in: correspondingClaimIds}}, db)
+            _getClaimsIgnoringOwnership({
+                _id: {$in: correspondingClaimIds},
+                owner: search.owner,
+                group: search.group,
+                ingroups: search.ingroups
+            }, db)
                 .then(function (claims) {
                     _.each(bills, function populateClaimDetails(bill) {
-                        var correspondingClaim = _.find(claims, function (claim) {
+                        let correspondingClaim = _.find(claims, function (claim) {
                             return claim._id == bill.claimId
                         });
                         bill.isClaimClosed = correspondingClaim ? correspondingClaim.isClosed : false;
@@ -115,8 +121,8 @@ var getBillObjects = function (search, includeClosedClaims, db) {
         });
 
     function _populateBillingItems(bill) {
-        var done = jQuery.Deferred();
-        var itemSearch = {billId: bill._id, owner: bill.owner};
+        let done = jQuery.Deferred();
+        let itemSearch = {billId: bill._id, owner: search.owner, group: search.group, ingroups: search.ingroups};
         jQuery.when(_getBillingItems(itemSearch, db))
             .then(function (billingItems) {
                 bill.billingItems = billingItems;
@@ -132,46 +138,46 @@ var getBillObjects = function (search, includeClosedClaims, db) {
 // :: Dict -> Dict -> None
 function getBillsREST(req, res) {
     assert.ok(req.body, 'Expecting Mongo query as a parameter');
-    var db = mongoUtils.connect();
-    var query = req.body.search;
-    var includeClosedClaims = req.body.includeClosedClaims;
-    query.owner = req.headers.userid;
+    let db = mongoUtils.connect();
+    let query = req.body.search;
+    let includeClosedClaims = req.body.includeClosedClaims;
+    query = addOwnerInfo(req, query);
 
     db.then(_.partial(getBillObjects, query, includeClosedClaims))
         .then(_.partial(sendResponse, res, null),
-        _.partial(sendResponse, res, 'Failed to get Bill for query ' + query));
+            _.partial(sendResponse, res, 'Failed to get Bill for query ' + query));
 }
 
 // :: Dict -> Dict -> None
 function getBillingItemsREST(req, res) {
     assert.ok(req.params.search, 'Expecting BillId as a parameter');
-    var db = mongoUtils.connect();
-    var search = req.params.search;
-    search.owner = req.headers.userid;
+    let db = mongoUtils.connect();
+    let search = req.params.search;
+    search = addOwnerInfo(req, search);
 
     db.then(_.partial(_getBillingItems, search))
         .then(_.partial(sendResponse, res, null),
-        _.partial(sendResponse, res, 'Failed to get BillingItems  ' + req.params.search));
+            _.partial(sendResponse, res, 'Failed to get BillingItems  ' + req.params.search));
 }
 
 // :: Dict -> Dict -> None
 function saveOrUpdateBillingItemsREST(req, res) {
-    var items = req.body;
+    let items = req.body;
     assert.ok(_.isArray(items), 'Expecting BillingItems in an Array');
 
     if (items.length > 1) {
         // Add owner attr to items
         items = _.map(items, function (item) {
-            item.owner = req.headers.userid;
+            item = addOwnerInfo(req, item);
             return item;
         });
-        var promises = _.map(items, _saveOrUpdateBillingItems);
+        let promises = _.map(items, _saveOrUpdateBillingItems);
         jQuery.when.apply(jQuery, promises)
             .done(_done)
             .fail(_fail);
     } else {
         // If one item is being saved - return Generated id
-        items[0].owner = req.headers.userid;
+        items[0] = addOwnerInfo(req, items[0]);
         mongoUtils.saveOrUpdateEntity(items[0], mongoUtils.BILLING_ITEMS_COL_NAME)
             .always(function (err, results) {
                 sendResponse(res, err, results);
@@ -188,8 +194,8 @@ function saveOrUpdateBillingItemsREST(req, res) {
 
 // :: Dict -> Dict -> None
 function saveOrUpdateBillREST(req, res) {
-    var bill = req.body;
-    bill.owner = req.headers.userid;
+    let bill = req.body;
+    bill = addOwnerInfo(req, bill);
 
     // Saved in a separate API call
     delete bill.billingItems;

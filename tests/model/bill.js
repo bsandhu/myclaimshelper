@@ -1,20 +1,20 @@
-var assert = require("assert");
-var Bill = require("./../../server/model/bill.js");
-var BillingItem = require("./../../server/model/billingItem.js");
-var billingServices = require("./../../server/services/billingServices.js");
-var config = require("./../../server/config.js");
-var mongoUtils = require("./../../server/mongoUtils.js");
-var _ = require('underscore');
+let assert = require("assert");
+let Bill = require("./../../server/model/bill.js");
+let BillingItem = require("./../../server/model/billingItem.js");
+let billingServices = require("./../../server/services/billingServices.js");
+let config = require("./../../server/config.js");
+let mongoUtils = require("./../../server/mongoUtils.js");
+let _ = require('underscore');
 
 mongoUtils.initConnPool();
-var db = mongoUtils.dbConn;
+let db = mongoUtils.dbConn;
 
 
 describe('Bill', function () {
-    var bill = new Bill();
+    let bill = new Bill();
     bill.claimId = 'abc';
     bill._id = 'bill_id';
-    var bi_1 = new BillingItem('task_id');
+    let bi_1 = new BillingItem('task_id');
     bi_1.billId = 'bill_id';
     bill.billingItems = [bi_1];
 
@@ -25,17 +25,17 @@ describe('Bill', function () {
     });
 
     it('gets with billingItems', function (done) {
-        var db = mongoUtils.connect(config.db);
+        let db = mongoUtils.connect(config.db);
 
-        var test = function (ret) {
+        let test = function (ret) {
             console.log(ret);
-            var bill = ret[0];
+            let bill = ret[0];
             assert.equal(bill._id, 'bill_id');
             assert.equal(bill.billingItems[0].billId, 'bill_id');
             done();
         };
         db.then(_.partial(billingServices.getBillObjects,
-            {_id: 'bill_id', owner: 'TestUser'},
+            {_id: 'bill_id', owner: 'TestUser', group: 'TestGroup', ingroups: ['TestGroup']},
             false))
           .then(test);
     });

@@ -1,0 +1,51 @@
+<div class="bottomMargin10" style="vertical-align: top;">
+
+    <span class="sub-heading" data-bind="text: contactInfo.contact.name"></span>
+    <span data-bind="if: contactInfo.subCategory() == 'Insured attorney'">
+        <strong data-bind="text: '(Attorney)'"></strong>
+    </span>
+    <br/>
+    <!-- ******** Addresses ******** -->
+    <!-- ko foreach: contactInfo.contact.addresses -->
+    <span data-bind="ifnot: $parents[1]._.isEmpty(type())">
+        <i><span data-bind="text: type" style="line-height: 2"></span>: </i><br/>
+    </span>
+    <span data-bind="ifnot: $parents[1]._.isEmpty(street())">
+        <span data-bind="text: street"></span><br/>
+    </span>
+    <span data-bind="ifnot: $parents[1]._.isEmpty(city())">
+        <span data-bind="text: city" class="rightMargin5"></span>
+    </span>
+    <span data-bind="ifnot: $parents[1]._.isEmpty(state())">
+        <span data-bind="ifnot: state() === '---'">
+            <span data-bind="text: state" class="rightMargin5"></span>
+        </span>
+    </span>
+    <span data-bind="ifnot: $parents[1]._.isEmpty(zip())">
+        <span data-bind="text: zip"></span><br/>
+    </span>
+    <!-- /ko -->
+
+    <!-- ******** Phones ******** -->
+    <!-- ko foreach: contactInfo.contact.phones -->
+    <span data-bind="ifnot: $parents[1]._.isEmpty(phone())" class="topMargin10">
+        <span><i data-bind="text: type() + ': '"></i></span>
+        <span data-bind="text: phone"></span>
+        <span data-bind="ifnot: $parents[1]._.isEmpty(ext())">
+            <span data-bind="text: 'x' + ext()"></span>
+        </span>
+        <br/>
+    </span>
+    <!-- /ko -->
+
+    <!-- ******** Emails ******** -->
+    <!-- ko foreach: contactInfo.contact.emails -->
+    <span data-bind="ifnot: $parents[1]._.isEmpty(email())">
+        <i class="fa fa-envelope-o"></i>
+        <span><i data-bind="text: type() + ': '"></i></span>
+        <span data-bind="text: email"></span>
+        <br/>
+    </span>
+    <!-- /ko -->
+
+</div>

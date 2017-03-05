@@ -1,30 +1,30 @@
-var assert = require("assert");
-var billingServices = require("./../../server/services/billingServices.js");
-var Bill = require("../../server/model/bill.js");
-var Claim = require("../../server/model/claim.js");
-var BillingItem = require("../../server/model/billingItem.js");
-var jQuery = require('jquery-deferred');
-var mongoUtils = require("./../../server/mongoUtils.js");
+let assert = require("assert");
+let billingServices = require("./../../server/services/billingServices.js");
+let Bill = require("../../server/model/bill.js");
+let Claim = require("../../server/model/claim.js");
+let BillingItem = require("../../server/model/billingItem.js");
+let jQuery = require('jquery-deferred');
+let mongoUtils = require("./../../server/mongoUtils.js");
 
 describe('billingServices', function () {
 
-    var bill = new Bill();
+    let bill = new Bill();
     bill.claimId = 'claim_id';
     bill._id = 'bill_id';
     bill.description = 'Test bill';
 
-    var bi_1 = new BillingItem('task_id');
+    let bi_1 = new BillingItem('task_id');
     bi_1.billId = bill._id;
-    var bi_2 = new BillingItem('task_id');
+    let bi_2 = new BillingItem('task_id');
     bi_2.billId = bill._id;
 
 
     it('saveOrUpdateBillingItemsREST ok', function (done) {
-        var req = {body: [
+        let req = {body: [
             {summary: 'bi_1'},
             {summary: 'bi_2'}
-        ], headers: {userid: 'TestUser'}};
-        var res = {};
+        ], headers: {userid: 'TestUser', group: 'TestGroup', ingroups: ['TestGroup']}};
+        let res = {};
         res.json = function (data) {
             assert(data);
             assert.equal(data.status, 'Success');
@@ -36,8 +36,8 @@ describe('billingServices', function () {
     });
 
     it('saveOrUpdateBillingItemsREST single ok', function (done) {
-        var req = {body: [bi_1], headers: {userid: 'TestUser'}};
-        var res = {};
+        let req = {body: [bi_1], headers: {userid: 'TestUser', group: 'TestGroup', ingroups: ['TestGroup']}};
+        let res = {};
         res.json = function (data) {
             assert(data);
             assert.equal(data.status, 'Success');
@@ -52,8 +52,8 @@ describe('billingServices', function () {
     });
 
     it('saveOrUpdateBillREST ok', function (done) {
-        var req = {body: bill, headers: {userid: 'TestUser'}};
-        var res = {};
+        let req = {body: bill, headers: {userid: 'TestUser', group: 'TestGroup', ingroups: ['TestGroup']}};
+        let res = {};
         res.json = function (data) {
             assert(data);
             assert.equal(data.status, 'Success');
@@ -63,17 +63,17 @@ describe('billingServices', function () {
     });
 
     it('getBillsREST ok', function (done) {
-        var req = {
+        let req = {
             body: {
                 search: {_id: bill._id},
                 includeClosedClaims: false
             },
-            headers: {userid: 'TestUser'}
+            headers: {userid: 'TestUser', group: 'TestGroup', ingroups: ['TestGroup']}
         };
-        var res = {};
+        let res = {};
         res.json = function (data) {
             console.log('getBillsREST: ' + JSON.stringify(data));
-            var bill = data.data[0];
+            let bill = data.data[0];
             assert.equal(bill.description, 'Test bill');
             assert.equal(bill._id, 'bill_id');
             assert.equal(bill.claimId, 'claim_id');
@@ -90,12 +90,14 @@ describe('billingServices', function () {
     });
 
     if ('getBillingItemsREST ok', function (done) {
-        var req = {params: {search: {claimEntryId: 'task_id'}}, headers: {userid: 'TestUser'}};
-        var res = {};
+        let req = {
+            params: {search: {claimEntryId: 'task_id'}},
+            headers: {userid: 'TestUser', group: 'TestGroup', ingroups: ['TestGroup']}};
+        let res = {};
         res.json = function (data) {
             console.log('*****************');
             console.log(data);
-            var items = data.data;
+            let items = data.data;
             assert.ok(items);
             done();
         };

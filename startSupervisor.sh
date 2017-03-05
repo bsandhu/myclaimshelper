@@ -1,0 +1,1 @@
+supervisor -w server server/start.js

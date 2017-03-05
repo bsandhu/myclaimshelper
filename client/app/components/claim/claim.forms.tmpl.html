@@ -1,0 +1,89 @@
+<!-- ko ifnot: isClaimClosed -->
+<div class="col-lg-12 col-md-12 col-sm-12" style="margin-bottom: 20px">
+
+    <!-- **** Add new form btn **** -->
+    <div class="btn-group inline leftMargin5">
+        <button type="button"
+                id="claim-newform-btn"
+                class="btn btn-default dropdown-toggle btn-info"
+                data-toggle="dropdown">
+            <span class="fa fa-plus"></span>
+            New Form <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu" role="menu">
+            <li>
+                <a data-bind="attr: {href: '#/claim/form/new/' + claim()._id() + '/proofOfLoss'}">
+                    <span><i class="fa fa-file-text-o"></i></span>
+                    <span class="leftMargin5">Proof of loss</span>
+                </a>
+            </li>
+            <li>
+                <a data-bind="attr: {href: '#/claim/form/new/' + claim()._id() + '/anotherForm'}">
+                    <span><i class="fa fa-file-text-o"></i></span>
+                    <span class="leftMargin5">Another form</span>
+                </a>
+            </li>
+            <li>
+                <a data-bind="attr: {href: '#/claim/form/new/' + claim()._id() + '/subrogationReceipt'}">
+                    <span><i class="fa fa-file-text-o"></i></span>
+                    <span class="leftMargin5">Subrogation receipt</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+
+</div>
+<!-- /ko -->
+
+<!-- No docs msg -->
+<!-- ko ifnot: isClaimClosed -->
+<div data-bind="if: claimForms().length == 0"
+     class="col-lg-offset-2 col-md-offset-2 col-sm-offset-1 col-lg-8 col-md-8 col-sm-10 col-xs-12">
+    <div class="text-info topMargin5pc text-center">
+        You may generate forms for this Claim<br/>No forms for this Claim yet
+    </div>
+</div>
+<!-- /ko -->
+
+<!-- **** List forms **** -->
+<div class="col-lg-12 col-md-12 col-sm-12" data-bind="if: claimForms().length > 0">
+    <table id="claimFormsTable"
+           data-sortable
+           data-bind="sortable"
+           class="table table-hover">
+
+        <!-- Header -->
+        <thead>
+        <tr>
+            <th data-field="type" data-sortable="false"></th>
+            <th data-field="type" data-sortable="true">Type</th>
+            <!-- ko ifnot: isPartiallyCollapsed -->
+            <th data-field="creationDate" data-sortable="true" class="hidden-xs">Updated</th>
+            <th data-field="createdBy" data-sortable="true" class="hidden-xs hidden-sm">Created by</th>
+            <th data-field="id" data-sortable="true" class="hidden-sm hidden-xs hidden-md hidden-lg">Id</th>
+            <!-- /ko -->
+        </tr>
+        </thead>
+
+        <!-- Body -->
+        <tbody data-bind="foreach: { data: claimForms, as: 'form' }">
+        <tr style="cursor: pointer" data-bind="click: $parent.onClaimFormClick.bind($parent)">
+            <td style="width: 20px">
+                <span class="stepBulletPoint color-teal" style="font-size: 1.25em"
+                      data-bind="text: form.type.substr(0,1).toUpperCase()"></span>
+            </td>
+            <td data-bind="text: $parent.ObjectUtils.camelcaseToSpaces(form.type)"></td>
+            <!-- ko ifnot: $parent.isPartiallyCollapsed -->
+            <td class="hidden-xs">
+                <div data-bind="text: $parent.DateUtils.niceDate(form.updateDate ? form.updateDate : '-')"></div>
+            </td>
+            <td class="hidden-xs">
+                <div data-bind="text: form.owner"></div>
+            </td>
+            <!-- /ko -->
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+
