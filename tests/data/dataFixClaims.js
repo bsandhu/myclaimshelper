@@ -1,4 +1,5 @@
 let mongoUtils = require('./../../server/mongoUtils.js');
+let Contact = require('./../../server/model/contact.js');
 let MongoClient = require('mongodb').MongoClient;
 let ProfileService = require('./../../server/services/profileService.js');
 let _ = require('underscore');
@@ -107,6 +108,29 @@ function changeToUserProfileSchema() {
         });
 }
 
+function changeToBillsSchema() {
+    let seq = Promise.resolve();
+
+    mongoUtils.connect()
+        .then(function (db) {
+            let collection = db.collection(mongoUtils.BILL_COL_NAME);
+
+            collection
+                .find({})
+                .toArray(function (err, bills) {
+                    function process(bill) {
+                        bill.billRecipient = new Contact();
+                        bill.group = bill.owner;
+                        return mongoUtils.saveOrUpdateEntity(bill, mongoUtils.BILL_COL_NAME, false);
+                    }
+
+                    bills.forEach(bill => {
+                        seq = seq.then(() => process(bill));
+                    });
+                });
+        });
+}
+
 function changeToContactsSchema() {
     let seq = Promise.resolve();
 
@@ -171,4 +195,5 @@ function changeToContactsSchema() {
 
 //changeToClaimsSchema();
 //changeToUserProfileSchema();
-changeToContactsSchema();
+//changeToContactsSchema();
+//changeToBillsSchema();
