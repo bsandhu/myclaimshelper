@@ -78,6 +78,7 @@
                     <div class="col-lg-3 col-md-4 col-sm-6 col-xs-6">
                         <strong>Date Of Loss</strong>
                         <span class="leftMargin5"
+                              id="claimDateOfLoss"
                               data-bind="text: DateUtils.niceLocaleDate(claim().dateOfLoss ? claim().dateOfLoss() : '')"></span>
                     </div>
                 </div>
@@ -259,10 +260,12 @@
                     <ul class="nav nav-tabs" role="tablist">
                         <li role="presentation" class="active">
                             <a aria-controls="claimDocs" href="#claimDocs" role="tab" data-toggle="tab"
+                               id="claimDocsTabLink"
                                class="squareCorners" id="claimDocsTabLink">Docs</a>
                         </li>
                         <li role="presentation">
                             <a aria-controls="claimTasks" href="#claimTasks" role="tab" data-toggle="tab"
+                               id="claimTasksTabLink"
                                class="squareCorners">Tasks</a>
                         </li>
                         <li role="presentation">
@@ -279,6 +282,7 @@
                     <div data-bind="ifnot: inEditMode && isPartiallyCollapsed" class="inline">
                         <!-- ko ifnot: isClaimClosed -->
                         <div class="btn btn-default inline btn-info"
+                             id="claimEditBtn"
                              data-bind="click: onEditModeClick.bind($data)">
                             <i class="fa fa-pencil"></i>
                             Edit

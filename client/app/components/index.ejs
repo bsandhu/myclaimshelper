@@ -219,10 +219,11 @@
                 </div>
             </div>
             <div class="welcome modal-footer">
-                <button type="button" class="welcome btn btn-default btn-link no" data-dismiss="modal">Not now</button>
                 <button type="button" class="welcome btn btn-default btn-link" data-dismiss="modal"
-                        data-bind="click: onWelcomeAccept">Yes please
-                </button>
+                        data-bind="click: onWelcomeAccept">Yes</button>
+                <button type="button" class="welcome btn btn-default btn-link no" data-dismiss="modal">No</button>
+                <button type="button" class="welcome btn btn-default btn-link no" data-dismiss="modal"
+                        data-bind="click: onWelcomeDontShow">Don't ask again</button>
             </div>
         </div>
     </div>

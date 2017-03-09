@@ -214,6 +214,10 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
             Tours.startClaimsTour();
         }
 
+        AppVM.prototype.onWelcomeDontShow = function () {
+            Tours.markAsDone();
+        }
+
         AppVM.prototype.onStartTravelTour = function (vm, ev) {
         }
 
