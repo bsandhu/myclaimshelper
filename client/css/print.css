@@ -6,6 +6,7 @@ body {
     height: 100%;
     font-family: "Open Sans", Arial, Helvetica, Sans-Serif, serif;
     font-size: 14px;
+    -webkit-print-color-adjust: exact;
 }
 
 table {
@@ -87,10 +88,10 @@ strong {
 }
 
 .print2.invoice-header-total {
-    background: #404040 !important;
-    padding: 8px;
-    color: white;
-    font-size: 1.1em;
+    padding: 5px;
+    font-size: 1.25em;
+    font-weight: 600;
+    background-color: lightgrey;
 }
 
 .print2.invoice-header-company {

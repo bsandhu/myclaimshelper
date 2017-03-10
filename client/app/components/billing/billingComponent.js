@@ -6,13 +6,14 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox', 'underscore',
         'text!app/components/billing/billing.tmpl.html',
         'text!app/components/billing/billing.print.tmpl.html',
         'text!app/components/billing/billing.print2.tmpl.html',
+        'text!app/components/claim/contact.print.tmpl.html',
         'text!app/components/billing/billing.create.tmpl.html',
         'text!app/components/billing/billing.list.tmpl.html',
         'app/utils/audit', 'app/components/contact/contactUtils'
     ],
     function ($, ko, KOMap, amplify, bootbox, _, DateUtils, NumberUtils, ObjectUtils, ajaxUtils, Events,
               Consts, router, Session, SessionKeys, Bill, BillingItem, BillingStatus, Contact,
-              viewHtml, printTmpl, print2Tmpl, createHtml, listHtml,
+              viewHtml, printTmpl, print2Tmpl, contactPrintTmpl, createHtml, listHtml,
               Audit, ContactUtils) {
 
         function BillingVM() {
@@ -35,6 +36,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox', 'underscore',
             this.createHtml = createHtml;
             this.listHtml = listHtml;
             this.billingTmpls = {'printTmpl': printTmpl, 'print2Tmpl': print2Tmpl};
+            this.contactPrintTmpl = contactPrintTmpl;
 
             // Grouping
             this.groupBy = ko.observable('Not Submitted');
@@ -764,7 +766,6 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox', 'underscore',
                             var frameContent = frame.contentWindow;
                             frameContent.document.open();
                             frameContent.document.write('<head><link rel=stylesheet href=../../css/print.css type=text/css ></head>');
-                            // frameContent.document.write($('#billPanel')[0].innerHTML);
                             frameContent.document.write(container.innerHTML);
                             frameContent.document.close();
                             setTimeout(function afterFrameRender() {
