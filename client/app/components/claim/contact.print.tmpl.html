@@ -5,9 +5,18 @@
         <strong data-bind="text: '(Attorney)'"></strong>
     </span>
     <br/>
+
+    <!-- Business name -->
+    <span data-bind="ifnot: $parent._.isEmpty(contactInfo.contact.businessName())">
+        <span data-bind="text: contactInfo.contact.businessName"></span><br/>
+    </span>
+    <span data-bind="ifnot: $parent._.isEmpty(contactInfo.contact.jobTitle())">
+        <span data-bind="text: contactInfo.contact.jobTitle"></span><br/>
+    </span>
+
     <!-- ******** Addresses ******** -->
     <!-- ko foreach: contactInfo.contact.addresses -->
-    <span data-bind="ifnot: $parents[1]._.isEmpty(type())">
+    <span data-bind="ifnot: $parents[1]._.isEmpty(street())">
         <i><span data-bind="text: type" style="line-height: 2"></span>: </i><br/>
     </span>
     <span data-bind="ifnot: $parents[1]._.isEmpty(street())">
