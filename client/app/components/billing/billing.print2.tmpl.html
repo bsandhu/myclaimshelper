@@ -7,12 +7,24 @@
                 <strong class="print2 invoice-header-company"
                         data-bind="text: userProfile.contactInfo.businessName"></strong>
                 <br>
+                <!-- ko if: userProfile.contactInfo.streetAddress -->
                 <span data-bind="text: userProfile.contactInfo.streetAddress"></span>
                 <br>
+                <!-- /ko -->
+                <!-- ko if: userProfile.contactInfo.city -->
                 <span data-bind="text: userProfile.contactInfo.city"></span>
+                <!-- /ko -->
+                <!-- ko if: userProfile.contactInfo.zip -->
                 <span data-bind="text: userProfile.contactInfo.zip"></span>
                 <br>
-                <abbr title="Phone">P:</abbr> (123) 456-7890
+                <!-- /ko -->
+                <!-- ko if: userProfile.contactInfo.phone -->
+                <abbr title="Phone">P:</abbr> <span data-bind="text: userProfile.contactInfo.phone"></span>
+                <br>
+                <!-- /ko -->
+                <!-- ko if: userProfile.contactInfo.email -->
+                <abbr title="Email">E:</abbr> <span data-bind="text: userProfile.contactInfo.email"></span>
+                <!-- /ko -->
             </address>
         </div>
         <br/>
@@ -20,13 +32,28 @@
         <div>
             <div style="margin-bottom: 10px">Bill to</div>
             <address>
-                <strong>Mr. Simon Hedger</strong>
+                <strong><span data-bind="text: bill().billRecipient.name"></span></strong>
                 <br>
-                342 Mirlington Road,
+                <span data-bind="text: bill().billRecipient.businessName"></span>
                 <br>
-                Calfornia, CA 431464
+                <!-- ko if: bill().billRecipient.addresses()[0] -->
+                <span data-bind="text: bill().billRecipient.addresses()[0].street"></span>
                 <br>
-                <abbr title="Phone">P:</abbr> (467) 143-4317
+                <span data-bind="text: bill().billRecipient.addresses()[0].city"></span>
+                <span> </span>
+                <span data-bind="text: bill().billRecipient.addresses()[0].state"></span>
+                <span> </span>
+                <span data-bind="text: bill().billRecipient.addresses()[0].zip"></span>
+                <br>
+                <!-- /ko -->
+                <!-- ko if: bill().billRecipient.phones()[0].phone -->
+                <abbr title="Phone">P:</abbr>  <span data-bind="text: bill().billRecipient.phones()[0].phone"></span>
+                <br/>
+                <!-- /ko -->
+                <!-- ko if: bill().billRecipient.emails()[0].email -->
+                <abbr title="Email">E:</abbr>  <span data-bind="text: bill().billRecipient.emails()[0].email"></span>
+                <br/>
+                <!-- /ko -->
             </address>
         </div>
     </div>
@@ -36,16 +63,17 @@
         <h1 style="font-weight: 200; text-align: right;">Invoice</h1>
         <div>
             <strong>Invoice num.</strong>
-            <span class="pull-right"> #AA-454-4113-00 </span>
+            <span class="pull-right" data-bind="text: bill()._id"></span>
         </div>
         <div>
             <strong>Invoice date</strong>
-            <span class="pull-right">15/02/13</span>
+            <span class="pull-right"
+                  data-bind="text: DateUtils.niceLocaleDate(bill().submissionDate(), 'Not submitted')"></span>
         </div>
         <br>
         <div>
             <strong>Claim file num.</strong>
-            <span class="pull-right" data-bind="text: activeClaim.fileNum"></span>
+            <span class="pull-right" data-bind="text: activeClaim.insuranceCompanyFileNum"></span>
         </div>
         <div>
             <strong>Insured</strong>
@@ -60,7 +88,8 @@
         <br>
         <div class="print2 invoice-header-total">
             Total Due :
-            <span class="pull-right"> 4,972 USD** </span>
+            <span class="pull-right"
+                  data-bind="text: NumberUtils.niceCCY(bill().total()) + ' **'"></span>
         </div>
         <br>
         <br>
@@ -81,7 +110,7 @@
             <th>Expense Amount</th>
         </tr>
         <!-- ko foreach: { data: groupedByCode, as: 'billingItem' } -->
-        <tr>
+        <tr style="line-height: 1.25em">
             <td data-bind="text: $parent.DateUtils.niceLocaleDate(new Date(billingItem.entryDate))"
                 style="width: 90px"></td>
             <td data-bind="text: billingItem.code"></td>
@@ -93,34 +122,37 @@
         </tr>
         <!-- /ko -->
         <tr>
-            <td colspan="2"></td>
-            <td class="text-right"><strong>Total Hours<strong></td>
-            <td colspan="4">
-                <span data-bind="text: NumberUtils.nice(bill().totalTime()) + ' hrs x '"></span>
-                <span data-bind="text: '$' + Number(billingProfile.timeRate) + '/hr = '"></span>
+            <td colspan="7" style="height: 3px;"></td>
+        </tr>
+        <tr>
+            <td colspan="3"></td>
+            <td class="text-right"><strong>Total Hours</strong></td>
+            <td colspan="3">
                 <span data-bind="text: NumberUtils.niceCCY(bill().totalTimeInDollars())"></span>
+                <span style="margin-left: 10px" data-bind="text: '(' + NumberUtils.nice(bill().totalTime()) + ' hrs x '"></span>
+                <span data-bind="text: '$' + Number(billingProfile.timeRate) + '/hr'"></span>)
             </td>
         </tr>
         <tr>
-            <td colspan="2"></td>
-            <td class="text-right"><strong>Total Mileage<strong></td>
-            <td colspan="4">
-                <span data-bind="text: NumberUtils.nice(bill().totalMileage()) + ' Miles x '"></span>
-                <span data-bind="text: '$' + Number(billingProfile.distanceRate) + '/mile = '"></span>
+            <td colspan="3"></td>
+            <td class="text-right"><strong>Total Mileage</strong></td>
+            <td colspan="3">
                 <span data-bind="text: NumberUtils.niceCCY(bill().totalMileageInDollars())"></span>
+                <span style="margin-left: 10px" data-bind="text: '(' + NumberUtils.nice(bill().totalMileage()) + ' Miles x '"></span>
+                <span data-bind="text: '$' + Number(billingProfile.distanceRate) + '/mile'"></span>)
             </td>
         </tr>
         <tr>
-            <td colspan="2"></td>
-            <td class="text-right"><strong>Total Expenses<strong></td>
-            <td colspan="4">
+            <td colspan="3"></td>
+            <td class="text-right"><strong>Total Expenses</strong></td>
+            <td colspan="3">
                 <span data-bind="text: NumberUtils.niceCCY(bill().totalExpenseAmount())"></span>
             </td>
         </tr>
         <tr>
-            <td colspan="2"></td>
-            <td class="text-right"><strong>Total<strong></td>
-            <td colspan="4">
+            <td colspan="3"></td>
+            <td class="text-right"><strong>Total</strong></td>
+            <td colspan="3">
                 <span data-bind="text: NumberUtils.niceCCY(bill().total())"></span>
             </td>
         </tr>

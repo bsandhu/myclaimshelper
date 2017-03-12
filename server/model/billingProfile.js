@@ -20,6 +20,7 @@ define([], function () {
         this.distanceRate = undefined;
         this.taxRate = undefined;
         this.billingTypes = {};
+        this.printTmpl = 'Style 2';
         this.codes = {};
     }
 

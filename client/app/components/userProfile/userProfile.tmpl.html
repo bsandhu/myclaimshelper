@@ -384,6 +384,19 @@
                                             <div class="col-md-8 col-sm-6 col-xs-4"
                                                  data-bind="text: '$ ' + userProfile.billingProfile.distanceRate()"></div>
                                         </div>
+                                        <div class="row bottomMargin5">
+                                            <div class="col-md-4 col-sm-4 col-xs-5">
+                                                <span class="pull-right">Print style</span>
+                                            </div>
+                                            <div class="col-md-3 col-sm-4 col-xs-4">
+                                                <select class="form-control input-sm"
+                                                        data-bind="options: billPrintTmplTypes,
+                                                                   optionsText: 'desc',
+                                                                   optionsValue: 'value',
+                                                                   value: userProfile.billingProfile.printTmpl,
+                                                                   enable: false"></select>
+                                            </div>
+                                        </div>
                                     </div>
 
                                     <!-- Billing edit view -->
@@ -431,6 +444,18 @@
                                                 <input class="form-control"
                                                        placeholder="$"
                                                        data-bind="value: userProfile.billingProfile.distanceRate"/>
+                                            </div>
+                                        </div>
+                                        <div class="row bottomMargin5">
+                                            <div class="col-md-4 col-sm-4 col-xs-5">
+                                                <span class="pull-right">Print style</span>
+                                            </div>
+                                            <div class="col-md-3 col-sm-4 col-xs-4">
+                                                <select class="form-control input-sm"
+                                                        data-bind="options: billPrintTmplTypes,
+                                                                   optionsText: 'desc',
+                                                                   optionsValue: 'value',
+                                                                   value: userProfile.billingProfile.printTmpl"></select>
                                             </div>
                                         </div>
                                     </div>

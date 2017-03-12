@@ -5,13 +5,15 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox', 'underscore',
         'model/bill', 'model/billingItem', 'model/billingStatus', 'model/contact',
         'text!app/components/billing/billing.tmpl.html',
         'text!app/components/billing/billing.print.tmpl.html',
+        'text!app/components/billing/billing.print2.tmpl.html',
+        'text!app/components/claim/contact.print.tmpl.html',
         'text!app/components/billing/billing.create.tmpl.html',
         'text!app/components/billing/billing.list.tmpl.html',
         'app/utils/audit', 'app/components/contact/contactUtils'
     ],
     function ($, ko, KOMap, amplify, bootbox, _, DateUtils, NumberUtils, ObjectUtils, ajaxUtils, Events,
               Consts, router, Session, SessionKeys, Bill, BillingItem, BillingStatus, Contact,
-              viewHtml, printHtml, createHtml, listHtml,
+              viewHtml, printTmpl, print2Tmpl, contactPrintTmpl, createHtml, listHtml,
               Audit, ContactUtils) {
 
         function BillingVM() {
@@ -33,6 +35,8 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox', 'underscore',
             this.groupedByCode = ko.observableArray([]);
             this.createHtml = createHtml;
             this.listHtml = listHtml;
+            this.billingTmpls = {'printTmpl': printTmpl, 'print2Tmpl': print2Tmpl};
+            this.contactPrintTmpl = contactPrintTmpl;
 
             // Grouping
             this.groupBy = ko.observable('Not Submitted');
@@ -695,7 +699,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox', 'underscore',
 
         BillingVM.prototype.printBill = function () {
             // Populate the print template with AMD content
-            $('#print-template').html(printHtml);
+            $('#print-template').html(this.billingTmpls[Session.getCurrentUserProfile().billingProfile.printTmpl]);
             var container = document.createElement("div");
             var _this = this;
             _this.activeClaim = Session.getActiveClaim();

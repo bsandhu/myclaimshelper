@@ -1,12 +1,13 @@
 define(['jquery', 'amplify', 'hopscotch',
         'app/utils/router', 'app/utils/ajaxUtils', 'app/utils/session', 'app/utils/consts'],
-    
+
     function ($, amplify, hopscotch, Router, ajaxUtils, Session, Consts) {
+
         function Tours() {
             console.log('Init Tours');
         }
 
-        Tours.prototype.markAsDone = function (tourName) {
+        Tours.prototype.markAsDone = function (tourName = Consts.CLAIMS_TOUR_PROFILE_KEY) {
             var attrs = {};
             attrs[tourName] = true;
 
@@ -59,7 +60,7 @@ define(['jquery', 'amplify', 'hopscotch',
 
                             var checkExist = setInterval(function () {
                                 // This is the element from the next step.
-                                $element = $('#taskEntrySummary1');
+                                $element = $('#claimDocsTabLink');
 
                                 if ($element.is(':visible')) {
                                     clearInterval(checkExist);
@@ -71,16 +72,76 @@ define(['jquery', 'amplify', 'hopscotch',
                     {
                         title: "Claim details",
                         content: "This is the detailed view of a sample Claim file.<br/><br/>You can track various pieces of information like the dates and contacts",
-                        target: "claim-id",
+                        target: "claimDateOfLoss",
+                        placement: "right",
+                    },
+                    {
+                        title: "Claim",
+                        content: "You can edit Claims",
+                        target: 'claimEditBtn',
                         placement: "bottom",
                         onNext: function () {
-                            $('#claim-newtask-btn')[0].click()
+                            var currTour = hopscotch.getCurrTour();
+                            hopscotch.endTour();
+                            $('#claimEditBtn').click();
+
+                            var checkExist = setInterval(function () {
+                                // This is the element from the next step.
+                                $element = $('#claimEditorInsured');
+
+                                if ($element.is(':visible')) {
+                                    clearInterval(checkExist);
+                                    hopscotch.startTour(currTour, 4);
+                                }
+                            }, 100);
+                        }
+                    },
+                    {
+                        title: "Claim",
+                        content: "You add flexibly add Insured/Claimant/Contacts as needed",
+                        target: 'claimEditorInsured',
+                        placement: "bottom",
+                        onNext: function () {
+                            var currTour = hopscotch.getCurrTour();
+                            hopscotch.endTour();
+                            $('#claimEditorCancelBtn').click();
+
+                            var checkExist = setInterval(function () {
+                                // This is the element from the next step.
+                                $element = $('#claimDocsTabLink');
+
+                                if ($element.is(':visible')) {
+                                    clearInterval(checkExist);
+                                    hopscotch.startTour(currTour, 5);
+                                }
+                            }, 100);
+                        }
+                    },
+                    {
+                        title: "Claim",
+                        content: "All the work you do while investigating a Claim can be tracked as `Tasks`",
+                        target: 'claimTasksTabLink',
+                        placement: "bottom",
+                        onNext: function () {
+                            var currTour = hopscotch.getCurrTour();
+                            hopscotch.endTour();
+                            $('#claimTasksTabLink').click();
+
+                            var checkExist = setInterval(function () {
+                                // This is the element from the next step.
+                                $element = $('#claim-newtask-btn');
+
+                                if ($element.is(':visible')) {
+                                    clearInterval(checkExist);
+                                    hopscotch.startTour(currTour, 6);
+                                }
+                            }, 100);
                         }
                     },
                     {
                         title: "Claim details",
-                        content: "All the work you do while investigating a Claim can be tracked as `Tasks`",
-                        target: "taskEntrySummary0",
+                        content: "Tasks have a status like ToDo/Complete etc.",
+                        target: "claimEntriesList tbody tr:nth-child(1) td:nth-child(3)",
                         placement: "bottom",
                         onNext: function () {
                             $('#claim-newtask-btn')[0].click()
@@ -89,7 +150,7 @@ define(['jquery', 'amplify', 'hopscotch',
                     {
                         title: "Task type",
                         content: "You can create different types of tasks, including tasks specifically for travel<br/><br/>" +
-                                 "Let's look at a sample task in more detail",
+                        "Let's look at a sample task in more detail",
                         target: "claim-newtask-btn",
                         placement: "bottom",
                         onNext: function () {
@@ -103,7 +164,7 @@ define(['jquery', 'amplify', 'hopscotch',
 
                                 if ($element.is(':visible')) {
                                     clearInterval(checkExist);
-                                    hopscotch.startTour(currTour, 5);
+                                    hopscotch.startTour(currTour, 8);
                                 }
                             }, 100);
                         },
@@ -117,7 +178,7 @@ define(['jquery', 'amplify', 'hopscotch',
                     {
                         title: "Billing information",
                         content: "You can Bill for aspects like Miles travelled / Hours worked or business expense<br/><br/>" +
-                                 "You can also specify billing codes as needed by the Insurer. Please contact us to customize these codes",
+                        "You can also specify billing codes as needed by the Insurer. Please contact us to customize these codes",
                         target: "billing-item-mileage",
                         placement: "right",
                         onNext: function () {
@@ -131,7 +192,7 @@ define(['jquery', 'amplify', 'hopscotch',
 
                                 if ($element.is(':visible')) {
                                     clearInterval(checkExist);
-                                    hopscotch.startTour(currTour, 7);
+                                    hopscotch.startTour(currTour, 10);
                                 }
                             }, 100);
                         }
@@ -139,7 +200,7 @@ define(['jquery', 'amplify', 'hopscotch',
                     {
                         title: "Tasks list",
                         content: "You can see all of Today's and upcoming tasks on the 'Tasks' page<br/><br/>" +
-                                 "This could help in staying organized and tracking progress",
+                        "This could help in staying organized and tracking progress",
                         target: "summaryTableHeader4",
                         placement: "bottom",
                     },
@@ -153,9 +214,9 @@ define(['jquery', 'amplify', 'hopscotch',
                 onError: function (e) {
                     console.error('Tour error ' + JSON.stringify(arguments));
                 },
-                onClose: function () {
+                /*onClose: function () {
                     _this.markAsDone(Consts.CLAIMS_TOUR_PROFILE_KEY)
-                },
+                },*/
                 onEnd: function () {
                     _this.markAsDone(Consts.CLAIMS_TOUR_PROFILE_KEY)
                 }
@@ -202,14 +263,14 @@ define(['jquery', 'amplify', 'hopscotch',
                     {
                         title: "Billing",
                         content: "You can manage all your Bills on this screen<br/><br/>" +
-                                 "Easily track what's been paid and outstanding",
+                        "Easily track what's been paid and outstanding",
                         target: "billigListSubmitHeader",
                         placement: "bottom"
                     },
                     {
                         title: "Billing",
                         content: "You can quickly see the Bills by status by using this filter<br/><br/>" +
-                                 "Lets look at the details of an individual bill next",
+                        "Lets look at the details of an individual bill next",
                         target: "billingListStatusFilter",
                         placement: "bottom",
                         onNext: function () {
@@ -256,7 +317,7 @@ define(['jquery', 'amplify', 'hopscotch',
                     {
                         title: "Bill",
                         content: "Once you are done making changes, you can save a draft or Submit the bill<br/><br/>" +
-                                 "Submitting the bill does not send the bill to anyone. It just tracks its as such in the system",
+                        "Submitting the bill does not send the bill to anyone. It just tracks its as such in the system",
                         target: "billCreationSaveDraftBtn",
                         placement: "left"
                     }

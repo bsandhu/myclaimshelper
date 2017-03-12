@@ -18,6 +18,9 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox',
             this.billCodesTypesUnderEdit = ko.observableArray([]);
             this.billCodesUnderDelete = ko.observableArray([]);
             this.billCodeTypesDisplayed = ko.observableArray([]);
+            this.billPrintTmplTypes = ko.observableArray([
+                {desc: 'Style 1', value: 'printTmpl'},
+                {desc: 'Style 2', value: 'print2Tmpl'}]);
             this.codesInUse = [];
             this.setupEvListeners();
 
@@ -168,7 +171,8 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox',
             attrs = {
                 'billingProfile.timeRate': Number(this.userProfile.billingProfile.timeRate()),
                 'billingProfile.distanceRate': Number(this.userProfile.billingProfile.distanceRate()),
-                'billingProfile.taxRate': Number(this.userProfile.billingProfile.taxRate())
+                'billingProfile.taxRate': Number(this.userProfile.billingProfile.taxRate()),
+                'billingProfile.printTmpl': this.userProfile.billingProfile.printTmpl()
             };
 
             AjaxUtils.post(
