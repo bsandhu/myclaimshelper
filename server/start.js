@@ -202,7 +202,15 @@ function setupProfileServiceRoutes() {
 }
 
 function setupStaticRoutes() {
-    // Static site
+
+    // **** Google verification ****
+
+    server.get(/\/google4e30704a510d46ba.html/, serveStaticWith304({
+        directory: 'site/myclaimshelper',
+        'file': 'google4e30704a510d46ba.html',
+        maxAge: 60 * 60 * 24
+    }));
+
     server.get(/\/myclaimshelper\/.*/, serveStaticWith304({
         directory: 'site',
         'default': 'index.html',
@@ -210,7 +218,9 @@ function setupStaticRoutes() {
         maxAge: 60 * 60 * 24
     }));
 
-    // Server side code shared with the client
+
+    // **** Server side code shared with the client ****
+
     server.get(/\/model\/.*/, restify.serveStatic({
         directory: 'server'
     }));
@@ -250,6 +260,9 @@ function setupStaticRoutes() {
         directory: 'client',
         maxAge: 60 * 60 * 24
     }));
+
+    // **** Static site ****
+
     server.get('/.*/ ', serveStaticWith304({
         'directory': 'site',
         'default': 'myclaimshelper/redirect.html',
