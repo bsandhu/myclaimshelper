@@ -4,9 +4,9 @@
 <h3 class="bottomBorderDashed">Insured</h3>
 <div data-bind="foreach: {data: insuredContacts(), as: 'contactInfo'}"
      class="formRow"
-     style="justify-content: space-between; align-items: flex-start; flex-grow: 1;">
+     style="justify-content: flex-start; align-items: flex-start; flex-grow: 1; flex-wrap: wrap">
 
-    <div class="formRow" style="flex-grow: 1">
+    <div class="formRow" style="min-width: 40%">
         <div data-bind="template: {name: $parent.contactPrintTmpl}"></div>
     </div>
 </div>
@@ -125,9 +125,9 @@
 <h3 class="bottomBorderDashed">Claimant</h3>
 <div data-bind="foreach: {data: claimantContacts(), as: 'contactInfo'}"
      class="formRow"
-     style="justify-content: space-between; align-items: flex-start; flex-grow: 1;">
+     style="justify-content: flex-start; align-items: flex-start; flex-grow: 1; flex-wrap: wrap">
 
-    <div class="formRow" style="flex-grow: 1">
+    <div class="formRow" style="min-width: 40%">
         <div data-bind="template: {name: $parent.contactPrintTmpl}"></div>
     </div>
 </div>
@@ -138,9 +138,9 @@
 <h3 class="bottomBorderDashed">Contacts</h3>
 <div data-bind="foreach: {data: otherContacts(), as: 'contactInfo'}"
      class="formRow"
-     style="justify-content: space-between; align-items: flex-start; flex-grow: 1;">
+     style="justify-content: flex-start; align-items: flex-start; flex-grow: 1; flex-wrap: wrap">
 
-    <div class="formRow" style="flex-grow: 1">
+    <div class="formRow" style="min-width: 40%">
         <div data-bind="template: {name: $parent.contactPrintTmpl}"></div>
     </div>
 </div>
