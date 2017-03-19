@@ -88,16 +88,7 @@ function changeToUserProfileSchema() {
                 .find({})
                 .toArray(function (err, profiles) {
                     function process(profile) {
-                        profile.group = profile.owner;
-                        profile.ingroups = [profile.owner, ProfileService.DEFAULT_GROUP];
-                        profile.isBillingEnabled = true;
-                        profile.isClaimNoteEnabled = true;
-                        profile.isClaimClaimantEnabled = true;
-                        profile.isClaimDtEnabled = true;
-                        profile.isClaimCoverageEnabled = true;
-                        profile.isClaimCloseEnabled = true;
-                        delete profile.isClaimDatesEnabled;
-
+                        profile.isClaimInsuredAttyLinkShown = true;
                         return mongoUtils.saveOrUpdateEntity(profile, mongoUtils.USERPROFILE_COL_NAME, false);
                     }
 

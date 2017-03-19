@@ -49,9 +49,11 @@
         <a href="" data-bind="click: onAddNewInsuredContact" class="rightMargin2pc">
             <i class="fa fa-lg fa-plus-circle"></i> Add insured
         </a>
+        <!-- ko if: Session.getCurrentUserProfile().isClaimInsuredAttyLinkShown -->
         <a href="" data-bind="click: onAddNewInsuredAttyContact">
             <i class="fa fa-lg fa-plus-circle"></i> Add attorney
         </a>
+        <!-- /ko -->
     </div>
     <div class="clear bottomMargin15"></div>
 

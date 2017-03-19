@@ -1,9 +1,15 @@
-<div class="bottomMargin10" style="vertical-align: top;">
+<div class="bottomMargin10">
 
+    <span data-bind="if: contactInfo.category() == 'Other'">
+        <strong>
+            <span
+                style="font-size: 1.1em;"
+                data-bind="text: contactInfo.subCategory"></span></strong><br/>
+    </span>
     <span class="sub-heading" data-bind="text: contactInfo.contact.name"></span>
     <span data-bind="if: contactInfo.subCategory() == 'Insured attorney'">
-        <strong data-bind="text: '(Attorney)'"></strong>
-    </span>
+            <strong data-bind="text: '(Attorney)'"></strong>
+        </span>
     <br/>
 
     <!-- Business name -->

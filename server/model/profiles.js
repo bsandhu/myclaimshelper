@@ -31,6 +31,7 @@ define(['./contact', './billingProfile'], function (Contact, BillingProfile) {
         this.isClaimDtEnabled = true;
         this.isClaimCoverageEnabled = true;
         this.isClaimCloseEnabled = true;
+        this.isClaimInsuredAttyLinkShown = true;
 
         // Default profile
         this.billingProfile = new BillingProfile();
