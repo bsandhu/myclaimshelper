@@ -1,7 +1,26 @@
-define(['knockout', 'underscore', 'KOMap', 'model/contact'],
-    function (ko, _, KOMap, Contact) {
+define(['knockout', 'underscore', 'KOMap', 'model/contact', 'shared/consts'],
+    function (ko, _, KOMap, Contact, Consts) {
 
         return {
+            parseInsured: function (claim) {
+                let isInsured = con => con.category == Consts.CONTACT_CATEGORY_INSURED && con.subCategory == Consts.CONTACT_SUBCATEGORY_INSURED;
+                let insured = claim.contacts.find(isInsured);
+                return (_.isObject(insured) && _.has(insured, 'contact'))
+                    ? insured.contact
+                    : undefined;
+            },
+            parseClaimant: function (claim) {
+                let isClaimant = con => con.category == Consts.CONTACT_CATEGORY_CLAIMANT && con.subCategory == Consts.CONTACT_SUBCATEGORY_CLAIMANT;
+                let claimant = claim.contacts.find(isClaimant);
+                return (_.isObject(claimant) && _.has(claimant, 'contact'))
+                    ? claimant.contact
+                    : undefined;
+            },
+            parseName: function(contact){
+                return (contact != null && contact != undefined && _.has(contact, 'name'))
+                    ? contact.name
+                    : 'None';
+            },
             parsePhone: function (contact) {
                 let phones = KOMap.toJS(contact.phones);
                 if (phones.length >= 1) {

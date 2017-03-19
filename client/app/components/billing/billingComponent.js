@@ -26,6 +26,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox', 'underscore',
             this.BillingStatus = BillingStatus;
             this.NumberUtils = NumberUtils;
             this.ObjectUtils = ObjectUtils;
+            this.ContactUtils = ContactUtils;
             this.router = router;
             this.billingStatus = KOMap.fromJS(BillingStatus);
             this.userProfile = undefined;
