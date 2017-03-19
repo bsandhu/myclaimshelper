@@ -60,14 +60,16 @@ let io = socketio.listen(server.server);
 
 function init() {
     function httpsRedirect(req, res, next) {
-        let securityNotNeeded = USE_SSL === false;
-        if (securityNotNeeded) {
-            next();
-        } else {
+        let sslNeeded = USE_SSL === true;
+        console.log("Secure conn needed: " + sslNeeded);
+
+        if (sslNeeded) {
             let secureUrl = 'https://' + req.headers.host.split(':')[0] + ':' + config.https_port + req.url;
             console.log("Redirecting to https: " + secureUrl);
             res.writeHead(302, {'Location': secureUrl});
             res.end();
+        } else {
+            next();
         }
     }
 
