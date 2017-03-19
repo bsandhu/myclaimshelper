@@ -61,8 +61,7 @@ let io = socketio.listen(server.server);
 function init() {
     function httpsRedirect(req, res, next) {
         let securityNotNeeded = USE_SSL === false;
-        let isSecure = req.isSecure() === true || req.headers['x-forwarded-proto'] == 'https';
-        if (securityNotNeeded || isSecure) {
+        if (securityNotNeeded) {
             next();
         } else {
             let secureUrl = 'https://' + req.headers.host.split(':')[0] + ':' + config.https_port + req.url;
