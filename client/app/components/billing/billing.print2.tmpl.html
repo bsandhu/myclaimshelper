@@ -78,12 +78,12 @@
         <div>
             <strong>Insured</strong>
             <span class="pull-right"
-                  data-bind="text: activeClaim.insuredContact ? activeClaim.insuredContact.name : 'None'"></span>
+                  data-bind="text: ContactUtils.parseName(ContactUtils.parseInsured(activeClaim))"></span>
         </div>
         <div>
             <strong>Claimant</strong>
             <span class="pull-right"
-                  data-bind="text: activeClaim.claimantContact ? activeClaim.claimantContact.name : 'None'"></span>
+                  data-bind="text: ContactUtils.parseName(ContactUtils.parseClaimant(activeClaim))"></span>
         </div>
         <br>
         <div class="print2 invoice-header-total">
