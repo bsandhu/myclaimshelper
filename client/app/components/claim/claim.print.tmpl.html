@@ -14,24 +14,24 @@
 
 <!-- Loss location/type/dateOfLoss -->
 <div class="formRow">
-    <div style="flex-basis: 7em;">
-        <span class="sub-heading">Loss Location</span>
+    <div style="flex-basis: 8em;">
+        <span class="sub-heading">Loss Location:</span>
     </div>
     <div class="leftMargin5">
         <span data-bind="text: claim().location() ? claim().location().formatted_address : 'None'"></span>
     </div>
 </div>
 <div class="formRow">
-    <div style="flex-basis: 7em;">
-        <span class="sub-heading">Type Of Loss</span>
+    <div style="flex-basis: 8em;">
+        <span class="sub-heading">Type Of Loss:</span>
     </div>
     <div class="leftMargin5">
         <span data-bind="text: claim().lossType()"></span>
     </div>
 </div>
 <div class="formRow">
-    <div style="flex-basis: 7em;">
-        <span class="sub-heading">Date Of Loss</span>
+    <div style="flex-basis: 8em;">
+        <span class="sub-heading">Date Of Loss:</span>
     </div>
     <div class="leftMargin5">
         <span data-bind="text: DateUtils.niceLocaleDate(claim().dateOfLoss ? claim().dateOfLoss() : '')"></span>
@@ -56,63 +56,72 @@
     <h3 class="fromRow bottomBorderDashed" style="flex-grow: 1">Dates</h3>
 </div>
 <div class="formRow">
-    <div class="sub-heading">Claim Received</div>
+    <div class="sub-heading">Claim Received:</div>
     <div class="leftMargin5"
          style="flex-basis: 10em"
          data-bind="text: DateUtils.niceLocaleDate(claim().dateReceived ? claim().dateReceived() : '')"></div>
-    <div class="sub-heading">Due</div>
+    <div class="sub-heading">Due:</div>
     <div class="leftMargin5"
          data-bind="text: DateUtils.niceLocaleDate(claim().dateReceived ? claim().dateDue() : '')"></div>
 </div>
 <div class="bottomMargin5 topMargin5"></div>
 <!-- /ko -->
 
-<!-- Insurance co -->
+<!-- Insurance company -->
 <div class="formRow">
     <h3 class="fromRow bottomBorderDashed" style="flex-grow: 1">Insurance</h3>
 </div>
 <div class="formRow">
-    <div class="sub-heading" style="flex-basis: 5em; flex-grow: 0">Company</div>
+    <div class="sub-heading" style="flex-basis: 8em; flex-grow: 0">Company:</div>
     <div class="inline leftMargin5"
          data-bind="text: claim().insuranceCompanyName ? claim().insuranceCompanyName() : ''"></div>
 </div>
+
+<!-- Policy Number -->
 <div class="formRow">
-    <div class="sub-heading"
-         style="flex-basis: 5em">File num.
-    </div>
-    <div class="leftMargin5"
-         style="flex-basis: 10em; flex-grow: 0"
-         data-bind="text: claim().insuranceCompanyFileNum ? claim().insuranceCompanyFileNum() : ''"></div>
-    <div class="sub-heading">Policy Num.</div>
+    <div class="sub-heading" style="flex-basis: 8em; flex-grow: 0">Policy Number:</div>
     <div class="inline leftMargin5"
          data-bind="text: claim().insuranceCompanyFileNum ? claim().insuranceCompanyPolicyNum() : ''"></div>
 </div>
 
 <!-- Issued/Expires -->
 <div class="formRow">
-    <div class="sub-heading"
-         style="flex-basis: 5em">Issued
+    <div class="sub-heading" style="flex-basis: 8em">Issued:
     </div>
     <div class="inline leftMargin5"
          style="flex-basis: 10em; flex-grow: 0"
          data-bind="text: DateUtils.niceLocaleDate(claim().validFromDate ? claim().validFromDate() : '')"></div>
-    <div class="sub-heading">Expires</div>
+    <div class="sub-heading" style="flex-basis: 7em">Expires:</div>
     <div class="inline leftMargin5"
          data-bind="text: DateUtils.niceLocaleDate(claim().validToDate ? claim().validToDate() : '')"></div>
 </div>
+
+<div class="formRow">
+    <div class="sub-heading" style="flex-basis: 8em">Claim Number:
+    </div>
+    <div class="leftMargin5"
+         style="flex-basis: 10em; flex-grow: 0"
+         data-bind="text: claim().fileNum ? claim().fileNum() : ''"></div>
+    <div class="sub-heading" style="flex-basis: 7em">File Number:</div>
+    <div class="inline leftMargin5"
+         data-bind="text: claim().insuranceCompanyFileNum ? claim().insuranceCompanyFileNum() : ''"></div>
+</div>
+
 <div class="bottomMargin5 topMargin5"></div>
 
 <!-- Policy coverages -->
 <!-- ko if: Session.getCurrentUserProfile().isClaimCoverageEnabled -->
-<h3 class="bottomBorderDashed">Policy Coverages</h3>
+<div class="formRow">
+    <h3 class="formRow bottomBorderDashed" style="flex-grow: 1">Policy Coverages</h3>
+</div>
 <div class="formRow"
      style="flex-wrap: wrap; align-items: flex-start"
      data-bind="foreach: {data: claim().expenses(), as: 'expense'}">
 
-    <div class="formRow leftMargin2pc bottomMargin5"
+    <div class="formRow bottomMargin5"
          style="flex-wrap: nowrap; flex-grow: 0; flex-basis: 30%;">
         <div class="sub-heading"
-             data-bind="text: expense.subCategory"></div>
+             data-bind="text: expense.subCategory() + ':'"></div>
         <div class="leftMargin5"
              data-bind="text: '$'+ $parent.NumberUtils.nice(expense.amount())"></div>
     </div>
