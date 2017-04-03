@@ -1,4 +1,4 @@
-<div class="bottomMargin10">
+<div class="bottomMargin10" style="line-height: 1.1em; font-size: 1.1em">
 
     <span data-bind="if: contactInfo.category() == 'Other'">
         <strong>
@@ -7,7 +7,7 @@
                 class="bottomBorderDashed"
                 data-bind="text: contactInfo.subCategory"></span></strong><br/>
     </span>
-    <span class="sub-heading" data-bind="text: contactInfo.contact.name"></span>
+    <span class="sub-heading" style="line-height: 2em" data-bind="text: contactInfo.contact.name"></span>
     <span data-bind="if: contactInfo.subCategory() == 'Insured attorney'">
             <strong data-bind="text: '(Attorney)'"></strong>
         </span>
