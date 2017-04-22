@@ -61,7 +61,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="bottomMargin5 topMargin5 bottomBorderDashed"></div>
+                <div class="bottomMargin10 topMargin10 bottomBorderDashed"></div>
 
                 <!-- Loss Location/type/dateOfLoss -->
                 <div class="row bottomMargin5">
@@ -84,7 +84,7 @@
                               data-bind="text: DateUtils.niceLocaleDate(claim().dateOfLoss ? claim().dateOfLoss() : '')"></span>
                     </div>
                 </div>
-                <div class="bottomMargin5 topMargin5 bottomBorderDashed"></div>
+                <div class="bottomMargin10 topMargin10 bottomBorderDashed"></div>
 
                 <!-- Notes -->
                 <!-- ko if: Session.getCurrentUserProfile().isClaimNoteEnabled -->
@@ -98,7 +98,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="bottomMargin5 topMargin5 bottomBorderDashed"></div>
+                <div class="bottomMargin10 topMargin10 bottomBorderDashed"></div>
                 <!-- /ko -->
 
                 <!-- Dates -->
@@ -114,7 +114,7 @@
                         <span class="leftMargin5"
                               data-bind="text: DateUtils.niceLocaleDate(claim().dateReceived ? claim().dateDue() : '')"></span>
                 </div>
-                <div class="bottomMargin5 topMargin5 bottomBorderDashed"></div>
+                <div class="bottomMargin10 topMargin10 bottomBorderDashed"></div>
                 <!-- /ko -->
 
                 <!-- Insurance co -->
@@ -151,7 +151,7 @@
                               data-bind="text: DateUtils.niceLocaleDate(claim().validToDate ? claim().validToDate() : '')"></span>
                     </div>
                 </div>
-                <div class="bottomMargin5 topMargin5 bottomBorderDashed"></div>
+                <div class="bottomMargin10 topMargin10 bottomBorderDashed"></div>
 
                 <!-- Policy Coverages -->
                 <!-- ko if: Session.getCurrentUserProfile().isClaimCoverageEnabled -->
@@ -167,7 +167,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="bottomMargin5 topMargin5 bottomBorderDashed"></div>
+                <div class="bottomMargin10 topMargin10 bottomBorderDashed"></div>
                 <!-- /ko -->
 
                 <!-- Claimant -->
@@ -201,7 +201,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="bottomMargin5 topMargin5 bottomBorderDashed"></div>
+                <div class="bottomMargin10 topMargin10 bottomBorderDashed"></div>
                 <!-- /ko -->
 
                 <!-- Other contacts -->
@@ -214,21 +214,16 @@
                     <div data-bind="foreach: {data: claim().contacts(), as: 'contactInfo'}">
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             <div data-bind="if: contactInfo.category() == 'Other'">
-                                <div class="row bottomMargin5">
-                                    <div class="col-lg-1 col-md-1 col-sm-2 col-xs-2">
-                                        <span data-bind="text: contactInfo.subCategory"></span>
+                                <div style="display: flex; flex-direction: column" class="bottomMargin5">
+                                    <div style="display: flex; flex-direction: row" class="bottomMargin5">
+                                        <div style="flex-basis: 12em" data-bind="text: contactInfo.subCategory"></div>
+                                        <div>
+                                            <a href=""
+                                               data-bind="click: function(){$parent.onShowContact(contactInfo.contact)}">
+                                                <span data-bind="text: $parent.niceName(contactInfo.contact)"></span>
+                                            </a>
+                                        </div>
                                     </div>
-                                    <div class="col-lg-3 col-md-3 col-sm-5 col-xs-5">
-                                        <a href=""
-                                           data-bind="click: function(){$parent.onShowContact(contactInfo.contact)}">
-                                            <span data-bind="text: $parent.niceName(contactInfo.contact)"></span>
-                                        </a>
-                                    </div>
-                                    <!--
-                                    <div class="col-lg-4 col-md-5 col-sm-4 col-xs-4">
-                                        <span data-bind="text: $parent.ContactUtils.parsePhone(contactInfo.contact)"></span>
-                                    </div>
-                                    -->
                                 </div>
                             </div>
                         </div>

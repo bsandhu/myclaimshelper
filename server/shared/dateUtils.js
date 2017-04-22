@@ -124,8 +124,8 @@ define([],
                 return displayIfInvalidDate;
             }
             return hideYear
-                    ? date.getMonth()+1 + '/' + date.getDate()
-                    : date.getMonth()+1 + '/' + date.getDate() + '/' + date.getFullYear() ;
+                    ? prefixZero(date.getMonth()+1) + '/' + prefixZero(date.getDate())
+                    : prefixZero(date.getMonth()+1) + '/' + prefixZero(date.getDate()) + '/' + date.getFullYear() ;
         }
 
         function isThisWeek(date) {
