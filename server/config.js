@@ -32,8 +32,8 @@ config.heroku.password = 'starWAR$1';
 
 // **** Modulous ****
 config.LOCAL.db = 'mongodb://localhost:9090/AgentDb';
-config.TEST.db = 'mongodb://agent:lightSA8ER@45.55.192.142:9090/myclaimshelper';
-config.PROD.db = 'mongodb://agent:starWARS1@104.131.103.65:9090/myclaimshelper';
+config.TEST.db = 'mongodb://agent:lightSA8ER@localhost:9090/myclaimshelper';
+config.PROD.db = 'mongodb://agent:starWARS1@localhost:9090/myclaimshelper';
 config.db = config[config.env]['db'];
 
 
