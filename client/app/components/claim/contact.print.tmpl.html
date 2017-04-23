@@ -1,12 +1,13 @@
-<div class="bottomMargin10">
+<div class="bottomMargin10" style="line-height: 1.1em; font-size: 1.1em">
 
     <span data-bind="if: contactInfo.category() == 'Other'">
         <strong>
             <span
-                style="font-size: 1.1em;"
+                style="font-size: 1.1em; line-height: 2em;"
+                class="bottomBorderDashed"
                 data-bind="text: contactInfo.subCategory"></span></strong><br/>
     </span>
-    <span class="sub-heading" data-bind="text: contactInfo.contact.name"></span>
+    <span class="sub-heading" style="line-height: 2em" data-bind="text: contactInfo.contact.name"></span>
     <span data-bind="if: contactInfo.subCategory() == 'Insured attorney'">
             <strong data-bind="text: '(Attorney)'"></strong>
         </span>
@@ -23,7 +24,7 @@
     <!-- ******** Addresses ******** -->
     <!-- ko foreach: contactInfo.contact.addresses -->
     <span data-bind="ifnot: $parents[1]._.isEmpty(street())">
-        <i><span data-bind="text: type" style="line-height: 2"></span>: </i><br/>
+        <i><span data-bind="text: type" style="line-height: 1.2"></span>: </i><br/>
     </span>
     <span data-bind="ifnot: $parents[1]._.isEmpty(street())">
         <span data-bind="text: street"></span><br/>

@@ -14,7 +14,7 @@ html {
 body {
     height: 100%;
     font-family: Lato, sans-serif;
-    font-size: 14px;
+    font-size: 16px;
     margin: 0;
     color: #333333;
     background-color: rgb(235, 238, 243);
@@ -297,8 +297,21 @@ div {
 /**** Form elements ****/
 /**********************************************************/
 
+.input-sm {
+    font-size: 1em;
+}
+
 input[type="text"] {
     border-radius: 0;
+    color: black;
+    font-size: 1em;
+}
+
+input[type="text"]::-webkit-input-placeholder {
+    border-radius: 0;
+    color: #242424;
+    opacity: .75;
+    font-size: 1em;
 }
 
 input[type="file"] {
@@ -317,7 +330,6 @@ input[type="file"] {
     min-height: 50px;
     border: 1px dashed #ccc;
     position: relative;
-    font-size: 13px;
     color: #007aac;
     background-color: #dff4fa;
     padding: 10px;
@@ -345,7 +357,7 @@ input[type="file"] {
 }
 
 .control-label {
-    font-weight: 300;
+    font-weight: 400;
     font-size: 16px;
 }
 
@@ -368,6 +380,7 @@ textarea {
     border: 1px solid #ccc;
     border-radius: 0;
     box-shadow: none;
+    font-size: 1em;
 }
 
 .select2-container--default .select2-selection--single {
@@ -694,7 +707,6 @@ input.no-border {
     padding-top: 10px;
     padding-left: 10px;
     color: #007aac;
-    font-size: 14px;
     text-align: center;
     font-weight: 700;
 }
@@ -707,7 +719,6 @@ input.no-border {
     padding-top: 10px;
     padding-left: 10px;
     color: #fff;
-    font-size: 14px;
     text-align: center;
 }
 
@@ -720,7 +731,6 @@ input.no-border {
     padding-left: 10px;
     color: #fff;
     font-weight: 700;
-    font-size: 14px;
     text-align: center;
 }
 
@@ -758,13 +768,11 @@ h3.panel-title {
 }
 
 .table > thead > tr > th {
-    font-size: 14px;
     font-weight: 700;
     border-bottom: 1px #ccc solid;
 }
 
 .table > tbody > tr > td {
-    font-size: 14px;
     border-top: 1px #ccc dotted;
 }
 
@@ -890,7 +898,6 @@ h3.panel-title {
 
 .dropdown {
     background-color: #f9f9f9;
-    font-size: 14px;
     border: 0;
     box-shadow: none;
     color: #039cdb;
@@ -932,6 +939,11 @@ h3.panel-title {
 }
 
 .navbar-default {
+    background-color: #34495e;
+    height: 74px;
+}
+
+.navbar-default .navbar-collapse {
     background-color: #34495e;
     height: 74px;
 }
@@ -1018,6 +1030,7 @@ h3.panel-title {
     border-radius: 0px;
     background-color: lightyellow;
 }
+
 /**********************************************************/
 /**** Bootstrap table overrides ****/
 /**********************************************************/
