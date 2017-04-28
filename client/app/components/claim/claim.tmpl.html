@@ -3,12 +3,11 @@
 
     <div class="panel-heading">
         <h3>
-            <span>Claim</span>
-            <span id="claim-id"
-                  class="color-grey"
-                  data-bind="text: (claim().fileNum() || '') + ' / ' + (claim().insuranceCompanyFileNum() || '')"></span>
+            <span style="font-size: 1.2em">Claim</span>
+            <span id="claim-id" style="font-size: .9em"
+                  data-bind="text: (claim().fileNum() || '') + ' / ' + (claim().insuranceCompanyFileNum() || claim().insuranceCompanyClaimNum() || claim().insuranceCompanyPolicyNum() || '')"></span>
             <span data-bind="ifnot: isPartiallyCollapsed">
-                <span class="color-grey" style="font-size: .8em"
+                <span style="font-size: .9em"
                       data-bind="text: (claim().insuranceCompanyName() || '')"></span>
             </span>
             <div data-bind="ifnot: isPartiallyCollapsed"
@@ -130,6 +129,11 @@
                         <span class="sub-heading" style="padding-right: 50px">File #</span>
                         <span class="inline leftMargin5"
                               data-bind="text: claim().insuranceCompanyFileNum ? claim().insuranceCompanyFileNum() : ''"></span>
+                    </div>
+                    <div class="col-lg-3 col-md-4 col-sm-6 col-xs-6">
+                        <span class="sub-heading">Claim #</span>
+                        <span class="inline leftMargin5"
+                              data-bind="text: claim().insuranceCompanyClaimNum ? claim().insuranceCompanyClaimNum() : ''"></span>
                     </div>
                     <div class="col-lg-3 col-md-4 col-sm-6 col-xs-6">
                         <span class="sub-heading">Policy #</span>
