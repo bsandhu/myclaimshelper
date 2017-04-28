@@ -245,7 +245,7 @@
     <div data-bind="template: {name: editorViewHtml}"></div>
 
     <!-- ************************************************ -->
-    <!-- Buttons -->
+    <!-- Buttons and tabs -->
     <!-- ************************************************ -->
 
     <div data-bind="ifnot: inEditMode" class="row">
@@ -276,8 +276,14 @@
                                class="squareCorners">Tasks</a>
                         </li>
                         <li role="presentation">
+                            <!-- ko ifnot: isPartiallyCollapsed -->
                             <a aria-controls="claimForms" href="#claimForms" role="tab" data-toggle="tab"
                                class="squareCorners">Insurance forms</a>
+                            <!-- /ko -->
+                            <!-- ko if: isPartiallyCollapsed -->
+                            <a aria-controls="claimForms" href="#claimForms" role="tab" data-toggle="tab"
+                               class="squareCorners">Forms</a>
+                            <!-- /ko -->
                         </li>
                     </ul>
                 </div>
@@ -361,7 +367,8 @@
 
                 <!-- **** Docs/Tasks/Forms **** -->
                 <div data-bind="ifnot: inEditMode" class="row">
-                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="top: -20px;">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12"
+                         data-bind="style:{top: isPartiallyCollapsed() ? '10px' : '-20px'}">
                         <div class="tab-content">
                             <div role="tabpanel" class="tab-pane active" id="claimDocs">
                                 <div data-bind="template: {name: docsViewHtml,
