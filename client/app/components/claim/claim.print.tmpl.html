@@ -85,6 +85,18 @@
              data-bind="text: claim().insuranceCompanyFileNum ? claim().insuranceCompanyPolicyNum() : ''"></div>
     </div>
 
+    <!-- File num/Claim num -->
+    <div class="formRow">
+        <div class="sub-heading" style="flex-basis: 8em">Claim Number:
+        </div>
+        <div class="leftMargin5"
+             style="flex-basis: 10em; flex-grow: 0"
+             data-bind="text: claim().insuranceCompanyClaimNum ? claim().insuranceCompanyClaimNum() : ''"></div>
+        <div class="sub-heading" style="flex-basis: 7em">File Number:</div>
+        <div class="inline leftMargin5"
+             data-bind="text: claim().insuranceCompanyFileNum ? claim().insuranceCompanyFileNum() : ''"></div>
+    </div>
+
     <!-- Issued/Expires -->
     <div class="formRow">
         <div class="sub-heading" style="flex-basis: 8em">Issued:
@@ -95,17 +107,6 @@
         <div class="sub-heading" style="flex-basis: 7em">Expires:</div>
         <div class="inline leftMargin5"
              data-bind="text: DateUtils.niceLocaleDate(claim().validToDate ? claim().validToDate() : '')"></div>
-    </div>
-
-    <div class="formRow">
-        <div class="sub-heading" style="flex-basis: 8em">Claim Number:
-        </div>
-        <div class="leftMargin5"
-             style="flex-basis: 10em; flex-grow: 0"
-             data-bind="text: claim().fileNum ? claim().fileNum() : ''"></div>
-        <div class="sub-heading" style="flex-basis: 7em">File Number:</div>
-        <div class="inline leftMargin5"
-             data-bind="text: claim().insuranceCompanyFileNum ? claim().insuranceCompanyFileNum() : ''"></div>
     </div>
 
     <div class="bottomMargin5 topMargin5"></div>

@@ -49,6 +49,7 @@ define([], function () {
 
         this.insuranceCompanyPolicyNum = undefined;
         this.insuranceCompanyFileNum = undefined;
+        this.insuranceCompanyClaimNum = undefined;
         this.insuranceCompanyName = undefined;
 
         // TODO, Complete, Pending

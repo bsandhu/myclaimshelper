@@ -134,6 +134,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'model/claim', 'model/claimEnt
                 console.log('AppVM - LOGGED_IN ev');
                 this.showApp(true);
                 this.userName(Session.getCurrentUserId());
+                this.router.setHomePage(Session.getCurrentUserProfile().homePage);
                 this.startRouter();
             });
             amplify.subscribe(Events.LOGOFF, this, function () {

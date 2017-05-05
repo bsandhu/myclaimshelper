@@ -3,12 +3,11 @@
 
     <div class="panel-heading">
         <h3>
-            <span>Claim</span>
-            <span id="claim-id"
-                  class="color-grey"
-                  data-bind="text: (claim().fileNum() || '') + ' / ' + (claim().insuranceCompanyFileNum() || '')"></span>
+            <span style="font-size: 1.2em">Claim</span>
+            <span id="claim-id" style="font-size: .9em"
+                  data-bind="text: (claim().fileNum() || '') + ' / ' + (claim().insuranceCompanyFileNum() || claim().insuranceCompanyClaimNum() || claim().insuranceCompanyPolicyNum() || '')"></span>
             <span data-bind="ifnot: isPartiallyCollapsed">
-                <span class="color-grey" style="font-size: .8em"
+                <span style="font-size: .9em"
                       data-bind="text: (claim().insuranceCompanyName() || '')"></span>
             </span>
             <div data-bind="ifnot: isPartiallyCollapsed"
@@ -132,6 +131,11 @@
                               data-bind="text: claim().insuranceCompanyFileNum ? claim().insuranceCompanyFileNum() : ''"></span>
                     </div>
                     <div class="col-lg-3 col-md-4 col-sm-6 col-xs-6">
+                        <span class="sub-heading">Claim #</span>
+                        <span class="inline leftMargin5"
+                              data-bind="text: claim().insuranceCompanyClaimNum ? claim().insuranceCompanyClaimNum() : ''"></span>
+                    </div>
+                    <div class="col-lg-3 col-md-4 col-sm-6 col-xs-6">
                         <span class="sub-heading">Policy #</span>
                         <span class="inline leftMargin5"
                               data-bind="text: claim().insuranceCompanyFileNum ? claim().insuranceCompanyPolicyNum() : ''"></span>
@@ -241,7 +245,7 @@
     <div data-bind="template: {name: editorViewHtml}"></div>
 
     <!-- ************************************************ -->
-    <!-- Buttons -->
+    <!-- Buttons and tabs -->
     <!-- ************************************************ -->
 
     <div data-bind="ifnot: inEditMode" class="row">
@@ -272,8 +276,14 @@
                                class="squareCorners">Tasks</a>
                         </li>
                         <li role="presentation">
+                            <!-- ko ifnot: isPartiallyCollapsed -->
                             <a aria-controls="claimForms" href="#claimForms" role="tab" data-toggle="tab"
                                class="squareCorners">Insurance forms</a>
+                            <!-- /ko -->
+                            <!-- ko if: isPartiallyCollapsed -->
+                            <a aria-controls="claimForms" href="#claimForms" role="tab" data-toggle="tab"
+                               class="squareCorners">Forms</a>
+                            <!-- /ko -->
                         </li>
                     </ul>
                 </div>
@@ -357,7 +367,8 @@
 
                 <!-- **** Docs/Tasks/Forms **** -->
                 <div data-bind="ifnot: inEditMode" class="row">
-                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="top: -20px;">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12"
+                         data-bind="style:{top: isPartiallyCollapsed() ? '10px' : '-20px'}">
                         <div class="tab-content">
                             <div role="tabpanel" class="tab-pane active" id="claimDocs">
                                 <div data-bind="template: {name: docsViewHtml,

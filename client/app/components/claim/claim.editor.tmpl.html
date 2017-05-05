@@ -10,7 +10,7 @@
     <form class="form-horizontal">
         <!-- File num. -->
         <div class="form-group">
-            <label class="col-sm-2 control-label">File num.</label>
+            <label class="col-sm-2 control-label">File number</label>
             <div class="col-sm-3">
                 <input type="text" class="form-control input-sm"
                        data-bind="value: claim().fileNum">
@@ -73,7 +73,7 @@
             <label class="col-sm-2 col-xs-2 control-label">Type Of Loss</label>
             <div class="col-sm-3">
                 <input type="text"
-                       class="form-control input-sm sub-heading"
+                       class="form-control input-sm"
                        data-bind="refDataAutoComplete: claim().lossType,
                                       type: 'ClaimTypes'"
                        placeholder="Loss Type"
@@ -128,7 +128,7 @@
                     <div class="col-sm-7">
                         <input type="text" class="form-control input-sm"
                                data-bind="value: claim().insuranceCompanyFileNum"
-                               placeholder="Claim number"
+                               placeholder="File number"
                                autocomplete="on">
                     </div>
                 </div>
@@ -140,27 +140,39 @@
                 <div class="col-sm-3">
                     <input type="text" class="form-control input-sm"
                            data-bind="value: claim().insuranceCompanyPolicyNum"
+                           placeholder="Policy number"
                            autocomplete="on">
                 </div>
                 <div class="col-sm-7">
-                    <label class="col-sm-3 control-label">Date Issued</label>
-                    <div class="col-sm-8">
+                    <label class="col-sm-3 control-label">Claim #</label>
+                    <div class="col-sm-7">
                         <input type="text" class="form-control input-sm"
-                               style="width: 40%;"
-                               data-bind="datetimePicker: {
+                               data-bind="value: claim().insuranceCompanyClaimNum"
+                               placeholder="Claim number"
+                               autocomplete="on">
+                    </div>
+                </div>
+            </div>
+        </form>
+        <form class="form-horizontal">
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Date Issued</label>
+                <div class="col-sm-5 col-md-5 col-lg-5">
+                    <input type="text" class="form-control input-sm"
+                           style="width: 40%;"
+                           data-bind="datetimePicker: {
                                               datepicker: true,
                                               timepicker: false,
                                               hideTimepicker: true,
                                               dateValue: claim().validFromDate}"/>
-                        <span class="leftMargin5 rightMargin5">Expires</span>
-                        <input type="text" class="form-control input-sm"
-                               style="width: 40%;"
-                               data-bind="datetimePicker: {
+                    <span class="leftMargin5 rightMargin5">Expires</span>
+                    <input type="text" class="form-control input-sm"
+                           style="width: 40%;"
+                           data-bind="datetimePicker: {
                                               datepicker: true,
                                               timepicker: false,
                                               hideTimepicker: true,
                                               dateValue: claim().validToDate}"/>
-                    </div>
                 </div>
             </div>
         </form>
@@ -179,7 +191,7 @@
                     <!-- Sub category -->
                     <div class="col-sm-2 col-xs-5" style="display: table-cell">
                         <input type="text"
-                               class="form-control input-sm sub-heading"
+                               class="form-control input-sm"
                                data-bind="refDataAutoComplete: expense.subCategory,
                                                   type: 'ExpenseSubCategory'"
                                placeholder="Category"
@@ -356,7 +368,8 @@
 
         <div class="col-md-offset-9 col-sm-offset-9 col-xs-offset-6">
             <button type="button" class="btn btn-info" data-bind="click: onSave">Save</button>
-            <button type="button" class="btn btn-default" data-bind="click: onCancel" id="claimEditorCancelBtn">Cancel</button>
+            <button type="button" class="btn btn-default" data-bind="click: onCancel" id="claimEditorCancelBtn">Cancel
+            </button>
         </div>
     </div>
 

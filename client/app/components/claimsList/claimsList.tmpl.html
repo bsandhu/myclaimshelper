@@ -40,9 +40,15 @@
             <thead id="claimListTableHeader">
             <th data-field="fileNo" data-sortable="true" data-visible="true">File No.</th>
             <th data-field="insured" data-sortable="true" data-sort-name="insuredSort">Insured</th>
+            <!-- ko if: Session.getCurrentUserProfile().isClaimClaimantEnabled -->
             <th data-field="claimant" data-sortable="true" data-sort-name="claimantSort">Claimant</th>
+            <!-- /ko -->
+            <!-- ko if: Session.getCurrentUserProfile().isClaimNoteEnabled -->
             <th data-field="desc" data-sortable="true">Description</th>
+            <!-- /ko -->
+            <!-- ko if: Session.getCurrentUserProfile().isClaimDtEnabled -->
             <th data-field="dateDue" data-sortable="true" data-sort-name="dueTime">Due</th>
+            <!-- /ko -->
             <th data-field="insuranceCo" data-sortable="true" data-visible="true">Insurance Co.</th>
             <!-- See client/lib/bootstrap.table.customization.js for CSS override -->
             <th data-field="ageText" data-sort-name="age" data-sortable="true">Age</th>

@@ -1,13 +1,16 @@
 define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore', 'model/claim', 'model/claimEntry', 'app/utils/events',
         'app/utils/router', 'shared/dateUtils', 'app/utils/ajaxUtils', 'shared/objectUtils', 'app/utils/responsive',
+        'app/utils/session',
         'text!app/components/claimsList/claimsList.tmpl.html'],
-    function ($, ko, KOMap, amplify, _, Claim, ClaimEntry, Events, Router, DateUtils, AjaxUtils, ObjectUtils, responsive, claimsListView) {
+    function ($, ko, KOMap, amplify, _, Claim, ClaimEntry, Events, Router, DateUtils, AjaxUtils, ObjectUtils,
+              responsive, Session, claimsListView) {
         'use strict';
 
         function ClaimsListVM() {
             console.log('Init ClaimsListVM');
             this.Responsive = responsive;
             this.amplify = amplify;
+            this.Session = Session;
             this.init();
         }
 

@@ -1,13 +1,14 @@
 define(['jquery', 'underscore', 'knockout', 'KOMap', 'amplify',
-        'app/utils/events', 'shared/NumberUtils', 'app/utils/ajaxUtils',
+        'app/utils/events', 'shared/NumberUtils', 'app/utils/ajaxUtils', 'app/utils/session',
         'text!app/components/stats/stats.tmpl.html', 'chart.js'],
-    function ($, _, ko, KOMap, amplify, Events, NumberUtils, AjaxUtils, statsView, Chart) {
+    function ($, _, ko, KOMap, amplify, Events, NumberUtils, AjaxUtils, Session, statsView, Chart) {
 
         var N = Number;
 
         function StatsVM() {
             console.log('Init Stats');
             this.loadStats();
+            this.isBillingEnabled = ko.observable();
             this.stats = ko.observable();
             this.NumberUtils = NumberUtils;
 
@@ -89,6 +90,9 @@ define(['jquery', 'underscore', 'knockout', 'KOMap', 'amplify',
             amplify.subscribe(Events.SAVED_CLAIM_ENTRY, this, this.loadStats);
             amplify.subscribe(Events.SAVED_BILL, this, this.loadStats);
             amplify.subscribe(Events.SAVED_CLAIM_ENTRY, this, this.onTasksStatsTemplRender);
+            amplify.subscribe(Events.LOADED_USER_PROFILE, this, function () {
+                this.isBillingEnabled(Session.getCurrentUserProfile().isBillingEnabled);
+            });
         }
 
         StatsVM.prototype.onTasksStatsTemplRender = function () {
