@@ -32,6 +32,7 @@ define(['./contact', './billingProfile'], function (Contact, BillingProfile) {
         this.isClaimCoverageEnabled = true;
         this.isClaimCloseEnabled = true;
         this.isClaimInsuredAttyLinkShown = true;
+        this.homePage = '#/dashboard';
 
         // Default profile
         this.billingProfile = new BillingProfile();

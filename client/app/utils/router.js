@@ -13,16 +13,24 @@ define(['Path', 'amplify', 'app/utils/events'],
             console.log('Init Router');
         }
 
+        Router.prototype.setHomePage = function (pg) {
+            this.homePage = pg;
+        }
+
         Router.prototype.setupRoutes = function () {
             console.log('Setup Routes');
 
-            Path.root("#/home");
+            Path.root(this.homePage);
 
             Path.rescue(function () {
                 console.error('Route not found');
             });
 
             Path.map("#/home").to(function () {
+                this.routeToHome();
+            }.bind(this));
+
+            Path.map("#/dashboard").to(function () {
                 amplify.publish(Events.SHOW_DASHBOARD);
             });
 
@@ -95,7 +103,7 @@ define(['Path', 'amplify', 'app/utils/events'],
         }
 
         Router.prototype.routeToHome = function () {
-            window.location.hash = '#/home';
+            window.location.hash = this.homePage;
         };
 
         Router.prototype.routeToBillingProfile = function (claimId) {
