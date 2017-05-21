@@ -90,8 +90,18 @@ function saveOrUpdateClaim(req, res) {
             {claimId: claimId});
     }
 
+    // Occasionally the UI might not send a well formed contact Obj, filter out
+    function filterOutBadContacts(claim) {
+        return _.filter(claim.contacts, contactJSON => {
+            let alreadySaved = Number(contactJSON.contactId) > 0;
+            let isPopulated = contactJSON.contact && !_.isEmpty(contactJSON.contact.name);
+            return alreadySaved || isPopulated;
+        });
+    }
+
     let claim = req.body;
     claim = _.extend(new Claim(), claim);
+    claim.contacts = filterOutBadContacts(claim);
 
     // Aggregate contact update calls
     let contactUpdateRequests = [];

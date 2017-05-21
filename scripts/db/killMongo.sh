@@ -1,0 +1,1 @@
+ps -ef | grep mongo | awk '{print '} |  xargs kill -9

@@ -70,8 +70,8 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore', 'bootbox',
             jsClaimObject.dateOfLoss = DateUtils.startOfToday();
             jsClaimObject.dateDue = DateUtils.startOfToday();
             jsClaimObject.dateReceived = DateUtils.startOfToday();
-            jsClaimObject.validFromDate = DateUtils.startOfToday();
-            jsClaimObject.validToDate = DateUtils.startOfToday();
+            jsClaimObject.validFromDate = undefined;
+            jsClaimObject.validToDate = undefined;
             jsClaimObject.attachments = [];
             jsClaimObject.location = undefined;
             jsClaimObject.lossType = undefined;
@@ -582,6 +582,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore', 'bootbox',
                         let frameContent = frame.contentWindow;
                         frameContent.document.open();
                         frameContent.document.write('<head><link rel=stylesheet href=../../css/app.css type=text/css ></head>');
+                        frameContent.document.write('<head><link rel=stylesheet href=../../css/claim.css type=text/css ></head>');
                         frameContent.document.write(container.innerHTML);
                         frameContent.document.close();
                         setTimeout(function afterFrameRender() {

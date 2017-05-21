@@ -1,1 +1,0 @@
-mongorestore --host localhost:9090 --drop dump/2017-01-21/u5jesaxU/ --db AgentDb

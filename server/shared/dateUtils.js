@@ -68,7 +68,7 @@ define([],
             var nativeJSONParse = JSON.parse;
             JSON.parse = function (data) {
                 return nativeJSONParse(data, function dateHandle(key, val) {
-                    return isDateAttr(key) ? new Date(Number(val)) : val;
+                    return isDateAttr(key) && Number(val) ? new Date(Number(val)) : val;
                 });
                 function isDateAttr(key) {
                     return key.toLowerCase().search('date') >= 0;
