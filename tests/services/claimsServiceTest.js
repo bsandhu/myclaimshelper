@@ -347,4 +347,39 @@ describe('ClaimsService', function () {
         };
     });
 
+    it('Save claim with bad contact', function (done) {
+        let badContact = {
+            "category": "Insured",
+            "subCategory": "Insured",
+            "contact": {
+                "_id": -1,
+                "addresses": [
+                    {
+                        "type": "Work",
+                        "street": ""
+                    }]
+            }
+        };
+        let testClaimBadContact = new Claim();
+        testClaimBadContact.description = 'Test claim';
+        testClaimBadContact.summary = "I am test entry";
+        testClaimBadContact.state = 'open';
+        testClaimBadContact.contacts = [badContact];
+
+        let req = {body: testClaimBadContact, headers: {userid: 'TestUser', group: 'TestGroup', ingroups: 'TestGroup'}};
+
+        let res = {};
+        res.json = function (data) {
+            assert(data);
+            assert.equal(data.status, 'Success');
+            // Contact ref
+            assert.equal(data.data.contacts.length, 0);
+
+            claimsService.deleteClaim(data.data._id).then(done);
+        };
+
+        //assert.equal(testClaimBadData.contacts.length, 3);
+        claimsService.saveOrUpdateClaim(req, res);
+    });
+
 });

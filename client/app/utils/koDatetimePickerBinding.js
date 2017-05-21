@@ -119,12 +119,14 @@ define(['jquery', 'knockout', 'KOMap', 'shared/dateUtils', 'datetimepicker'],
             },
 
             update: function (element, valueAccessor, allBindings, viewModel, bindingContext) {
-                var config = ko.utils.unwrapObservable(valueAccessor());
+                let config = ko.utils.unwrapObservable(valueAccessor());
 
                 // Set the observable date as String
-                var boundDate = config.dateValue && config.dateValue() || new Date();
-                $(element).val(DateUtils.toDatePickerFormat(boundDate));
-                $(element).parent().find('.timePickerInput').val(DateUtils.toTimePickerFormat(boundDate));
+                let boundDate = config.dateValue && config.dateValue();
+                if (boundDate && boundDate != null){
+                    $(element).val(DateUtils.toDatePickerFormat(boundDate));
+                    $(element).parent().find('.timePickerInput').val(DateUtils.toTimePickerFormat(boundDate));
+                }
             }
         };
     }

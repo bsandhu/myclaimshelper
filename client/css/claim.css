@@ -1,0 +1,9 @@
+@media print {
+    @page {
+        size: letter;
+        margin-left: .25in;
+        margin-right: .25in;
+        margin-bottom: .25in;
+        margin-top: .5in;
+    }
+}

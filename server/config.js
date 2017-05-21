@@ -9,7 +9,7 @@ config.ENV_TEST = 'TEST';
 config.ENV_PROD = 'PROD';
 
 
-// **** Heroku Config vars ****
+// **** Env Config vars ****
 config.port = process.env.PORT || 8080;
 config.https_port = process.env.HTTPS_PORT || 8443;
 config.env = process.env.ENV || 'LOCAL';
@@ -24,16 +24,9 @@ config.PROD.use_ssl = true;
 config.use_ssl = config[config.env]['use_ssl'];
 
 
-// **** Heroku ****
-config.heroku = {};
-config.heroku.user = 'baljeet.mail@gmail.com';
-config.heroku.password = 'starWAR$1';
-
-
-// **** Modulous ****
-config.LOCAL.db = 'mongodb://localhost:9090/AgentDb';
+// **** DB ****
+config.LOCAL.db = 'mongodb://agent:lightSA8ER@localhost:9090/myclaimshelper';
 config.TEST.db = 'mongodb://agent:lightSA8ER@45.55.192.142:9090/myclaimshelper';
-// In Prod, external DB port is blocked by firewall
 config.PROD.db = 'mongodb://agent:starWARS1@localhost:9090/myclaimshelper';
 config.db = config[config.env]['db'];
 
@@ -101,11 +94,6 @@ config.dnssimple = {};
 config.dnssimple.user = 'baljeet.mail@gmail.com';
 config.dnssimple.password = 'starWAR$1';
 
-
-// **** Modulous ****
-config.modulous = {};
-config.modulous.user = 'baljeet.mail@gmail.com';
-config.modulous.password = 'starWAR$1';
 
 // **** DigitalOcean ****
 config.digitalOcean = {};
