@@ -940,12 +940,10 @@ h3.panel-title {
 
 .navbar-default {
     background-color: #34495e;
-    height: 74px;
 }
 
 .navbar-default .navbar-collapse {
     background-color: #34495e;
-    height: 74px;
 }
 
 .navbar-msg-count {
@@ -957,7 +955,7 @@ h3.panel-title {
 
 @media (max-width: 1024px) {
     .navbar-header {
-        padding-right: 5px;
+       padding-right: 5px;
     }
 }
 
