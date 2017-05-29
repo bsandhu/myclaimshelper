@@ -16,7 +16,7 @@ body {
     font-family: Lato, sans-serif;
     font-size: 16px;
     margin: 0;
-    color: #333333;
+    color: black;
     background-color: rgb(235, 238, 243);
     -webkit-print-color-adjust: exact;
 }
@@ -940,12 +940,10 @@ h3.panel-title {
 
 .navbar-default {
     background-color: #34495e;
-    height: 74px;
 }
 
 .navbar-default .navbar-collapse {
     background-color: #34495e;
-    height: 74px;
 }
 
 .navbar-msg-count {
@@ -957,7 +955,7 @@ h3.panel-title {
 
 @media (max-width: 1024px) {
     .navbar-header {
-        padding-right: 5px;
+       padding-right: 5px;
     }
 }
 
