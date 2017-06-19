@@ -2,9 +2,10 @@
     <div class="panel-heading">
         <h3>
             <i class="fa fa-file-text-o"></i>
-            <div class="inline"
-                 id="claimFormHeading"
-                 data-bind="text: ObjectUtils.camelcaseToSpaces(form().type())"></div>
+            <div class="inline formHeader"
+                 id="claimFormHeading">
+                <input data-bind="value: form().displayName">
+            </div>
             <div class="pull-right">
                 <a href="javascript:void(0);"
                    class="btn btn-default ghost-button pull-right hidden-xs"

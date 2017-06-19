@@ -10,6 +10,7 @@ define([], function () {
     function Form() {
         this._id = undefined;
         this.type = undefined;
+        this.displayName = undefined;
         this.claimId = undefined;
         this.creationDate = undefined;
         this.updateDate = undefined;
