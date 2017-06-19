@@ -1,13 +1,16 @@
 define(['knockout', 'KOMap', 'jquery', 'underscore', 'bootbox',
         'amplify', 'app/utils/events', 'app/utils/ajaxUtils', 'app/utils/router',
-        'shared/objectUtils', 'app/utils/audit', 'app/utils/session',
+        'shared/objectUtils',
+        'shared/dateUtils',
+        'app/utils/audit', 'app/utils/session',
         'model/form', 'model/email',
+        'app/components/contact/contactUtils',
         'text!app/components/form/proofOfLoss.tmpl.html',
         'text!app/components/form/anotherForm.tmpl.html',
         'text!app/components/form/subrogationReceipt.tmpl.html',
         'text!app/components/form/formComponent.tmpl.html'],
-    function (ko, KOMap, $, _, bootbox, amplify, Events, ajaxUtils, Router, ObjectUtils, Audit, Session,
-              Form, Email, proofOfLossTmpl, anotherForm, subrogationReceipt, viewHtml) {
+    function (ko, KOMap, $, _, bootbox, amplify, Events, ajaxUtils, Router, ObjectUtils, DateUtils, Audit, Session,
+              Form, Email, ContactUtils, proofOfLossTmpl, anotherForm, subrogationReceipt, viewHtml) {
         'use strict';
 
         function FormsComponentVM(params) {
@@ -42,12 +45,36 @@ define(['knockout', 'KOMap', 'jquery', 'underscore', 'bootbox',
             newForm.updateDate(new Date());
             newForm.creationDate(new Date());
             newForm.type(type);
+            newForm.displayName(ObjectUtils.camelcaseToSpaces(type));
 
             // Copy active claim attributes
             // From data is an observable with nested observables so the tmpl picks up
-            // changes whne the forms are switched
+            // changes when the forms are switched
             newForm.data = ko.observable(KOMap.fromJS(_.extend({}, activeClaim, newForm.data)));
             delete newForm.data().attachments;
+
+            // Pre-populate know fields from Claim
+            // Proof Of Loss
+            if (type == 'proofOfLoss') {
+                newForm.data()._id(activeClaim.insuranceCompanyPolicyNum);
+                newForm.data().e(activeClaim.fileNum);
+                newForm.data().b('See Schedule "A"');
+                newForm.data().f(activeClaim.insuranceCompanyClaimNum);
+                newForm.data().c(DateUtils.niceLocaleDate(activeClaim.validFromDate, '', false));
+                newForm.data().d(DateUtils.niceLocaleDate(activeClaim.validToDate, '', false));
+                newForm.data().i(activeClaim.insuranceCompanyName);
+                if(ContactUtils.parseInsured(activeClaim)){
+                    newForm.data().k(ContactUtils.parseInsured(activeClaim).name || '');
+                    newForm.data().al(ContactUtils.parseInsured(activeClaim).name || '');
+                }
+                newForm.data().m(activeClaim.lossType);
+                newForm.data().l('All Risk');
+                newForm.data().v('As Permitted');
+                newForm.data().y('Owner');
+                newForm.data().ac('As Per Policy');
+                newForm.data().af('See Schedule "A"');
+                newForm.data().an('X');
+            }
 
             return newForm;
         }
