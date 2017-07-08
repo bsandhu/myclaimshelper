@@ -1,6 +1,6 @@
 var assert = require('assert');
 var jQuery = require('jquery-deferred');
-var http = require('http');
+var https = require('https');
 var querystring = require('querystring');
 
 /**
@@ -39,7 +39,7 @@ function extract(text) {
 
     var options = {
         hostname: 'access.alchemyapi.com',
-        port: 80,
+        port: 443,
         path: '/calls/text/TextGetRankedNamedEntities',
         method: 'POST',
         headers: {
@@ -48,7 +48,7 @@ function extract(text) {
         }
     };
 
-    var req = http.request(options, function (res) {
+    var req = https.request(options, function (res) {
         var data = '';
 
         res.on('data', function (chunk) {
