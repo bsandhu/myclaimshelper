@@ -271,11 +271,14 @@
     <div class="formRow topMargin15">
         <div style="order: 1"><strong>6. The Actual Cash Value</strong> of the said property at the time of the loss was
         </div>
-        <div style="order: 2; flex-grow: 1" class="bottomBorderDashed"></div>
+        <div style="order: 2; flex-grow: 1">
+            <input class="bottomBorderDashed" data-bind="value: eg"/>
+            <span class="bottomBorderDashed" data-bind="text: eg"></span>
+        </div>
         <div style="order: 3;">$</div>
         <div style="order: 4; flex-grow: 0; flex-basis: 10em;">
-            <input data-bind="value: ag"/>
-            <span data-bind="text: ag"></span>
+            <input class="numeric" data-bind="value: ag"/>
+            <div class="printOnly numeric" data-bind="text: ag"></div>
         </div>
     </div>
 
@@ -283,11 +286,14 @@
     <div class="formRow topMargin15">
         <div style="order: 1"><strong>7. The Whole Loss and Damage </strong> was
         </div>
-        <div style="order: 2; flex-grow: 1" class="bottomBorderDashed"></div>
+        <div style="order: 2; flex-grow: 1">
+            <input class="bottomBorderDashed" data-bind="value: eh"/>
+            <span class="bottomBorderDashed" data-bind="text: eh"></span>
+        </div>
         <div style="order: 3;">$</div>
         <div style="order: 4; flex-grow: 0; flex-basis: 10em;">
-            <input data-bind="value: ah"/>
-            <span data-bind="text: ah"></span>
+            <input class="numeric" data-bind="value: ah"/>
+            <div class="printOnly numeric" data-bind="text: ah"></div>
         </div>
     </div>
 
@@ -295,11 +301,14 @@
     <div class="formRow topMargin15">
         <div style="order: 1"><strong>8. Less Amount of Deductible </strong>
         </div>
-        <div style="order: 2; flex-grow: 1" class="bottomBorderDashed"></div>
+        <div style="order: 2; flex-grow: 1">
+            <input class="bottomBorderDashed" data-bind="value: ei"/>
+            <span class="bottomBorderDashed" data-bind="text: ei"></span>
+        </div>
         <div style="order: 3;">$</div>
         <div style="order: 4; flex-grow: 0; flex-basis: 10em;">
-            <input data-bind="value: ai"/>
-            <span data-bind="text: ai"></span>
+            <input class="numeric" data-bind="value: ai"/>
+            <div class="printOnly numeric" data-bind="text: ai"></div>
         </div>
     </div>
 
@@ -307,11 +316,14 @@
     <div class="formRow topMargin15">
         <div style="order: 1"><strong>9. The Amount Claimed </strong> under the above numbered policy is
         </div>
-        <div style="order: 2; flex-grow: 1" class="bottomBorderDashed"></div>
+        <div style="order: 2; flex-grow: 1">
+            <input class="bottomBorderDashed" data-bind="value: ej"/>
+            <span class="bottomBorderDashed" data-bind="text: ej"></span>
+        </div>
         <div style="order: 3;">$</div>
         <div style="order: 4; flex-grow: 0; flex-basis: 10em;">
-            <input data-bind="value: aj"/>
-            <span data-bind="text: aj"></span>
+            <input class="numeric" data-bind="value: aj"/>
+            <div class="printOnly numeric" data-bind="text: aj"></div>
         </div>
     </div>
 
@@ -341,8 +353,8 @@
             <input data-bind="value: ak"/>
             <span data-bind="text: ak"></span>
         </div>
-        <div style="order: 3; flex-grow: 1;"></div>
-        <div style="order: 4; flex-grow: 0; flex-basis: 25em">
+        <div style="order: 3; flex-grow: 0; flex-basis: 2em"></div>
+        <div style="order: 4; flex-grow: 1; flex-basis: 25em">
             <input data-bind="value: al"/>
             <span data-bind="text: al"></span>
         </div>
@@ -356,8 +368,8 @@
             <input data-bind="value: am"/>
             <span data-bind="text: am"></span>
         </div>
-        <div style="order: 3; flex-grow: 1;"></div>
-        <div style="order: 4; flex-grow: 0; flex-basis: 22em">
+        <div style="order: 3; flex-grow: 0; flex-basis: 2em"></div>
+        <div style="order: 4; flex-grow: 1; flex-basis: 22em">
             <input data-bind="value: an"/>
             <span data-bind="text: an"></span>
         </div>

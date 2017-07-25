@@ -90,4 +90,20 @@ describe('DateUtils', function () {
         assert.equal(dateUtils.startOfToday().getSeconds(), 0);
     })
 
+    it('dayOfMonth', function () {
+        assert.equal(dateUtils.dayOfMonth(), '');
+        assert.equal(dateUtils.dayOfMonth(new Date(2017, 06, 30)), "30th");
+        assert.equal(dateUtils.dayOfMonth(new Date(2017, 06, 3)), "3rd");
+    })
+
+    it('month', function () {
+        assert.equal(dateUtils.month(undefined), '');
+        assert.equal(dateUtils.month(new Date(2017, 06, 30)), 'Jul');
+    })
+
+    it('year', function () {
+        assert.equal(dateUtils.year(null), '');
+        assert.equal(dateUtils.year(new Date(2017, 06, 30)), '17');
+    })
+
 });

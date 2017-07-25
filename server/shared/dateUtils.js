@@ -11,6 +11,12 @@ define([],
         var millisInADay = 86400000;
         var daysInWeek = 6;
 
+        var monthNames = [ "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" ];
+        var dayNames   = [ "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" ];
+        var dayOfMonthNames   = [ "", "1st", "2nd", "3rd", "4th", "5th", "6th", "7th", "8th", "9th", "10th",
+                                      "11th", "12th", "13th", "14th", "15th", "16th", "17th", "18th", "19th", "20th",
+                                      "21st", "22nd", "23rd", "24th", "25th", "26th", "27th", "28th", "29th", "30th", "31st"];
+
         function toDatePickerFormat(jsDate) {
             if (!jsDate instanceof Date) {
                 throw 'Expecting JS Date. Got: ' + jsDate;
@@ -89,8 +95,6 @@ define([],
             if(date.getTime() == 0){
                 return defaultValue || 'None'
             }
-            var monthNames = [ "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" ];
-            var dayNames   = [ "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" ];
 
             var month = monthNames[date.getMonth()];
             var day = date.getDate();
@@ -182,6 +186,27 @@ define([],
             return withoutTime;
         }
 
+        function dayOfMonth(dateObj) {
+            if (!(dateObj instanceof Date)){
+                return '';
+            }
+            return dayOfMonthNames[dateObj.getDate()];
+        }
+
+        function month(dateObj) {
+            if (!(dateObj instanceof Date)){
+                return '';
+            }
+            return monthNames[dateObj.getMonth()];
+        }
+
+        function year(dateObj) {
+            if (!(dateObj instanceof Date)){
+                return '';
+            }
+            return String(dateObj.getFullYear()).substring(2);
+        }
+
         return {
             'niceDate'              : niceDate,
             'stripTime'             : stripTime,
@@ -202,6 +227,9 @@ define([],
             'startOfWeekInMillis'   : startOfWeekInMillis,
             'endOfWeekInMillis'     : endOfWeekInMillis,
             'daysFromNowInMillis'   : daysFromNowInMillis,
-            'daysBeforeNowInMillis' : daysBeforeNowInMillis
+            'daysBeforeNowInMillis' : daysBeforeNowInMillis,
+            'dayOfMonth'            : dayOfMonth,
+            'month'                 : month,
+            'year'                  : year
         };
     });
