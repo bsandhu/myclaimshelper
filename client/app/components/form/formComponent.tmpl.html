@@ -40,12 +40,18 @@
 
         <!-- Footer buttons -->
         <div class="col-md-12 col-lg-12 topBorderSolid topMargin5pc">
+            <button type="button" data-toggle="tooltip" data-placement="top"
+                    data-bind="click: onDeleteForm,
+                               css: 'btn btn-link color-red'"
+                    class="btn btn-link color-red">
+                <i class="fa fa-trash-o"></i>
+                Delete
+            </button>
             <button id="claim-form-close"
                     type="button"
                     class="btn btn-default pull-right topMargin10"
                     data-bind="click: onClose">Close
             </button>
-
             <button type="button" class="btn btn-info pull-right leftMargin2pc rightMargin5 topMargin10"
                     data-bind="click: onSave">Save
             </button>
