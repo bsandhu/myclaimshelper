@@ -1,4 +1,7 @@
-<div style="line-height: 1.2em; opacity: 100%">
+<body>
+<div style="line-height: 1.2em; opacity: 100%;" id="claimPrint">
+    <div class="divFooter" style="width: 100px"></div>
+
     <h2 class="bottomBorderForm" data-bind="text: 'Claim ' + claim().fileNum()">Claim</h2>
 
     <!-- Insured -->
@@ -147,13 +150,15 @@
 
     <!-- Other contacts -->
     <h3 class="bottomBorderForm">Contacts</h3>
-    <div data-bind="foreach: {data: otherContacts(), as: 'contactInfo'}"
-         class="formRow"
-         style="justify-content: flex-start; align-items: flex-start; flex-grow: 1; flex-wrap: wrap">
+    <div data-bind="foreach: {data: otherContacts(), as: 'contactInfo'}">
 
-        <div class="formRow" style="min-width: 40%">
-            <div data-bind="template: {name: $parent.contactPrintTmpl}"></div>
-        </div>
+        <!--<div class="formRow" style="min-width: 40%;  page-break-inside: avoid">-->
+            <div data-bind="template: {name: $parent.contactPrintTmpl}" style="page-break-inside: avoid"></div>
+        <!--</div>-->
     </div>
-    <div class="bottomMargin5 topMargin5"></div>
+    <div class="bottomMargin5 topMargin15"></div>
+    <div class="bottomBorderForm"></div>
+    <div>End</div>
+
 </div>
+</body>
