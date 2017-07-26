@@ -63,17 +63,43 @@ define(['knockout', 'KOMap', 'jquery', 'underscore', 'bootbox',
                 newForm.data().c(DateUtils.niceLocaleDate(activeClaim.validFromDate, '', false));
                 newForm.data().d(DateUtils.niceLocaleDate(activeClaim.validToDate, '', false));
                 newForm.data().i(activeClaim.insuranceCompanyName);
-                if(ContactUtils.parseInsured(activeClaim)){
+                if (ContactUtils.parseInsured(activeClaim)) {
                     newForm.data().k(ContactUtils.parseInsured(activeClaim).name || '');
                     newForm.data().al(ContactUtils.parseInsured(activeClaim).name || '');
                 }
-                newForm.data().m(activeClaim.lossType);
-                newForm.data().l('All Risk');
+                // Date of loss
+                newForm.data().p(DateUtils.dayOfMonth(activeClaim.dateOfLoss));
+                newForm.data().q(DateUtils.month(activeClaim.dateOfLoss));
+                newForm.data().r(DateUtils.year(activeClaim.dateOfLoss));
                 newForm.data().v('As Permitted');
                 newForm.data().y('Owner');
                 newForm.data().ac('As Per Policy');
                 newForm.data().af('See Schedule "A"');
                 newForm.data().an('X');
+
+                // Schedule 'A' population
+                if (_.isArray(activeClaim.expenses)) {
+                    let item1 = activeClaim.expenses[0];
+                    let item2 = activeClaim.expenses[1];
+                    let item3 = activeClaim.expenses[2];
+                    let item4 = activeClaim.expenses[3];
+                    if (_.isObject(item1)) {
+                        newForm.data().au(item1.amount);
+                        newForm.data().av(item1.subCategory);
+                    }
+                    if (_.isObject(item2)) {
+                        newForm.data().aw(item2.amount);
+                        newForm.data().ax(item2.subCategory);
+                    }
+                    if (_.isObject(item3)) {
+                        newForm.data().ay(item3.amount);
+                        newForm.data().az(item3.subCategory);
+                    }
+                    if (_.isObject(item4)) {
+                        newForm.data().ba(item4.amount);
+                        newForm.data().bb(item4.subCategory);
+                    }
+                }
             }
 
             return newForm;
@@ -187,6 +213,35 @@ define(['knockout', 'KOMap', 'jquery', 'underscore', 'bootbox',
                     Audit.info('SavedForm', {_id: this.form()._id(), type: this.form().type()});
                     defer.resolve();
                 }.bind(this));
+            return defer;
+        }
+
+        FormsComponentVM.prototype.onDeleteForm = function () {
+            let defer = $.Deferred();
+
+            let dialog = bootbox.dialog({
+                title: "",
+                message: "Delete this Form permanently ?",
+                buttons: {
+                    no: {label: "No", className: "btn-danger", callback: $.noop},
+                    yes: {label: "Yes", className: "btn-info", callback: onConfirm.bind(this)}
+                }
+            });
+
+            function onConfirm() {
+                let form = this.form();
+                let name = form.displayName ? form.displayName() : form.type();
+
+                ajaxUtils.post(
+                    '/form/delete',
+                    JSON.stringify({id: form._id(), name: name}),
+                    function onSuccess(response) {
+                        console.log('Deleted Form: ' + JSON.stringify(response));
+                        amplify.publish(Events.SUCCESS_NOTIFICATION, {msg: `Deleted form ${name}`});
+                        Router.routeToClaim(Session.getActiveClaimId());
+                        defer.resolve();
+                    }.bind(this));
+            }
             return defer;
         }
 

@@ -58,6 +58,18 @@ function getAllFormsForClaim(req, res) {
     });
 }
 
+function deleteForm(req, res) {
+    assert.ok(req.params.id, 'Expecting FormId as a parameter');
+    let formId = req.params.id;
+    let formName = req.params.name;
+
+    console.log(`Delete Form Req. FormId ${formId}. Name ${formName}`);
+    mongoUtils.deleteEntity({'_id': formId}, mongoUtils.FORMDATA_COL_NAME)
+        .then(data => sendResponse(res, null, {id: formId, name: formName}))
+        .fail(err => sendResponse(res, err, null));
+}
+
 exports.getFormData = getFormData;
 exports.addFormData = addFormData;
+exports.deleteForm = deleteForm;
 exports.getAllFormsForClaim = getAllFormsForClaim;

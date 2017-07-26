@@ -175,6 +175,7 @@ function setupClaimsServiceRoutes() {
 
     server.get('/form/:id', authenticate, formService.getFormData);
     server.post('/form', authenticate, formService.addFormData);
+    server.post('/form/delete', authenticate, formService.deleteForm);
 }
 
 function setupContactServiceRoutes() {

@@ -6,7 +6,7 @@ let RefData = require('./../../server/model/refData.js');
 let mongoUtils = require('./../../server/mongoUtils.js');
 
 
-describe('RefDataService', function () {
+describe('FormService', function () {
     let testForm = new Form();
     testForm.type = 'proofOfLoss';
     testForm.claimId = '100';
@@ -77,4 +77,21 @@ describe('RefDataService', function () {
         };
         formService.getFormData(req, res);
     });
+
+    it('Delete form', function (done) {
+        let req = {
+            params: {id: testForm._id},
+            headers: {userid: 'TestUser', ingroups: [profileService.DEFAULT_GROUP]}
+        };
+        let res = {};
+
+        res.json = function (data) {
+            assert(data);
+            assert.equal(data.status, 'Success');
+            assert.equal(data.data.id, testForm._id);
+            done();
+        };
+
+        formService.deleteForm(req, res);
+    })
 })
