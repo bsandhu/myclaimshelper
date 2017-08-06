@@ -6,11 +6,11 @@ define(['knockout', 'KOMap', 'jquery', 'underscore', 'bootbox',
         'model/form', 'model/email',
         'app/components/contact/contactUtils',
         'text!app/components/form/proofOfLoss.tmpl.html',
-        'text!app/components/form/anotherForm.tmpl.html',
+        'text!app/components/form/regulation10.tmpl.html',
         'text!app/components/form/subrogationReceipt.tmpl.html',
         'text!app/components/form/formComponent.tmpl.html'],
     function (ko, KOMap, $, _, bootbox, amplify, Events, ajaxUtils, Router, ObjectUtils, DateUtils, Audit, Session,
-              Form, Email, ContactUtils, proofOfLossTmpl, anotherForm, subrogationReceipt, viewHtml) {
+              Form, Email, ContactUtils, proofOfLossTmpl, regulation10, subrogationReceipt, viewHtml) {
         'use strict';
 
         function FormsComponentVM(params) {
@@ -100,6 +100,11 @@ define(['knockout', 'KOMap', 'jquery', 'underscore', 'bootbox',
                         newForm.data().bb(item4.subCategory);
                     }
                 }
+                // Schedule 'A' - loss location
+                let lossLoc = activeClaim.location;
+                if (lossLoc) {
+                    newForm.data().ef(lossLoc.formatted_address);
+                }
             }
 
             return newForm;
@@ -111,10 +116,10 @@ define(['knockout', 'KOMap', 'jquery', 'underscore', 'bootbox',
                 this.email().attachments([{name: 'ProofOfLoss.pdf'}]);
                 this.email().subject('Sending ProofOfLoss');
             }
-            if (this.form().type() == 'anotherForm') {
-                this.activeFormTmpl(anotherForm);
-                this.email().attachments([{name: 'ProofOfLoss.pdf'}]);
-                this.email().subject('Sending ProofOfLoss');
+            if (this.form().type() == 'regulation10') {
+                this.activeFormTmpl(regulation10);
+                this.email().attachments([{name: 'Regulation10.pdf'}]);
+                this.email().subject('Sending Regulation 10');
             }
             if (this.form().type() == 'subrogationReceipt') {
                 this.activeFormTmpl(subrogationReceipt);
