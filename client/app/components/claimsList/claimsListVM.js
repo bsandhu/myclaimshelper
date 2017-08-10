@@ -1,9 +1,9 @@
 define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore', 'model/claim', 'model/claimEntry', 'app/utils/events',
         'app/utils/router', 'shared/dateUtils', 'app/utils/ajaxUtils', 'shared/objectUtils', 'app/utils/responsive',
-        'app/utils/session',
+        'app/utils/session', 'app/components/contact/contactUtils',
         'text!app/components/claimsList/claimsList.tmpl.html'],
     function ($, ko, KOMap, amplify, _, Claim, ClaimEntry, Events, Router, DateUtils, AjaxUtils, ObjectUtils,
-              responsive, Session, claimsListView) {
+              responsive, Session, ContactUtils, claimsListView) {
         'use strict';
 
         function ClaimsListVM() {
@@ -67,7 +67,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore', 'model/claim', '
                         let claimantId = Number(ObjectUtils.nullSafe.bind(claim, 'this.claimantContact._id', '')());
                         let claimant = claimantName;
 
-                        let insuredName = ObjectUtils.nullSafe.bind(claim, 'this.insuredContact.name', 'None')();
+                        let insuredName = ContactUtils.parseNames(claim.insuredContacts) || [];
                         let insuredId = Number(ObjectUtils.nullSafe.bind(claim, 'this.insuredContact._id', '')());
                         let insured = insuredName;
                         let insuranceCo = "<span>" + insuranceCompanyFileNum + "</span><span class='secondary'>" + insuranceCoName + "</span>";

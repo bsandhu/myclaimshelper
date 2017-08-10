@@ -379,6 +379,7 @@ function searchClaims(req, res) {
     let query = req.body.query;
     query = addOwnerInfo(req, query);
 
+    const IS_INSURED = con => con.category == Consts.CONTACT_CATEGORY_INSURED && con.subCategory == Consts.CONTACT_SUBCATEGORY_INSURED;
     console.log('Searching for Claim with query: ' + query);
     mongoUtils.run(function (db) {
         mongoUtils
@@ -391,6 +392,20 @@ function searchClaims(req, res) {
             let contactLookups = [];
             _.each(claims, function (claim) {
                 let {insuredContactId, claimantContactId} = getInsuredAndClaimant(claim);
+                let insureds = claim.contacts.filter(IS_INSURED);
+                claim.insuredContacts = [];
+
+                // Load all insureds
+                _.each(insureds, function (contactInfo, index) {
+                    contactLookups.push(
+                        populateContactRef(query.owner, query.ingroups, contactInfo.contactId, function (contactObj) {
+                            if (!Boolean(contactObj) || _.isEmpty(contactObj)) {
+                                console.warn("Could not populate Contact for Id: " + contactId);
+                            }
+                            claim.insuredContacts[index] = contactObj;
+                        })
+                    );
+                });
 
                 contactLookups.push(
                     populateContactRef(query.owner, query.ingroups, insuredContactId, function (contactObj) {
