@@ -1,13 +1,27 @@
 define(['knockout', 'underscore', 'KOMap', 'model/contact', 'shared/consts'],
     function (ko, _, KOMap, Contact, Consts) {
 
+        function _parseName(contact) {
+                return (contact != null && contact != undefined && _.has(contact, 'name'))
+                    ? contact.name
+                    : 'None'
+        }
+        let isInsured = con => con.category == Consts.CONTACT_CATEGORY_INSURED && con.subCategory == Consts.CONTACT_SUBCATEGORY_INSURED;
+
         return {
             parseInsured: function (claim) {
-                let isInsured = con => con.category == Consts.CONTACT_CATEGORY_INSURED && con.subCategory == Consts.CONTACT_SUBCATEGORY_INSURED;
                 let insured = claim.contacts.find(isInsured);
                 return (_.isObject(insured) && _.has(insured, 'contact'))
                     ? insured.contact
                     : undefined;
+            },
+            parseInsureds: function (claim) {
+                let insureds = claim.contacts.filter(isInsured);
+                return insureds.map(insured => {
+                    return (_.isObject(insured) && _.has(insured, 'contact'))
+                        ? insured.contact
+                        : undefined;
+                });
             },
             parseClaimant: function (claim) {
                 let isClaimant = con => con.category == Consts.CONTACT_CATEGORY_CLAIMANT && con.subCategory == Consts.CONTACT_SUBCATEGORY_CLAIMANT;
@@ -16,10 +30,9 @@ define(['knockout', 'underscore', 'KOMap', 'model/contact', 'shared/consts'],
                     ? claimant.contact
                     : undefined;
             },
-            parseName: function(contact){
-                return (contact != null && contact != undefined && _.has(contact, 'name'))
-                    ? contact.name
-                    : 'None';
+            parseName: _parseName(),
+            parseNames: (contacts = []) => {
+                return contacts.map(_parseName).join(', ');
             },
             parsePhone: function (contact) {
                 let phones = KOMap.toJS(contact.phones);

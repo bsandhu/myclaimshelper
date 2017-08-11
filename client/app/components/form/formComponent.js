@@ -64,8 +64,8 @@ define(['knockout', 'KOMap', 'jquery', 'underscore', 'bootbox',
                 newForm.data().d(DateUtils.niceLocaleDate(activeClaim.validToDate, '', false));
                 newForm.data().i(activeClaim.insuranceCompanyName);
                 if (ContactUtils.parseInsured(activeClaim)) {
-                    newForm.data().k(ContactUtils.parseInsured(activeClaim).name || '');
-                    newForm.data().al(ContactUtils.parseInsured(activeClaim).name || '');
+                    newForm.data().k(ContactUtils.parseNames(ContactUtils.parseInsureds(activeClaim)) || '');
+                    newForm.data().al(ContactUtils.parseNames(ContactUtils.parseInsureds(activeClaim)) || '');
                 }
                 // Date of loss
                 newForm.data().p(DateUtils.dayOfMonth(activeClaim.dateOfLoss));
