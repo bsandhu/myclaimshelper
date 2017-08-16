@@ -442,6 +442,53 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore', 'bootbox',
             }, this);
         }
 
+        ClaimVM.prototype.deleteDoc = function (doc, mouseEvent) {
+            console.log(`Deleting doc ${JSON.stringify(doc)}`);
+
+            let dialog = bootbox.dialog({
+                title: "",
+                message: "Remove document from Claim?",
+                size: "small",
+                buttons: {
+                    no: {label: "No", className: "btn-danger", callback: $.noop},
+                    yes: {label: "Yes", className: "btn-info", callback: onConfirm.bind(this)}
+                }
+            });
+
+            function onConfirm() {
+                let claim = this.claim();
+                let attachmentId = doc.attachment.id();
+
+                if (doc.origin == 'ClaimEntry') {
+                    // Deleting attachment on Claim Entry
+                    let isMatchingClaimEntry = entry => entry._id == doc.originId;
+                    let claimEntry = this.claimEntries().find(isMatchingClaimEntry);
+                    let attachmentsSansDeleted = claimEntry.attachments.filter(attach => {
+                        return attach.id != attachmentId;
+                    });
+
+                    ajaxUtils.post(
+                        '/claimEntry/modify',
+                        JSON.stringify({_id: doc.originId, attrsAsJson: {attachments: attachmentsSansDeleted}}),
+                        function onSuccess(response) {
+                            console.log('Saved ClaimEntry: ' + JSON.stringify(response));
+                            amplify.publish(Events.SUCCESS_NOTIFICATION, {msg: 'Deleted attachment'});
+                            amplify.publish(Events.SAVED_CLAIM_ENTRY, {
+                                claimId: claim._id(),
+                                claimEntryId: claimEntry._id
+                            });
+                        }.bind(this));
+                } else {
+                    // Deleting attachment on Claim
+                    let attachmentsSansDeleted = claim.attachments().filter(attach => {
+                        return attach.id() != attachmentId;
+                    });
+                    this.claim().attachments(attachmentsSansDeleted);
+                    this.onSave('Attachment deleted');
+                }
+            }
+        }
+
         /***********************************************************/
         /* Server calls                                            */
         /***********************************************************/
