@@ -30,12 +30,13 @@
         <tr>
             <th data-field="name" data-sortable="true" data-sortable-type="alpha">File name</th>
             <!-- ko ifnot: isPartiallyCollapsed -->
-            <th></th>
+            <th>Download</th>
             <th data-sortable-type="numeric">Size</th>
             <th data-sortable-type="alpha" class="hidden-xs">Type</th>
             <th data-field="lastModifiedDate" data-sortable="true" data-sortable-type="numeric" class="hidden-xs">Last modified</th>
             <th data-field="owner" data-sortable="true" data-sortable-type="alpha" class="hidden-xs hidden-sm">Created by</th>
             <th data-field="id" data-sortable="true" class="hidden-sm hidden-xs hidden-md hidden-lg">Id</th>
+            <th>Delete</th>
             <!-- /ko -->
         </tr>
         </thead>
@@ -68,6 +69,14 @@
                 data-bind="text: attachment.owner"></td>
             <td class="hidden-sm hidden-xs hidden-md hidden-lg tableCell"
                 data-bind="text: attachment.id">
+            </td>
+            <td>
+                <a data-bind="click: $parent.deleteDoc.bind($parent)" href="javascript: 0"
+                   class="color-light-blue myTooltip" myTitle="Click to Delete file">
+                    <span class="fa-lg color-red" style="opacity: .8;">
+                      <i class="fa fa-lg fa-trash-o"></i>
+                    </span>
+                </a>
             </td>
             <!-- /ko -->
         </tr>
