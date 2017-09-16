@@ -30,7 +30,7 @@ define(['knockout', 'underscore', 'KOMap', 'model/contact', 'shared/consts'],
                     ? claimant.contact
                     : undefined;
             },
-            parseName: _parseName(),
+            parseName: _parseName,
             parseNames: (contacts = []) => {
                 return contacts.map(_parseName).join(', ');
             },
