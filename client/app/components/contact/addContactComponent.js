@@ -1,5 +1,5 @@
 define(['knockout', 'KOMap', 'underscore',
-        'text!app/components/contact/addContactComponent.tmpl.html', 'model/contact',
+        'text-loader!app/components/contact/addContactComponent.tmpl.html', 'model/contact',
         'app/components/contact/contactUtils',
         'app/utils/ajaxUtils', 'amplify', 'app/utils/events', 'app/components/contact/contactClient',
         'app/utils/audit'],

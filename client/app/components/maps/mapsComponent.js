@@ -1,6 +1,6 @@
 define(['knockout', 'KOMap',
         'app/utils/audit',
-        'text!app/components/maps/mapsComponent.tmpl.html'],
+        'text-loader!app/components/maps/mapsComponent.tmpl.html'],
 
     function (ko, KOMap, Audit, viewHtml) {
         'use strict';

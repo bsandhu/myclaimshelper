@@ -1,6 +1,6 @@
 define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox',
         'app/utils/events', 'app/utils/session', 'app/utils/responsive',
-        'text!app/components/userProfile/userProfile.tmpl.html', 'model/profiles',
+        'text-loader!app/components/userProfile/userProfile.tmpl.html', 'model/profiles',
         'app/utils/audit', 'app/utils/consts', 'app/utils/ajaxUtils'],
 
     function ($, ko, KOMap, amplify, bootbox, Events, Session, Responsive, viewHtml, UserProfile,
@@ -307,25 +307,65 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'bootbox',
                         return resp.data.Auth0;
                     })
                     .then(function (auth0Config) {
-                        var lock = new Auth0Lock(auth0Config.id, auth0Config.domain);
-                        lock.show(function (err, profile, token) {
-                            if (err) {
+                        // Auth0 start
+                        var lock = new Auth0Lock(auth0Config.id, auth0Config.domain,{ popup: true });
+
+                        // Auth0 V11.6
+                        lock.on('authenticated', function(authResult) {
+                            if (authResult && authResult.accessToken && authResult.idToken) {
+                                console.log("Auth0 > authResult: " + JSON.stringify(authResult));
+
+                                lock.getUserInfo(authResult.accessToken, function(err, userInfo) {
+                                    if (err) {
+                                        alert('There was an error logging you in');
+                                        Session.setCurrentUserAuthProfile(null);
+                                        Session.setCurrentUserAuthToken(null);
+                                        Session.setCurrentUserId(null);
+                                        Session.setCurrentUserProfile(null);
+                                        Audit.warn('LoginError');
+                                    } else {
+                                        console.log("Auth0 > userInfo: " + JSON.stringify(userInfo));
+
+                                        Session.setCurrentUserAuthProfile(userInfo);
+                                        Session.setCurrentUserAuthToken(authResult.accessToken);
+                                        Session.setCurrentUserId(userInfo.nickname);
+                                        Audit.info('LoggedIn', {deviceInfo: Responsive.deviceInfo()});
+                                        // If existing credentials are not found, wait till the profile
+                                        // is created to trigger LOGGED_IN ev
+                                        onDone();
+                                    }
+                                });
+                            } else {
                                 alert('There was an error logging you in');
                                 Session.setCurrentUserAuthProfile(null);
                                 Session.setCurrentUserAuthToken(null);
                                 Session.setCurrentUserId(null);
                                 Session.setCurrentUserProfile(null);
-                                Audit.warn('LoginError', err);
-                            } else {
-                                Session.setCurrentUserAuthProfile(profile);
-                                Session.setCurrentUserAuthToken(token);
-                                Session.setCurrentUserId(profile.nickname);
-                                Audit.info('LoggedIn', {deviceInfo: Responsive.deviceInfo()});
-                                // If existing credentials are not found, wait till the profile
-                                // is created to trigger LOGGED_IN ev
-                                onDone();
+                                Audit.warn('LoginError');
                             }
-                        })
+                        });
+
+                        lock.show();
+
+                        // Auth0 V9
+                        // lock.show(function (err, profile, token) {
+                        //     if (authResult) {
+                        //         alert('There was an error logging you in');
+                        //         Session.setCurrentUserAuthProfile(null);
+                        //         Session.setCurrentUserAuthToken(null);
+                        //         Session.setCurrentUserId(null);
+                        //         Session.setCurrentUserProfile(null);
+                        //         Audit.warn('LoginError');
+                        //     } else {
+                        //         Session.setCurrentUserAuthProfile(profile);
+                        //         Session.setCurrentUserAuthToken(token);
+                        //         Session.setCurrentUserId(profile.nickname);
+                        //         Audit.info('LoggedIn', {deviceInfo: Responsive.deviceInfo()});
+                        //         // If existing credentials are not found, wait till the profile
+                        //         // is created to trigger LOGGED_IN ev
+                        //         onDone();
+                        //     }
+                        // })
                     })
                     .fail(function (resp) {
                         console.error('Failed to load Config' + JSON.stringify(resp));

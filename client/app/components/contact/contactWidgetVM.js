@@ -1,5 +1,5 @@
 define(['knockout', 'underscore', 'KOMap',
-        'text!app/components/contact/contactWidget.tmpl.html',
+        'text-loader!app/components/contact/contactWidget.tmpl.html',
         'app/utils/session',
         'app/components/contact/contactClient',
         'app/components/contact/contactUtils',

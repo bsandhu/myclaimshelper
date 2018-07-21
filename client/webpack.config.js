@@ -23,41 +23,37 @@ module.exports = {
         })
     ],
     resolve: {
-        root: [
-            path.resolve('.'), ,
-            path.join(path.resolve('..'),
-                'server')],
         // This is the default setting too, repeated for clarity
-        modulesDirectories: ['node_modules'],
-        extensions: ['', '.js', '.json'],
+        modules: [path.resolve('.'), 'node_modules'],
+        extensions: ['.js', '.json'],
         alias: {
-            'jquery': 'lib\\jquery-2.1.1.js',
-            'jqueryBase64': 'lib\\jquery.base64.js',
-            'jqueryui': 'lib\\jquery.ui.min.js',
-            'hotkeys': 'lib\\jquery.hotkeys.js',
-            'knockout': 'lib\\knockout.js',
-            'KOMap': 'lib\\knockout.mapping.min.js',
-            'KOAmd': 'lib\\knockout.amd.helpers.js',
-            'velocity': 'lib\\jquery.velocity.min.js',
-            'amplify': 'lib\\amplify.js',
-            'Path': 'lib\\path.js',
-            'bootstrap': 'lib\\bootstrap.min.js',
-            'bootstrapTable': 'lib\\bootstrap.table.js',
-            'bootstrapTableCustom': 'lib\\bootstrap.table.customization.js',
-            'bootbox': 'lib\\bootbox.min.js',
-            'tableExport': 'lib\\bootstrap.table.export.js',
-            'kayalshriTableExport': 'lib\\kayalshri.table.export.js',
-            'wysiwyg': 'lib\\bootstrap.wysiwyg.js',
-            'datetimepicker': 'lib\\jquery.datetimepicker.js',
-            'sortable': 'lib\\sortable.min.js',
-            'xeditable': 'lib\\x-editable.min.js',
-            'KOXeditable': 'lib\\ko.xeditable.js',
-            'select2': 'lib\\select2.min.js',
-            'circliful': 'lib\\jquery.circliful.min.js',
-            'underscore': 'lib\\underscore.min.js',
-            'maskedInput': 'lib\\jquery.mask.js',
-            'loggly': 'lib\\loggly.tracker-2.1.min.js',
-            'hopscotch': 'lib\\hopscotch.js'
+            'jquery': path.resolve(__dirname, 'lib/jquery-2.1.1.js'),
+            'jqueryBase64': path.resolve(__dirname, 'lib/jquery.base64.js'),
+            'jqueryui': path.resolve(__dirname, 'lib/jquery.ui.min.js'),
+            'hotkeys': path.resolve(__dirname, 'lib/jquery.hotkeys.js'),
+            'knockout': path.resolve(__dirname, 'lib/knockout.js'),
+            'KOMap': path.resolve(__dirname, 'lib/knockout.mapping.min.js'),
+            'KOAmd': path.resolve(__dirname, 'lib/knockout.amd.helpers.js'),
+            'velocity': path.resolve(__dirname, 'lib/jquery.velocity.min.js'),
+            'amplify': path.resolve(__dirname, 'lib/amplify.js'),
+            'Path': path.resolve(__dirname, 'lib/path.js'),
+            'bootstrap': path.resolve(__dirname, 'lib/bootstrap.min.js'),
+            'bootstrapTable': path.resolve(__dirname, 'lib/bootstrap.table.js'),
+            'bootstrapTableCustom': path.resolve(__dirname, 'lib/bootstrap.table.customization.js'),
+            'bootbox': path.resolve(__dirname, 'lib/bootbox.min.js'),
+            'tableExport': path.resolve(__dirname, 'lib/bootstrap.table.export.js'),
+            'kayalshriTableExport': path.resolve(__dirname, 'lib/kayalshri.table.export.js'),
+            'wysiwyg': path.resolve(__dirname, 'lib/bootstrap.wysiwyg.js'),
+            'datetimepicker': path.resolve(__dirname, 'lib/jquery.datetimepicker.js'),
+            'sortable': path.resolve(__dirname, 'lib/sortable.min.js'),
+            'xeditable': path.resolve(__dirname, 'lib/x-editable.min.js'),
+            'KOXeditable': path.resolve(__dirname, 'lib/ko.xeditable.js'),
+            'select2': path.resolve(__dirname, 'lib/select2.min.js'),
+            'circliful': path.resolve(__dirname, 'lib/jquery.circliful.min.js'),
+            'underscore': path.resolve(__dirname, 'lib/underscore.min.js'),
+            'maskedInput': path.resolve(__dirname, 'lib/jquery.mask.js'),
+            'loggly': path.resolve(__dirname, 'lib/loggly.tracker-2.1.min.js'),
+            'hopscotch': path.resolve(__dirname, 'lib/hopscotch.js')
         }
     },
     devtool: 'eval',
@@ -68,40 +64,32 @@ module.exports = {
         // webpack cannot find the loader. You need to add the node_modules folder as absolute path
         // to the resolveLoader.root option.
         // - Webpack docs
-        root: path.join(__dirname, "node_modules")
+        modules: [path.join(__dirname, "node_modules")]
     },
     module: {
-        loaders: [
-            {test: /loggly/, loader: 'exports?_LTracker'},
-            {test: /hopscotch/, loader: 'imports?jquery'},
-            {test: /circliful/, loader: 'imports?jquery'},
-            {test: /bootbox/, loader: 'imports?jquery,bootstrap'},
-            {test: /jqueryui/, loader: 'imports?jquery'},
-            {test: /velocity/, loader: 'imports?jquery'},
-            {test: /maskedInput/, loader: 'imports?jquery'},
-            {test: /jqueryBase64/, loader: 'imports?jquery'},
-            {test: /datetimepicker/, loader: 'imports?jquery,jqueryui'},
-            {test: /kayalshriTableExport/, loader: 'imports?jquery,jqueryBase64'},
-            {test: /tableExport/, loader: 'imports?jquery,bootstrapTableCustom,bootstrapTable,kayalshriTableExport'},
-            {test: /bootstrap/, loader: 'imports?jquery'},
-            {test: /bootstrapTable/, loader: 'imports?jquery,bootstrap,bootstrapTableCustom'},
-            {test: /sortable/, loader: 'imports?jquery'},
-            {test: /wysiwyg/, loader: 'imports?jquery,bootstrap,hotkeys'},
-            {test: /knockout/, loader: 'imports?jquery'},
-            {test: /KOMap/, loader: 'imports?knockout!exports=KOMap'},
-            {test: /KOAmd/, loader: 'imports?knockout!exports=KOAmd'},
-            {test: /amplify/, loader: 'imports?jquery!exports?amplify'},
-            {test: /path/, loader: 'exports?Path'},
-            {test: /x-editable/, loader: 'imports?bootstrap,jquery'},
-            {test: /ko.xeditable/, loader: 'imports?xeditable'},
-            {
-                test: /\.js$/,
-                exclude: /(node_modules|lib)/,
-                loader: 'babel',
-                query: {
-                    presets: ['es2015']
-                }
-            }
+        rules: [
+            {test: /loggly/, loader: 'exports-loader?_LTracker'},
+            {test: /hopscotch/, loader: 'imports-loader?jquery'},
+            {test: /circliful/, loader: 'imports-loader?jquery'},
+            {test: /bootbox/, loader: 'imports-loader?jquery,bootstrap'},
+            {test: /jqueryui/, loader: 'imports-loader?jquery'},
+            {test: /velocity/, loader: 'imports-loader?jquery'},
+            {test: /maskedInput/, loader: 'imports-loader?jquery'},
+            {test: /jqueryBase64/, loader: 'imports-loader?jquery'},
+            {test: /datetimepicker/, loader: 'imports-loader?jquery,jqueryui'},
+            {test: /kayalshriTableExport/, loader: 'imports-loader?jquery,jqueryBase64'},
+            {test: /tableExport/, loader: 'imports-loader?jquery,bootstrapTableCustom,bootstrapTable,kayalshriTableExport'},
+            {test: /bootstrap/, loader: 'imports-loader?jquery'},
+            {test: /bootstrapTable/, loader: 'imports-loader?jquery,bootstrap,bootstrapTableCustom'},
+            {test: /sortable/, loader: 'imports-loader?jquery'},
+            {test: /wysiwyg/, loader: 'imports-loader?jquery,bootstrap,hotkeys'},
+            {test: /knockout/, loader: 'imports-loader?jquery'},
+            {test: /KOMap/, loader: 'imports-loader?knockout!exports=KOMap'},
+            {test: /KOAmd/, loader: 'imports-loader?knockout!exports=KOAmd'},
+            {test: /amplify/, loader: 'imports-loader?jquery!exports-loader?amplify'},
+            {test: /path/, loader: 'exports-loader?Path'},
+            {test: /x-editable/, loader: 'imports-loader?bootstrap,jquery'},
+            {test: /ko.xeditable/, loader: 'imports-loader?xeditable'}
         ]
     }
 }

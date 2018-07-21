@@ -1,6 +1,6 @@
 define(['knockout', 'KOMap', 'jquery',
         'app/utils/ajaxUtils',
-        'text!app/components/contactSync/contactSync.tmpl.html'],
+        'text-loader!app/components/contactSync/contactSync.tmpl.html'],
 
     function (ko, KOMap, $, ajaxUtils, viewHtml) {
 

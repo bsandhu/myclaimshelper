@@ -3,7 +3,7 @@ define(['jquery', 'knockout', 'amplify',
         'socket.io-client',
         'app/utils/session',
         'shared/consts',
-        'text!app/components/admin/admin.tmpl.html'],
+        'text-loader!app/components/admin/admin.tmpl.html'],
 
     function ($, ko, amplify, Events, ajaxUtils, io, Session, ServerConsts, viewHtml) {
         'use strict';

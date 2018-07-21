@@ -3,7 +3,7 @@ define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore',
         'app/utils/events', 'app/utils/router', 'shared/dateUtils',
         'app/utils/ajaxUtils', 'shared/objectUtils', 'app/utils/sessionKeys',
         'app/components/claimsList/claimsListVM',
-        'text!app/components/claimsList/claimSelector.tmpl.html'],
+        'text-loader!app/components/claimsList/claimSelector.tmpl.html'],
     function ($, ko, KOMap, amplify, _, Claim, ClaimEntry, Events,
               Router, DateUtils, AjaxUtils, ObjectUtils, SessionKeys, ClaimsListVM, claimsSelectorView) {
         'use strict';

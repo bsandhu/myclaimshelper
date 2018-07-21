@@ -1,6 +1,6 @@
 define(['jquery', 'knockout', 'KOMap', 'amplify', 'underscore',
         'app/components/summary/summaryVM',
-        'text!app/components/maps/travelComponent.tmpl.html',
+        'text-loader!app/components/maps/travelComponent.tmpl.html',
         'model/tags', 'model/claimEntry',
         'shared/dateUtils', 'app/utils/ajaxUtils', 'app/utils/events', 'app/utils/audit',
         'app/utils/responsive'],

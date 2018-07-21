@@ -1,6 +1,6 @@
 define(['knockout', 'KOMap', 'amplify',
         'app/utils/events', 'app/utils/session',
-        'text!app/components/billingItem/billingItemComponent.tmpl.html', 'model/billingItem'],
+        'text-loader!app/components/billingItem/billingItemComponent.tmpl.html', 'model/billingItem'],
 
     function (ko, KOMap, amplify, Events, Session, viewHtml, BillingItem) {
         'use strict';

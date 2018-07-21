@@ -3,7 +3,7 @@ define(['underscore', 'jquery', 'knockout', 'KOMap', 'amplify',
         'app/utils/ajaxUtils', 'app/utils/events', 'app/utils/router',
         'app/utils/sessionKeys', 'app/utils/session',
         'shared/dateUtils', 'app/utils/audit',
-        'text!app/components/taskEntry/taskEntry.tmpl.html', 'bootbox'],
+        'text-loader!app/components/taskEntry/taskEntry.tmpl.html', 'bootbox'],
     function (_, $, ko, KOMap, amplify, Claim, ClaimEntry, BillingItem, BillingStatus, States, ajaxUtils, Events,
               Router, SessionKeys, Session, DateUtils, Audit, taskEntryView, bootbox) {
         'use strict';

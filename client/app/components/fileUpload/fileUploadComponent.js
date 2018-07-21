@@ -1,7 +1,7 @@
 define(['knockout', 'KOMap', 'jquery', 'underscore', 'bootbox',
         'amplify', 'app/utils/events',
         'shared/objectUtils', 'app/utils/ajaxUtils',
-        'text!app/components/fileUpload/fileUploadComponent.tmpl.html'],
+        'text-loader!app/components/fileUpload/fileUploadComponent.tmpl.html'],
     function (ko, KOMap, $, _, bootbox, amplify, Events, ObjectUtils, AjaxUtils, viewHtml) {
         'use strict';
 

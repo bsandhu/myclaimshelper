@@ -1,6 +1,6 @@
 define(['knockout', 'KOMap', 'maskedInput', 'bootbox',
         'app/components/contact/contactUtils',
-        'text!app/components/contact/contactComponent.tmpl.html', 'model/contact'],
+        'text-loader!app/components/contact/contactComponent.tmpl.html', 'model/contact'],
 
     function (ko, KOMap, maskedInput, bootbox, ContactUtils, viewHtml, Contact) {
         'use strict';

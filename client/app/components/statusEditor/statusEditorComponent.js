@@ -1,4 +1,4 @@
-define(['jquery', 'knockout', 'KOMap', 'amplify', 'text!app/components/statusEditor/statusEditorComponent.tmpl.html',
+define(['jquery', 'knockout', 'KOMap', 'amplify', 'text-loader!app/components/statusEditor/statusEditorComponent.tmpl.html',
         'model/states', 'app/utils/events'],
     function ($, ko, KOMap, amplify, viewHtml, States, Events) {
         'use strict';

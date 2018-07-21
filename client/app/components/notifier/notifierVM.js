@@ -1,4 +1,4 @@
-define(['knockout', 'amplify', 'app/utils/events', 'text!app/components/notifier/notifier.tmpl.html'],
+define(['knockout', 'amplify', 'app/utils/events', 'text-loader!app/components/notifier/notifier.tmpl.html'],
     function (ko, amplify, Events, notifierView) {
 
         function NotifierVM() {

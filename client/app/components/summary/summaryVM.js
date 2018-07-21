@@ -1,6 +1,6 @@
 define(['jquery', 'knockout', 'underscore', 'KOMap', 'amplify', 'model/claim', 'model/claimEntry', 'model/states', 'app/utils/events',
         'app/utils/router', 'shared/dateUtils', 'app/utils/ajaxUtils', 'app/utils/sessionKeys',
-        'text!app/components/summary/summary.tmpl.html'],
+        'text-loader!app/components/summary/summary.tmpl.html'],
     function ($, ko, _, KOMap, amplify, Claim, ClaimEntry, States, Events, Router,
               DateUtils, AjaxUtils, SessionKeys, summaryView) {
         'use strict';

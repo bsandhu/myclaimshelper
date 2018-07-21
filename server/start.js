@@ -36,7 +36,8 @@ let JWT_SECRET = config.auth0_client_secret;
 let DECODED_JWT_SECRET = new Buffer(JWT_SECRET, 'base64');
 
 // Testing hooks
-let DISABLE_AUTH = config.disable_auth;
+// let DISABLE_AUTH = config.disable_auth;
+let DISABLE_AUTH = true;
 let USE_SSL = config.use_ssl;
 let TEST_USER = config.test_user;
 

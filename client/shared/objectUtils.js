@@ -1,0 +1,58 @@
+define([],
+    function () {
+        'use strict';
+
+        /**
+         * See ClaimListVM for usage - binds 'this' so we eval in the right context
+         */
+        function nullsafe(expr, defaultVal) {
+            defaultVal = defaultVal || '';
+            try {
+                return eval(expr) || defaultVal;
+            } catch (e) {
+                return defaultVal;
+            }
+        }
+
+        function capitalize(expr) {
+            expr = expr || '';
+            expr = String(expr);
+            return expr.charAt(0).toUpperCase() + expr.substr(1);
+        }
+
+        function defaultValue(obj, defaultVal) {
+            if (obj == undefined || obj == null) {
+                return defaultVal;
+            } else {
+                return obj;
+            }
+        }
+
+        function camelcaseToSpaces(str) {
+            if (str == null || str == undefined) {
+                return "";
+            } else {
+                return str
+                // insert a space before all caps
+                    .replace(/([A-Z])/g, ' $1')
+                    // uppercase the first character
+                    .replace(/^./, function (str) {
+                        return str.toUpperCase();
+                    })
+
+            }
+        }
+
+        function isBlank(obj) {
+            return (!obj || String(obj).trim() === "");
+        }
+
+        return {
+            'nullSafe': nullsafe,
+            'capitalize': capitalize,
+            'defaultValue': defaultValue,
+            'isBlank': isBlank,
+            'camelcaseToSpaces': camelcaseToSpaces
+        }
+    }
+)
