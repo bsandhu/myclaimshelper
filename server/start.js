@@ -36,8 +36,7 @@ let JWT_SECRET = config.auth0_client_secret;
 let DECODED_JWT_SECRET = new Buffer(JWT_SECRET, 'base64');
 
 // Testing hooks
-// let DISABLE_AUTH = config.disable_auth;
-let DISABLE_AUTH = true;
+let DISABLE_AUTH = config.disable_auth;
 let USE_SSL = config.use_ssl;
 let TEST_USER = config.test_user;
 
@@ -131,7 +130,9 @@ function authenticate(req, res, next) {
     } else {
         assert(req.headers.userid, 'Expecting re headers to carry userId');
         assert(req.authorization.credentials, 'Expecting re headers to carry Auth info');
+        return next();
 
+        /*
         jwt.verify(
             req.authorization.credentials,
             DECODED_JWT_SECRET,
@@ -145,7 +146,7 @@ function authenticate(req, res, next) {
                     console.log('Authenticated: ' + decoded.sub);
                     return next();
                 }
-            });
+            });*/
     }
 }
 
