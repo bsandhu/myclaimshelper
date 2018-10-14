@@ -8,6 +8,10 @@ var querystring = require('querystring');
  */
 function extractEntities(txt) {
     var defer = jQuery.Deferred();
+    defer.resolve([]);
+    /* 
+    Deprecate dependency on Alchemy
+    
     extract(txt)
         .then(function (data) {
             var people = [];
@@ -25,6 +29,7 @@ function extractEntities(txt) {
             console.error('Error while extracting entities: ' + e);
             defer.resolve([]);
         });
+        */
     return defer;
 }
 
