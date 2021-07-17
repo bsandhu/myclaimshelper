@@ -70,7 +70,7 @@ Common code between client/server, example models
 
 ## Try hitting these URLs
   - [Main view. There should be no errors in the devtools console] 
-  - http://localhost:8080/app/app.html
+  - http://localhost:8080/
 
 ## Running tests
 Mocha is being used as the testing lib. Assertions are from Node standard pkgs.
