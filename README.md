@@ -19,6 +19,14 @@ You will need a local (dev machine) install of Mongo DB.
 
 - Command line for starting MongoDB <br/>
   `mongod --port 9090 --dbpath <local dir for storing data>`
+  
+- Download GUI client for mongoDB: https://robomongo.org/
+
+- Using the Robo mongo UI client - connect to the local DB running on port 9090. No credentials are needed since the DB is empty
+  -- Once cnnected, right click on the "New connection" on the right side and create `myclaimshelper` DB
+  -- The DB should show up on the right side menu. Right click on the DB and click "open shell"
+  -- In the shell type this command to create a user: `db.createUser({"user": "agent", "pwd": "lightSA8ER", "roles": ["dbAdmin"]})` 
+  -- Now you are ready to use the local DB
 
 NO additional 'schema'setup is required
 
