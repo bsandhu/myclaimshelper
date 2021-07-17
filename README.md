@@ -34,17 +34,28 @@ See: http://stackoverflow.com/questions/12170755/webstorm-using-node-supervisor-
 # Code structure
     
 ## Building the Client
-All the files accessible to the client live here. The client is Knockout + jQueryUI. Webpack is used for packaging
-Go to client dir: `cd client`
-Install webpack: `npm install webpack webpack-cli --global`
-Install node dependencies: `npm install`
-Run webpack `webpack`
+- All the files accessible to the client live here. The client is Knockout + jQueryUI. Webpack is used for packaging
+- Go to client dir: `cd client`
+- Install webpack: `npm install webpack webpack-cli --global`
+- Install node dependencies: `npm install`
+- Run webpack `webpack`
+- You shoudl see something like this
+```
+Child html-webpack-plugin for "index.html":
+         Asset     Size  Chunks  Chunk Names
+    index.html  565 KiB       0
+    Entrypoint undefined = index.html
+    [0] ./node_modules/html-webpack-plugin/lib/loader.js!./app/components/index.ejs 10.5 KiB {0} [built]
+    [1] ./node_modules/lodash/lodash.js 531 KiB {0} [built]
+    [2] (webpack)/buildin/global.js 472 bytes {0} [built]
+    [3] (webpack)/buildin/module.js 497 bytes {0} [built]
+```
 
 ## Building the Server
-Node backend based on [http://mcavage.me/node-restify/](restify). Mongo is/will be used as the DB
-Go to server dir: `cd server`
-Start server: `node server/start.js` 
-You should see a msg like this `restify listening at http://127.0.0.1:8080`
+- Node backend based on [http://mcavage.me/node-restify/](restify). Mongo is/will be used as the DB
+- Go to server dir: `cd server`
+- Start server: `node server/start.js` 
+- You should see a msg like this `restify listening at http://127.0.0.1:8080`
 
 ## Shared 
 Common code between client/server, example models
