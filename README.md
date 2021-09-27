@@ -44,7 +44,7 @@ See: http://stackoverflow.com/questions/12170755/webstorm-using-node-supervisor-
 ## Building the Client
 - All the files accessible to the client live here. The client is Knockout + jQueryUI. Webpack is used for packaging
 - Go to client dir: `cd client`
-- Install webpack: `npm install webpack webpack-cli --global`
+- Install webpack: `sudo npm install webpack@4.44.2 webpack-cli --global`. This version is needed.
 - Install node dependencies: `npm install`
 - Run webpack `webpack`
 - You shoudl see something like this
