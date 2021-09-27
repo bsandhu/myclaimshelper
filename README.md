@@ -62,6 +62,7 @@ Child html-webpack-plugin for "index.html":
 ## Building the Server
 - Node backend based on [http://mcavage.me/node-restify/](restify). Mongo is/will be used as the DB
 - Go to server dir: `cd server`
+- Run `npm install`
 - Start server: `node server/start.js` 
 - You should see a msg like this `restify listening at http://127.0.0.1:8080`
 
