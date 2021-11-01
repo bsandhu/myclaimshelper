@@ -35,8 +35,8 @@ function initConnPool() {
     MongoClient.connect(config.db, function (err, db) {
         if (!err) {
             console.log("Connected");
-            dbConn = db;
-            deferred.resolve(db);
+            dbConn = db.db("MyClaimsHelperDev");
+	    deferred.resolve(dbConn);
         } else {
             console.error("Conn error " + err);
             deferred.reject(err);
