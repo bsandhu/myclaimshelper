@@ -15,6 +15,6 @@ Xvfb :99 -screen 0 1366x768x24 > /dev/null 2>&1 &
 export PORT=80
 export HTTPS_PORT=443
 export ENV=PROD
-echo "Starting $ENV ENV on Port $HTTPS_PORT"
+echo "Starting PROD ENV on Port $HTTPS_PORT"
 
 sudo PORT=80 HTTPS_PORT=443 ENV=PROD node ./server/start.js 1>>server.out 2>>server.err &
