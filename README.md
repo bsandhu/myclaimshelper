@@ -69,6 +69,10 @@ Child html-webpack-plugin for "index.html":
   - node server/start.js`
 - You should see a msg like this `restify listening at http://127.0.0.1:8080`
 
+### Specifying the local env
+
+- In config.js `config.env` defaults to `LOCAL`. Hence, if no env is specified, local is used.
+
 ## Shared 
 Common code between client/server, example models
 
