@@ -8,7 +8,7 @@
     "amdefine": "0.1.0",
     "assert-plus": "^1.0.0",
     "debug": "^2.2.0",
-    "electron": "1.4.15",
+    "electron": "22.3.21",
     "electron-html-to": "2.3.3",
     "entities": "^1.1.1",
     "escape-regexp-component": "^1.0.2",
